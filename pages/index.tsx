@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import styles from '../styles/Home.module.css'
 import PrelaunchHomePage from './PrelaunchHomePage/PrelaunchHomePage'
-import Layout from './_layout'
+import Layout from './Layout/_layout'
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <Layout>
-          <PrelaunchHomePage /> 
+          <PrelaunchHomePage />
         </Layout>
       </main>
     </>
