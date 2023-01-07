@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import PrelaunchHomePage from './PrelaunchHomePage/PrelaunchHomePage'
+import PrelaunchHomePage from '../components/PrelaunchHomePage/PrelaunchHomePage'
 
 export default function Home() {
   return (
