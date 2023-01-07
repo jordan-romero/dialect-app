@@ -14,7 +14,7 @@ const NavComponent = ({ navText }: Props) => {
     <Center
       w="auto"
       h="10"
-      bg="blue.400"
+      bg="blue.500"
       p={2}
       borderRadius="md"
       _hover={{ bg: 'blue.300' }}

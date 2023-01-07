@@ -4,7 +4,7 @@ import NavComponent from './NavComponent'
 
 const Navbar = () => {
   return (
-    <Flex w="100%" bg="blue.400" h="14">
+    <Flex w="100%" bg="blue.500" h="14">
       <HStack spacing="24px">
         <NavComponent navText="Home" />
         <NavComponent navText="About" />

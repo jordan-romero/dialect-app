@@ -11,28 +11,27 @@ const PrelaunchGrid = () => {
       gridTemplateRows={'100px 1fr 60px'}
       gridTemplateColumns={'450px 1fr'}
       h="1000px"
-      gap="1"
       color="blackAlpha.700"
       fontWeight="bold"
     >
       <PrelaunchGridItem
         placement="2"
-        backgroundColor="orange.300"
+        backgroundColor="gray.200"
         areaProp="header"
       />
       <PrelaunchGridItem
         placement="2"
-        backgroundColor="pink.300"
+        backgroundColor="gray.50"
         areaProp="cta"
       />
       <PrelaunchGridItem
         placement="2"
-        backgroundColor="green.300"
+        backgroundColor="blue.300"
         areaProp="main"
       />
       <PrelaunchGridItem
         placement="2"
-        backgroundColor="blue.300"
+        backgroundColor="gray.100"
         areaProp="footer"
       />
     </Grid>

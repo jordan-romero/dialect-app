@@ -1,11 +1,11 @@
-import { Box, Flex, Spacer, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Spacer, Text } from '@chakra-ui/react'
 import React from 'react'
 
 const PrelaunchHeader = () => {
   return (
     <Flex align="center" h="100%">
       <Box px={8}>
-        <Text>Dialect Class Name</Text>
+        <Heading as='h3' size='lg'>Dialect Class Name</Heading>
         <Text>Catchy Dialect Class Slogan</Text>
       </Box>
       <Spacer />

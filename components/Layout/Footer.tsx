@@ -3,7 +3,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <Box h="40" bg="blue.50">
+    <Box h="40" bg="gray.200">
       Footer
     </Box>
   )
