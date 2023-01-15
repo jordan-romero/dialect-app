@@ -1,4 +1,4 @@
-import { VStack, Text, HStack, Flex, Spacer } from '@chakra-ui/react'
+import { VStack, Text, HStack, Flex, Spacer, Heading } from '@chakra-ui/react'
 import React from 'react'
 import { ArrowRightIcon, MoonIcon, RepeatIcon } from '@chakra-ui/icons'
 
@@ -8,9 +8,9 @@ const PrelaunchCta = () => {
       <VStack w="100%" h="175px" p={6} pl={0}>
         <HStack w="100%">
           <ArrowRightIcon boxSize={6} color="green.400" />
-          <Text as="b" fontSize="2xl">
+          <Heading as="b" fontSize="2xl">
             Why learn the IPA?
-          </Text>
+          </Heading>
         </HStack>
         <Text>
           IPA is a phonetic notation system that uses a set of symbols to
@@ -21,9 +21,9 @@ const PrelaunchCta = () => {
       <VStack w="100%" h="175px" p={6} pl={0}>
         <HStack w="100%">
           <MoonIcon boxSize={6} color="green.400" />
-          <Text as="b" fontSize="2xl">
+          <Heading as="b" fontSize="2xl">
             Who are Scott and Krista?
-          </Text>
+          </Heading>
         </HStack>
         <Text>
           IPA badasses who basically can do everything and anything and they are
@@ -35,9 +35,9 @@ const PrelaunchCta = () => {
       <VStack w="100%" h="175px" p={6} pl={0}>
         <HStack w="100%">
           <RepeatIcon boxSize={6} color="green.400" />
-          <Text as="b" fontSize="2xl">
+          <Heading as="b" fontSize="2xl">
             Practice Makes Perfect
-          </Text>
+          </Heading>
         </HStack>
         <Text>
           I have no idea what little blurb to use here but something something
