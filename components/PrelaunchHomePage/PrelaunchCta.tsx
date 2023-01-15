@@ -4,10 +4,9 @@ import { ArrowRightIcon, MoonIcon, RepeatIcon } from '@chakra-ui/icons'
 
 const PrelaunchCta = () => {
   return (
-    <Flex h="100%" direction="column">
-      <Spacer />
-      <VStack w="100%" h="175px" p={6}>
-        <HStack w='100%'>
+    <Flex h="100%" direction="column" align='start' pt={20}>
+      <VStack w="100%" h="175px" p={6} pl={0}>
+        <HStack w="100%">
           <ArrowRightIcon boxSize={6} color="green.400" />
           <Text as="b" fontSize="2xl">
             Why learn the IPA?
@@ -19,8 +18,8 @@ const PrelaunchCta = () => {
         </Text>
       </VStack>
       <Spacer />
-      <VStack w="100%" h="175px" p={6}>
-        <HStack w='100%'>
+      <VStack w="100%" h="175px" p={6} pl={0}>
+        <HStack w="100%">
           <MoonIcon boxSize={6} color="green.400" />
           <Text as="b" fontSize="2xl">
             Who are Scott and Krista?
@@ -33,8 +32,8 @@ const PrelaunchCta = () => {
         </Text>
       </VStack>
       <Spacer />
-      <VStack w="100%" h="175px" p={6}>
-        <HStack w='100%'>
+      <VStack w="100%" h="175px" p={6} pl={0}>
+        <HStack w="100%">
           <RepeatIcon boxSize={6} color="green.400" />
           <Text as="b" fontSize="2xl">
             Practice Makes Perfect

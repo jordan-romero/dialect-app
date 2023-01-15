@@ -5,33 +5,25 @@ import PrelaunchGridItem from './PrelaunchGridItem'
 const PrelaunchGrid = () => {
   return (
     <Grid
-      templateAreas={`"header header"
-    "cta main"
-    "cta footer"`}
-      gridTemplateRows={'100px 1fr 60px'}
+      templateAreas={`
+        "cta main"
+        "cta footer"`}
+      gridTemplateRows={'1fr 260px'}
       gridTemplateColumns={'450px 1fr'}
       h="1000px"
       color="blackAlpha.700"
       fontWeight="bold"
+      mt='10px'
     >
+      <PrelaunchGridItem placement="2" backgroundColor="white" areaProp="cta" />
       <PrelaunchGridItem
         placement="2"
-        backgroundColor="gray.200"
-        areaProp="header"
-      />
-      <PrelaunchGridItem
-        placement="2"
-        backgroundColor="gray.50"
-        areaProp="cta"
-      />
-      <PrelaunchGridItem
-        placement="2"
-        backgroundColor="blue.300"
+        backgroundColor="white"
         areaProp="main"
       />
       <PrelaunchGridItem
         placement="2"
-        backgroundColor="gray.100"
+        backgroundColor="white"
         areaProp="footer"
       />
     </Grid>

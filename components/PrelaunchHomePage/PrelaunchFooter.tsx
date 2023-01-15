@@ -1,11 +1,12 @@
-import { Center, Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import React from 'react'
+import PrelauchSignUpForm from './PrelauchSignUpForm'
 
 const PrelaunchFooter = () => {
   return (
-    <Center>
-      <Text mt={4}>*Course coming soon*</Text>
-    </Center>
+    <Box>
+      <PrelauchSignUpForm />
+    </Box>
   )
 }
 

@@ -4,12 +4,12 @@ import React from 'react'
 const DialectVideo = () => {
   return (
     <AspectRatio
-      maxW="700px"
-      maxH="400px"
+      maxW="900px"
+      maxH="510px"
       ratio={1}
       mr="auto"
       ml="auto"
-      mt={10}
+      mt={20}
       boxShadow="dark-lg"
     >
       <iframe

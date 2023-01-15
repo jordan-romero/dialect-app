@@ -3,7 +3,6 @@ import React from 'react'
 import PrelaunchMain from './PrelaunchMain'
 import PrelaunchCta from './PrelaunchCta'
 import PrelaunchFooter from './PrelaunchFooter'
-import PrelaunchHeader from './PrelaunchHeader'
 
 type Props = {
   placement: string
@@ -14,8 +13,6 @@ type Props = {
 const PrelaunchGridItem = ({ placement, backgroundColor, areaProp }: Props) => {
   const renderContent = () => {
     switch (areaProp) {
-      case 'header':
-        return <PrelaunchHeader />
       case 'cta':
         return <PrelaunchCta />
       case 'main':
