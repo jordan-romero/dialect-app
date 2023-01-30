@@ -4,7 +4,7 @@ import { ArrowRightIcon, MoonIcon, RepeatIcon } from '@chakra-ui/icons'
 
 const PrelaunchCta = () => {
   return (
-    <Flex h="100%" direction="column" align='start' pt={20}>
+    <Flex h="100%" direction="column" align="start" pt={20}>
       <VStack w="100%" h="175px" p={6} pl={0}>
         <HStack w="100%">
           <ArrowRightIcon boxSize={6} color="green.400" />

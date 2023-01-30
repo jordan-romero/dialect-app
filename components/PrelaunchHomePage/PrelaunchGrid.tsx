@@ -13,7 +13,7 @@ const PrelaunchGrid = () => {
       h="1000px"
       color="blackAlpha.700"
       fontWeight="bold"
-      mt='10px'
+      mt="10px"
     >
       <PrelaunchGridItem placement="2" backgroundColor="white" areaProp="cta" />
       <PrelaunchGridItem

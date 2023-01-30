@@ -1,41 +1,42 @@
-/* eslint-disable react/no-children-prop */
-import { Box, Text, InputGroup, Input, InputRightAddon } from '@chakra-ui/react'
-import React from 'react'
+import { Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input } from '@chakra-ui/react'
+import axios from 'axios';
+import { useRef, useState } from 'react'
 
-const PrelauchSignUpForm = () => {
-    const [value, setValue] = React.useState('')
+const PrelaunchSignUpForm = () => {
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState("IDLE");
+  const [errorMessage, setErrorMessage] = useState(null);
 
-    const handleChange = (event: {
-      target: { value: React.SetStateAction<string> }
-    }) => setValue(event.target.value)
-  
-    // const handleSubmit = (event) => {
-    //   event.preventDefault()
-    //   alert(`The name you entered was: ${name}`)
-    // }
+  const subscribe = async (e: any) => {
+    e.preventDefault()
+    setState("LOADING");
+    setErrorMessage(null);
+    try {
+      const response = await axios.post("/api/subscribe", { email });
+      setState("SUCCESS");
+    } catch (e: any) {
+      setErrorMessage(e.response.data.error);
+      setState("ERROR");
+    }
+  };
+    return (
+      <form onSubmit={subscribe}>
+      <FormControl isRequired>
+        <FormLabel htmlFor="email-input">
+          Your Best Email
+        </FormLabel>
 
-  return (
-    <Box as="form">
-        <Text mt={6} textAlign="center">
-          Sign up for this Dialect Class now and get 15% off!
-        </Text>
-        <InputGroup w="50%" mr="auto" ml="auto" mt={10}>
-          <Input
-            value={value}
-            onChange={handleChange}
-            placeholder="Email"
-            color="gray.600"
-            variant="outline"
-            bg="white"
-          />
-          <InputRightAddon
-            children="Suscribe Now"
-            cursor="pointer"
-            _hover={{ bg: 'green.300', color: 'white' }}
-          />
-        </InputGroup>
-      </Box>
-  )
+        <Input type='email'  value={email} onChange={(e) => setEmail(e.target.value)} />
+    
+        <FormErrorMessage>Email is required.</FormErrorMessage>
+
+        <Button type="submit" value="" name="subscribe">
+          Subscribe
+        </Button>
+      </FormControl>
+      </form>
+    )
+
 }
 
-export default PrelauchSignUpForm
+export default PrelaunchSignUpForm
