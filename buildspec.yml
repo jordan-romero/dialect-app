@@ -12,19 +12,12 @@ phases:
       - apt-get update && apt-get install -y yarn
       - yarn install
 
-  pre_build:
+   build:
     commands:
-      - yarn run build
-
-  build:
-    commands:
-      - echo Build started on `date`
-
-  post_build:
-    commands:
-      - echo Build completed on `date`
+      - yarn install
+      - yarn build
+      - next export
 
 artifacts:
   files:
     - '**/*'
-  # base-directory: 'out'
