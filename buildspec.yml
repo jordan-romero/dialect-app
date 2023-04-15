@@ -11,13 +11,18 @@ phases:
       - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
       - apt-get update && apt-get install -y yarn
       - yarn install
-
-   build:
+      
+ build:
     commands:
       - yarn install
       - yarn build
       - next export
 
+  post_build:
+    commands:
+      - echo Build completed on `date`
+
 artifacts:
   files:
     - '**/*'
+  # base-directory: 'out'
