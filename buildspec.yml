@@ -3,17 +3,24 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 12.x
+      nodejs: 16
     commands:
-      - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.10
-      - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
       - yarn install
+
+  pre_build:
+    commands:
+      - yarn build
+
   build:
     commands:
-      - yarn run build
+      - echo Build started on `date`
+      - yarn export
+
   post_build:
     commands:
-      - zip -r dialect-class-client.zip *
+      - echo Build completed on `date`
+
 artifacts:
   files:
-    - dialect-class-client.zip
+    - '**/*'
+  base-directory: 'out'
