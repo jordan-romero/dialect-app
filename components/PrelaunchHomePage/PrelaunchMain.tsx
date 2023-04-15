@@ -11,7 +11,6 @@ import React from 'react'
 import DialectVideo from './DialectVideo'
 
 const PrelaunchMain = () => {
-
   return (
     <Box pt={6}>
       <DialectVideo />

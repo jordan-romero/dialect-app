@@ -5,7 +5,7 @@ import NavComponent from './NavComponent'
 
 const Navbar = () => {
   return (
-    <Flex w="100%" bg="blue.500" h="14">
+    <Flex w="100%" h="14">
       <HStack ml={4}>
         <ArrowRightIcon boxSize={8} color="green.400" />
         <Heading>Dialect Class Name</Heading>

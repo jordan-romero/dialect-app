@@ -14,12 +14,11 @@ const NavComponent = ({ navText }: Props) => {
     <Center
       w="auto"
       h="10"
-      bg="blue.500"
       p={2}
       borderRadius="md"
       _hover={{ bg: 'blue.300' }}
     >
-      <Text fontSize="xl" as="b" color="white">
+      <Text fontSize="xl" as="b" color="black" _hover={{color: 'white'}}>
         <Link href={navText === 'Home' ? '/' : `/${formattedNavText}`}>
           {navText}
         </Link>

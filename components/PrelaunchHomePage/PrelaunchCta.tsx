@@ -1,52 +1,11 @@
-import { VStack, Text, HStack, Flex, Spacer, Heading } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import React from 'react'
-import { ArrowRightIcon, MoonIcon, RepeatIcon } from '@chakra-ui/icons'
 
 const PrelaunchCta = () => {
   return (
-    <Flex h="100%" direction="column" align="start" pt={20}>
-      <VStack w="100%" h="175px" p={6} pl={0}>
-        <HStack w="100%">
-          <ArrowRightIcon boxSize={6} color="green.400" />
-          <Heading as="b" fontSize="2xl">
-            Why learn the IPA?
-          </Heading>
-        </HStack>
-        <Text>
-          IPA is a phonetic notation system that uses a set of symbols to
-          represent each distinct sound that exists in human spoken language.
-        </Text>
-      </VStack>
-      <Spacer />
-      <VStack w="100%" h="175px" p={6} pl={0}>
-        <HStack w="100%">
-          <MoonIcon boxSize={6} color="green.400" />
-          <Heading as="b" fontSize="2xl">
-            Who are Scott and Krista?
-          </Heading>
-        </HStack>
-        <Text>
-          IPA badasses who basically can do everything and anything and they are
-          amazing. You should totally buy their class because they know all
-          things dialect.
-        </Text>
-      </VStack>
-      <Spacer />
-      <VStack w="100%" h="175px" p={6} pl={0}>
-        <HStack w="100%">
-          <RepeatIcon boxSize={6} color="green.400" />
-          <Heading as="b" fontSize="2xl">
-            Practice Makes Perfect
-          </Heading>
-        </HStack>
-        <Text>
-          I have no idea what little blurb to use here but something something
-          something something etc etc etc etc etc etc etc and you know that is
-          it
-        </Text>
-      </VStack>
-      <Spacer />
-    </Flex>
+    <Box mt='20'>
+      <iframe width="100%" height="500" src="https://9b8c475b.sibforms.com/serve/MUIEAHlNZuwvcHoGnVwyPdIEjbqjd_urhJZbdWpI3OHdjxa5ac82tbdeosYqkkl0V7LvP4w8obIn8vA57-G6gejRgVqxHxPoK1UvUPXCHSZLBlQ4_s9N6b1Kx8v8TVw4q62sSUpGysG6ybhmD53c6yHhZlEQg7p8LAix_0Z5p3jW2mhHrLOqcx8vFY5JFou-AAMJRQaYp1H6CX41" frameBorder="0" scrolling="auto"></iframe>
+    </Box>
   )
 }
 
