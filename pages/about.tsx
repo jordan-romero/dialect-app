@@ -1,7 +1,7 @@
 import React from 'react'
 
 const About = () => {
-  return <div>About TEST Commit changes</div>
+  return <div>About Damn Time</div>
 }
 
 export default About
