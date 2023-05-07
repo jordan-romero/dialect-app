@@ -2,8 +2,6 @@ import { VStack, Text, HStack, Flex, Spacer, Heading } from '@chakra-ui/react'
 import React from 'react'
 import { ArrowRightIcon, MoonIcon, RepeatIcon } from '@chakra-ui/icons'
 
-
-
 const PrelaunchFooter = () => {
   return (
     <Flex h="100%" align="start">
