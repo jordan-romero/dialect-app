@@ -8,7 +8,7 @@ const Navbar = () => {
     <Flex w="100%" h="14">
       <HStack ml={4}>
         <ArrowRightIcon boxSize={8} color="green.400" />
-        <Heading>Dialect Class Name</Heading>
+        <Heading>Acting Accents</Heading>
       </HStack>
       <Spacer />
       <HStack spacing="24px" mr={4}>

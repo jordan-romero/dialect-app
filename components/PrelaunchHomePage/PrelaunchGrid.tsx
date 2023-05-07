@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid } from '@chakra-ui/react'
+import { Grid, Flex } from '@chakra-ui/react'
 import PrelaunchGridItem from './PrelaunchGridItem'
 
 const PrelaunchGrid = () => {
@@ -7,8 +7,8 @@ const PrelaunchGrid = () => {
     <Grid
       templateAreas={`
         "cta main"
-        "cta footer"`}
-      gridTemplateRows={'1fr 260px'}
+        "cta background"`}
+      gridTemplateRows={'1fr'}
       gridTemplateColumns={'450px 1fr'}
       h="1000px"
       color="blackAlpha.700"
@@ -21,11 +21,7 @@ const PrelaunchGrid = () => {
         backgroundColor="white"
         areaProp="main"
       />
-      <PrelaunchGridItem
-        placement="2"
-        backgroundColor="white"
-        areaProp="footer"
-      />
+      <PrelaunchGridItem backgroundColor="red" areaProp="background"/>
     </Grid>
   )
 }

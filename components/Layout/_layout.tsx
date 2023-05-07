@@ -10,7 +10,7 @@ interface Props {
 
 const Layout = ({ children }: Props) => {
   return (
-    <Box w="95vw" maxW="1500px" h="auto" mr="auto" ml="auto" bg="gray.50">
+    <Box w="95vw" maxW="1500px" h="auto" mr="auto" ml="auto">
       <Navbar />
       {children}
       <Footer />
