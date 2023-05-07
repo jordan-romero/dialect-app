@@ -21,7 +21,6 @@ const PrelaunchGrid = () => {
         backgroundColor="white"
         areaProp="main"
       />
-      <PrelaunchGridItem backgroundColor="red" areaProp="background"/>
     </Grid>
   )
 }
