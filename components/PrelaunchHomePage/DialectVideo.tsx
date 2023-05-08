@@ -7,8 +7,6 @@ const DialectVideo = () => {
       maxW="900px"
       maxH="510px"
       ratio={1}
-      mr="auto"
-      ml="auto"
       mt={20}
       boxShadow="dark-lg"
     >

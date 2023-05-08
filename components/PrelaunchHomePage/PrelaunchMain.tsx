@@ -12,7 +12,7 @@ import DialectVideo from './DialectVideo'
 
 const PrelaunchMain = () => {
   return (
-    <Box pt={6}>
+    <Box>
       <DialectVideo />
     </Box>
   )

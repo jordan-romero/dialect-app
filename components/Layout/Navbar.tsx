@@ -6,7 +6,7 @@ import NavComponent from './NavComponent'
 const Navbar = () => {
   return (
     <Flex w="100%" h="14">
-      <HStack ml={4}>
+      <HStack ml={4} bg='brand.lightGreen' w='43vw'>
         <ArrowRightIcon boxSize={8} color="green.400" />
         <Heading>Acting Accents</Heading>
       </HStack>
