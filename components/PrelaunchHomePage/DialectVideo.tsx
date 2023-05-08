@@ -11,7 +11,7 @@ const DialectVideo = () => {
       boxShadow="dark-lg"
     >
       <iframe
-        title="dialect class teaser"
+        title="acting actors teaser"
         src="https://player.vimeo.com/video/292519785?h=87b41e7120"
         allowFullScreen
       />

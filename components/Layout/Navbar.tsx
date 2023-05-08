@@ -6,12 +6,12 @@ import NavComponent from './NavComponent'
 const Navbar = () => {
   return (
     <Flex w="100%" h="14">
-      <HStack ml={4} bg='brand.lightGreen' w='43vw'>
-        <ArrowRightIcon boxSize={8} color="green.400" />
+      <HStack ml={4}>
+        <ArrowRightIcon boxSize={8} color="brand.purple" />
         <Heading>Acting Accents</Heading>
       </HStack>
       <Spacer />
-      <HStack spacing="24px" mr={4}>
+      <HStack spacing="24px" mr={4} pr={8} justifyContent='end' bg="brand.lightGreen" w="40vw">
         <NavComponent navText="Home" />
         <NavComponent navText="About" />
         <NavComponent navText="Testimonials" />
