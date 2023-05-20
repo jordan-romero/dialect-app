@@ -1,5 +1,6 @@
 import { extendTheme, theme as base } from '@chakra-ui/react'
 
+
 const theme = extendTheme({
   colors: {
     brand: {
@@ -11,9 +12,28 @@ const theme = extendTheme({
     },
   },
   fonts: {
-    heading: `Poppins, ${base.fonts?.heading}`,
-    body: `Lato, ${base.fonts?.body}`,
+    heading: `Arimo, ${base.fonts?.heading}`,
+    body: `Arimo, ${base.fonts?.heading}`,
+    longBody: `Charis SIL,, serif`,
   },
-})
+  components: {
+    Button: {
+      variants: {
+        brandBold: {
+          bg: "brand.green",
+          color: "white",
+          _hover: {
+            bg: "brand.olive",
+          },
+          _active: {
+            bg: "brand.lightGreen",
+            color: "black",
+          },
+        },
+      },
+    },
+  },
+});
 
-export default theme
+export default theme;
+

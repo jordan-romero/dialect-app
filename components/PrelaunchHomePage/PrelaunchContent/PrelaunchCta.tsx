@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Input, Button, useToast } from '@chakra-ui/react';
+import { Box, Input, Button, useToast, Heading } from '@chakra-ui/react';
+import { EmailIcon } from '@chakra-ui/icons';
 
 const PrelaunchCta = () => {
   const toast = useToast();
@@ -60,7 +61,8 @@ const PrelaunchCta = () => {
   };
 
   return (
-    <Box as="form" onSubmit={handleSubmit}>
+    <Box as="form" onSubmit={handleSubmit} w='55%'>
+      <Heading fontSize="2xl" mb='7'>Sign up now for an Early Bird Discount!</Heading>
       <Input
         type="email"
         placeholder="Enter your email"
@@ -68,8 +70,13 @@ const PrelaunchCta = () => {
         onChange={(e) => setEmail(e.target.value)}
         mb={4}
         isRequired
+        borderRadius="md"
+        borderColor="brand.green"
+        _placeholder={{ color: "gray.400" }}
+        _focus={{ borderColor: "brand.olive", boxShadow: "outline" }}
+        _hover={{ bg: "gray.200" }}
       />
-      <Button type="submit" colorScheme="blue">
+      <Button leftIcon={<EmailIcon />} type="submit" variant='brandBold' mt='5'>
         Sign up now
       </Button>
     </Box>
