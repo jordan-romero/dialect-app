@@ -5,9 +5,9 @@ import PrelaunchFooter from './PrelaunchFooter'
 
 const PrelaunchHomePage = () => {
   return (
-    <Box>
+    <Box w='90vw' h='100vh'>
       <PrelaunchContent />
-      <Box bg='white'>
+      <Box>
         <PrelaunchFooter />
       </Box>
     </Box>

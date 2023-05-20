@@ -11,7 +11,7 @@ const Navbar = () => {
         <Heading>Acting Accents</Heading>
       </HStack>
       <Spacer />
-      <HStack spacing="24px" mr={4} pr={8} justifyContent='end' bg="brand.lightGreen" w="40vw">
+      <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
         <NavComponent navText="Home" />
         <NavComponent navText="About" />
         <NavComponent navText="Testimonials" />

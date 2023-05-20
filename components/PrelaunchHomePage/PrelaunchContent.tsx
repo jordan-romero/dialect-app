@@ -1,27 +1,36 @@
 import React from 'react'
 import DialectVideo from './DialectVideo'
 import PrelaunchCta from './PrelaunchCta'
-import { Flex, Box, Text, HStack } from '@chakra-ui/react'
+import { Flex, Box, Text, HStack, Spacer, Heading } from '@chakra-ui/react'
 
 const PrelaunchContent = () => {
+  const heroImg = '/actingAccentsHeroImg.png'
+  
   return (
-    <Box h='850px' mt='20'>
-      <Box
-        position="absolute"
-        top="55px"
-        right="113px"
-        bg="brand.lightGreen"
-        w="40vw"
-        h="90%"
-        zIndex="-1"
-      ></Box>
+    <Box
+      w="100%"
+      h="100%"
+      style={{
+        backgroundImage: `url(${heroImg})`,
+        backgroundSize: 'cover',
+      }}
+    >
       <Flex>
-        <Box w="450px" alignContent="center">
+        <Box w="450px" pt="10" mt="" flexDirection="column" bg="red.100">
+          <Heading fontSize="2xl">
+            Welcome to the future home of ActingAccents.com!
+          </Heading>
+          <Text fontSize="lg">
+            This website will be a resource for learning various dialects and
+            accents for performance purposes. Whether you have a natural gift
+            for dialects, or you find the process intimidating, having a
+            systematic approach will help you to make more authentic dialect and
+            accent choices.
+          </Text>
           <PrelaunchCta />
         </Box>
         <Box w="65vw" pl="12" pb="10">
           <DialectVideo />
-          <Text>This is some fun  catchy text that will make a user want to click on videos and scroll some more</Text>
         </Box>
       </Flex>
     </Box>
