@@ -2,6 +2,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, HStack, IconButton, Menu, MenuItem, MenuButton, MenuList, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import useMobileCheck from '../hooks/useMobileCheck';
+import NavComponent from './NavComponent';
 
 const Navbar = () => {
   const isMobile = useMobileCheck();
