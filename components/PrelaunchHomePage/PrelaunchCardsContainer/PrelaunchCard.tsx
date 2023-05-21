@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardBody, CardHeader, Heading, Text, CardFooter, Button, Icon, Flex } from '@chakra-ui/react';
+import { Card, CardBody, CardHeader, Heading, Text, CardFooter, Button, Icon, Flex, Center } from '@chakra-ui/react';
 import { CardData } from '../types';
 import useMobileCheck from '../../hooks/useMobileCheck';
 
@@ -65,7 +65,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
       <CardBody p={isMobile ? "2" : "5"}>
         {renderBodyText()}
       </CardBody>
-      <CardFooter>
+      <CardFooter justifyContent={isMobile ? "center" : undefined}>
         <Button>{buttonText}</Button>
       </CardFooter>
     </Card>
