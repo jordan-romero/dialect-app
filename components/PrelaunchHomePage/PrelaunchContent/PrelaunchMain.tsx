@@ -33,7 +33,7 @@ const PrelaunchMain = () => {
 }
 const PrelaunchMainMobile = () => {
   return (
-    <Card maxW="sm" mx="auto" mt={9} p={6} boxShadow='lg'>
+    <Card maxW="sm" mx="auto" mt={1} p={6} boxShadow='lg'>
       <Heading fontSize="3xl" fontWeight="black" lineHeight="1.25" display="inline">
         Welcome to the future home of
         <Text color="brand.purple">ActingAccents.com!</Text>

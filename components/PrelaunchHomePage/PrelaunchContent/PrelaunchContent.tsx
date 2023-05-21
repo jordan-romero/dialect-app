@@ -10,7 +10,7 @@ const PrelaunchContent = () => {
 
   if (isMobile) {
     return (
-      <Flex direction="column" mt={4}>
+      <Flex direction="column" mt={2}>
         <PrelaunchContentMobile />
       </Flex>
     );
