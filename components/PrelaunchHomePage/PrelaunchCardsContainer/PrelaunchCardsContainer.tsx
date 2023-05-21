@@ -11,6 +11,7 @@ import { FaGraduationCap } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
 import { CardData } from '../types';
+import useMobileCheck from '../../hooks/useMobileCheck';
 
 
 const PrelaunchCardsContainer = () => {
@@ -36,18 +37,27 @@ const PrelaunchCardsContainer = () => {
     // Add more card data objects as needed
   ];
 
-  return (
-    <Box pt='35' textAlign='center'>
-      <Heading fontSize='5xl'>Why use ActingAccents.com?</Heading>
-    <Box pt='40' textAlign='left'>
-    <SimpleGrid spacing={4} templateColumns="repeat(3, minmax(200px, 1fr))" ml='10' mr='10'>
-      {cardsData.map((cardData, index) => (
-        <PrelaunchCard key={index} data={cardData} />
-      ))}
-    </SimpleGrid>
+  const isMobile = useMobileCheck();
+
+return (
+  <Box pt={isMobile ? '1' : '35'} textAlign='center'>
+    <Heading fontSize={isMobile ? '3xl' : '5xl'}>Why use ActingAccents.com?</Heading>
+    <Box pt={isMobile ? '1' : '40'} textAlign={isMobile ? 'center' : 'left'}>
+      {isMobile ? (
+        cardsData.map((cardData, index) => (
+          <PrelaunchCard key={index} data={cardData} />
+        ))
+      ) : (
+        <SimpleGrid spacing={4} templateColumns="repeat(3, minmax(200px, 1fr))" ml='10' mr='10'>
+          {cardsData.map((cardData, index) => (
+            <PrelaunchCard key={index} data={cardData} />
+          ))}
+        </SimpleGrid>
+      )}
     </Box>
-    </Box>
-  );
+  </Box>
+);
+
 };
 
 
