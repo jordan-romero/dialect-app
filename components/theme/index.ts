@@ -30,16 +30,17 @@ const theme = extendTheme({
             color: "black",
           },
         },
-        brandPurple: {
-          bg: "brand.purple",
-          color: "white",
+        brandWhite: {
+          bg: "white",
+          color: "brand.olive",
           _hover: {
-            bg: "brand.pink",
+            bg: "brand.green",
+            color: 'white'
           },
-          // _active: {
-          //   bg: "brand.lightGreen",
-          //   color: "black",
-          // },
+          _active: {
+            bg: "brand.lightGreen",
+            color: "black",
+          },
         },
       },
     },

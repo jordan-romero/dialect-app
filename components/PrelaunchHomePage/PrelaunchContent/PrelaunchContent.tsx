@@ -1,14 +1,21 @@
 import React from 'react'
 import DialectVideo from './DialectVideo'
 import PrelaunchCta from './PrelaunchCta'
-import { Flex, Spacer } from '@chakra-ui/react'
+import { Flex, Spacer, useBreakpointValue } from '@chakra-ui/react'
 import PrelaunchMain from './PrelaunchMain'
+import useMobileCheck from '../../hooks/useMobileCheck'
 
 const PrelaunchContent = () => {
+  const isMobile = useMobileCheck()
 
-  
+  if (isMobile) {
+    return (
+      <Flex direction="column" mt={4}>
+        <PrelaunchContentMobile />
+      </Flex>
+    );
+  }
   return (
-    
       <Flex direction='row'>
         <Flex direction='column' mt='40'>
           <PrelaunchMain />
@@ -19,8 +26,16 @@ const PrelaunchContent = () => {
           <DialectVideo />
         </Flex>
       </Flex>
-
   )
 }
+const PrelaunchContentMobile = () => {
+  return (
+    <Flex w='100%' h='1300px' pb="10" direction='column'>
+      <DialectVideo />
+      <PrelaunchMain /> 
+      <PrelaunchCta />
+    </Flex>
+  )
+};
 
 export default PrelaunchContent
