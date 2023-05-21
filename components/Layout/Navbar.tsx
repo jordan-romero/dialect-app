@@ -3,6 +3,7 @@ import { Box, Flex, Heading, HStack, IconButton, Menu, MenuItem, MenuButton, Men
 import React, { useState } from 'react';
 import useMobileCheck from '../hooks/useMobileCheck';
 import NavComponent from './NavComponent';
+import router from 'next/router';
 
 const Navbar = () => {
   const isMobile = useMobileCheck();
@@ -46,7 +47,7 @@ const MobileNavbar = () => {
         <MenuList>
           <VStack p="4" spacing="4">
             {menuItems.map((item, index) => (
-              <MenuItem key={index} onClick={() => window.location.href = `/${item}`} textTransform="capitalize">
+              <MenuItem key={index} onClick={() => router.push(item === 'home' ? '/' : `/${item}`)} textTransform="capitalize">
                 {item}
               </MenuItem>
             ))}
