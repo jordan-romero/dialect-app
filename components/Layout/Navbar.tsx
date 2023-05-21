@@ -35,7 +35,7 @@ const Navbar = () => {
 
 const MobileNavbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [menuItems, setMenuItems] = useState(['Home', 'About', 'Services', 'Contact']);
+  const [menuItems, setMenuItems] = useState(['Home', 'About', 'Testimonials', 'Contact']);
 
   return (
     <Box>
@@ -52,11 +52,11 @@ const MobileNavbar = () => {
           <DrawerCloseButton />
           <DrawerBody>
             <VStack p="4" spacing="4">
-              {menuItems.map((item, index) => (
-                <Box key={index} onClick={onClose}>
-                  {item}
-                </Box>
-              ))}
+            {menuItems.map((item, index) => (
+              <Box key={index} onClick={onClose} as="a" href={`/${item}`}>
+                {item}
+              </Box>
+            ))}
             </VStack>
           </DrawerBody>
         </DrawerContent>
