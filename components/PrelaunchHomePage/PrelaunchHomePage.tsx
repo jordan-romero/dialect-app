@@ -19,7 +19,7 @@ const PrelaunchHomePage = () => {
         }}>
           <PrelaunchContent />
       </Box>
-      <Box w='90vw' h={isMobile ? '1160px' : '925px'} 
+      <Box w='90vw' h={isMobile ? '1100px' : '925px'} 
       style={isMobile ? undefined: {
         backgroundImage: `url(${cardImg})`,
         backgroundSize: 'cover',
