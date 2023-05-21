@@ -35,7 +35,7 @@ const Navbar = () => {
 
 const MobileNavbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [menuItems, setMenuItems] = useState(['Home', 'About', 'Testimonials', 'Contact']);
+  const [menuItems, setMenuItems] = useState(['home', 'about', 'testimonials', 'contact']);
 
   return (
     <Box>
@@ -46,7 +46,7 @@ const MobileNavbar = () => {
         onClick={onOpen}
       />
 
-      <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
