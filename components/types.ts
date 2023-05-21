@@ -6,3 +6,11 @@ export type CardData = {
   body: string;
   buttonText: string;
 };
+
+export type Coach = {
+  name: string;
+  title: string;
+  bio: string;
+  photoSrc: string;
+  website: string;
+}

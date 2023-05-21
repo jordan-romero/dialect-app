@@ -10,7 +10,7 @@ import PrelaunchCard from './PrelaunchCard'
 import { FaGraduationCap } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
-import { CardData } from '../types';
+import { CardData } from '../../types';
 import useMobileCheck from '../../hooks/useMobileCheck';
 
 
