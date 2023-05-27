@@ -13,29 +13,29 @@ const PrelaunchContent = () => {
       <Flex direction="column" mt={2}>
         <PrelaunchContentMobile />
       </Flex>
-    );
+    )
   }
   return (
-      <Flex direction='row'>
-        <Flex direction='column' mt='40'>
-          <PrelaunchMain />
-          <PrelaunchCta />
-        </Flex>
-        <Spacer />
-        <Flex justifyContent="flex-end" w="100%" h="auto" pb="10" pt='10' mt="20">
-          <DialectVideo />
-        </Flex>
+    <Flex direction="row">
+      <Flex direction="column" mt="40">
+        <PrelaunchMain />
+        <PrelaunchCta />
       </Flex>
+      <Spacer />
+      <Flex justifyContent="flex-end" w="100%" h="auto" pb="10" pt="10" mt="20">
+        <DialectVideo />
+      </Flex>
+    </Flex>
   )
 }
 const PrelaunchContentMobile = () => {
   return (
-    <Flex w='100%' h='1300px' pb="10" direction='column'>
+    <Flex w="100%" h="1300px" pb="10" direction="column">
       <DialectVideo />
-      <PrelaunchMain /> 
+      <PrelaunchMain />
       <PrelaunchCta />
     </Flex>
   )
-};
+}
 
 export default PrelaunchContent

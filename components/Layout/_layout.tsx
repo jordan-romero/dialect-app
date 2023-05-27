@@ -12,7 +12,13 @@ interface Props {
 const Layout = ({ children }: Props) => {
   const isMobile = useMobileCheck()
   return (
-    <Box w={isMobile ? "90vw" : "95vw"} maxW="1500px" h="auto" mr="auto" ml="auto">
+    <Box
+      w={isMobile ? '90vw' : '95vw'}
+      maxW="1500px"
+      h="auto"
+      mr="auto"
+      ml="auto"
+    >
       <Navbar />
       {children}
       <Footer />

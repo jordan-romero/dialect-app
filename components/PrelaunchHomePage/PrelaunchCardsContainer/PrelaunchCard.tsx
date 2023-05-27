@@ -1,21 +1,32 @@
-import { useState } from 'react';
-import { Card, CardBody, CardHeader, Heading, Text, CardFooter, Button, Icon, Flex, Center } from '@chakra-ui/react';
-import { CardData } from '../../types';
-import useMobileCheck from '../../hooks/useMobileCheck';
+import { useState } from 'react'
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Text,
+  CardFooter,
+  Button,
+  Icon,
+  Flex,
+  Center,
+} from '@chakra-ui/react'
+import { CardData } from '../../types'
+import useMobileCheck from '../../hooks/useMobileCheck'
 
 interface PrelaunchCardProps {
-  data: CardData;
+  data: CardData
 }
 
 const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
-  const { header, body, buttonText, icon } = data;
-  const isMobile = useMobileCheck();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const MAX_MOBILE_BODY_LENGTH = 115; 
+  const { header, body, buttonText, icon } = data
+  const isMobile = useMobileCheck()
+  const [isExpanded, setIsExpanded] = useState(false)
+  const MAX_MOBILE_BODY_LENGTH = 115
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
+    setIsExpanded(!isExpanded)
+  }
 
   const renderBodyText = () => {
     if (isMobile && body.length > MAX_MOBILE_BODY_LENGTH) {
@@ -26,7 +37,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
           </Text>
           <Text
             color="brand.green"
-            fontSize='lg'
+            fontSize="lg"
             fontWeight="bold"
             cursor="pointer"
             onClick={toggleExpand}
@@ -35,24 +46,24 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
             {isExpanded ? 'Read less' : 'Read more'}
           </Text>
         </>
-      );
+      )
     } else {
-      return <Text>{body}</Text>;
+      return <Text>{body}</Text>
     }
-  };
+  }
 
   return (
     <Card
-      w={isMobile ? "100%" : "400px"}
-      mt={isMobile ? "4" : undefined}
+      w={isMobile ? '100%' : '400px'}
+      mt={isMobile ? '4' : undefined}
       bg="white"
       borderRadius="md"
       boxShadow="lg"
       transition="box-shadow 0.2s"
       _hover={{
-        boxShadow: "dark-lg",
+        boxShadow: 'dark-lg',
       }}
-      p={isMobile ? "5" : undefined}
+      p={isMobile ? '5' : undefined}
     >
       <CardHeader bg="brand.lightGreen" borderRadius="md">
         <Flex align="center">
@@ -62,14 +73,12 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
           </Heading>
         </Flex>
       </CardHeader>
-      <CardBody p={isMobile ? "2" : "5"}>
-        {renderBodyText()}
-      </CardBody>
-      <CardFooter justifyContent={isMobile ? "center" : undefined}>
+      <CardBody p={isMobile ? '2' : '5'}>{renderBodyText()}</CardBody>
+      <CardFooter justifyContent={isMobile ? 'center' : undefined}>
         <Button>{buttonText}</Button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}
 
-export default PrelaunchCard;
+export default PrelaunchCard

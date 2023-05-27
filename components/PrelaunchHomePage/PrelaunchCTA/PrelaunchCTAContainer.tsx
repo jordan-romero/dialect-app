@@ -27,7 +27,7 @@ const PrelaunchCTAContainer = () => {
       <PrelaunchPersonas />
       <PrelaunchCtaFooter />
     </HStack>
-  );
+  )
 }
 
 export default PrelaunchCTAContainer

@@ -1,15 +1,26 @@
-import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Flex, Heading, HStack, IconButton, Menu, MenuItem, MenuButton, MenuList, VStack } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import useMobileCheck from '../hooks/useMobileCheck';
-import NavComponent from './NavComponent';
-import router from 'next/router';
+import { HamburgerIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Flex,
+  Heading,
+  HStack,
+  IconButton,
+  Menu,
+  MenuItem,
+  MenuButton,
+  MenuList,
+  VStack,
+} from '@chakra-ui/react'
+import React, { useState } from 'react'
+import useMobileCheck from '../hooks/useMobileCheck'
+import NavComponent from './NavComponent'
+import router from 'next/router'
 
 const Navbar = () => {
-  const isMobile = useMobileCheck();
+  const isMobile = useMobileCheck()
 
   if (isMobile) {
-    return <MobileNavbar />;
+    return <MobileNavbar />
   }
 
   return (
@@ -28,11 +39,16 @@ const Navbar = () => {
         </HStack>
       </HStack>
     </Flex>
-  );
-};
+  )
+}
 
 const MobileNavbar = () => {
-  const [menuItems, setMenuItems] = useState(['home', 'about', 'testimonials', 'contact']);
+  const [menuItems, setMenuItems] = useState([
+    'home',
+    'about',
+    'testimonials',
+    'contact',
+  ])
 
   return (
     <Box>
@@ -47,7 +63,11 @@ const MobileNavbar = () => {
         <MenuList>
           <VStack p="4" spacing="4">
             {menuItems.map((item, index) => (
-              <MenuItem key={index} onClick={() => router.push(item === 'home' ? '/' : `/${item}`)} textTransform="capitalize">
+              <MenuItem
+                key={index}
+                onClick={() => router.push(item === 'home' ? '/' : `/${item}`)}
+                textTransform="capitalize"
+              >
                 {item}
               </MenuItem>
             ))}
@@ -55,13 +75,7 @@ const MobileNavbar = () => {
         </MenuList>
       </Menu>
     </Box>
-  );
-};
+  )
+}
 
-export default Navbar;
-
-
-
-
-
-
+export default Navbar

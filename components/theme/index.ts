@@ -1,6 +1,5 @@
 import { extendTheme, theme as base } from '@chakra-ui/react'
 
-
 const theme = extendTheme({
   colors: {
     brand: {
@@ -20,32 +19,31 @@ const theme = extendTheme({
     Button: {
       variants: {
         brandBold: {
-          bg: "brand.green",
-          color: "white",
+          bg: 'brand.green',
+          color: 'white',
           _hover: {
-            bg: "brand.olive",
+            bg: 'brand.olive',
           },
           _active: {
-            bg: "brand.lightGreen",
-            color: "black",
+            bg: 'brand.lightGreen',
+            color: 'black',
           },
         },
         brandWhite: {
-          bg: "white",
-          color: "brand.olive",
+          bg: 'white',
+          color: 'brand.olive',
           _hover: {
-            bg: "brand.green",
-            color: 'white'
+            bg: 'brand.green',
+            color: 'white',
           },
           _active: {
-            bg: "brand.lightGreen",
-            color: "black",
+            bg: 'brand.lightGreen',
+            color: 'black',
           },
         },
       },
     },
   },
-});
+})
 
-export default theme;
-
+export default theme
