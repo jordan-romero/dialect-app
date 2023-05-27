@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Input, Button, useToast, Heading, Flex } from '@chakra-ui/react'
+import { Box, Input, Button, useToast, Heading } from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
 import useMobileCheck from '../../hooks/useMobileCheck'
 

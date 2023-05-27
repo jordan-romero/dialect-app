@@ -9,6 +9,13 @@ const theme = extendTheme({
       lightGreen: '#f1f5ef',
       olive: '#5f6b36',
     },
+    util: {
+      white: '#ffffff',
+      black: '#000000',
+      gray: '#f5f5f5',
+      darkGray: '#333333',
+      mediumGray: '#999999',
+    },
   },
   fonts: {
     heading: `Arimo, ${base.fonts?.heading}`,

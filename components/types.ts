@@ -14,4 +14,5 @@ export type Coach = {
   longBio: string
   photoSrc: string
   website: string
+  websiteSecondary?: string
 }
