@@ -30,7 +30,7 @@ const AboutPageContainer = () => {
 
   return (
     <>
-      <Heading fontSize="5xl">Meet Your Coaches</Heading>
+      <Heading fontSize="5xl">Meet Your Coaches! Test Test</Heading>
       <Flex
         h="900px"
         justify="space-between"
