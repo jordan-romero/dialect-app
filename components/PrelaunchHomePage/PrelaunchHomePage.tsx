@@ -13,7 +13,7 @@ const PrelaunchHomePage = () => {
   return (
     <>
       <Box
-        h={isMobile ? '1125px' : '925px'}
+        h={isMobile ? '1125px' : '1125px'}
         style={
           isMobile
             ? undefined
