@@ -15,4 +15,5 @@ export type Coach = {
   photoSrc: string
   website: string
   websiteSecondary?: string
+  icons: IconType[]
 }

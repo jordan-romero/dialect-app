@@ -1,6 +1,6 @@
 import React from 'react'
 import AboutCard from './AboutCard'
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading, Box } from '@chakra-ui/react'
 import useMobileCheck from '../hooks/useMobileCheck'
 import { coaches } from './utils'
 
@@ -9,8 +9,10 @@ const AboutPageContainer = () => {
   const aboutPageHeroImg = '/aboutPageHero.png'
 
   return (
-    <>
-      <Heading fontSize="5xl">Meet Your Coaches</Heading>
+    <Box mt="10">
+      <Heading fontSize="5xl" textAlign="center" mt="15">
+        Meet Your Coaches
+      </Heading>
       <Flex
         h="900px"
         justify="space-between"
@@ -28,7 +30,7 @@ const AboutPageContainer = () => {
           <AboutCard key={index} {...coach} />
         ))}
       </Flex>
-    </>
+    </Box>
   )
 }
 

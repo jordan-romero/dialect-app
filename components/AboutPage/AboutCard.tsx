@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   Card,
   CardBody,
+  CardFooter,
   Heading,
   Text,
   Link,
@@ -15,9 +16,8 @@ import {
   ModalCloseButton,
   Flex,
   Box,
+  Icon,
 } from '@chakra-ui/react'
-// Will need to add social icons section
-// import { SiTiktok } from 'react-icons/fa'
 import React from 'react'
 import { Coach } from '../types'
 import { removeProtocol } from './utils'
@@ -33,6 +33,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
   photoSrc,
   website,
   websiteSecondary,
+  icons,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -57,6 +58,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             objectFit="cover"
             h="100%"
             flexBasis="50%"
+            borderTopLeftRadius={10}
           />
           <Flex
             direction="column"
@@ -65,6 +67,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             basis="50%"
             p={3}
             justifyContent="space-between"
+            borderTopRightRadius={10}
           >
             <Box>
               <Heading
@@ -101,15 +104,34 @@ const AboutCard: React.FC<AboutCardProps> = ({
                   {removeProtocol(websiteSecondary)}
                 </Link>
               )}
+              <Flex justifyContent="flex-end">
+                {icons.map((icon, index) => (
+                  <Icon
+                    as={icon}
+                    color="gray.300"
+                    fontSize="xl"
+                    mr={4}
+                    key={index}
+                  />
+                ))}
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
-        <CardBody>
-          <Text mb={4}>{bio}</Text>
-          <Button colorScheme="blue" onClick={handleModal}>
-            Learn more about {name}
-          </Button>
+        <CardBody h="500px">
+          <Text fontSize="lg" m={6}>
+            {bio}
+          </Text>
         </CardBody>
+        <CardFooter
+          style={{ borderTopColor: 'lightgray' }}
+          borderTop="1px"
+          onClick={handleModal}
+        >
+          <Button w="100%" variant="brandGhost">
+            Learn More About {name}
+          </Button>
+        </CardFooter>
       </Card>
 
       <Modal isOpen={isOpen} onClose={handleModal}>

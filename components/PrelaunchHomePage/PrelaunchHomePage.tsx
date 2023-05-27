@@ -2,7 +2,6 @@ import { Box } from '@chakra-ui/react'
 import React from 'react'
 import PrelaunchContent from './PrelaunchContent/PrelaunchContent'
 import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsContainer'
-import PrelaunchCTAContainer from './PrelaunchCTA/PrelaunchCTAContainer'
 import useMobileCheck from '../hooks/useMobileCheck'
 import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas'
 

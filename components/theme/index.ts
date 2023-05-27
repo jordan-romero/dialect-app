@@ -48,6 +48,18 @@ const theme = extendTheme({
             color: 'black',
           },
         },
+        brandGhost: {
+          bg: 'util.lightGray',
+          color: 'brand.purple',
+          _hover: {
+            bg: 'brand.purple',
+            color: 'util.white',
+          },
+          _active: {
+            bg: 'brand.lightGreen',
+            color: 'black',
+          },
+        },
       },
     },
   },
