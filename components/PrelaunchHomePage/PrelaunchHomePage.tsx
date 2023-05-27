@@ -4,6 +4,7 @@ import PrelaunchContent from './PrelaunchContent/PrelaunchContent'
 import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsContainer'
 import PrelaunchCTAContainer from './PrelaunchCTA/PrelaunchCTAContainer'
 import useMobileCheck from '../hooks/useMobileCheck'
+import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas'
 
 const PrelaunchHomePage = () => {
   const heroImg = '/actingAccentsHeroImg.png'
@@ -38,6 +39,7 @@ const PrelaunchHomePage = () => {
       >
         <PrelaunchCardsContainer />
       </Box>
+      {isMobile ? <PrelaunchPersonas /> : null}
     </>
   )
 }
