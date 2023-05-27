@@ -30,5 +30,5 @@ jobs:
 
       - name: Build
         run: |
-          npm install
+          yarn add -D webpack-cli
           npx webpack
