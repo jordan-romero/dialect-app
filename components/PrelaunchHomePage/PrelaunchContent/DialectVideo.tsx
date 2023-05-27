@@ -12,7 +12,7 @@ const DialectVideo = () => {
       mt={isMobile ? 10 : 20}
       boxShadow={boxShadow}
       w="100%"
-      h="auto"
+      // h="auto"
     >
       <AspectRatio ratio={16 / 9}>
         <iframe

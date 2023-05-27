@@ -17,12 +17,19 @@ const PrelaunchContent = () => {
   }
   return (
     <Flex direction="row">
-      <Flex direction="column" mt="40">
+      <Flex direction="column" mt="20">
         <PrelaunchMain />
         <PrelaunchCta />
       </Flex>
       <Spacer />
-      <Flex justifyContent="flex-end" w="100%" h="auto" pb="10" pt="10" mt="20">
+      <Flex
+        justifyContent="flex-end"
+        w="100%"
+        h="500px"
+        pb="10"
+        pt="15"
+        mt="20"
+      >
         <DialectVideo />
       </Flex>
     </Flex>

@@ -1,7 +1,7 @@
 import { HStack, Spacer, VStack } from '@chakra-ui/react'
 import React from 'react'
 import PrelaunchCtaFooter from './PrelaunchCtaFooter'
-import PrelaunchPersonas from './PrelaunchPersonas'
+import PrelaunchPersonas from '../PrelaunchContent/PrelaunchPersonas'
 import useMobileCheck from '../../hooks/useMobileCheck'
 
 const PrelaunchCTAContainer = () => {
