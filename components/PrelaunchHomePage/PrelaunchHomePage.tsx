@@ -13,7 +13,6 @@ const PrelaunchHomePage = () => {
   return (
     <>
       <Box
-        w="90vw"
         h={isMobile ? '1125px' : '925px'}
         style={
           isMobile
@@ -27,7 +26,6 @@ const PrelaunchHomePage = () => {
         <PrelaunchContent />
       </Box>
       <Box
-        w="90vw"
         h={isMobile ? '1100px' : '925px'}
         style={
           isMobile
@@ -39,9 +37,6 @@ const PrelaunchHomePage = () => {
         }
       >
         <PrelaunchCardsContainer />
-      </Box>
-      <Box w="90vw" h="925px">
-        <PrelaunchCTAContainer />
       </Box>
     </>
   )
