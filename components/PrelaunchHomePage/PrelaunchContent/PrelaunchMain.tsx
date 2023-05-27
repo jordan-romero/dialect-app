@@ -24,31 +24,33 @@ const PrelaunchMain = () => {
     )
   }
   return (
-    <Flex w="575px" h="675px" flexDirection="column">
+    <Flex w="575px" h="590px" flexDirection="column">
       <Heading fontSize="4xl" fontWeight="black" lineHeight="1.25">
         Welcome to the future home of{' '}
-        <Text color="brand.purple">ActingAccents.com!</Text>
+        <Text color="brand.purple" fontSize="5xl">
+          ActingAccents.com!
+        </Text>
       </Heading>
-      <Text fontSize="md" mt="7" w="85%">
+      <Text fontSize="md" mt="5" w="85%">
         This website will be a resource for learning various dialects and
         accents for performance purposes. Whether you have a natural gift for
         dialects, or you find the process intimidating, having a systematic
         approach will help you to make more authentic dialect and accent
         choices.
       </Text>
-      <Box>
-        <Heading fontSize="xl">
+      <Box pt={2}>
+        <Text fontSize="md" fontWeight="bold">
           Who Would Benefit From ActingAccents.com Courses?
-        </Heading>
+        </Text>
         <SimpleGrid columns={2}>
           {personas.map((persona, index) => (
-            <UnorderedList key={index} pt={5} fontWeight="bold">
+            <UnorderedList key={index} pt={3}>
               <ListItem>{persona}</ListItem>
             </UnorderedList>
           ))}
         </SimpleGrid>
       </Box>
-      <Text fontSize="lg" fontWeight="extrabold" mt="5" w="85%">
+      <Text fontSize="xl" fontWeight="extrabold" mt="5" w="85%">
         Ultimately, this course will teach you to teach yourself any dialect or
         accent you desire.
       </Text>
