@@ -21,7 +21,6 @@ import {
 import React from 'react'
 import { Coach } from '../types'
 import { removeProtocol } from './utils'
-import { FaIcons } from 'react-icons/fa'
 
 interface AboutCardProps extends Coach {}
 
@@ -139,9 +138,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
         <ModalContent>
           <ModalHeader>{name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <Text>{longBio}</Text>
-          </ModalBody>
+          <ModalBody p="8">{longBio}</ModalBody>
         </ModalContent>
       </Modal>
     </>

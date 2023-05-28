@@ -9,23 +9,21 @@ const AboutPageContainer = () => {
   const aboutPageHeroImg = '/aboutPageHero.png'
 
   return (
-    <Box mt="10">
+    <Box
+      mt="10"
+      style={
+        isMobile
+          ? undefined
+          : {
+              backgroundImage: `url(${aboutPageHeroImg})`,
+              backgroundSize: 'cover',
+            }
+      }
+    >
       <Heading fontSize="5xl" textAlign="center" mt="15">
         Meet Your Coaches
       </Heading>
-      <Flex
-        h="900px"
-        justify="space-between"
-        alignItems="center"
-        style={
-          isMobile
-            ? undefined
-            : {
-                backgroundImage: `url(${aboutPageHeroImg})`,
-                backgroundSize: 'cover',
-              }
-        }
-      >
+      <Flex h="900px" justify="space-between" alignItems="center">
         {coaches.map((coach, index) => (
           <AboutCard key={index} {...coach} />
         ))}
