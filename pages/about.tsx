@@ -1,7 +1,8 @@
 import React from 'react'
+import AboutPageContainer from '../components/AboutPage/AboutPageContainer'
 
 const About = () => {
-  return <div>About Damn Time</div>
+  return <AboutPageContainer />
 }
 
 export default About
