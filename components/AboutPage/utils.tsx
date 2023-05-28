@@ -60,7 +60,7 @@ export const coaches: Coach[] = [
           <strong>
             solid foundation in a phonetic-kinesthetic study of speech
           </strong>{' '}
-          is necessary to train "multi-phonological" actors fluent in IPA usage
+          is necessary to train `multi-phonological` actors fluent in IPA usage
           for clarity in classic and contemporary performances and for
           authenticity in all dialects and accents in all media platforms. The
           athletic event of acting demands a command of language beyond worldly
