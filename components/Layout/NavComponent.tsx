@@ -11,8 +11,14 @@ const NavComponent = ({ navText }: Props) => {
   const formattedNavText = navText.toLowerCase()
 
   return (
-    <Center w="auto" h="10" p={2} borderRadius="md" _hover={{ bg: 'blue.300' }}>
-      <Text fontSize="xl" as="b" color="black" _hover={{ color: 'white' }}>
+    <Center
+      w="auto"
+      h="10"
+      p={2}
+      borderRadius="md"
+      _hover={{ bg: 'brand.lightGreen' }}
+    >
+      <Text fontSize="xl" as="b" color="black" _hover={{ color: 'brand.pink' }}>
         <Link href={navText === 'Home' ? '/' : `/${formattedNavText}`}>
           {navText}
         </Link>

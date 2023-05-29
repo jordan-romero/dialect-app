@@ -1,7 +1,8 @@
 import React from 'react'
+import AboutPageContainer from '../components/AboutPage/AboutPageContainer'
 
 const About = () => {
-  return <div>About TEST Commit changes</div>
+  return <AboutPageContainer />
 }
 
 export default About
