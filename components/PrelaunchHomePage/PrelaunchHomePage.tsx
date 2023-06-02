@@ -6,8 +6,8 @@ import useMobileCheck from '../hooks/useMobileCheck'
 import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas/PrelaunchPersonas'
 
 const PrelaunchHomePage = () => {
-  const heroImg = '/actingAccentsHeroImg.png'
-  const cardImg = '/cardBackground.png'
+  const heroImg = '/heroBgImage.svg'
+  const cardImg = '/cardBgImg.svg'
   const isMobile = useMobileCheck()
 
   return (

@@ -78,9 +78,9 @@ const PrelaunchCta = () => {
             mb={4}
             isRequired
             borderRadius="md"
-            borderColor="brand.green"
+            borderColor="brand.purple"
             _placeholder={{ color: 'gray.400' }}
-            _focus={{ borderColor: 'brand.olive', boxShadow: 'outline' }}
+            _focus={{ borderColor: 'brand.iris', boxShadow: 'outline' }}
             _hover={{ bg: 'gray.200' }}
           />
           <Button
@@ -119,7 +119,7 @@ const PrelaunchCta = () => {
             borderRadius="md"
             borderColor="white"
             _placeholder={{ color: 'black' }}
-            _focus={{ borderColor: 'brand.olive', boxShadow: 'outline' }}
+            _focus={{ borderColor: 'brand.iris', boxShadow: 'outline' }}
             _hover={{ bg: 'gray.200' }}
           />
           <Button

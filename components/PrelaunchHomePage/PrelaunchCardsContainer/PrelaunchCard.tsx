@@ -35,7 +35,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
             {isExpanded ? body : `${body.slice(0, MAX_MOBILE_BODY_LENGTH)}...`}
           </Text>
           <Text
-            color="brand.green"
+            color="brand.purple"
             fontSize="lg"
             fontWeight="bold"
             cursor="pointer"
@@ -64,9 +64,9 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
       }}
       p={isMobile ? '5' : undefined}
     >
-      <CardHeader bg="brand.lightGreen" borderRadius="md">
+      <CardHeader bg="util.gray" borderRadius="md">
         <Flex align="center">
-          <Icon as={icon} boxSize={8} mr={4} color="brand.green" />
+          <Icon as={icon} boxSize={8} mr={4} color="brand.purple" />
           <Heading size="lg" display="inline-block">
             {header}
           </Heading>
@@ -74,7 +74,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
       </CardHeader>
       <CardBody p={isMobile ? '2' : '5'}>{renderBodyText()}</CardBody>
       <CardFooter justifyContent={isMobile ? 'center' : undefined}>
-        <Button>{buttonText}</Button>
+        <Button variant="brandWhite">{buttonText}</Button>
       </CardFooter>
     </Card>
   )

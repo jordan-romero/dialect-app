@@ -3,7 +3,7 @@ import React from 'react'
 import { personasMobile } from './utils'
 
 const PrelaunchPersonas = () => {
-  const footerHeroMobile = '/footerHeroMobile.png'
+  const footerHeroMobile = '/footerHeroMobile.svg'
 
   return (
     <Box p={4} borderRadius={6}>

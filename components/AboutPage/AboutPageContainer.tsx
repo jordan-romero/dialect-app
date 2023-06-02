@@ -6,7 +6,7 @@ import { coaches } from './utils'
 
 const AboutPageContainer = () => {
   const isMobile = useMobileCheck()
-  const aboutPageHeroImg = '/aboutPageHero.png'
+  const aboutPageHeroImg = '/aboutPageHero.svg'
 
   return (
     <Box

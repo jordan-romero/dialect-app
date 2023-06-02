@@ -9,7 +9,7 @@ const DialectVideo = () => {
   return (
     <Box
       maxW="875px"
-      mt={isMobile ? 10 : 20}
+      mt={isMobile ? 10 : 28}
       boxShadow={boxShadow}
       w="100%"
       // h="auto"
