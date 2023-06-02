@@ -9,9 +9,8 @@ import {
   Button,
   Icon,
   Flex,
-  Center,
 } from '@chakra-ui/react'
-import { CardData } from '../../types'
+import { CardData } from '../types'
 import useMobileCheck from '../../hooks/useMobileCheck'
 
 interface PrelaunchCardProps {

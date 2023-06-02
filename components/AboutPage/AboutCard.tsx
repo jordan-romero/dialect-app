@@ -2,20 +2,20 @@ import { useState } from 'react'
 import {
   Card,
   CardBody,
+  CardFooter,
   Heading,
   Text,
   Link,
   Button,
   Image,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
+  Flex,
+  Box,
+  Icon,
 } from '@chakra-ui/react'
 import React from 'react'
-import { Coach } from '../types'
+import { Coach } from '../PrelaunchHomePage/types'
+import { removeProtocol } from './utils'
+import AboutCardModal from './AboutCardModal'
 
 interface AboutCardProps extends Coach {}
 
@@ -26,6 +26,8 @@ const AboutCard: React.FC<AboutCardProps> = ({
   longBio,
   photoSrc,
   website,
+  websiteSecondary,
+  icons,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -35,43 +37,97 @@ const AboutCard: React.FC<AboutCardProps> = ({
 
   return (
     <>
-      <Card maxW="lg" h="600px" m="14" borderRadius="10" boxShadow="dark-lg">
-        <Image
-          borderRadius="10px 10px 0 0"
-          src={photoSrc}
-          alt={name}
-          objectFit="cover"
-          h="300px"
-        />
-        <CardBody>
-          <Heading as="h3" size="md" mb={2}>
-            {name}
-          </Heading>
-          <Text color="gray.500" fontSize="sm" mb={2}>
-            {title}
+      <Card
+        maxW="xl"
+        h="600px"
+        w="100%"
+        m="14"
+        borderRadius="10"
+        boxShadow="dark-lg"
+      >
+        <Flex h="45%" justifyContent="space-between">
+          <Image
+            src={photoSrc}
+            alt={name}
+            objectFit="cover"
+            h="100%"
+            flexBasis="50%"
+            borderTopLeftRadius={10}
+          />
+          <Flex
+            direction="column"
+            textAlign="end"
+            bg="brand.purple"
+            basis="50%"
+            p={3}
+            justifyContent="space-between"
+            borderTopRightRadius={10}
+          >
+            <Box>
+              <Heading
+                size="lg"
+                fontWeight="extrabold"
+                mr={4}
+                color="util.white"
+              >
+                {name}
+              </Heading>
+              <Text color="gray.300" fontSize="sm" mb={3} mr={4}>
+                {title}
+              </Text>
+            </Box>
+            <Flex direction="column">
+              <Link
+                href={website}
+                isExternal
+                color="gray.300"
+                fontSize="sm"
+                mr={4}
+              >
+                {removeProtocol(website)}
+              </Link>
+              {websiteSecondary && (
+                <Link
+                  href={websiteSecondary}
+                  isExternal
+                  color="gray.300"
+                  fontSize="sm"
+                  mb={3}
+                  mr={4}
+                >
+                  {removeProtocol(websiteSecondary)}
+                </Link>
+              )}
+              <Flex justifyContent="flex-end">
+                {icons.map((icon, index) => (
+                  <Icon
+                    as={icon}
+                    color="gray.300"
+                    fontSize="xl"
+                    mr={4}
+                    key={index}
+                  />
+                ))}
+              </Flex>
+            </Flex>
+          </Flex>
+        </Flex>
+        <CardBody h="500px">
+          <Text fontSize="lg" m={6}>
+            {bio}
           </Text>
-          <Text mb={4}>{bio}</Text>
-          <Button colorScheme="blue" onClick={handleModal}>
-            Learn more about {name}
-          </Button>
-          <Link href={website} isExternal>
-            <Button colorScheme="blue" ml={2}>
-              Visit Website
-            </Button>
-          </Link>
         </CardBody>
+        <CardFooter
+          style={{ borderTopColor: 'lightgray' }}
+          borderTop="1px"
+          onClick={handleModal}
+        >
+          <Button w="100%" variant="brandGhost">
+            Learn More About {name}
+          </Button>
+        </CardFooter>
       </Card>
-
-      <Modal isOpen={isOpen} onClose={handleModal}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{name}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>{longBio}</Text>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <AboutCardModal {...{ isOpen, handleModal, longBio, name }} />
     </>
   )
 }

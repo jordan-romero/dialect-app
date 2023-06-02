@@ -1,11 +1,4 @@
-import {
-  Box,
-  Card,
-  CardHeader,
-  Heading,
-  ListItem,
-  UnorderedList,
-} from '@chakra-ui/react'
+import { Box, Card, Heading, ListItem, UnorderedList } from '@chakra-ui/react'
 import React from 'react'
 import { personasMobile } from './utils'
 
