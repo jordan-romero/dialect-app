@@ -15,11 +15,9 @@ const DialectVideo = () => {
       // h="auto"
     >
       <AspectRatio ratio={16 / 9}>
-        <iframe
-          title="acting actors teaser"
-          src="https://player.vimeo.com/video/292519785?h=87b41e7120"
-          allowFullScreen
-        />
+        <video title="acting actors teaser" autoPlay muted controls>
+          <source src="/dialectVideoTeaser.mp4" type="video/mp4" />
+        </video>
       </AspectRatio>
     </Box>
   )
