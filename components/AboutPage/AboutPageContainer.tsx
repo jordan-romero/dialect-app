@@ -1,12 +1,20 @@
 import React from 'react'
 import AboutCard from './AboutCard'
-import { Flex, Heading, Box } from '@chakra-ui/react'
+import { Flex, Heading, Box, useBreakpointValue } from '@chakra-ui/react'
 import useMobileCheck from '../hooks/useMobileCheck'
 import { coaches } from './utils'
+import useMidSizeCheck from '../hooks/useMidSizeCheck'
 
 const AboutPageContainer = () => {
   const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
   const aboutPageHeroImg = '/aboutPageHero.svg'
+
+  const containerHeight = useBreakpointValue({
+    base: '1400px', // Height for mobile screens
+    md: '2800px', // Height for medium-sized screens
+    lg: '900px', // Height for large-sized screens
+  })
 
   return (
     <Box
@@ -24,10 +32,10 @@ const AboutPageContainer = () => {
         Meet Your Coaches
       </Heading>
       <Flex
-        h="1300px"
+        h={containerHeight}
         justify="space-between"
         alignItems="center"
-        direction={isMobile ? 'column' : 'row'}
+        direction={isMidSized ? 'column' : 'row'}
       >
         {coaches.map((coach, index) => (
           <AboutCard key={index} {...coach} />

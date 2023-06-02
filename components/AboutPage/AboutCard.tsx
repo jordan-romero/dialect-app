@@ -11,12 +11,13 @@ import {
   Flex,
   Box,
   Icon,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Coach } from '../PrelaunchHomePage/types'
 import { getIconLink, removeProtocol } from './utils'
 import AboutCardModal from './AboutCardModal'
-import useMobileCheck from '../hooks/useMobileCheck'
+import useMidSizeCheck from '../hooks/useMidSizeCheck'
 
 interface AboutCardProps extends Coach {}
 
@@ -31,7 +32,18 @@ const AboutCard: React.FC<AboutCardProps> = ({
   icons,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
+  const cardHeight = useBreakpointValue({
+    base: '1100px', // Height for mobile screens
+    md: '1400px', // Height for medium-sized screens
+    lg: '650px', // Height for large-sized screens
+  })
+
+  const cardBioHeight = useBreakpointValue({
+    base: '500px', // Height for mobile screens
+    md: '600px', // Height for medium-sized screens
+    lg: '500px', // Height for large-sized screens
+  })
 
   const handleModal = () => {
     setIsOpen(!isOpen)
@@ -45,16 +57,16 @@ const AboutCard: React.FC<AboutCardProps> = ({
     <>
       <Card
         maxW="xl"
-        h={isMobile ? '1100px' : '650px'}
+        h={cardHeight}
         w="100%"
         m="14"
         borderRadius="10"
         boxShadow="dark-lg"
       >
         <Flex
-          h={isMobile ? '65%' : '45%'}
+          h={isMidSized ? '65%' : '45%'}
           justifyContent="space-between"
-          direction={isMobile ? 'column' : 'row'}
+          direction={isMidSized ? 'column' : 'row'}
         >
           <Image
             src={photoSrc}
@@ -63,7 +75,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             h="100%"
             flexBasis="50%"
             borderTopLeftRadius={10}
-            borderTopRightRadius={isMobile ? 10 : 0}
+            borderTopRightRadius={isMidSized ? 10 : 0}
           />
           <Flex
             direction="column"
@@ -72,7 +84,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             basis="50%"
             p={3}
             justifyContent="space-between"
-            borderTopRightRadius={isMobile ? 0 : 10}
+            borderTopRightRadius={isMidSized ? 0 : 10}
           >
             <Box>
               <Heading
@@ -130,7 +142,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             </Flex>
           </Flex>
         </Flex>
-        <CardBody h="500px" w={isMobile ? '100%' : undefined}>
+        <CardBody h="500px" w={isMidSized ? '100%' : undefined}>
           <Text fontSize="lg" m={6}>
             {bio}
           </Text>
