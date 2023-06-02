@@ -1,5 +1,5 @@
 import { Coach } from '../PrelaunchHomePage/types'
-import { FaInstagram, FaTiktok, FaTwitter, FaYoutube } from 'react-icons/fa'
+import { FaInstagram, FaTiktok, FaTwitter, FaFacebook } from 'react-icons/fa'
 import { Text, Box, Flex, Image } from '@chakra-ui/react'
 
 export const coaches: Coach[] = [
@@ -29,25 +29,17 @@ export const coaches: Coach[] = [
             Ultimately, I want to give actors their confidence back!
           </Text>
         </Box>
-        <Image
-          src="/scott.jpeg"
-          alt="Scott Alan Moffitt"
-          objectFit="contain"
-          maxWidth="100%"
-          maxHeight="100%"
-          borderTopLeftRadius={10}
-        />
       </Flex>
     ),
     photoSrc: '/scott.jpeg',
     website: 'https://www.actorsdialectcoach.com/',
     websiteSecondary: 'https://www.scottalanmoffitt.com/',
-    icons: [FaTiktok, FaInstagram, FaTwitter, FaYoutube],
+    icons: [FaTiktok, FaInstagram, FaTwitter, FaFacebook],
   },
   {
     name: 'Krista Scott',
     title: 'Professor',
-    bio: 'I’m Krista Scott, a Professor of Voice and Acting at Texas Christian University, a Certified Instructor of Fitzmaurice Voicework™ and an Associate Editor of the International Dialects of English Archive (IDEA) website.',
+    bio: 'I’m Krista Scott, a Professor of Voice and Acting at Texas Christian University, a Certified Instructor of Fitzmaurice Voicework™ and an Associate Editor of the International Dialects of English Archive (IDEA) website. I’ve also been a frequent actor and director at numerous theaters in the DFW Metroplex, and am a member of the Society of Stage Directors and Choreographers.',
     longBio: (
       <Flex>
         <Box>
@@ -67,9 +59,7 @@ export const coaches: Coach[] = [
             in Cairo.
           </Text>
           <Text mt="3">
-            I’ve also been a frequent actor and director at numerous theaters in
-            the DFW Metroplex, and am a member of the Society of Stage Directors
-            and Choreographers. I believe a{' '}
+            I believe a{' '}
             <strong>
               solid foundation in a phonetic-kinesthetic study of speech
             </strong>{' '}
@@ -84,21 +74,27 @@ export const coaches: Coach[] = [
             </strong>
           </Text>
         </Box>
-        <Image
-          src="/krista.jpeg"
-          alt="Krista Scott"
-          objectFit="cover"
-          h="100%"
-          flexBasis="50%"
-          borderTopLeftRadius={10}
-        />
       </Flex>
     ),
     photoSrc: '/krista.jpeg',
     website: 'https://finearts.tcu.edu/faculty_staff/krista-scott/',
-    icons: [FaTiktok, FaInstagram, FaTwitter, FaYoutube],
   },
 ]
 
 export const removeProtocol = (url: string) =>
   url.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, '')
+
+export const getIconLink = (icon: React.ElementType) => {
+  switch (icon) {
+    case FaTiktok:
+      return 'https://www.tiktok.com/@scottalanmoffitt'
+    case FaInstagram:
+      return 'https://www.instagram.com/theactorsdialectcoach/'
+    case FaTwitter:
+      return 'https://twitter.com/ReelScottAlan'
+    case FaFacebook:
+      return 'https://www.facebook.com/scottalanmoffitt'
+    default:
+      return ''
+  }
+}

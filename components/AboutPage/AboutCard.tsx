@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { Coach } from '../PrelaunchHomePage/types'
-import { removeProtocol } from './utils'
+import { getIconLink, removeProtocol } from './utils'
 import AboutCardModal from './AboutCardModal'
 
 interface AboutCardProps extends Coach {}
@@ -35,11 +35,15 @@ const AboutCard: React.FC<AboutCardProps> = ({
     setIsOpen(!isOpen)
   }
 
+  const handleIconClick = (link: string) => {
+    window.open(link, '_blank')
+  }
+
   return (
     <>
       <Card
         maxW="xl"
-        h="600px"
+        h="650px"
         w="100%"
         m="14"
         borderRadius="10"
@@ -98,17 +102,24 @@ const AboutCard: React.FC<AboutCardProps> = ({
                   {removeProtocol(websiteSecondary)}
                 </Link>
               )}
-              <Flex justifyContent="flex-end">
-                {icons.map((icon, index) => (
-                  <Icon
-                    as={icon}
-                    color="gray.300"
-                    fontSize="xl"
-                    mr={4}
-                    key={index}
-                  />
-                ))}
-              </Flex>
+              {icons && icons?.length > 0 && (
+                <Flex justifyContent="flex-end">
+                  {icons.map((icon, index) => {
+                    const link = getIconLink(icon)
+                    return (
+                      <Icon
+                        as={icon}
+                        color="gray.300"
+                        fontSize="xl"
+                        mr={4}
+                        key={index}
+                        onClick={() => handleIconClick(link)}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    )
+                  })}
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </Flex>
