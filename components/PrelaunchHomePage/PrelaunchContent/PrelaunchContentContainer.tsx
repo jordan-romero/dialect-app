@@ -4,17 +4,19 @@ import PrelaunchCta from './PrelaunchCta'
 import { Flex, Spacer } from '@chakra-ui/react'
 import PrelaunchMain from './PrelaunchMain'
 import useMobileCheck from '../../hooks/useMobileCheck'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchContent = () => {
-  const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
 
-  if (isMobile) {
+  if (isMidSized) {
     return (
-      <Flex direction="column" mt={2}>
+      <Flex direction="column" mt={isMidSized ? 0 : 2}>
         <PrelaunchContentMobile />
       </Flex>
     )
   }
+
   return (
     <Flex direction="row">
       <Flex direction="column" mt="20">

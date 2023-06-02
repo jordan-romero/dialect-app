@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { CardData } from '../types'
 import useMobileCheck from '../../hooks/useMobileCheck'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 interface PrelaunchCardProps {
   data: CardData
@@ -20,6 +21,7 @@ interface PrelaunchCardProps {
 const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
   const { header, body, buttonText, icon } = data
   const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
   const [isExpanded, setIsExpanded] = useState(false)
   const MAX_MOBILE_BODY_LENGTH = 115
 
@@ -53,8 +55,8 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
 
   return (
     <Card
-      w={isMobile ? '100%' : '400px'}
-      mt={isMobile ? '4' : undefined}
+      w={isMidSized ? '100%' : '400px'}
+      mt={isMidSized ? '4' : undefined}
       bg="white"
       borderRadius="md"
       boxShadow="lg"
@@ -62,7 +64,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
       _hover={{
         boxShadow: 'dark-lg',
       }}
-      p={isMobile ? '5' : undefined}
+      p={isMidSized ? '5' : undefined}
     >
       <CardHeader bg="util.gray" borderRadius="md">
         <Flex align="center">
@@ -72,8 +74,8 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
           </Heading>
         </Flex>
       </CardHeader>
-      <CardBody p={isMobile ? '2' : '5'}>{renderBodyText()}</CardBody>
-      <CardFooter justifyContent={isMobile ? 'center' : undefined}>
+      <CardBody p={isMidSized ? '2' : '5'}>{renderBodyText()}</CardBody>
+      <CardFooter justifyContent={isMidSized ? 'center' : undefined}>
         <Button variant="brandWhite">{buttonText}</Button>
       </CardFooter>
     </Card>

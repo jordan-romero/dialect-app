@@ -1,15 +1,16 @@
 import { AspectRatio, Box, useBreakpointValue } from '@chakra-ui/react'
 import React from 'react'
 import useMobileCheck from '../../hooks/useMobileCheck'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const DialectVideo = () => {
   const boxShadow = useBreakpointValue({ base: 'none', lg: 'dark-lg' })
-  const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
 
   return (
     <Box
       maxW="875px"
-      mt={isMobile ? 10 : 28}
+      mt={isMidSized ? 10 : 28}
       boxShadow={boxShadow}
       w="100%"
       // h="auto"
