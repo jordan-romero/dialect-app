@@ -1,6 +1,6 @@
 import { Coach } from '../PrelaunchHomePage/types'
 import { FaInstagram, FaTiktok, FaTwitter, FaFacebook } from 'react-icons/fa'
-import { Text, Box, Flex, Image } from '@chakra-ui/react'
+import { Text, Box, Flex } from '@chakra-ui/react'
 
 export const coaches: Coach[] = [
   {

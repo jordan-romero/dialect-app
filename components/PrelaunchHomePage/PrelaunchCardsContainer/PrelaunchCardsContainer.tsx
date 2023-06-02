@@ -1,4 +1,4 @@
-import { Box, Heading, SimpleGrid } from '@chakra-ui/react'
+import { Box, Flex, Heading, SimpleGrid } from '@chakra-ui/react'
 import React from 'react'
 import PrelaunchCard from './PrelaunchCard'
 import { FaGraduationCap } from 'react-icons/fa'
@@ -6,6 +6,7 @@ import { FaBook } from 'react-icons/fa'
 import { FaRegLightbulb } from 'react-icons/fa'
 import { CardData } from '../types'
 import useMobileCheck from '../../hooks/useMobileCheck'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchCardsContainer = () => {
   const cardsData: CardData[] = [
@@ -31,29 +32,47 @@ const PrelaunchCardsContainer = () => {
   ]
 
   const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
+
+  const renderCards = () => {
+    if (isMobile) {
+      return cardsData.map((cardData, index) => (
+        <PrelaunchCard key={index} data={cardData} />
+      ))
+    } else if (isMidSized) {
+      return (
+        <Flex ml="10" mr="10" direction="column">
+          {cardsData.map((cardData, index) => (
+            <PrelaunchCard key={index} data={cardData} />
+          ))}
+        </Flex>
+      )
+    } else {
+      return (
+        <SimpleGrid
+          spacing={4}
+          templateColumns="repeat(3, minmax(200px, 1fr))"
+          ml="10"
+          mr="10"
+        >
+          {cardsData.map((cardData, index) => (
+            <PrelaunchCard key={index} data={cardData} />
+          ))}
+        </SimpleGrid>
+      )
+    }
+  }
 
   return (
     <Box pt={isMobile ? '1' : '35'} textAlign="center">
       <Heading fontSize={isMobile ? '3xl' : '5xl'}>
         Why use ActingAccents.com?
       </Heading>
-      <Box pt={isMobile ? '1' : '40'} textAlign={isMobile ? 'center' : 'left'}>
-        {isMobile ? (
-          cardsData.map((cardData, index) => (
-            <PrelaunchCard key={index} data={cardData} />
-          ))
-        ) : (
-          <SimpleGrid
-            spacing={4}
-            templateColumns="repeat(3, minmax(200px, 1fr))"
-            ml="10"
-            mr="10"
-          >
-            {cardsData.map((cardData, index) => (
-              <PrelaunchCard key={index} data={cardData} />
-            ))}
-          </SimpleGrid>
-        )}
+      <Box
+        pt={isMidSized ? '1' : '40'}
+        textAlign={isMobile ? 'center' : 'left'}
+      >
+        {renderCards()}
       </Box>
     </Box>
   )

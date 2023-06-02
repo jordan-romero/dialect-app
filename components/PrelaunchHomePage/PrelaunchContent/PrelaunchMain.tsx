@@ -11,9 +11,11 @@ import {
 import React from 'react'
 import useMobileCheck from '../../hooks/useMobileCheck'
 import { personas } from './PrelaunchPersonas/utils'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchMain = () => {
   const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
 
   if (isMobile) {
     return (
@@ -23,7 +25,14 @@ const PrelaunchMain = () => {
     )
   }
   return (
-    <Flex w="575px" h="590px" flexDirection="column">
+    <Flex
+      w={isMidSized ? '100%' : '575px'}
+      h={isMidSized ? '700px' : '590px'}
+      ml={isMidSized ? 'auto' : undefined}
+      mr={isMidSized ? 'auto' : undefined}
+      alignItems={isMidSized ? 'center' : 'flex-start'}
+      flexDirection="column"
+    >
       <Heading fontSize="4xl" fontWeight="black" lineHeight="1.25">
         Welcome to the future home of{' '}
         <Text color="brand.purple" fontSize="5xl">
@@ -38,7 +47,11 @@ const PrelaunchMain = () => {
         choices.
       </Text>
       <Box pt={2}>
-        <Text fontSize="md" fontWeight="bold">
+        <Text
+          fontSize="md"
+          fontWeight="bold"
+          textAlign={isMidSized ? 'center' : undefined}
+        >
           Who Would Benefit From ActingAccents.com Courses?
         </Text>
         <SimpleGrid columns={2}>
