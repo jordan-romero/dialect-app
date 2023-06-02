@@ -3,7 +3,6 @@ import DialectVideo from './DialectVideo'
 import PrelaunchCta from './PrelaunchCta'
 import { Flex, Spacer } from '@chakra-ui/react'
 import PrelaunchMain from './PrelaunchMain'
-import useMobileCheck from '../../hooks/useMobileCheck'
 import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchContent = () => {
