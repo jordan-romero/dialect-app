@@ -16,6 +16,7 @@ import React from 'react'
 import { Coach } from '../PrelaunchHomePage/types'
 import { getIconLink, removeProtocol } from './utils'
 import AboutCardModal from './AboutCardModal'
+import useMobileCheck from '../hooks/useMobileCheck'
 
 interface AboutCardProps extends Coach {}
 
@@ -30,6 +31,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
   icons,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const isMobile = useMobileCheck()
 
   const handleModal = () => {
     setIsOpen(!isOpen)
@@ -43,13 +45,17 @@ const AboutCard: React.FC<AboutCardProps> = ({
     <>
       <Card
         maxW="xl"
-        h="650px"
+        h={isMobile ? '1100px' : '650px'}
         w="100%"
         m="14"
         borderRadius="10"
         boxShadow="dark-lg"
       >
-        <Flex h="45%" justifyContent="space-between">
+        <Flex
+          h={isMobile ? '65%' : '45%'}
+          justifyContent="space-between"
+          direction={isMobile ? 'column' : 'row'}
+        >
           <Image
             src={photoSrc}
             alt={name}
@@ -57,6 +63,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             h="100%"
             flexBasis="50%"
             borderTopLeftRadius={10}
+            borderTopRightRadius={isMobile ? 10 : 0}
           />
           <Flex
             direction="column"
@@ -65,7 +72,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             basis="50%"
             p={3}
             justifyContent="space-between"
-            borderTopRightRadius={10}
+            borderTopRightRadius={isMobile ? 0 : 10}
           >
             <Box>
               <Heading
@@ -123,7 +130,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
             </Flex>
           </Flex>
         </Flex>
-        <CardBody h="500px">
+        <CardBody h="500px" w={isMobile ? '100%' : undefined}>
           <Text fontSize="lg" m={6}>
             {bio}
           </Text>

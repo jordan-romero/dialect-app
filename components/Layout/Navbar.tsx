@@ -15,6 +15,7 @@ import {
 import React, { useState } from 'react'
 import useMobileCheck from '../hooks/useMobileCheck'
 import NavComponent from './NavComponent'
+import Link from 'next/link'
 import router from 'next/router'
 
 const Navbar = () => {
@@ -28,16 +29,15 @@ const Navbar = () => {
     <Flex w="100%" h="14" align="center">
       <HStack w="100%" spacing={0} justify="space-between">
         <HStack align="center">
-          <Image
-            src="/actingAccentsLogo.png"
-            alt="acting accents logo"
-            objectFit="cover"
-            w="42"
-            h="14"
-          />
-          <Heading fontSize="4xl" ml={2}>
-            ActingAccents.com
-          </Heading>
+          <Link href="/">
+            <Image
+              src="/actingAccentsLogo.png"
+              alt="acting accents logo"
+              objectFit="contain"
+              w="48"
+              h="14"
+            />
+          </Link>
         </HStack>
         <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
           <NavComponent navText="Home" />

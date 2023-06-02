@@ -23,7 +23,12 @@ const AboutPageContainer = () => {
       <Heading fontSize="5xl" textAlign="center" mt="15">
         Meet Your Coaches
       </Heading>
-      <Flex h="900px" justify="space-between" alignItems="center">
+      <Flex
+        h="1300px"
+        justify="space-between"
+        alignItems="center"
+        direction={isMobile ? 'column' : 'row'}
+      >
         {coaches.map((coach, index) => (
           <AboutCard key={index} {...coach} />
         ))}
