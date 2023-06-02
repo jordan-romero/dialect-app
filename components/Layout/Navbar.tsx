@@ -34,7 +34,6 @@ const Navbar = () => {
         <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
-          <NavComponent navText="Testimonials" />
           <NavComponent navText="Contact" />
         </HStack>
       </HStack>
@@ -43,12 +42,7 @@ const Navbar = () => {
 }
 
 const MobileNavbar = () => {
-  const [menuItems, setMenuItems] = useState([
-    'home',
-    'about',
-    'testimonials',
-    'contact',
-  ])
+  const [menuItems, setMenuItems] = useState(['home', 'about', 'contact'])
 
   return (
     <Box>
