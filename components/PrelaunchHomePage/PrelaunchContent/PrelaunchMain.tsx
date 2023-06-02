@@ -5,13 +5,12 @@ import {
   Heading,
   ListItem,
   SimpleGrid,
-  Spacer,
   Text,
   UnorderedList,
 } from '@chakra-ui/react'
 import React from 'react'
 import useMobileCheck from '../../hooks/useMobileCheck'
-import { personas } from './utils'
+import { personas } from './PrelaunchPersonas/utils'
 
 const PrelaunchMain = () => {
   const isMobile = useMobileCheck()

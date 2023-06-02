@@ -8,19 +8,14 @@ import {
   Link,
   Button,
   Image,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
   Flex,
   Box,
   Icon,
 } from '@chakra-ui/react'
 import React from 'react'
-import { Coach } from '../types'
+import { Coach } from '../PrelaunchHomePage/types'
 import { removeProtocol } from './utils'
+import AboutCardModal from './AboutCardModal'
 
 interface AboutCardProps extends Coach {}
 
@@ -132,15 +127,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
           </Button>
         </CardFooter>
       </Card>
-
-      <Modal isOpen={isOpen} onClose={handleModal}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{name}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody p="8">{longBio}</ModalBody>
-        </ModalContent>
-      </Modal>
+      <AboutCardModal {...{ isOpen, handleModal, longBio, name }} />
     </>
   )
 }

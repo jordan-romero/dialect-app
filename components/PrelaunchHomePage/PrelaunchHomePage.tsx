@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react'
 import React from 'react'
-import PrelaunchContent from './PrelaunchContent/PrelaunchContent'
+import PrelaunchContent from './PrelaunchContent/PrelaunchContentContainer'
 import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsContainer'
 import useMobileCheck from '../hooks/useMobileCheck'
-import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas'
+import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas/PrelaunchPersonas'
 
 const PrelaunchHomePage = () => {
   const heroImg = '/actingAccentsHeroImg.png'
