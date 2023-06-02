@@ -19,9 +19,9 @@ const PrelaunchHomePage = () => {
   })
 
   const cardContainerHeight = useBreakpointValue({
-    base: '1100px', // Height for mobile screens
-    md: '1200px', // Height for medium-sized screens
-    lg: '920px', // Height for large-sized screens
+    base: '1100px',
+    md: '1200px',
+    lg: '920px',
   })
 
   return (
