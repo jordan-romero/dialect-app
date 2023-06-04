@@ -1,6 +1,5 @@
 import { AspectRatio, Box, useBreakpointValue } from '@chakra-ui/react'
 import React from 'react'
-import useMobileCheck from '../../hooks/useMobileCheck'
 import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const DialectVideo = () => {
@@ -13,7 +12,7 @@ const DialectVideo = () => {
       mt={isMidSized ? 10 : 28}
       boxShadow={boxShadow}
       w="100%"
-      // h="auto"
+      h="auto"
     >
       <AspectRatio ratio={16 / 9}>
         <video title="acting actors teaser" autoPlay muted controls>
