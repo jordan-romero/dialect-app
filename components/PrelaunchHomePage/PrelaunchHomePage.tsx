@@ -5,10 +5,12 @@ import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsCon
 import useMobileCheck from '../hooks/useMobileCheck'
 import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas/PrelaunchPersonas'
 import useMidSizeCheck from '../hooks/useMidSizeCheck'
+import PrelaunchTestimonialsContainer from './PrelaunchTestimonials/PrelaunchTestimonialsContainer'
 
 const PrelaunchHomePage = () => {
   const heroImg = '/heroBgImage.svg'
   const cardImg = '/cardBgImg.svg'
+  const testimonialsImg = '/testimonialsCarousel.svg'
   const isMobile = useMobileCheck()
   const isMidSized = useMidSizeCheck()
 
@@ -22,6 +24,12 @@ const PrelaunchHomePage = () => {
     base: '1100px',
     md: '1200px',
     lg: '920px',
+  })
+
+  const testimonialContainerHeight = useBreakpointValue({
+    base: '1100px',
+    md: '700px',
+    lg: '930px',
   })
 
   return (
@@ -53,6 +61,20 @@ const PrelaunchHomePage = () => {
         <PrelaunchCardsContainer />
       </Box>
       {isMobile ? <PrelaunchPersonas /> : null}
+      <Box
+        h={testimonialContainerHeight}
+        style={
+          isMobile
+            ? undefined
+            : {
+                backgroundImage: `url(${testimonialsImg})`,
+                backgroundSize: isMidSized ? 'cover' : 'contain',
+                backgroundPosition: 'center',
+              }
+        }
+      >
+        <PrelaunchTestimonialsContainer />
+      </Box>
     </>
   )
 }
