@@ -6,10 +6,9 @@ import useMobileCheck from '../hooks/useMobileCheck'
 import PrelaunchPersonas from './PrelaunchContent/PrelaunchPersonas/PrelaunchPersonas'
 import useMidSizeCheck from '../hooks/useMidSizeCheck'
 import PrelaunchTestimonialsContainer from './PrelaunchTestimonials/PrelaunchTestimonialsContainer'
-// Works in the browser, but errors in vsCode 🤷🏻‍♀️
-import Zoom from 'react-reveal/Zoom'
-import Fade from 'react-reveal/Fade'
-import Slide from 'react-reveal/Slide'
+import { Zoom } from 'react-awesome-reveal'
+
+import { Slide } from 'react-awesome-reveal'
 
 const PrelaunchHomePage = () => {
   const heroImg = '/heroBgImage.svg'
@@ -21,7 +20,7 @@ const PrelaunchHomePage = () => {
   const containerHeight = useBreakpointValue({
     base: '1125px', // Height for mobile screens
     md: '1400px', // Height for medium-sized screens
-    lg: '900px', // Height for large-sized screens
+    lg: '940px', // Height for large-sized screens
   })
 
   const cardContainerHeight = useBreakpointValue({
@@ -51,7 +50,7 @@ const PrelaunchHomePage = () => {
       >
         <PrelaunchContent />
       </Box>
-      <Zoom>
+      <Zoom duration={2000} triggerOnce={true} fraction={0}>
         <Box
           h={cardContainerHeight}
           style={
@@ -67,22 +66,21 @@ const PrelaunchHomePage = () => {
         </Box>
       </Zoom>
       {isMobile ? <PrelaunchPersonas /> : null}
-      <Slide top>
-        <Box
-          h={testimonialContainerHeight}
-          style={
-            isMidSized
-              ? undefined
-              : {
-                  backgroundImage: `url(${testimonialsImg})`,
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'center',
-                }
-          }
-        >
-          <PrelaunchTestimonialsContainer />
-        </Box>
-      </Slide>
+
+      <Box
+        h={testimonialContainerHeight}
+        style={
+          isMidSized
+            ? undefined
+            : {
+                backgroundImage: `url(${testimonialsImg})`,
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+              }
+        }
+      >
+        <PrelaunchTestimonialsContainer />
+      </Box>
     </>
   )
 }

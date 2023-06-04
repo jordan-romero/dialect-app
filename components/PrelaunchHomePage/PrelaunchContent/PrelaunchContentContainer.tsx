@@ -4,8 +4,8 @@ import PrelaunchCta from './PrelaunchCta'
 import { Flex, Spacer, Box } from '@chakra-ui/react'
 import PrelaunchMain from './PrelaunchMain'
 import useMidSizeCheck from '../../hooks/useMidSizeCheck'
-import Fade from 'react-reveal/Fade'
-import Zoom from 'react-reveal/Zoom'
+import { Slide } from 'react-awesome-reveal'
+import { Fade } from 'react-awesome-reveal'
 
 const PrelaunchContent = () => {
   const isMidSized = useMidSizeCheck()
@@ -20,15 +20,15 @@ const PrelaunchContent = () => {
 
   return (
     <Flex direction="row">
-      <Fade left>
+      <Slide direction="left" triggerOnce={true}>
         <Flex direction="column" mt="20">
           <PrelaunchMain />
           <PrelaunchCta />
         </Flex>
-      </Fade>
+      </Slide>
       <Spacer />
       <Box w="100%">
-        <Fade right>
+        <Fade duration={2000} triggerOnce={true}>
           <Flex
             justifyContent="flex-end"
             w="100%"
