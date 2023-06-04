@@ -20,7 +20,7 @@ interface CardCarouselProps {
 const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
   const isMidSized = useMidSizeCheck()
   const carouselHeight = useBreakpointValue({
-    base: '200px',
+    base: 'auto',
     md: '300px',
     lg: '285px',
   })

@@ -5,7 +5,7 @@ import { Box, Flex, useBreakpointValue } from '@chakra-ui/react'
 
 const PrelaunchTestimonialsContainer = () => {
   const testimonialContainerHeight = useBreakpointValue({
-    base: '700px',
+    base: 'auto',
     md: '700px',
     lg: '735px',
   })

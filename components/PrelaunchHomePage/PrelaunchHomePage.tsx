@@ -27,7 +27,7 @@ const PrelaunchHomePage = () => {
   })
 
   const testimonialContainerHeight = useBreakpointValue({
-    base: '700px',
+    base: 'auto',
     md: '900px',
     lg: '930px',
   })
@@ -68,7 +68,7 @@ const PrelaunchHomePage = () => {
             ? undefined
             : {
                 backgroundImage: `url(${testimonialsImg})`,
-                backgroundSize: isMidSized ? 'cover' : 'contain',
+                backgroundSize: 'contain',
                 backgroundPosition: 'center',
               }
         }
