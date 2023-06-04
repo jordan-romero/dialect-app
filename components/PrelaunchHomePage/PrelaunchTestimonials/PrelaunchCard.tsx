@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Center, Image, Text } from '@chakra-ui/react'
+import { Flex, Center, Image, Text, useBreakpointValue } from '@chakra-ui/react'
 
 interface PrelaunchCardProps {
   testimonial: string
@@ -14,9 +14,14 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
   subtitle,
   image,
 }) => {
+  const cardHeight = useBreakpointValue({
+    base: '700px',
+    md: '600px',
+    lg: '400px',
+  })
   return (
     <Flex
-      h="400px"
+      h={cardHeight}
       w="90%"
       mt={10}
       ml="auto"
