@@ -4,11 +4,17 @@ interface ErrorResponse {
   error: string
 }
 
+interface SubscribeData {
+  email: string
+  firstName?: string
+  lastName?: string
+}
+
 export default async function subscribeHandler(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<void> {
-  const { email } = req.body
+  const { email, firstName, lastName } = req.body as SubscribeData
 
   if (!email || !email.length) {
     return res.status(400).json({ error: 'Email is required' } as ErrorResponse)
@@ -23,6 +29,10 @@ export default async function subscribeHandler(
   const data = {
     email_address: email,
     status: 'subscribed',
+    merge_fields: {
+      FNAME: firstName,
+      LNAME: lastName,
+    },
   }
 
   const options: RequestInit = {
@@ -47,3 +57,4 @@ export default async function subscribeHandler(
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
+
