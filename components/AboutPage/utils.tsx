@@ -38,8 +38,8 @@ export const coaches: Coach[] = [
   },
   {
     name: 'Krista Scott',
-    title: 'Professor',
-    bio: 'I’m Krista Scott, a Professor of Voice and Acting at Texas Christian University, a Certified Instructor of Fitzmaurice Voicework™ and an Associate Editor of the International Dialects of English Archive (IDEA) website. I’ve also been a frequent actor and director at numerous theaters in the DFW Metroplex, and am a member of the Society of Stage Directors and Choreographers.',
+    title: 'Actor, Dialect Coach, Director, Professor of Theatre',
+    bio: 'I’m Krista Scott, a Professor of Voice and Acting at Texas Christian University, a Certified Instructor of Fitzmaurice Voicework™ and an Associate Editor of the International Dialects of English Archive (IDEA) website. I’ve also been a frequent actor, director and dialect coach at numerous theaters in the DFW Metroplex, and I love guiding performers in techniques which help to build distinctive and dynamic character personas.',
     longBio: (
       <Flex>
         <Box>
@@ -56,7 +56,8 @@ export const coaches: Coach[] = [
             trauma. I’ve directed and taught dialects, voice and performance
             courses at Ithaca College, University of Connecticut, Syracuse
             University, University of Mississippi, and The American University
-            in Cairo.
+            in Cairo. I’m a member of The Voice and Speech Trainers Association
+            and the Society of Stage Directors and Choreographers.
           </Text>
           <Text mt="3">
             I believe a{' '}
@@ -64,10 +65,9 @@ export const coaches: Coach[] = [
               solid foundation in a phonetic-kinesthetic study of speech
             </strong>{' '}
             is necessary to train multi-phonological actors fluent in IPA usage
-            for clarity in classic and contemporary performances and for
-            authenticity in all dialects and accents in all media platforms. The
-            athletic event of acting demands a command of language beyond
-            worldly expectations;{' '}
+            for clarity and authenticity in all dialects and accents in all
+            genres and media platforms. The athletic event of acting demands a
+            command of language beyond worldly expectations;{' '}
             <strong>
               {' '}
               my aim is to help actors endeavor toward this mastery.
@@ -76,7 +76,7 @@ export const coaches: Coach[] = [
         </Box>
       </Flex>
     ),
-    photoSrc: '/krista.jpeg',
+    photoSrc: '/kristaScott.jpeg',
     website: 'https://finearts.tcu.edu/faculty_staff/krista-scott/',
   },
 ]
@@ -89,7 +89,7 @@ export const getIconLink = (icon: React.ElementType) => {
     case FaTiktok:
       return 'https://www.tiktok.com/@scottalanmoffitt'
     case FaInstagram:
-      return 'https://www.instagram.com/theactorsdialectcoach/'
+      return 'https://www.instagram.com/scottalanmoffitt/'
     case FaTwitter:
       return 'https://twitter.com/ReelScottAlan'
     case FaFacebook:
