@@ -48,8 +48,9 @@ const PrelaunchMain = () => {
       </Text>
       <Box pt={2}>
         <Text
-          fontSize="md"
+          fontSize="lg"
           fontWeight="bold"
+          color='brand.purpleLight'
           textAlign={isMidSized ? 'center' : undefined}
         >
           Who Would Benefit From ActingAccents.com Courses?
@@ -62,7 +63,7 @@ const PrelaunchMain = () => {
           ))}
         </SimpleGrid>
       </Box>
-      <Text fontSize="xl" fontWeight="extrabold" mt="5" w="85%">
+      <Text fontSize="xl" fontWeight="extrabold" color='brand.iris' mt="5" w="85%">
         Ultimately, this course will teach you to teach yourself any dialect or
         accent you desire.
       </Text>
