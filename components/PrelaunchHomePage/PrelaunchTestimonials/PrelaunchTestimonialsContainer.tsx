@@ -10,7 +10,7 @@ const PrelaunchTestimonialsContainer = () => {
     lg: '735px',
   })
   return (
-    <Box w="100%" h="100%">
+    <Box w="100%" h="100%" id="testimonials">
       <Flex h={testimonialContainerHeight} justify="center" align="center">
         <PrelaunchCarousel cards={cards} />
       </Flex>

@@ -5,6 +5,7 @@ export type CardData = {
   header: string
   body: string
   buttonText: string
+  href: string
 }
 
 export type Coach = {
