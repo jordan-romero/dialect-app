@@ -18,6 +18,7 @@ import { Coach } from '../PrelaunchHomePage/types'
 import { getIconLink, removeProtocol } from './utils'
 import AboutCardModal from './AboutCardModal'
 import useMidSizeCheck from '../hooks/useMidSizeCheck'
+import useMobileCheck from '../hooks/useMobileCheck'
 
 interface AboutCardProps extends Coach {}
 
@@ -33,16 +34,11 @@ const AboutCard: React.FC<AboutCardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const isMidSized = useMidSizeCheck()
+  const isMobile = useMobileCheck()
   const cardHeight = useBreakpointValue({
     base: '1100px', // Height for mobile screens
     md: '1400px', // Height for medium-sized screens
     lg: '650px', // Height for large-sized screens
-  })
-
-  const cardBioHeight = useBreakpointValue({
-    base: '500px', // Height for mobile screens
-    md: '600px', // Height for medium-sized screens
-    lg: '500px', // Height for large-sized screens
   })
 
   const handleModal = () => {
@@ -59,13 +55,15 @@ const AboutCard: React.FC<AboutCardProps> = ({
         maxW="xl"
         h={cardHeight}
         w="100%"
-        m="14"
+        m={isMobile ? "0" : "14"}
+        mb={isMidSized ? "10" : "0"}
         borderRadius="10"
         boxShadow="dark-lg"
       >
         <Flex
           h={isMidSized ? '65%' : '45%'}
           justifyContent="space-between"
+          alignItems={isMidSized ? "space-around" : undefined}
           direction={isMidSized ? 'column' : 'row'}
         >
           <Image

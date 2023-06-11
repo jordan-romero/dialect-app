@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Input, Button, Stack, Box, Heading } from '@chakra-ui/react'
+import useMobileCheck from '../../hooks/useMobileCheck'
 
 const ContactPageForm = () => {
   const [firstName, setFirstName] = useState('')
@@ -8,6 +9,7 @@ const ContactPageForm = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const isMobile = useMobileCheck()
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
@@ -55,7 +57,7 @@ const ContactPageForm = () => {
   }
 
   return (
-    <Box w='50%'>
+    <Box w={isMobile ? '100%' : '50%'}>
         <Heading as="h1" size="2xl" textAlign="center" color='brand.iris' mb={8}>
             Contact Us
         </Heading>
@@ -66,7 +68,6 @@ const ContactPageForm = () => {
           placeholder="First Name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-          w='100%'
         />
         <Input
           type="text"

@@ -1,16 +1,16 @@
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
 import ContactPageFormContainer from './ContactPageForm/ContactPageFormContainer'
-import useMobileCheck from '../hooks/useMobileCheck'
+import useMidSizeCheck from '../hooks/useMidSizeCheck'
 
 const ContactPageContainer = () => {
 const contactPageBgImg = '/contactPageBg.png'
-const isMobile = useMobileCheck()
+const isMidsized = useMidSizeCheck()
   return (
     <Flex 
     h='800px'
       style={
-        isMobile
+        isMidsized
           ? undefined
           : {
               backgroundImage: `url(${contactPageBgImg})`,

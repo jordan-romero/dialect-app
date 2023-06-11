@@ -13,8 +13,8 @@ const AboutPageContainer = () => {
   const aboutPageHeroImg = '/aboutPageHero.svg'
 
   const containerHeight = useBreakpointValue({
-    base: '1400px', // Height for mobile screens
-    md: '2800px', // Height for medium-sized screens
+    base: '2300px', // Height for mobile screens
+    md: '3100px', // Height for medium-sized screens
     lg: '900px', // Height for large-sized screens
   })
 
