@@ -5,7 +5,7 @@ export const cards = [
       "This is absolutely the dialect coach you've been looking for. Scott's method teaches you the IPA (International Phonetic Alphabet) - an easy-to-learn cheat sheet that when mastered, allows you to speak in any dialect you can think of. Over the course of 10 months, Scott taught me 11 vastly different accents, while only doing one session per week - and yet I'm comfortable enough to pop into any of those accents at a moment's notice. He teaches at your pace but pushes you just enough to make sure you're getting what you want (and more!) out of his class. I can't recommend Scott enough!",
     name: 'Chandler Riggs',
     subtitle: 'Actor, The Walking Dead, A Million Little Things',
-    image: './chandlerRiggs.jpg',
+    image: './chandlerRiggs.jpeg',
   },
   {
     id: 2,
