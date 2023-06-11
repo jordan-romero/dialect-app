@@ -47,6 +47,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   left: '20px',
                   transform: 'translateY(-50%)',
                   zIndex: 1,
+                  fontSize: '48px',
+                  fontWeight: 'bold'
                 }}
               >
                 &lt;
@@ -65,6 +67,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   right: '20px',
                   transform: 'translateY(-50%)',
                   zIndex: 1,
+                  fontSize: '48px',
+                  fontWeight: 'bold'
                 }}
               >
                 &gt;
