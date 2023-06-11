@@ -5,16 +5,17 @@ import {
   Heading,
   ListItem,
   SimpleGrid,
-  Spacer,
   Text,
   UnorderedList,
 } from '@chakra-ui/react'
 import React from 'react'
 import useMobileCheck from '../../hooks/useMobileCheck'
-import { personas } from './utils'
+import { personas } from './PrelaunchPersonas/utils'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchMain = () => {
   const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
 
   if (isMobile) {
     return (
@@ -24,7 +25,14 @@ const PrelaunchMain = () => {
     )
   }
   return (
-    <Flex w="575px" h="590px" flexDirection="column">
+    <Flex
+      w={isMidSized ? '100%' : '575px'}
+      h={isMidSized ? '700px' : '590px'}
+      ml={isMidSized ? 'auto' : undefined}
+      mr={isMidSized ? 'auto' : undefined}
+      alignItems={isMidSized ? 'center' : 'flex-start'}
+      flexDirection="column"
+    >
       <Heading fontSize="4xl" fontWeight="black" lineHeight="1.25">
         Welcome to the future home of{' '}
         <Text color="brand.purple" fontSize="5xl">
@@ -39,7 +47,12 @@ const PrelaunchMain = () => {
         choices.
       </Text>
       <Box pt={2}>
-        <Text fontSize="md" fontWeight="bold">
+        <Text
+          fontSize="lg"
+          fontWeight="bold"
+          color='brand.purpleLight'
+          textAlign={isMidSized ? 'center' : undefined}
+        >
           Who Would Benefit From ActingAccents.com Courses?
         </Text>
         <SimpleGrid columns={2}>
@@ -50,7 +63,7 @@ const PrelaunchMain = () => {
           ))}
         </SimpleGrid>
       </Box>
-      <Text fontSize="xl" fontWeight="extrabold" mt="5" w="85%">
+      <Text fontSize="xl" fontWeight="extrabold" color='brand.iris' mt="5" w="85%">
         Ultimately, this course will teach you to teach yourself any dialect or
         accent you desire.
       </Text>

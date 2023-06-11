@@ -10,10 +10,12 @@ import {
   MenuButton,
   MenuList,
   VStack,
+  Image,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import useMobileCheck from '../hooks/useMobileCheck'
 import NavComponent from './NavComponent'
+import Link from 'next/link'
 import router from 'next/router'
 
 const Navbar = () => {
@@ -27,14 +29,19 @@ const Navbar = () => {
     <Flex w="100%" h="14" align="center">
       <HStack w="100%" spacing={0} justify="space-between">
         <HStack align="center">
-          <Heading fontSize="xl" ml={2}>
-            Acting Accents
-          </Heading>
+          <Link href="/">
+            <Image
+              src="/actingAccentsLogo.png"
+              alt="acting accents logo"
+              objectFit="contain"
+              w="48"
+              h="14"
+            />
+          </Link>
         </HStack>
         <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
-          <NavComponent navText="Testimonials" />
           <NavComponent navText="Contact" />
         </HStack>
       </HStack>
@@ -43,12 +50,7 @@ const Navbar = () => {
 }
 
 const MobileNavbar = () => {
-  const [menuItems, setMenuItems] = useState([
-    'home',
-    'about',
-    'testimonials',
-    'contact',
-  ])
+  const [menuItems, setMenuItems] = useState(['home', 'about', 'contact'])
 
   return (
     <Box>
