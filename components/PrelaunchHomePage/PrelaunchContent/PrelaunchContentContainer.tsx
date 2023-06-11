@@ -1,9 +1,11 @@
 import React from 'react'
 import DialectVideo from './DialectVideo'
 import PrelaunchCta from './PrelaunchCta'
-import { Flex, Spacer } from '@chakra-ui/react'
+import { Flex, Spacer, Box } from '@chakra-ui/react'
 import PrelaunchMain from './PrelaunchMain'
 import useMidSizeCheck from '../../hooks/useMidSizeCheck'
+import { Slide } from 'react-awesome-reveal'
+import { Fade } from 'react-awesome-reveal'
 
 const PrelaunchContent = () => {
   const isMidSized = useMidSizeCheck()
@@ -18,21 +20,27 @@ const PrelaunchContent = () => {
 
   return (
     <Flex direction="row">
-      <Flex direction="column" mt="20">
-        <PrelaunchMain />
-        <PrelaunchCta />
-      </Flex>
+      <Slide direction="left" triggerOnce={true}>
+        <Flex direction="column" mt="20">
+          <PrelaunchMain />
+          <PrelaunchCta />
+        </Flex>
+      </Slide>
       <Spacer />
-      <Flex
-        justifyContent="flex-end"
-        w="100%"
-        h="500px"
-        pb="10"
-        pt="15"
-        mt="20"
-      >
-        <DialectVideo />
-      </Flex>
+      <Box w="100%">
+        <Fade duration={2000} triggerOnce={true}>
+          <Flex
+            justifyContent="flex-end"
+            w="100%"
+            h="500px"
+            pb="10"
+            pt="15"
+            mt="20"
+          >
+            <DialectVideo />
+          </Flex>
+        </Fade>
+      </Box>
     </Flex>
   )
 }

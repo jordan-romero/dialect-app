@@ -4,6 +4,8 @@ import { Flex, Heading, Box, useBreakpointValue } from '@chakra-ui/react'
 import useMobileCheck from '../hooks/useMobileCheck'
 import { coaches } from './utils'
 import useMidSizeCheck from '../hooks/useMidSizeCheck'
+import { Fade } from 'react-awesome-reveal'
+import { Slide } from 'react-awesome-reveal'
 
 const AboutPageContainer = () => {
   const isMobile = useMobileCheck()
@@ -28,9 +30,12 @@ const AboutPageContainer = () => {
             }
       }
     >
-      <Heading fontSize="5xl" textAlign="center" mt="15">
-        Meet Your Coaches
-      </Heading>
+      <Slide direction="down" triggerOnce={true} fraction={0}>
+        <Heading fontSize="5xl" textAlign="center" mt="15">
+          Meet Your Coaches
+        </Heading>
+      </Slide>
+
       <Flex
         h={containerHeight}
         justify="space-between"
@@ -38,7 +43,9 @@ const AboutPageContainer = () => {
         direction={isMidSized ? 'column' : 'row'}
       >
         {coaches.map((coach, index) => (
-          <AboutCard key={index} {...coach} />
+          <Fade key={index} duration={2000} triggerOnce={true}>
+            <AboutCard key={index} {...coach} />
+          </Fade>
         ))}
       </Flex>
     </Box>
