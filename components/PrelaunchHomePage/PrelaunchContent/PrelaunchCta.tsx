@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { Box, Input, Button, useToast, Heading, Flex } from '@chakra-ui/react'
+import { Box, Input, Button, useToast, Heading } from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
 import useMobileCheck from '../../hooks/useMobileCheck'
+import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchCta = () => {
   const toast = useToast()
   const [email, setEmail] = useState('')
   const isMobile = useMobileCheck()
+  const isMidSized = useMidSizeCheck()
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
@@ -65,7 +67,7 @@ const PrelaunchCta = () => {
 
   return (
     <>
-      {!isMobile && (
+      {!isMobile && !isMidSized && (
         <Box as="form" onSubmit={handleSubmit} w="55%">
           <Heading fontSize="2xl" mb="7">
             Sign up now for an Early Bird Discount!
@@ -78,9 +80,9 @@ const PrelaunchCta = () => {
             mb={4}
             isRequired
             borderRadius="md"
-            borderColor="brand.green"
+            borderColor="brand.purple"
             _placeholder={{ color: 'gray.400' }}
-            _focus={{ borderColor: 'brand.olive', boxShadow: 'outline' }}
+            _focus={{ borderColor: 'brand.iris', boxShadow: 'outline' }}
             _hover={{ bg: 'gray.200' }}
           />
           <Button
@@ -93,7 +95,7 @@ const PrelaunchCta = () => {
           </Button>
         </Box>
       )}
-      {isMobile && (
+      {isMidSized && (
         <Box
           as="form"
           onSubmit={handleSubmit}
@@ -119,7 +121,7 @@ const PrelaunchCta = () => {
             borderRadius="md"
             borderColor="white"
             _placeholder={{ color: 'black' }}
-            _focus={{ borderColor: 'brand.olive', boxShadow: 'outline' }}
+            _focus={{ borderColor: 'brand.iris', boxShadow: 'outline' }}
             _hover={{ bg: 'gray.200' }}
           />
           <Button

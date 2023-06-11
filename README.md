@@ -29,12 +29,34 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-This project use [Typescript](https://www.typescriptlang.org/docs/) 
+This project use [Typescript](https://www.typescriptlang.org/docs/)
 
-## Styled using ChakraUi 
+## Styled using ChakraUi
 
 [ChakraUi Docs](https://chakra-ui.com/docs/components)
 
 To utilize custom styling, navigate to `components/theme/theme.ts`
 
+## Large File Storage
 
+For large file storage such as videos or things that we know will exceed github's limitations we are using [GitLfs](https://git-lfs.com/)
+
+You will have to install the package on your local machine:
+
+```bash
+brew install git-lfs
+```
+
+Once initalized you will need to run the command (only the during initial setup):
+
+```bash
+git lfs install
+```
+
+To add file times to the `.gitattributes` file you can run:
+
+```bash
+git lfs track "*.psd"
+```
+
+Changing the type of file (ex. "\*.psd") to the necessary file type

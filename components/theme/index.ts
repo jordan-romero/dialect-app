@@ -3,11 +3,18 @@ import { extendTheme, theme as base } from '@chakra-ui/react'
 const theme = extendTheme({
   colors: {
     brand: {
-      purple: '#552b53',
-      pink: '#bb77b8',
-      green: '#83994d',
-      lightGreen: '#f1f5ef',
-      olive: '#5f6b36',
+      purple: '#723FC5',
+      purpleLight: '#8A2DBB',
+      iris: '#5F53CF',
+      blue: '#7EACE2',
+      blueLight: '#B1F5F4',
+    },
+    util: {
+      white: '#ffffff',
+      black: '#000000',
+      gray: '#f5f5f5',
+      darkGray: '#333333',
+      mediumGray: '#999999',
     },
   },
   fonts: {
@@ -19,25 +26,37 @@ const theme = extendTheme({
     Button: {
       variants: {
         brandBold: {
-          bg: 'brand.green',
+          bg: 'brand.iris',
           color: 'white',
           _hover: {
-            bg: 'brand.olive',
+            bg: 'brand.purple',
           },
           _active: {
-            bg: 'brand.lightGreen',
-            color: 'black',
+            bg: 'util.white',
+            color: 'brand.blue',
           },
         },
         brandWhite: {
           bg: 'white',
-          color: 'brand.olive',
+          color: 'brand.iris',
           _hover: {
-            bg: 'brand.green',
+            bg: 'brand.iris',
             color: 'white',
           },
           _active: {
-            bg: 'brand.lightGreen',
+            bg: 'brand.blueLight',
+            color: 'black',
+          },
+        },
+        brandGhost: {
+          bg: 'util.lightGray',
+          color: 'brand.purple',
+          _hover: {
+            bg: 'brand.purple',
+            color: 'util.white',
+          },
+          _active: {
+            bg: 'brand.blueLight',
             color: 'black',
           },
         },
