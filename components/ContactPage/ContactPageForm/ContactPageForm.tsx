@@ -55,38 +55,38 @@ const ContactPageForm = () => {
   }
 
   return (
-    <Box w='50%'>
-        <Heading as="h1" size="2xl" textAlign="center" color='brand.iris' mb={8}>
-            Contact Us
-        </Heading>
-    <form onSubmit={handleSubmit}>
-      <Stack spacing={10}>
-        <Input
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          w='100%'
-        />
-        <Input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        {error && <div>{error}</div>}
-        {success && <div>Thank you for subscribing!</div>}
-        <Button type="submit" isLoading={loading} variant='brandBold'>
-          Subscribe
-        </Button>
-      </Stack>
-    </form>
+    <Box w="50%">
+      <Heading as="h1" size="2xl" textAlign="center" color="brand.iris" mb={8}>
+        Contact Us
+      </Heading>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={10}>
+          <Input
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            w="100%"
+          />
+          <Input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {error && <div>{error}</div>}
+          {success && <div>Thank you for subscribing!</div>}
+          <Button type="submit" isLoading={loading} variant="brandBold">
+            Subscribe
+          </Button>
+        </Stack>
+      </form>
     </Box>
   )
 }

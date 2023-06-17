@@ -143,8 +143,8 @@ const AboutCard: React.FC<AboutCardProps> = ({
           </Flex>
         </Flex>
         <CardBody w={isMidSized ? '100%' : undefined}>
-          <Text fontSize="lg" mr='6' ml='6' mt='6'>
-            {bio} 
+          <Text fontSize="lg" mr="6" ml="6" mt="6">
+            {bio}
           </Text>
         </CardBody>
         <CardFooter
