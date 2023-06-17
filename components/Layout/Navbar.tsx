@@ -18,11 +18,15 @@ import NavComponent from './NavComponent'
 import Link from 'next/link'
 import router from 'next/router'
 import { useFeatureFlag } from 'configcat-react'
+import Login from '../AuthComponents/Login'
+import Logout from '../AuthComponents/Logout'
 
 const Navbar = () => {
   const isMobile = useMobileCheck()
-  const {value: signUpAndLoginVisible} = useFeatureFlag('signUpAndLoginVisible', false)
-  console.log(signUpAndLoginVisible, 'signUpAndLoginVisible')
+  const { value: signUpAndLoginVisible } = useFeatureFlag(
+    'signUpAndLoginVisible',
+    false,
+  )
 
   if (isMobile) {
     return <MobileNavbar />
@@ -46,8 +50,9 @@ const Navbar = () => {
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
-          {signUpAndLoginVisible ? <NavComponent navText="Sign Up" /> : null}
-          {signUpAndLoginVisible ? <NavComponent navText="Login" /> : null}
+          {/* {signUpAndLoginVisible ? <Login navText="Sign Up" /> : null} */}
+          {signUpAndLoginVisible ? <Login /> : null}
+          {signUpAndLoginVisible ? <Logout /> : null}
         </HStack>
       </HStack>
     </Flex>

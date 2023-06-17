@@ -8,7 +8,6 @@ import useMidSizeCheck from '../hooks/useMidSizeCheck'
 import PrelaunchTestimonialsContainer from './PrelaunchTestimonials/PrelaunchTestimonialsContainer'
 import { Zoom } from 'react-awesome-reveal'
 
-
 const PrelaunchHomePage = () => {
   const heroImg = '/heroBgImage.svg'
   const cardImg = '/cardBgImg.svg'
