@@ -21,8 +21,10 @@ import { useFeatureFlag } from 'configcat-react'
 
 const Navbar = () => {
   const isMobile = useMobileCheck()
-  const {value: signUpAndLoginVisible} = useFeatureFlag('signUpAndLoginVisible', false)
-  console.log(signUpAndLoginVisible, 'signUpAndLoginVisible')
+  const { value: signUpAndLoginVisible } = useFeatureFlag(
+    'signUpAndLoginVisible',
+    false,
+  )
 
   if (isMobile) {
     return <MobileNavbar />
