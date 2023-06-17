@@ -55,31 +55,32 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
 
   return (
     <Card
-  w={isMidSized ? '100%' : '400px'}
-  mt={isMidSized ? '4' : undefined}
-  bg="white"
-  borderRadius="md"
-  boxShadow="lg"
-  transition="box-shadow 0.2s"
-  _hover={{
-    boxShadow: 'dark-lg',
-  }}
-  p={isMidSized ? '5' : undefined}
->
-  <CardHeader bg="util.gray" borderRadius="md">
-    <Flex align="center">
-      <Icon as={icon} boxSize={8} mr={4} color="brand.purple" />
-      <Heading size="lg" display="inline-block">
-        {header}
-      </Heading>
-    </Flex>
-  </CardHeader>
-  <CardBody p={isMidSized ? '2' : '5'}>{renderBodyText()}</CardBody>
-  <CardFooter justifyContent={isMidSized ? 'center' : undefined}>
-    <Button as="a" href={href} variant="brandWhite">{buttonText}</Button>
-  </CardFooter>
-</Card>
-
+      w={isMidSized ? '100%' : '400px'}
+      mt={isMidSized ? '4' : undefined}
+      bg="white"
+      borderRadius="md"
+      boxShadow="lg"
+      transition="box-shadow 0.2s"
+      _hover={{
+        boxShadow: 'dark-lg',
+      }}
+      p={isMidSized ? '5' : undefined}
+    >
+      <CardHeader bg="util.gray" borderRadius="md">
+        <Flex align="center">
+          <Icon as={icon} boxSize={8} mr={4} color="brand.purple" />
+          <Heading size="lg" display="inline-block">
+            {header}
+          </Heading>
+        </Flex>
+      </CardHeader>
+      <CardBody p={isMidSized ? '2' : '5'}>{renderBodyText()}</CardBody>
+      <CardFooter justifyContent={isMidSized ? 'center' : undefined}>
+        <Button as="a" href={href} variant="brandWhite">
+          {buttonText}
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 
