@@ -2,13 +2,15 @@ import { Flex } from '@chakra-ui/react'
 import React from 'react'
 import ContactPageFormContainer from './ContactPageForm/ContactPageFormContainer'
 import useMidSizeCheck from '../hooks/useMidSizeCheck'
+import useMobileCheck from '../hooks/useMobileCheck'
 
 const ContactPageContainer = () => {
-const contactPageBgImg = '/contactPageBg.png'
-const isMidsized = useMidSizeCheck()
+  const contactPageBgImg = '/contactPageBg.png'
+  const isMidsized = useMidSizeCheck()
+  const isMobile = useMobileCheck()
   return (
-    <Flex 
-    h='800px'
+    <Flex
+      h={isMobile ? "600px" : "800px"} 
       style={
         isMidsized
           ? undefined
@@ -17,9 +19,9 @@ const isMidsized = useMidSizeCheck()
               backgroundSize: 'cover',
             }
       }
-      alignItems='center'
-    > 
-        <ContactPageFormContainer />
+      alignItems="center"
+    >
+      <ContactPageFormContainer />
     </Flex>
   )
 }

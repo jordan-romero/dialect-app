@@ -55,15 +55,15 @@ const AboutCard: React.FC<AboutCardProps> = ({
         maxW="xl"
         h={cardHeight}
         w="100%"
-        m={isMobile ? "0" : "14"}
-        mb={isMidSized ? "10" : "0"}
+        m={isMobile ? '0' : '14'}
+        mb={isMidSized ? '10' : '0'}
         borderRadius="10"
         boxShadow="dark-lg"
       >
         <Flex
           h={isMidSized ? '65%' : '45%'}
           justifyContent="space-between"
-          alignItems={isMidSized ? "space-around" : undefined}
+          alignItems={isMidSized ? 'space-around' : undefined}
           direction={isMidSized ? 'column' : 'row'}
         >
           <Image
@@ -141,8 +141,8 @@ const AboutCard: React.FC<AboutCardProps> = ({
           </Flex>
         </Flex>
         <CardBody w={isMidSized ? '100%' : undefined}>
-          <Text fontSize="lg" mr='6' ml='6' mt='6'>
-            {bio} 
+          <Text fontSize="lg" mr="6" ml="6" mt="6">
+            {bio}
           </Text>
         </CardBody>
         <CardFooter
