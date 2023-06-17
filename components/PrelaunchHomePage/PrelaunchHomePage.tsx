@@ -35,8 +35,7 @@ const PrelaunchHomePage = () => {
     md: '900px',
     lg: '930px',
   });
-  console.log(isContainerExpanded)
-  console.log(testimonialContainerHeight)
+  
   return (
     <>
       <Box
