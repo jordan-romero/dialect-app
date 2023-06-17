@@ -16,17 +16,19 @@ import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 interface PrelaunchCardProps {
   data: CardData
+  setIsContainerExpanded: (isContainerExpanded: boolean) => void
 }
 
-const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
+const PrelaunchCard = ({ data, setIsContainerExpanded }: PrelaunchCardProps) => {
   const { header, body, buttonText, icon, href } = data
   const isMobile = useMobileCheck()
   const isMidSized = useMidSizeCheck()
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isCardExpanded, setIsCardExpanded] = useState(false)
   const MAX_MOBILE_BODY_LENGTH = 115
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded)
+    setIsCardExpanded(!isCardExpanded)
+    setIsContainerExpanded(true)
   }
 
   const renderBodyText = () => {
@@ -34,7 +36,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
       return (
         <>
           <Text>
-            {isExpanded ? body : `${body.slice(0, MAX_MOBILE_BODY_LENGTH)}...`}
+            {isCardExpanded ? body : `${body.slice(0, MAX_MOBILE_BODY_LENGTH)}...`}
           </Text>
           <Text
             color="brand.purple"
@@ -44,7 +46,7 @@ const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
             onClick={toggleExpand}
             mt={2}
           >
-            {isExpanded ? 'Read less' : 'Read more'}
+            {isCardExpanded ? 'Read less' : 'Read more'}
           </Text>
         </>
       )

@@ -1,5 +1,5 @@
 import { Box, useBreakpointValue } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
 import PrelaunchContent from './PrelaunchContent/PrelaunchContentContainer'
 import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsContainer'
 import useMobileCheck from '../hooks/useMobileCheck'
@@ -16,6 +16,7 @@ const PrelaunchHomePage = () => {
   const testimonialsImg = '/testimonialsCarousel.svg'
   const isMobile = useMobileCheck()
   const isMidSized = useMidSizeCheck()
+  const [isContainerExpanded, setIsContainerExpanded] = useState(false)
 
   const containerHeight = useBreakpointValue({
     base: '1125px', // Height for mobile screens
@@ -24,7 +25,7 @@ const PrelaunchHomePage = () => {
   })
 
   const cardContainerHeight = useBreakpointValue({
-    base: '1100px',
+    base: isContainerExpanded ? '1550px' : '1100px', 
     md: '1200px',
     lg: '920px',
   })
@@ -33,8 +34,9 @@ const PrelaunchHomePage = () => {
     base: 'auto',
     md: '900px',
     lg: '930px',
-  })
-
+  });
+  console.log(isContainerExpanded)
+  console.log(testimonialContainerHeight)
   return (
     <>
       <Box
@@ -62,7 +64,7 @@ const PrelaunchHomePage = () => {
                 }
           }
         >
-          <PrelaunchCardsContainer />
+          <PrelaunchCardsContainer setIsContainerExpanded={setIsContainerExpanded} />
         </Box>
       </Zoom>
       {isMobile ? <PrelaunchPersonas /> : null}

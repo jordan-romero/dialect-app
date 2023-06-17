@@ -8,7 +8,13 @@ import { CardData } from '../types'
 import useMobileCheck from '../../hooks/useMobileCheck'
 import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
-const PrelaunchCardsContainer = () => {
+interface PrelaunchCardsContainerProps {
+  setIsContainerExpanded: (isCardExpanded: boolean) => void
+}
+
+const PrelaunchCardsContainer = ({
+  setIsContainerExpanded,
+}: PrelaunchCardsContainerProps) => {
   const cardsData: CardData[] = [
     {
       icon: FaBook,
@@ -40,13 +46,13 @@ const PrelaunchCardsContainer = () => {
   const renderCards = () => {
     if (isMobile) {
       return cardsData.map((cardData, index) => (
-        <PrelaunchCard key={index} data={cardData} />
+        <PrelaunchCard key={index} data={cardData} setIsContainerExpanded={setIsContainerExpanded} />
       ))
     } else if (isMidSized) {
       return (
         <Flex ml="10" mr="10" direction="column">
           {cardsData.map((cardData, index) => (
-            <PrelaunchCard key={index} data={cardData} />
+            <PrelaunchCard key={index} data={cardData} setIsContainerExpanded={setIsContainerExpanded} />
           ))}
         </Flex>
       )
@@ -59,7 +65,7 @@ const PrelaunchCardsContainer = () => {
           mr="10"
         >
           {cardsData.map((cardData, index) => (
-            <PrelaunchCard key={index} data={cardData} />
+            <PrelaunchCard key={index} data={cardData} setIsContainerExpanded={setIsContainerExpanded} />
           ))}
         </SimpleGrid>
       )
