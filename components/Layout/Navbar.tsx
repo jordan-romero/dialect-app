@@ -20,6 +20,7 @@ import router from 'next/router'
 import { useFeatureFlag } from 'configcat-react'
 import Login from '../AuthComponents/Login'
 import Logout from '../AuthComponents/Logout'
+import { useUser } from '@auth0/nextjs-auth0/client'
 
 const Navbar = () => {
   const isMobile = useMobileCheck()
@@ -27,6 +28,7 @@ const Navbar = () => {
     'signUpAndLoginVisible',
     false,
   )
+  const user = useUser()
 
   if (isMobile) {
     return <MobileNavbar />
@@ -50,9 +52,11 @@ const Navbar = () => {
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
-          {/* {signUpAndLoginVisible ? <Login navText="Sign Up" /> : null} */}
-          {signUpAndLoginVisible ? <Login /> : null}
-          {signUpAndLoginVisible ? <Logout /> : null}
+          {signUpAndLoginVisible && user.user === undefined ? <Login /> : null}
+          {signUpAndLoginVisible && user.user !== undefined ? (
+            <NavComponent navText="Dashboard" />
+          ) : null}
+          {signUpAndLoginVisible && user ? <Logout /> : null}
         </HStack>
       </HStack>
     </Flex>

@@ -1,5 +1,4 @@
-import Link from "next/link";
-
 export default function Logout() {
-    return <Link href="/api/auth/logout">Logout</Link>;
-  }
+  // eslint-disable-next-line @next/next/no-html-link-for-pages
+  return <a href="/api/auth/logout">Logout</a>
+}
