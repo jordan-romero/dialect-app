@@ -37,6 +37,7 @@ const Navbar = () => {
       <HStack w="100%" justify="space-between">
         <HStack align="center" bgColor={'brand.purple'} spacing={0}>
           <Link href="/">
+            <Flex>
             <Image
               src="/actingAccentsLogo.png"
               alt="acting accents logo"
@@ -45,13 +46,14 @@ const Navbar = () => {
               mr={-6}
               w="100%"
             />
-          </Link>
-          <Image
+            <Image
             src="/actingAccentsTitle.png"
             alt="acting accents title"
             objectFit="contain"
             h="20"
           />
+          </Flex>
+          </Link>
         </HStack>
         <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
           <NavComponent navText="Home" />
