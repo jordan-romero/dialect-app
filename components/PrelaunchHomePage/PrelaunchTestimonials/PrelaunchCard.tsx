@@ -5,8 +5,6 @@ import {
   Image,
   Text,
   useBreakpointValue,
-  Circle,
-  Button,
 } from '@chakra-ui/react'
 import useMobileCheck from '../../hooks/useMobileCheck'
 
@@ -15,6 +13,7 @@ interface PrelaunchCardProps {
   name: string
   subtitle: string
   image: string
+  altText: string
 }
 
 const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
@@ -22,6 +21,7 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
   name,
   subtitle,
   image,
+  altText
 }) => {
   const isMobile = useMobileCheck()
   const cardHeight = useBreakpointValue({
@@ -49,7 +49,7 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
         <Center bg="gray.200" borderRadius="full" w={40} h={40} mb={4}>
           <Image
             src={image}
-            alt={`${name}'s headshot`}
+            alt={altText}
             fit="cover"
             align={isMobile ? 'center' : 'top'}
             borderRadius="full"
@@ -83,7 +83,7 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
       <Center w="30%" h="100%">
         <Image
           src={image}
-          alt={`${name}'s headshot`}
+          alt={altText}
           fit="cover"
           align="top"
           borderTopLeftRadius={4}
