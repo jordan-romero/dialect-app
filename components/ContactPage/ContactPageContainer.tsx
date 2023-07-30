@@ -4,11 +4,11 @@ import ContactPageFormContainer from './ContactPageForm/ContactPageFormContainer
 import useMobileCheck from '../hooks/useMobileCheck'
 
 const ContactPageContainer = () => {
-const contactPageBgImg = '/contactPageBg.png'
-const isMobile = useMobileCheck()
+  const contactPageBgImg = '/contactPageBg.png'
+  const isMobile = useMobileCheck()
   return (
-    <Flex 
-    h='800px'
+    <Flex
+      h="800px"
       style={
         isMobile
           ? undefined
@@ -17,9 +17,9 @@ const isMobile = useMobileCheck()
               backgroundSize: 'cover',
             }
       }
-      alignItems='center'
-    > 
-        <ContactPageFormContainer />
+      alignItems="center"
+    >
+      <ContactPageFormContainer />
     </Flex>
   )
 }

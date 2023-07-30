@@ -11,6 +11,7 @@ interface Card {
   name: string
   subtitle: string
   image: string
+  altText: string
 }
 
 interface CardCarouselProps {
@@ -48,7 +49,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   transform: 'translateY(-50%)',
                   zIndex: 1,
                   fontSize: '48px',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               >
                 &lt;
@@ -68,7 +69,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   transform: 'translateY(-50%)',
                   zIndex: 1,
                   fontSize: '48px',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               >
                 &gt;

@@ -15,8 +15,8 @@ const NavComponent = ({ navText }: Props) => {
       <Text
         fontSize="xl"
         as="b"
-        color="black"
-        _hover={{ color: 'brand.purple' }}
+        color="util.white"
+        _hover={{ color: 'brand.blueLight' }}
       >
         <Link href={navText === 'Home' ? '/' : `/${formattedNavText}`}>
           {navText}

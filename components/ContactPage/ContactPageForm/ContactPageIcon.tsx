@@ -5,7 +5,7 @@ import { FaEnvelopeOpenText } from 'react-icons/fa'
 const ContactPageIcon = () => {
   return (
     <Box>
-        <Icon as={FaEnvelopeOpenText} boxSize={96} mr={4} color="brand.iris" />
+      <Icon as={FaEnvelopeOpenText} boxSize={96} mr={4} color="brand.iris" />
     </Box>
   )
 }

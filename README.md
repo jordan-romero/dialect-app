@@ -60,3 +60,9 @@ git lfs track "*.psd"
 ```
 
 Changing the type of file (ex. "\*.psd") to the necessary file type
+
+## Database
+
+Using [Supabase](https://supabase.com/dashboard/project/tmhgzuhrjfbppddufgld)
+
+Setting up Supabase for [local development](https://supabase.com/docs/guides/getting-started/local-development)
