@@ -6,7 +6,7 @@ export const cards = [
     name: 'Chandler Riggs',
     subtitle: 'Actor, The Walking Dead, A Million Little Things',
     image: './chandlerRiggs.jpeg',
-    altText: 'Photographer Credit: Maarten De Boer'
+    altText: 'Photographer Credit: Maarten De Boer',
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const cards = [
     name: 'Jason Dolley',
     subtitle: 'Actor, Good Luck Charlie, Cory in the House, Minutemen',
     image: 'jasonDolley.jpg',
-    altText: 'Photographer Credit: Evan Engel for Michael Roud Photography'
+    altText: 'Photographer Credit: Evan Engel for Michael Roud Photography',
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ export const cards = [
     name: 'Trinity Bliss',
     subtitle: 'Actor, Avatar: The Way of Water, The Garcias',
     image: './trinityBliss.jpg',
-    altText: 'Photographer Credit: Shannon Photography'
+    altText: 'Photographer Credit: Shannon Photography',
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ export const cards = [
     name: 'Brooke Ann Smith',
     subtitle: "Actor, Tyler Perry's Too Close to Home",
     image: './brookeSmith.jpg',
-    altText: 'Photographer Credit: James Vela'
+    altText: 'Photographer Credit: James Vela',
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ export const cards = [
     name: 'Ciara Riley Wilson',
     subtitle: "Actor, Kim Possible, LA's Finest, Freeridge",
     image: './ciaraWilson.jpg',
-    altText: 'Photographer Credit: Joanna DeGeneres'
+    altText: 'Photographer Credit: Joanna DeGeneres',
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ export const cards = [
     name: 'Jason Burkart',
     subtitle: 'Actor, Once Upon a Time',
     image: './jasonBurkhart.jpg',
-    altText: 'Photographer Credit: Andrew Gerard'
+    altText: 'Photographer Credit: Andrew Gerard',
   },
   {
     id: 7,
@@ -60,7 +60,7 @@ export const cards = [
     name: 'Shaylaren Hilton',
     subtitle: 'Actor, Winning Time, Reboot, With Love',
     image: './shaylarenHilton.jpg',
-    altText: 'Photographer Credit: Max Nathan'
+    altText: 'Photographer Credit: Max Nathan',
   },
   {
     id: 8,
@@ -69,7 +69,7 @@ export const cards = [
     name: 'Sean Russel Herman',
     subtitle: 'Actor, The Have and Have Nots',
     image: './seanHerman.jpg',
-    altText: 'Photographer Credit: Naomi Christie'
+    altText: 'Photographer Credit: Naomi Christie',
   },
   {
     id: 9,
@@ -78,7 +78,7 @@ export const cards = [
     name: 'Chanté McCormick',
     subtitle: 'Audiobook Narrator',
     image: './chanteMccormick.jpeg',
-    altText: 'Photographer Credit: Diana Nierenberg'
+    altText: 'Photographer Credit: Diana Nierenberg',
   },
   {
     id: 10,
@@ -87,7 +87,7 @@ export const cards = [
     name: 'Stephanie Troyak',
     subtitle: 'Actor, Greenhouse Academy',
     image: './stephanieTroyak.jpg',
-    altText: 'Photographer Credit: Caitlin Fisher'
+    altText: 'Photographer Credit: Caitlin Fisher',
   },
   {
     id: 11,
@@ -96,7 +96,7 @@ export const cards = [
     name: 'Casey McSherry',
     subtitle: 'Actor, Model',
     image: './caseyMcSherry.jpg',
-    altText: 'Photographer Credit: Kristin Hoebermann'
+    altText: 'Photographer Credit: Kristin Hoebermann',
   },
   {
     id: 12,
@@ -105,15 +105,15 @@ export const cards = [
     name: 'Brad Yanagida',
     subtitle: 'Actor',
     image: './bradYanagida.jpeg',
-    altText: 'Photographer Credit: Rebecca Prephan'
+    altText: 'Photographer Credit: Rebecca Prephan',
   },
   {
     id: 13,
     testimonial:
-      "I think what sets Krista apart as a dialect coach is her attention to detail and nuance. A broad, general dialect will get the job done, but the subtleties Krista brings to her coaching, pinpointing a character to a specific location is thrilling to hear and see!",
+      'I think what sets Krista apart as a dialect coach is her attention to detail and nuance. A broad, general dialect will get the job done, but the subtleties Krista brings to her coaching, pinpointing a character to a specific location is thrilling to hear and see!',
     name: 'J Schmidt',
     subtitle: 'Actor',
     image: './jschmidt.jpg',
-    altText: 'Photographer Credit:'
-  }
+    altText: 'Photographer Credit:',
+  },
 ]

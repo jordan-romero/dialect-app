@@ -35,7 +35,7 @@ const Navbar = () => {
   return (
     <Flex w="100%" h="24" align="center" bgColor={'brand.purple'}>
       <HStack w="100%" justify="space-between">
-        <HStack align="center" bgColor={'brand.purple'} spacing={0} >
+        <HStack align="center" bgColor={'brand.purple'} spacing={0}>
           <Link href="/">
             <Image
               src="/actingAccentsLogo.png"
@@ -43,16 +43,15 @@ const Navbar = () => {
               objectFit="contain"
               h="24"
               mr={-6}
-              w='100%'
+              w="100%"
             />
           </Link>
           <Image
-              src="/actingAccentsTitle.png"
-              alt="acting accents title"
-              objectFit="contain"
-              h='20'
-
-             />
+            src="/actingAccentsTitle.png"
+            alt="acting accents title"
+            objectFit="contain"
+            h="20"
+          />
         </HStack>
         <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
           <NavComponent navText="Home" />

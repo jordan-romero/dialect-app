@@ -16,7 +16,7 @@ const DialectVideo = () => {
       h="auto"
     >
       <AspectRatio ratio={16 / 9}>
-      <iframe
+        <iframe
           title="acting actors teaser"
           width="100%"
           height="100%"

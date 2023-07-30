@@ -1,11 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Flex,
-  Center,
-  Image,
-  Text,
-  useBreakpointValue,
-} from '@chakra-ui/react'
+import { Flex, Center, Image, Text, useBreakpointValue } from '@chakra-ui/react'
 import useMobileCheck from '../../hooks/useMobileCheck'
 
 interface PrelaunchCardProps {
@@ -21,7 +15,7 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
   name,
   subtitle,
   image,
-  altText
+  altText,
 }) => {
   const isMobile = useMobileCheck()
   const cardHeight = useBreakpointValue({
