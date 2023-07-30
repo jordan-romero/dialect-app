@@ -57,4 +57,3 @@ export default async function subscribeHandler(
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
-

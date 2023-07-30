@@ -8,8 +8,6 @@ import useMidSizeCheck from '../hooks/useMidSizeCheck'
 import PrelaunchTestimonialsContainer from './PrelaunchTestimonials/PrelaunchTestimonialsContainer'
 import { Zoom } from 'react-awesome-reveal'
 
-import { Slide } from 'react-awesome-reveal'
-
 const PrelaunchHomePage = () => {
   const heroImg = '/heroBgImage.svg'
   const cardImg = '/cardBgImg.svg'
@@ -80,6 +78,7 @@ const PrelaunchHomePage = () => {
         }
       >
         <PrelaunchTestimonialsContainer />
+        {/* {signUpAndLoginVisible ? <div>My loging Feature is enabled</div> : <div>My login Feature is disabled</div>} */}
       </Box>
     </>
   )
