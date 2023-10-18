@@ -59,7 +59,6 @@ const Navbar = () => {
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
-          {/* {signUpAndLoginVisible ? <Login navText="Sign Up" /> : null} */}
           {signUpAndLoginVisible ? <Login /> : null}
           {signUpAndLoginVisible ? <Logout /> : null}
         </HStack>

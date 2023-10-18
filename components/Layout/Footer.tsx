@@ -37,7 +37,9 @@ const Footer = () => {
           <Link href="https://www.actorsdialectcoach.com/" isExternal>
             Need immediate dialect coaching? Reach out now!
           </Link>
-          <Link href="mailto:info@actingaccents.com">Questions? Reach us by email</Link>
+          <Link href="mailto:info@actingaccents.com">
+            Questions? Reach us by email
+          </Link>
         </VStack>
         <Box
           display={isMobile ? 'flex' : 'none'}

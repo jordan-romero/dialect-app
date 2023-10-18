@@ -18,7 +18,7 @@ export default function Home() {
           property="og:description"
           content="An online course to help you learn any dialect!"
         />
-        <meta property="og:image" content="/actingAccentsLogo.png" />
+        <meta property="og:image" content="/actingAccentsLogo.jpg" />
         <meta property="og:image:alt" content="Preview of ActingAccents.com" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.actingaccents.com" />
