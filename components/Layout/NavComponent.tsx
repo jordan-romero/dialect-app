@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 type Props = {
   navText: string
+  onClick?: any
 }
 
 const NavComponent = ({ navText }: Props) => {

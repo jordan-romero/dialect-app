@@ -6,15 +6,28 @@ import theme from '../components/theme'
 import '../components/theme/styles.css'
 import { ConfigCatProvider } from 'configcat-react'
 import { UserProvider } from '@auth0/nextjs-auth0/client'
+import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs'
+import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
+import { useState } from 'react'
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps,
+}: AppProps<{
+  initialSession: Session
+}>) {
   const CONFIGCAT_KEY = process.env.NEXT_PUBLIC_CONFIGCAT_SDK_KEY
+
+  const [supabaseClient] = useState(() => createPagesBrowserClient())
 
   if (!CONFIGCAT_KEY) {
     return <div>Loading...</div>
   }
   return (
-    <UserProvider>
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
+    >
       <ConfigCatProvider sdkKey={CONFIGCAT_KEY}>
         <ChakraProvider theme={theme}>
           <Layout>
@@ -22,6 +35,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </Layout>
         </ChakraProvider>
       </ConfigCatProvider>
-    </UserProvider>
+    </SessionContextProvider>
   )
 }

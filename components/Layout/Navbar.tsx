@@ -11,6 +11,7 @@ import {
   MenuList,
   VStack,
   Image,
+  Button,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import useMobileCheck from '../hooks/useMobileCheck'
@@ -18,8 +19,7 @@ import NavComponent from './NavComponent'
 import Link from 'next/link'
 import router from 'next/router'
 import { useFeatureFlag } from 'configcat-react'
-import Login from '../AuthComponents/Login'
-import Logout from '../AuthComponents/Logout'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
 const Navbar = () => {
   const isMobile = useMobileCheck()
@@ -27,6 +27,7 @@ const Navbar = () => {
     'signUpAndLoginVisible',
     false,
   )
+  const supabaseClient = useSupabaseClient()
 
   if (isMobile) {
     return <MobileNavbar />
@@ -59,8 +60,17 @@ const Navbar = () => {
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
-          {signUpAndLoginVisible ? <Login /> : null}
-          {signUpAndLoginVisible ? <Logout /> : null}
+          {signUpAndLoginVisible ? <NavComponent navText="Login" /> : null}
+          {signUpAndLoginVisible ? (
+            <Button
+              onClick={async () => {
+                await supabaseClient.auth.signOut()
+                router.push('/')
+              }}
+            >
+              Logout{' '}
+            </Button>
+          ) : null}
         </HStack>
       </HStack>
     </Flex>
@@ -68,7 +78,7 @@ const Navbar = () => {
 }
 
 const MobileNavbar = () => {
-  const [menuItems, setMenuItems] = useState(['home', 'about', 'contact'])
+  const menuItems = ['home', 'about', 'contact']
 
   return (
     <Box>

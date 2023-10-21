@@ -10,21 +10,50 @@ datasource db {
   directUrl = env("DEV_POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Course {
-  id        String     @default(cuid()) @id
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  String?
+// Define the User model
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  courses   Course[]
 }
 
-model User {
-  id            String       @default(cuid()) @id
-  name          String?
-  email         String?   @unique
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  courses         Course[]
-  @@map(name: "users")
+// Define the Course model
+model Course {
+  id               Int      @id @default(autoincrement())
+  title            String
+  moduleList       String   // You can specify the format for moduleList
+  gatingMechanism  Boolean  @default(false)
+  completedStatus  Boolean  @default(false)
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  modules          Module[]
+}
+
+// Define the Module model
+model Module {
+  id              Int      @id @default(autoincrement())
+  title           String
+  completedStatus Boolean  @default(false)
+  courseId        Int
+  course          Course   @relation(fields: [courseId], references: [id])
+  resources       Resource[]
+  homework        Homework[]
+}
+
+// Define the Resource model
+model Resource {
+  id      Int     @id @default(autoincrement())
+  name    String
+  url     String
+  moduleId Int
+  module  Module  @relation(fields: [moduleId], references: [id])
+}
+
+// Define the Homework model
+model Homework {
+  id      Int     @id @default(autoincrement())
+  title   String
+  moduleId Int
+  module  Module  @relation(fields: [moduleId], references: [id])
 }
