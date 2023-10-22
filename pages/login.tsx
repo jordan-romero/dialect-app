@@ -2,6 +2,7 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useEffect, useState } from 'react'
+import router from 'next/router'
 
 const LoginPage = () => {
   const supabaseClient = useSupabaseClient()
@@ -29,7 +30,7 @@ const LoginPage = () => {
   if (!user)
     return (
       <Auth
-        redirectTo="http://localhost:3000/dashboard"
+        redirectTo="/dashboard"
         appearance={{ theme: ThemeSupa }}
         supabaseClient={supabaseClient}
         providers={['google', 'github']}
@@ -40,10 +41,6 @@ const LoginPage = () => {
   return (
     <>
       <button onClick={() => supabaseClient.auth.signOut()}>Sign out</button>
-      <p>user:</p>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <p>client-side data fetching with RLS</p>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
     </>
   )
 }
