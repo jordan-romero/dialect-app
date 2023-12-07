@@ -4,23 +4,130 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DEV_POSTGRES_PRISMA_URL") 
+  directUrl = env("DEV_POSTGRES_URL_NON_POOLING")
 }
 
-model users {
-  id        BigInt    @id @default(autoincrement())
-  firstname String?
-  lastname  String?
-  email     String?
-  createdat DateTime? @default(now()) @db.Timestamptz(6)
-  updatedat DateTime? @default(now()) @db.Timestamptz(6)
-  role      String?   @default("student")
+// User Model
+model User {
+  id                      Int       @id @default(autoincrement())
+  auth0Id                 String    @unique
+  email                   String    @unique
+  firstName               String?
+  lastName                String?
+  avatar                  String?
+  hasAccessToPaidCourses  Boolean   @default(false)
+  // Other user-related fields
+  posts                   Post[]
+  comments                Comment[]
+  enrollments             Enrollment[]
+  lessonProgress          LessonProgress[]
 }
 
-model courses {
-  coursename        String?
-  iscoursegated     Boolean?
-  courseduration    Int?
-  coursedescription String?
-  id                Int      @id @default(autoincrement())
+// Course Model
+model Course {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  price       Float?
+  progress    Float     @default(0.0)
+  lessons     Lesson[]
+  resources   Resource[]
+  enrollments Enrollment[]
+}
+
+// Lesson Model
+model Lesson {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  videoUrl    String?
+  quiz        Quiz?
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  resources   Resource[]
+  passScore   Int?
+  lessonProgress LessonProgress[]
+}
+
+// LessonProgress Model
+model LessonProgress {
+  id            Int       @id @default(autoincrement())
+  lessonId      Int
+  progress      Float
+  quizScore     Int?
+  quizPassed    Boolean?
+  updatedAt     DateTime  @updatedAt
+  lesson        Lesson    @relation(fields: [lessonId], references: [id])
+  user          User      @relation(fields: [userId], references: [id])
+  userId        Int       // Add this field to establish the opposite relation
+}
+
+// Quiz model 
+model Quiz {
+  id          Int       @id @default(autoincrement())
+  questions   Question[]
+  lessonId    Int       @unique
+  lesson      Lesson    @relation(fields: [lessonId], references: [id])
+  score       Int?
+  passScore   Int?
+}
+
+// Question Model
+model Question {
+  id          Int       @id @default(autoincrement())
+  text        String
+  options     Json
+  correctAnswer Json
+  quizId      Int
+  quiz        Quiz      @relation(fields: [quizId], references: [id])
+}
+
+// Resource Model
+model Resource {
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String
+  url         String
+  courseId    Int?
+  lessonId    Int?
+  course      Course?   @relation(fields: [courseId], references: [id])
+  lesson      Lesson?   @relation(fields: [lessonId], references: [id])
+  
+  @@unique([courseId, lessonId])
+}
+
+// Post Model
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  comments    Comment[]
+}
+
+// Comment Model
+model Comment {
+  id          Int       @id @default(autoincrement())
+  content     String
+  postId      Int
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  post        Post      @relation(fields: [postId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+// Enrollment Model
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  courseId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
 }
