@@ -10,11 +10,7 @@ import { Course, CourseSideBarProps } from './courseTypes'
 
 const CourseSideBar = ({ freeCourses, onSelectLesson }: CourseSideBarProps) => {
   const [currentLesson, setCurrentLesson] = useState<number>(0)
-  const [expandedCourses, setExpandedCourses] = useState<number[]>([]) // Maintain an array of expanded course indices
-
-  // const toggleLesson = (lessonIndex: number) => {
-  //   setCurrentLesson(lessonIndex)
-  // }
+  const [expandedCourses, setExpandedCourses] = useState<number[]>([])
 
   const toggleCourse = (courseIndex: number) => {
     // Toggle the course's expanded/collapsed status

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Text, Icon, VStack, HStack, Box } from '@chakra-ui/react'
 import { MdFiberManualRecord } from 'react-icons/md'
 import { Lesson } from '../Course/courseTypes'
-import LessonContainer from './LessonContainer' // Import the LessonContainer component
 
 function LessonTracker({
   totalLessons,
@@ -40,7 +39,7 @@ function LessonTracker({
 
   const handleLessonClick = (lesson: Lesson) => {
     setSelectedLesson(lesson)
-    onSelectLesson(lesson) // Call onSelectLesson prop with the selected lesson
+    onSelectLesson(lesson)
   }
 
   return (

@@ -1,7 +1,12 @@
 import React from 'react'
 import { Box, Text, Button, Link } from '@chakra-ui/react'
+import { Lesson } from '../Course/courseTypes'
 
-const LessonContainer = ({ lesson }) => {
+type LessonContainerProps = {
+  lesson: Lesson
+}
+
+const LessonContainer: React.FC<LessonContainerProps> = ({ lesson }) => {
   return (
     <Box p={4}>
       {/* Lesson Title */}

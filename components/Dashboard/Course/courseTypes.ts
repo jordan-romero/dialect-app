@@ -8,7 +8,7 @@ export type Course = {
 
 export type CourseSideBarProps = {
   freeCourses: Course[] | null
-  onSelectLesson: any
+  onSelectLesson: (lesson: Lesson) => void
 }
 
 export type Resource = {
