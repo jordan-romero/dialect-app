@@ -1,5 +1,14 @@
 export const cards = [
   {
+    id: 15,
+    testimonial:
+      "I've been lucky enough to work on a wide array of dialects throughout my career, and the only notebook I still have intact from my days at Ithaca College is the one from Krista Scott's dialect class. It felt like a secret language, and her enthusiasm  made it all the more exciting to learn. I use those lessons constantly, and still to this day, I'll spend hours marking up my scripts with IPA notations. I think perhaps dialects come more naturally to some, but for me, apart from the few I grew up hearing, it was always a struggle to immerse myself in a strange new voice. Luckily, as an analytical thinking, I often like to work from the outside in, and having IPA at the base line of my character work, I am able to form a different kind of connection with characters I may have otherwise struggled finding. I am incredibly grateful to Krista for imparting this whole new way of thinking about text. I count that college notebook among my treasured possessions.",
+    name: 'Jeremy Jordan',
+    subtitle: 'Student',
+    image: './jeremyJordan.jpg',
+    altText: 'Photographer Credit:',
+  },
+  {
     id: 1,
     testimonial:
       "This is absolutely the dialect coach you've been looking for. Scott's method teaches you the IPA (International Phonetic Alphabet) - an easy-to-learn cheat sheet that when mastered, allows you to speak in any dialect you can think of. Over the course of 10 months, Scott taught me 11 vastly different accents, while only doing one session per week - and yet I'm comfortable enough to pop into any of those accents at a moment's notice. He teaches at your pace but pushes you just enough to make sure you're getting what you want (and more!) out of his class. I can't recommend Scott enough!",
@@ -123,6 +132,7 @@ export const cards = [
     name: 'Jeffrey Schmidt',
     subtitle: 'Artistic Director',
     image: './JSchmidt.jpg',
+    altText: 'Photographer Credit:',
   },
   {
     id: 14,
@@ -131,14 +141,7 @@ export const cards = [
     name: 'Scott Alan Moffitt',
     subtitle: 'Actor/Dialect Coach',
     image: './scott.jpeg',
-  },
-  {
-    id: 15,
-    testimonial:
-      "I've been lucky enough to work on a wide array of dialects throughout my career, and the only notebook I still have intact from my days at Ithaca College is the one from Krista Scott's dialect class. It felt like a secret language, and her enthusiasm  made it all the more exciting to learn. I use those lessons constantly, and still to this day, I'll spend hours marking up my scripts with IPA notations. I think perhaps dialects come more naturally to some, but for me, apart from the few I grew up hearing, it was always a struggle to immerse myself in a strange new voice. Luckily, as an analytical thinking, I often like to work from the outside in, and having IPA at the base line of my character work, I am able to form a different kind of connection with characters I may have otherwise struggled finding. I am incredibly grateful to Krista for imparting this whole new way of thinking about text. I count that college notebook among my treasured possessions.",
-    name: 'Jeremy Jordan',
-    subtitle: 'Student',
-    image: './jeremyJordan.jpg',
+    altText: 'Photographer Credit:',
   },
   {
     id: 16,
@@ -147,5 +150,6 @@ export const cards = [
     name: 'Leroy Hood',
     subtitle: 'Student, actor, dialect coachee',
     image: './leroyHood.jpg',
+    altText: 'Photographer Credit:',
   },
 ]

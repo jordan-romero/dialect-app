@@ -50,7 +50,7 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
             boxSize="full"
           />
         </Center>
-        <Text fontSize="xl" mb={2} h={cardHeight} overflow="hidden">
+        <Text fontSize="lg" mb={2} h={cardHeight} overflow="hidden">
           {testimonial}
         </Text>
         <Text fontSize="lg" fontWeight="bold" mb={2}>
