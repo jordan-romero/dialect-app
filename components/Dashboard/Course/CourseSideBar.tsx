@@ -24,7 +24,15 @@ const CourseSideBar = ({ freeCourses, onSelectLesson }: CourseSideBarProps) => {
   }
 
   return (
-    <Box p={4} width={300} bg="brand.iris" color="brand.white">
+    <Box
+      p={4}
+      width={300}
+      height={700}
+      bg="util.gray"
+      color="util.black"
+      borderTopLeftRadius="xl"
+      borderBottomLeftRadius="xl"
+    >
       <Flex direction="column">
         {freeCourses &&
           freeCourses.map((course: Course, index: number) => (
