@@ -11,6 +11,7 @@ interface Card {
   name: string
   subtitle: string
   image: string
+  altText: string
 }
 
 interface CardCarouselProps {
