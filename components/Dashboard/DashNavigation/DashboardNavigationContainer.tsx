@@ -1,8 +1,10 @@
-import { Box, VStack, Spacer, Icon } from '@chakra-ui/react'
+import { Box, VStack, Icon } from '@chakra-ui/react'
 import React from 'react'
 import { FaHome, FaFileAlt, FaUser } from 'react-icons/fa'
 import { GiProgression } from 'react-icons/gi'
 import { IoChatboxEllipsesSharp } from 'react-icons/io5'
+import Link from 'next/link'
+import Logout from '../../AuthComponents/Logout'
 
 const DashboardNavigationContainer = () => {
   return (
@@ -14,14 +16,24 @@ const DashboardNavigationContainer = () => {
         justify="flex-start"
         height="88%"
       >
-        <Icon as={FaHome} boxSize={8} color="util.white" />
-        <Icon as={FaFileAlt} boxSize={8} color="util.white" />
-        <Icon as={GiProgression} boxSize={8} color="util.white" />
-        <Icon as={IoChatboxEllipsesSharp} boxSize={8} color="util.white" />
+        <Link href="/">
+          <Icon as={FaHome} boxSize={8} color="util.white" />
+        </Link>
+        <Link href="/dashboard/resources">
+          <Icon as={FaFileAlt} boxSize={8} color="util.white" />
+        </Link>
+        <Link href="/dashboard/progress">
+          <Icon as={GiProgression} boxSize={8} color="util.white" />
+        </Link>
+        <Link href="/dashboard/community">
+          <Icon as={IoChatboxEllipsesSharp} boxSize={8} color="util.white" />
+        </Link>
       </VStack>
       <VStack spacing={6} align="center" mr="4" justify="flex-end">
-        <Icon as={FaUser} boxSize={8} color="util.white" />
-        <Box>Logout</Box>
+        <Link href="/dashboard/profile">
+          <Icon as={FaUser} boxSize={8} color="util.white" />
+        </Link>
+        <Logout />
       </VStack>
     </Box>
   )
