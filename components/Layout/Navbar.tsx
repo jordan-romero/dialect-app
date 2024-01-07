@@ -20,6 +20,7 @@ import router from 'next/router'
 import { useFeatureFlag } from 'configcat-react'
 import Login from '../AuthComponents/Login'
 import Logout from '../AuthComponents/Logout'
+import { useUser } from '@auth0/nextjs-auth0/client'
 
 const Navbar = () => {
   const isMobile = useMobileCheck()
@@ -27,6 +28,7 @@ const Navbar = () => {
     'signUpAndLoginVisible',
     false,
   )
+  const user = useUser()
 
   if (isMobile) {
     return <MobileNavbar />
@@ -38,30 +40,32 @@ const Navbar = () => {
         <HStack align="center" bgColor={'brand.purple'} spacing={0}>
           <Link href="/">
             <Flex>
-            <Image
-              src="/actingAccentsLogo.png"
-              alt="acting accents logo"
-              objectFit="contain"
-              h="24"
-              mr={-6}
-              w="100%"
-            />
-            <Image
-            src="/actingAccentsTitle.png"
-            alt="acting accents title"
-            objectFit="contain"
-            h="20"
-          />
-          </Flex>
+              <Image
+                src="/actingAccentsLogo.png"
+                alt="acting accents logo"
+                objectFit="contain"
+                h="24"
+                mr={-6}
+                w="100%"
+              />
+              <Image
+                src="/actingAccentsTitle.png"
+                alt="acting accents title"
+                objectFit="contain"
+                h="20"
+              />
+            </Flex>
           </Link>
         </HStack>
         <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
-          {/* {signUpAndLoginVisible ? <Login navText="Sign Up" /> : null} */}
-          {signUpAndLoginVisible ? <Login /> : null}
-          {signUpAndLoginVisible ? <Logout /> : null}
+          {signUpAndLoginVisible && user.user === undefined ? <Login /> : null}
+          {signUpAndLoginVisible && user.user !== undefined ? (
+            <NavComponent navText="Dashboard" />
+          ) : null}
+          {signUpAndLoginVisible && user ? <Logout /> : null}
         </HStack>
       </HStack>
     </Flex>
