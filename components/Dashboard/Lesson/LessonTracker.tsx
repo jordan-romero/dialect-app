@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Text, Icon, VStack, HStack, Box } from '@chakra-ui/react'
-import { MdFiberManualRecord } from 'react-icons/md'
+import { MdCheck, MdFiberManualRecord, MdLock } from 'react-icons/md' // Import the checkmark and lock icons
 import { Lesson } from '../Course/courseTypes'
 
-function LessonTracker({
+const LessonTracker = ({
   totalLessons,
   currentLesson,
   lessons,
@@ -13,23 +13,21 @@ function LessonTracker({
   currentLesson: number
   lessons: Lesson[]
   onSelectLesson: (lesson: Lesson) => void
-}) {
+}) => {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
 
-  const circleColor = (index: number) => {
+  const lessonIcon = (index: number) => {
     if (index < currentLesson) {
-      return 'green.500' // Completed lesson
+      return <Icon as={MdCheck} color="green.500" boxSize={2} /> // Checkmark for completed lesson
     } else if (index === currentLesson) {
-      return 'green.500' // Current lesson
+      return <Icon as={MdFiberManualRecord} color="green.500" boxSize={2} /> // Current lesson
     } else {
-      return 'gray.200' // Future lesson (locked)
+      return <Icon as={MdLock} color="gray.500" boxSize={2} /> // Locked lesson
     }
   }
 
   const lessonStyle = (index: number) => {
     return {
-      background:
-        selectedLesson === lessons[index] ? 'lightgray' : 'transparent',
       borderBottom:
         selectedLesson === lessons[index] ? '2px solid blue' : 'none',
       cursor: 'pointer',
@@ -52,8 +50,8 @@ function LessonTracker({
           onClick={() => handleLessonClick(lesson)}
           style={lessonStyle(index)}
         >
-          <Icon as={MdFiberManualRecord} color="white" boxSize={2} />
-          <Text fontSize="sm">{lesson.title}</Text>
+          {lessonIcon(index)}
+          <Text fontSize="md">{lesson.title}</Text>
           {index < totalLessons - 1 && (
             <Box
               position="absolute"

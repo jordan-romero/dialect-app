@@ -8,9 +8,9 @@ type LessonContainerProps = {
 
 const LessonContainer: React.FC<LessonContainerProps> = ({ lesson }) => {
   return (
-    <Box p={4}>
+    <Box>
       {/* Lesson Title */}
-      <Text fontSize="xl" fontWeight="bold" mb={4}>
+      <Text fontSize="2xl" fontWeight="bold" mb={4}>
         {lesson.title}
       </Text>
 
@@ -30,8 +30,6 @@ const LessonContainer: React.FC<LessonContainerProps> = ({ lesson }) => {
         ></iframe>
       </Box>
 
-      {/* Resources */}
-      {/* Resources */}
       {lesson.resources && lesson.resources.length > 0 && (
         <Box mb={4}>
           <Text fontSize="lg" fontWeight="bold">

@@ -8,7 +8,7 @@ import Logout from '../../AuthComponents/Logout'
 
 const DashboardNavigationContainer = () => {
   return (
-    <Box bg="brand.purple" color="util.white" p={4} mr="-4" height={700}>
+    <Box bg="brand.purple" color="util.white" p={4} mr="-4" h="100vh">
       <VStack
         spacing={8}
         align="center"
