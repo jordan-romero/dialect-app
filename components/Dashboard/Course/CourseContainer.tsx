@@ -26,8 +26,8 @@ const CourseContainer = () => {
   }
 
   return (
-    <Flex>
-      <Box flex="1">
+    <Flex w="100%">
+      <Box>
         <CourseSideBar
           freeCourses={freeCourses}
           onSelectLesson={handleSelectLesson}

@@ -20,6 +20,7 @@ export default async (
           include: {
             resources: true,
             quiz: true,
+            discussions: true,
           },
         },
       },
@@ -27,7 +28,6 @@ export default async (
 
     if (freeCourses !== null) {
       // Course found, it's not null
-      console.log(freeCourses, 'Test res')
       res.status(200).json(freeCourses)
     } else {
       // Course not found (null case)

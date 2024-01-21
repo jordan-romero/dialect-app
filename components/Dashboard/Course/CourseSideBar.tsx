@@ -24,27 +24,40 @@ const CourseSideBar = ({ freeCourses, onSelectLesson }: CourseSideBarProps) => {
   }
 
   return (
-    <Box p={4} width={300} bg="brand.iris" color="brand.white">
+    <Box
+      p={4}
+      width={300}
+      height="100vh"
+      bg="util.gray"
+      color="util.black"
+      borderTopLeftRadius="xl"
+      borderBottomLeftRadius="xl"
+    >
       <Flex direction="column">
         {freeCourses &&
           freeCourses.map((course: Course, index: number) => (
             <Box key={index} mb={index === 0 ? 2 : 4} cursor="pointer">
               <Flex alignItems="center" onClick={() => toggleCourse(index)}>
-                <Icon as={MdLockOpen} boxSize={4} mr={2} color="red.500" />
-                <Text fontSize="md">{course.title}</Text>
+                <Icon
+                  as={MdLockOpen}
+                  boxSize={6}
+                  mr={4}
+                  color="brand.purpleLight"
+                />
+                <Text fontSize="xl">{course.title}</Text>
                 <Icon
                   as={
                     expandedCourses.includes(index)
                       ? MdKeyboardArrowUp
                       : MdKeyboardArrowDown
                   }
-                  boxSize={4}
-                  mr={2}
-                  color="red.500"
+                  boxSize={6}
+                  ml={4}
+                  color="brand.purpleLight"
                 />
               </Flex>
               {expandedCourses.includes(index) && (
-                <Box background="lightgray" mb={6} width="100%">
+                <Box mb={6} width="100%">
                   <LessonTracker
                     totalLessons={course.lessons.length}
                     currentLesson={currentLesson}

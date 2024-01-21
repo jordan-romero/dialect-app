@@ -16,6 +16,11 @@ const theme = extendTheme({
       darkGray: '#333333',
       mediumGray: '#999999',
     },
+    lesson: {
+      completed: '#B1F5F4',
+      inProgress: '#7EACE2',
+      notStarted: '#ffffff',
+    },
   },
   fonts: {
     heading: `Arimo, ${base.fonts?.heading}`,

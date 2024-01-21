@@ -1,10 +1,12 @@
+// Prisma schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("DEV_POSTGRES_PRISMA_URL") 
+  provider = "postgresql" 
+  url = env("DEV_POSTGRES_PRISMA_URL")
   directUrl = env("DEV_POSTGRES_URL_NON_POOLING")
 }
 
@@ -17,11 +19,12 @@ model User {
   lastName                String?
   avatar                  String?
   hasAccessToPaidCourses  Boolean   @default(false)
-  // Other user-related fields
   posts                   Post[]
   comments                Comment[]
   enrollments             Enrollment[]
   lessonProgress          LessonProgress[]
+  discussions             Discussion[] @relation("DiscussionUser")
+  answers                 Answer[] @relation("AnswerUser")
 }
 
 // Course Model
@@ -48,6 +51,7 @@ model Lesson {
   resources   Resource[]
   passScore   Int?
   lessonProgress LessonProgress[]
+  discussions Discussion[] @relation("LessonDiscussion")
 }
 
 // LessonProgress Model
@@ -60,7 +64,7 @@ model LessonProgress {
   updatedAt     DateTime  @updatedAt
   lesson        Lesson    @relation(fields: [lessonId], references: [id])
   user          User      @relation(fields: [userId], references: [id])
-  userId        Int       // Add this field to establish the opposite relation
+  userId        Int       
 }
 
 // Quiz model 
@@ -95,6 +99,31 @@ model Resource {
   lesson      Lesson?   @relation(fields: [lessonId], references: [id])
   
   @@unique([courseId, lessonId])
+}
+
+// Discussion Model 
+model Discussion {
+  id          Int       @id @default(autoincrement())
+  question    String
+  lessonId    Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation("DiscussionUser", fields: [userId], references: [id])
+  userId      Int
+  answers     Answer[]  @relation("DiscussionAnswer")
+  lesson      Lesson    @relation("LessonDiscussion", fields: [lessonId], references: [id])
+}
+
+// Answer Model
+model Answer {
+  id          Int       @id @default(autoincrement())
+  content     String
+  discussionId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation("AnswerUser", fields: [userId], references: [id])
+  userId      Int
+  discussion  Discussion @relation("DiscussionAnswer", fields: [discussionId], references: [id])
 }
 
 // Post Model
