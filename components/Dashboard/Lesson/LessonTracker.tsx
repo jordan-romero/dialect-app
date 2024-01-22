@@ -18,11 +18,11 @@ const LessonTracker = ({
 
   const lessonIcon = (index: number) => {
     if (index < currentLesson) {
-      return <Icon as={MdCheck} color="green.500" boxSize={2} /> // Checkmark for completed lesson
+      return <Icon as={MdCheck} color="green.500" boxSize={4} /> // Checkmark for completed lesson
     } else if (index === currentLesson) {
-      return <Icon as={MdFiberManualRecord} color="green.500" boxSize={2} /> // Current lesson
+      return <Icon as={MdFiberManualRecord} color="brand.blue" boxSize={4} /> // Current lesson
     } else {
-      return <Icon as={MdLock} color="gray.500" boxSize={2} /> // Locked lesson
+      return <Icon as={MdLock} color="gray.500" boxSize={4} /> // Locked lesson
     }
   }
 
