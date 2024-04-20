@@ -72,7 +72,6 @@ const CourseContainer = () => {
         <CourseSideBar
           lessons={lessons}
           onSelectLesson={handleSelectLesson}
-          lessonProgress={lessonProgress}
           hasAccessToPaidCourses={false}
         />
       </Box>

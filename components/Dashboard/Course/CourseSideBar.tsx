@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Flex, Text, Icon, VStack, HStack } from '@chakra-ui/react'
 import {
   MdCheck,
@@ -11,18 +11,42 @@ import { Lesson } from './courseTypes'
 type CourseSideBarProps = {
   lessons: Lesson[] | null
   onSelectLesson: (lesson: Lesson) => void
-  lessonProgress: { [key: number]: number }
   hasAccessToPaidCourses: boolean
 }
 
 const CourseSideBar = ({
   lessons,
   onSelectLesson,
-  lessonProgress,
   hasAccessToPaidCourses,
 }: CourseSideBarProps) => {
+  const [lessonProgress, setLessonProgress] = useState<{
+    [key: number]: number
+  }>({})
+
+  useEffect(() => {
+    const fetchLessonProgress = async () => {
+      try {
+        const response = await fetch('/api/lessonProgress')
+        if (response.ok) {
+          const data = await response.json()
+          setLessonProgress(data)
+        } else {
+          console.error(
+            'Error retrieving lesson progress:',
+            response.statusText,
+          )
+        }
+      } catch (error) {
+        console.error('Error retrieving lesson progress:', error)
+      }
+    }
+
+    fetchLessonProgress()
+  }, [])
+
+  console.log(lessonProgress, 'lessonProgress')
+
   const isLessonLocked = (lesson: Lesson, index: number) => {
-    // The first lesson is always unlocked
     if (index === 0) return false
 
     // Check if the previous lesson is completed

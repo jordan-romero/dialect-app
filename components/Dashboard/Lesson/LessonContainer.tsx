@@ -109,7 +109,7 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
                 </ul>
               </TabPanel>
             )}
-            {lesson.quiz && (
+            {lesson && lesson.quiz && (
               <TabPanel>
                 {/* Content for Quiz Tab */}
                 <Button
