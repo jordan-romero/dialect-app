@@ -15,14 +15,12 @@ import { Lesson, Resource } from '../Course/courseTypes'
 
 type LessonContainerProps = {
   lesson: Lesson
-  totalLessons: number
   onLessonComplete: (lessonId: number) => void
   isCompleted: boolean
 }
 
 const LessonContainer: React.FC<LessonContainerProps> = ({
   lesson,
-  totalLessons,
   onLessonComplete,
   isCompleted,
 }) => {
@@ -58,16 +56,17 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
             title={lesson.title}
             allowFullScreen
           ></iframe>
-
-          <Checkbox
-            size="lg"
-            colorScheme="green"
-            mt={10}
-            isChecked={isCompleted}
-            onChange={handleLessonComplete}
-          >
-            Mark as Watched
-          </Checkbox>
+          {lesson && lesson.videoUrl && (
+            <Checkbox
+              size="lg"
+              colorScheme="green"
+              mt={10}
+              isChecked={isCompleted}
+              onChange={handleLessonComplete}
+            >
+              {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
+            </Checkbox>
+          )}
         </Box>
 
         {/* Tabs for Resources and Quiz */}

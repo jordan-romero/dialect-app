@@ -1,82 +1,79 @@
-// CourseContainer.tsx
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainer from '../Lesson/LessonContainer'
-import { Course, Lesson } from './courseTypes'
+import { Lesson } from './courseTypes'
 import { Flex, Box } from '@chakra-ui/react'
+import { useUser } from '@auth0/nextjs-auth0/client'
 
 const CourseContainer = () => {
-  const [courses, setCourses] = useState<Course[] | null>(null)
-  const [totalLessons, setTotalLessons] = useState<number>(0)
+  const [lessons, setLessons] = useState<Lesson[] | null>(null)
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
   }>({})
+  const { user } = useUser()
 
   useEffect(() => {
-    // Fetch a list of courses from the API route
-    fetch('/api/courses')
+    fetch('/api/lessons')
       .then((response) => response.json())
-      .then((data: Course[]) => {
-        setCourses(data)
-        const selectedCourse = data.find(
-          (course) => course.id === selectedLesson?.courseId,
-        )
-        const total = selectedCourse?.lessons
-          ? selectedCourse.lessons.length
-          : 0
-        setTotalLessons(total)
-        console.log(data)
+      .then((data: Lesson[]) => {
+        setLessons(data)
+        if (data && data.length > 0) {
+          const firstLesson = data[0]
+          setSelectedLesson(firstLesson)
+          // Set the first lesson as in progress if it's not completed
+          setLessonProgress((prev) => ({
+            ...prev,
+            [firstLesson.id]: prev[firstLesson.id] === 100 ? 100 : 50,
+          }))
+        }
       })
       .catch((error) => {
-        console.error('Error fetching courses:', error)
-      })
-  }, [selectedLesson])
-
-  useEffect(() => {
-    // Fetch lesson progress data from the API route
-    fetch('/api/lessonProgress')
-      .then((response) => response.json())
-      .then((data: { [key: number]: number }) => {
-        setLessonProgress(data)
-      })
-      .catch((error) => {
-        console.error('Error fetching lesson progress:', error)
+        console.error('Error fetching lessons:', error)
       })
   }, [])
 
   const handleSelectLesson = (lesson: Lesson) => {
     setSelectedLesson(lesson)
+    // Set the lesson as in progress when selected, if not already completed
+    setLessonProgress((prev) => ({
+      ...prev,
+      [lesson.id]: prev[lesson.id] === 100 ? 100 : 50,
+    }))
   }
 
   const handleLessonComplete = async (lessonId: number) => {
+    console.log('Lesson completed:', lessonId)
     try {
-      // Update the progress in the database
-      await fetch('/api/updateProgress', {
+      const response = await fetch('/api/updateProgress', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ lessonId }),
       })
+      if (!response.ok) {
+        throw new Error(`Failed to update progress. Status: ${response.status}`)
+      }
 
-      // Update the lesson progress state
+      // Update lesson progress locally if the API call succeeds
       setLessonProgress((prevProgress) => ({
         ...prevProgress,
         [lessonId]: 100,
       }))
     } catch (error) {
-      console.error('Error updating progress:', error)
+      console.error('Error updating lesson progress:', error)
     }
   }
 
   return (
     <Flex w="100%">
-      <Box>
+      <Box w="300px">
         <CourseSideBar
-          courses={courses}
+          lessons={lessons}
           onSelectLesson={handleSelectLesson}
           lessonProgress={lessonProgress}
+          hasAccessToPaidCourses={false}
         />
       </Box>
       <Box flex="2">
@@ -84,7 +81,6 @@ const CourseContainer = () => {
           <Flex justifyContent="center" alignItems="center" height="100vh">
             <LessonContainer
               lesson={selectedLesson}
-              totalLessons={totalLessons}
               onLessonComplete={handleLessonComplete}
               isCompleted={lessonProgress[selectedLesson.id] === 100}
             />

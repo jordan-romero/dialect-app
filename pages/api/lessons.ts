@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-// pages/api/course.ts
+// pages/api/lesson.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient, Course } from '@prisma/client'
 
@@ -11,27 +11,24 @@ export default async (
 ) => {
   if (req.method === 'GET') {
     try {
-      const courses = await prisma.course.findMany({
+      const lessons = await prisma.lesson.findMany({
         include: {
-          lessons: {
-            include: {
-              resources: true,
-              quiz: true,
-              discussions: true,
-            },
-          },
+          resources: true,
+          quiz: true,
+          discussions: true,
         },
+
         orderBy: {
           id: 'asc',
         },
       })
 
-      res.status(200).json(courses)
+      res.status(200).json(lessons)
     } catch (error) {
       console.error(error)
       res
         .status(500)
-        .json({ error: 'An error occurred while fetching the courses.' })
+        .json({ error: 'An error occurred while fetching the lessons.' })
     } finally {
       await prisma.$disconnect()
     }

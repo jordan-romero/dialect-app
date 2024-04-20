@@ -51,6 +51,7 @@ model Lesson {
   resources   Resource[]
   passScore   Int?
   isCompleted Boolean @default(false)
+  isGatedLesson Boolean @default(true)
   lessonProgress LessonProgress[]
   discussions Discussion[] @relation("LessonDiscussion")
 }
