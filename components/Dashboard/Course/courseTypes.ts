@@ -3,12 +3,7 @@ export type Course = {
   title: string
   description: string
   lessons: []
-  // Define other fields in your Course type as needed
-}
-
-export type CourseSideBarProps = {
-  freeCourses: Course[] | null
-  onSelectLesson: (lesson: Lesson) => void
+  isGatedCourse: boolean
 }
 
 export type Resource = {

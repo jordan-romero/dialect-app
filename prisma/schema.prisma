@@ -32,8 +32,8 @@ model Course {
   id          Int       @id @default(autoincrement())
   title       String
   description String
-  price       Float?
-  progress    Float     @default(0.0)
+  isCompleted Boolean @default(false)
+  isGatedCourse Boolean @default(true)
   lessons     Lesson[]
   resources   Resource[]
   enrollments Enrollment[]
@@ -50,6 +50,7 @@ model Lesson {
   course      Course    @relation(fields: [courseId], references: [id])
   resources   Resource[]
   passScore   Int?
+  isCompleted Boolean @default(false)
   lessonProgress LessonProgress[]
   discussions Discussion[] @relation("LessonDiscussion")
 }

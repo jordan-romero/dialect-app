@@ -16,13 +16,19 @@ import { Lesson, Resource } from '../Course/courseTypes'
 type LessonContainerProps = {
   lesson: Lesson
   totalLessons: number
+  onLessonComplete: (lessonId: number) => void
+  isCompleted: boolean
 }
 
 const LessonContainer: React.FC<LessonContainerProps> = ({
   lesson,
   totalLessons,
+  onLessonComplete,
+  isCompleted,
 }) => {
-  const [isCompleted, setIsCompleted] = useState(false)
+  const handleLessonComplete = () => {
+    onLessonComplete(lesson.id)
+  }
 
   return (
     <Box w="100%" h="100%" p={10} pl={0}>
@@ -53,7 +59,13 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
             allowFullScreen
           ></iframe>
 
-          <Checkbox size="lg" colorScheme="green" mt={10}>
+          <Checkbox
+            size="lg"
+            colorScheme="green"
+            mt={10}
+            isChecked={isCompleted}
+            onChange={handleLessonComplete}
+          >
             Mark as Watched
           </Checkbox>
         </Box>
