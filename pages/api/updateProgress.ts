@@ -82,6 +82,7 @@ export default async function handler(
       }
 
       // Update the lesson's isCompleted field if progress reaches 100
+
       if (progress === 100) {
         await prisma.lesson.update({
           where: { id: lessonId },
