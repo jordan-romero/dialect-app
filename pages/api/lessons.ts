@@ -23,7 +23,7 @@ export default async (
         },
       })
 
-      res.status(200).json(lessons)
+      res.status(200).json(lessons as any)
     } catch (error) {
       console.error(error)
       res
