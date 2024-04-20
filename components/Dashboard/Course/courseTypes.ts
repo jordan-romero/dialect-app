@@ -30,6 +30,7 @@ export type Lesson = {
   videoUrl: string
   courseId: number
   isGatedLesson: boolean
+  isCompleted: boolean
   passScore: number | null // Assuming passScore can be nullable
   resources: Resource[]
   quiz: Quiz | null // Assuming quiz can be nullable

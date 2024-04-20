@@ -54,7 +54,7 @@ export default async function handler(
     })
 
     // Calculate the progress based on whether the lesson has a quiz or not
-    const progress = quiz ? 50 : 100
+    const progress = quiz && quiz.hasBeenAttempted === false ? 50 : 100
     console.log('Progress:', progress)
 
     if (existingLessonProgress) {

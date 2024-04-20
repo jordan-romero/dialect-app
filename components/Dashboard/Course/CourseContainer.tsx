@@ -11,7 +11,8 @@ const CourseContainer = () => {
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
   }>({})
-  const { user } = useUser()
+
+  console.log(lessonProgress, 'lessonProgress')
 
   useEffect(() => {
     fetch('/api/lessons')
@@ -43,7 +44,6 @@ const CourseContainer = () => {
   }
 
   const handleLessonComplete = async (lessonId: number) => {
-    console.log('Lesson completed:', lessonId)
     try {
       const response = await fetch('/api/updateProgress', {
         method: 'POST',
@@ -65,6 +65,8 @@ const CourseContainer = () => {
       console.error('Error updating lesson progress:', error)
     }
   }
+
+  console.log(lessons, 'test lessons')
 
   return (
     <Flex w="100%">

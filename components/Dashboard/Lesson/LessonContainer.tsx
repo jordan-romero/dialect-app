@@ -22,12 +22,11 @@ type LessonContainerProps = {
 const LessonContainer: React.FC<LessonContainerProps> = ({
   lesson,
   onLessonComplete,
-  isCompleted,
 }) => {
   const handleLessonComplete = () => {
     onLessonComplete(lesson.id)
   }
-
+  console.log(lesson, 'lesson')
   return (
     <Box w="100%" h="100%" p={10} pl={0}>
       {/* Lesson Title */}
@@ -61,10 +60,10 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
               size="lg"
               colorScheme="green"
               mt={10}
-              isChecked={isCompleted}
+              isChecked={lesson.isCompleted}
               onChange={handleLessonComplete}
             >
-              {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
+              {lesson.isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
             </Checkbox>
           )}
         </Box>
