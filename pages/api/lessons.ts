@@ -34,8 +34,6 @@ export default async (
       },
     })
 
-    console.log('Fetched lessons:', lessons)
-
     if (!lessons || lessons.length === 0) {
       console.log('No lessons found')
       return res.status(404).json({ error: 'No lessons found' })

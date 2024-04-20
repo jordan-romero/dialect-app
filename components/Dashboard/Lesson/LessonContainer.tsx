@@ -12,6 +12,7 @@ import {
   Checkbox,
 } from '@chakra-ui/react'
 import { Lesson, Resource } from '../Course/courseTypes'
+import QuizModal from '../Quiz/QuizModal'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -22,11 +23,13 @@ type LessonContainerProps = {
 const LessonContainer: React.FC<LessonContainerProps> = ({
   lesson,
   onLessonComplete,
+  isCompleted,
 }) => {
   const handleLessonComplete = () => {
     onLessonComplete(lesson.id)
   }
-  console.log(lesson, 'lesson')
+
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <Box w="100%" h="100%" p={10} pl={0}>
       {/* Lesson Title */}
@@ -60,10 +63,10 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
               size="lg"
               colorScheme="green"
               mt={10}
-              isChecked={lesson.isCompleted}
+              isChecked={isCompleted}
               onChange={handleLessonComplete}
             >
-              {lesson.isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
+              {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
             </Checkbox>
           )}
         </Box>
@@ -111,14 +114,15 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
             {lesson && lesson.quiz && (
               <TabPanel>
                 {/* Content for Quiz Tab */}
-                <Button
-                  colorScheme="blue"
-                  onClick={() => {
-                    /* Handle quiz start */
-                  }}
-                >
+                <Button colorScheme="blue" onClick={() => setIsOpen(true)}>
                   Start Quiz
                 </Button>
+
+                <QuizModal
+                  isOpen={isOpen}
+                  onClose={() => setIsOpen(false)}
+                  lessonId={lesson.id}
+                />
               </TabPanel>
             )}
           </TabPanels>

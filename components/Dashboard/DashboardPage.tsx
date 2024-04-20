@@ -33,7 +33,6 @@ const DashboardPage = () => {
           console.log(
             `User with email ${currentUser?.user?.email} is logged in.`,
           )
-          console.log(response) // Log the response from the user creation API call
         })
         .catch((error) => {
           console.error('Error creating user:', error)

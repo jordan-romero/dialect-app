@@ -82,12 +82,31 @@ model Quiz {
 
 // Question Model
 model Question {
-  id          Int       @id @default(autoincrement())
-  text        String
-  options     Json
-  correctAnswer Json
-  quizId      Int
-  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  id            Int             @id @default(autoincrement())
+  text          String
+  questionType  String
+  quizId        Int
+  quiz          Quiz            @relation(fields: [quizId], references: [id])
+  answerOptions AnswerOption[]
+  extraOptions  ExtraOption[]
+}
+
+// AnswerOption Model
+model AnswerOption {
+  id            Int       @id @default(autoincrement())
+  optionText    String
+  isCorrect     Boolean
+  rhymeCategory String?
+  questionId    Int
+  question      Question  @relation(fields: [questionId], references: [id])
+}
+
+// ExtraOption Model
+model ExtraOption {
+  id         Int       @id @default(autoincrement())
+  optionText String
+  questionId Int
+  question   Question  @relation(fields: [questionId], references: [id])
 }
 
 // Resource Model

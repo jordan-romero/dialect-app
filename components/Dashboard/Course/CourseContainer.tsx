@@ -12,8 +12,6 @@ const CourseContainer = () => {
     [key: number]: number
   }>({})
 
-  console.log(lessonProgress, 'lessonProgress')
-
   useEffect(() => {
     fetch('/api/lessons')
       .then((response) => response.json())
@@ -66,8 +64,6 @@ const CourseContainer = () => {
     }
   }
 
-  console.log(lessons, 'test lessons')
-
   return (
     <Flex w="100%">
       <Box w="300px">
@@ -83,7 +79,9 @@ const CourseContainer = () => {
             <LessonContainer
               lesson={selectedLesson}
               onLessonComplete={handleLessonComplete}
-              isCompleted={lessonProgress[selectedLesson.id] === 100}
+              isCompleted={
+                lessonProgress && lessonProgress[selectedLesson.id] === 100
+              }
             />
           </Flex>
         )}

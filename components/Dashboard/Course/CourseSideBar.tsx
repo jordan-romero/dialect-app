@@ -44,8 +44,6 @@ const CourseSideBar = ({
     fetchLessonProgress()
   }, [])
 
-  console.log(lessonProgress, 'lessonProgress')
-
   const isLessonLocked = (lesson: Lesson, index: number) => {
     if (index === 0) return false
 
