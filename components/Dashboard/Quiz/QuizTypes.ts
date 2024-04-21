@@ -2,7 +2,9 @@ export interface AnswerOption {
   id: number
   optionText: string
   isCorrect: boolean
+  audioUrl: string
   rhymeCategory: string | null
+  rhymingWordId: number | null
 }
 
 export interface ExtraOption {
@@ -26,4 +28,5 @@ export interface QuizData {
   passScore: number
   hasBeenAttempted: boolean
   questions: Question[]
+  answerOptions: AnswerOption[]
 }

@@ -97,6 +97,8 @@ model AnswerOption {
   optionText    String
   isCorrect     Boolean
   rhymeCategory String?
+  rhymingWordId Int? 
+  audioUrl      String?
   questionId    Int
   question      Question  @relation(fields: [questionId], references: [id])
 }
