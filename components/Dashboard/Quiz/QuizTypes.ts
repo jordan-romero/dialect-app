@@ -18,7 +18,7 @@ export interface Question {
   questionType: string
   quizId: number
   answerOptions: AnswerOption[]
-  extraOptions: ExtraOption[]
+  extraOptions?: ExtraOption[]
 }
 
 export interface QuizData {

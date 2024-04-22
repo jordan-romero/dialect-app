@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { Lesson, Resource } from '../Course/courseTypes'
 import QuizModal from '../Quiz/QuizModal'
+import QuizModalRefactor from '../Quiz/QuizModalRefactor'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -118,7 +119,7 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
                   Start Quiz
                 </Button>
 
-                <QuizModal
+                <QuizModalRefactor
                   isOpen={isOpen}
                   onClose={() => setIsOpen(false)}
                   lessonId={lesson.id}

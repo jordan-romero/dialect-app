@@ -31,6 +31,9 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [questionId: number]: number[]
   }>({})
+  const [showCorrectMessage, setShowCorrectMessage] = useState<{
+    [questionId: number]: boolean
+  }>({})
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -43,6 +46,12 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
             acc[question.id] = []
             return acc
           }, {} as { [questionId: number]: number[] }),
+        )
+        setShowCorrectMessage(
+          data.questions.reduce((acc, question) => {
+            acc[question.id] = false
+            return acc
+          }, {} as { [questionId: number]: boolean }),
         )
       }
     }
@@ -60,9 +69,21 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
       source.droppableId === `options-${questionId}` &&
       destination.droppableId === `selected-${questionId}`
     ) {
+      if (selectedOptions[questionId].length >= 2) return
+
       setSelectedOptions((prevSelectedOptions) => ({
         ...prevSelectedOptions,
         [questionId]: [...prevSelectedOptions[questionId], optionId],
+      }))
+    } else if (
+      source.droppableId === `selected-${questionId}` &&
+      destination.droppableId === `options-${questionId}`
+    ) {
+      setSelectedOptions((prevSelectedOptions) => ({
+        ...prevSelectedOptions,
+        [questionId]: prevSelectedOptions[questionId].filter(
+          (id) => id !== optionId,
+        ),
       }))
     }
   }
@@ -85,10 +106,33 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
       (option) => option.id === optionId2,
     )
 
-    console.log(option1, option2, 'OPTIONS')
-
     return option1?.rhymingWordId === option2?.id
   }
+
+  useEffect(() => {
+    Object.keys(selectedOptions).forEach((questionId) => {
+      const selectedOptionIds = selectedOptions[parseInt(questionId)]
+      if (selectedOptionIds.length === 2) {
+        const [optionId1, optionId2] = selectedOptionIds
+        if (isRhyming(parseInt(questionId), optionId1, optionId2)) {
+          setShowCorrectMessage((prevShowCorrectMessage) => ({
+            ...prevShowCorrectMessage,
+            [parseInt(questionId)]: true,
+          }))
+          setTimeout(() => {
+            setSelectedOptions((prevSelectedOptions) => ({
+              ...prevSelectedOptions,
+              [parseInt(questionId)]: [],
+            }))
+            setShowCorrectMessage((prevShowCorrectMessage) => ({
+              ...prevShowCorrectMessage,
+              [parseInt(questionId)]: false,
+            }))
+          }, 2000)
+        }
+      }
+    })
+  }, [selectedOptions, quizData])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
@@ -188,11 +232,11 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             bg={
-                                              isMatched
-                                                ? 'green.500'
-                                                : 'red.500'
+                                              isMatched ? 'green.500' : 'white'
                                             }
-                                            color="white"
+                                            color={
+                                              isMatched ? 'white' : 'inherit'
+                                            }
                                             p={2}
                                             borderRadius="md"
                                             boxShadow="md"
@@ -220,13 +264,20 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
                                     )
                                   },
                                 )}
+                                {provided.placeholder}
                               </VStack>
-                              {provided.placeholder}
                             </Box>
                           )}
                         </Droppable>
                       </Box>
                     </HStack>
+                    {showCorrectMessage[question.id] && (
+                      <Box mt={4}>
+                        <Text color="green.500" fontWeight="bold">
+                          Correct!
+                        </Text>
+                      </Box>
+                    )}
                   </Box>
                 ))}
               </VStack>
