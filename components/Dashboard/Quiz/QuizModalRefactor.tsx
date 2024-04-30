@@ -1,5 +1,4 @@
-// QuizModal.tsx
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -12,10 +11,14 @@ import {
   Box,
   Text,
 } from '@chakra-ui/react'
-import { DragDropContext, DropResult } from 'react-beautiful-dnd'
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from 'react-beautiful-dnd'
 import useQuiz from './utils'
-import { Question } from './QuizTypes'
-import DragAndDropAnswerUI from './DragAndDropAnswerUi'
+import { Question, AnswerOption } from './QuizTypes'
 
 interface QuizModalProps {
   isOpen: boolean
@@ -28,55 +31,48 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
     isOpen,
     lessonId,
   )
+  const [rhymingWords, setRhymingWords] = useState<AnswerOption[]>([])
 
-  const handleDragEnd = (questionId: number, result: DropResult) => {
-    if (!result.destination) return
-
+  const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result
-    const optionId = parseInt(result.draggableId.split('-')[1])
 
+    if (!destination) return // No destination found, nothing to do
+
+    // If item is dropped in the same place, return
     if (
-      source.droppableId === `options-${questionId}` &&
-      destination.droppableId === `selected-${questionId}`
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
     ) {
-      if (selectedOptions[questionId].length >= 2) return
-
-      setSelectedOptions((prevSelectedOptions) => ({
-        ...prevSelectedOptions,
-        [questionId]: [...prevSelectedOptions[questionId], optionId],
-      }))
-    } else if (
-      source.droppableId === `selected-${questionId}` &&
-      destination.droppableId === `options-${questionId}`
-    ) {
-      setSelectedOptions((prevSelectedOptions) => ({
-        ...prevSelectedOptions,
-        [questionId]: prevSelectedOptions[questionId].filter(
-          (id) => id !== optionId,
-        ),
-      }))
+      return
     }
-  }
 
-  const playAudio = (audioUrl: string) => {
-    const audio = new Audio(audioUrl)
-    audio.play()
-  }
+    if (quizData && quizData.questions[0].answerOptions) {
+      const sourceItems = quizData.questions[0].answerOptions
+      const movedItem = sourceItems[source.index]
 
-  const isRhyming = (
-    questionId: number,
-    optionId1: number,
-    optionId2: number,
-  ): boolean => {
-    const question = quizData?.questions.find((q) => q.id === questionId)
-    const option1 = question?.answerOptions.find(
-      (option) => option.id === optionId1,
-    )
-    const option2 = question?.answerOptions.find(
-      (option) => option.id === optionId2,
-    )
+      if (destination.droppableId === 'rhymingBox') {
+        let newRhymingWords = Array.from(rhymingWords)
 
-    return option1?.rhymingWordId === option2?.id
+        // Remove the item from its original position if it exists in rhymingWords
+        newRhymingWords = newRhymingWords.filter(
+          (item) => item.id !== movedItem.id,
+        )
+        // Add to the new position
+        newRhymingWords.splice(destination.index, 0, movedItem)
+
+        // Limit to 2 items in the rhyming box
+        if (newRhymingWords.length <= 2) {
+          setRhymingWords(newRhymingWords)
+        }
+      } else {
+        // Handle if the destination is not rhyming box
+        // For example, moving back to word bank or another list
+        let newRhymingWords = rhymingWords.filter(
+          (item) => item.id !== movedItem.id,
+        )
+        setRhymingWords(newRhymingWords)
+      }
+    }
   }
 
   return (
@@ -85,35 +81,100 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
       <ModalContent>
         <ModalHeader>Quiz</ModalHeader>
         <ModalBody>
-          <DragDropContext
-            onDragEnd={(result) => {
-              const { source } = result
-              const questionId = parseInt(source.droppableId.split('-')[1])
-              handleDragEnd(questionId, result)
-            }}
-          >
+          <DragDropContext onDragEnd={handleDragEnd}>
             {quizData && (
               <VStack spacing={8}>
                 {quizData.questions.map((question: Question) => (
                   <React.Fragment key={question.id}>
                     {question.questionType === 'dragAndDrop' && (
-                      <DragAndDropAnswerUI
-                        question={question}
-                        selectedOptions={selectedOptions[question.id]}
-                        onOptionClick={(optionId: any) =>
-                          playAudio(
-                            question.answerOptions.find(
-                              (option: { id: any }) => option.id === optionId,
-                            )?.audioUrl || '',
-                          )
-                        }
-                        isMatched={(optionId: number) =>
-                          selectedOptions[question.id].some((id) =>
-                            isRhyming(question.id, optionId, id),
-                          )
-                        }
-                        isRhyming={isRhyming}
-                      />
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        width="100%"
+                      >
+                        <Droppable droppableId="wordBank">
+                          {(provided) => (
+                            <Box
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                              backgroundColor="gray.100"
+                              padding={4}
+                              width="45%"
+                            >
+                              <Text fontWeight="bold" marginBottom={2}>
+                                Word Bank
+                              </Text>
+                              {question.answerOptions.map((word, index) => (
+                                <Draggable
+                                  key={word.id}
+                                  draggableId={word.id.toString()}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <Box
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      backgroundColor="white"
+                                      padding={2}
+                                      marginBottom={2}
+                                      boxShadow="md"
+                                      borderRadius="md"
+                                    >
+                                      {word.optionText}
+                                    </Box>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </Box>
+                          )}
+                        </Droppable>
+                        <Droppable droppableId="rhymingBox">
+                          {(provided) => (
+                            <Box
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                              backgroundColor="gray.100"
+                              padding={4}
+                              width="45%"
+                            >
+                              <Text fontWeight="bold" marginBottom={2}>
+                                Rhyming Words
+                              </Text>
+                              {rhymingWords.map((word, index) => (
+                                <Draggable
+                                  key={word.id}
+                                  draggableId={word.id.toString()}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <Box
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      backgroundColor={
+                                        rhymingWords.length === 2 &&
+                                        rhymingWords[0].rhymingWordId ===
+                                          rhymingWords[1].id
+                                          ? 'green.200'
+                                          : 'red.200'
+                                      }
+                                      padding={2}
+                                      marginBottom={2}
+                                      boxShadow="md"
+                                      borderRadius="md"
+                                    >
+                                      {word.optionText}
+                                    </Box>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </Box>
+                          )}
+                        </Droppable>
+                      </Box>
                     )}
                   </React.Fragment>
                 ))}
@@ -122,7 +183,10 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
           </DragDropContext>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" onClick={onClose}>
+          <Button colorScheme="blue" onClick={() => {}} marginRight={4}>
+            Check
+          </Button>
+          <Button colorScheme="gray" onClick={onClose}>
             Close
           </Button>
         </ModalFooter>
