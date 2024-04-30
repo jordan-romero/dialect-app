@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -32,6 +32,13 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
     lessonId,
   )
   const [rhymingWords, setRhymingWords] = useState<AnswerOption[]>([])
+  const [answeredWords, setAnsweredWords] = useState<AnswerOption[]>([])
+
+  useEffect(() => {
+    if (quizData && quizData.questions[0].answerOptions) {
+      setAnsweredWords(quizData.questions[0].answerOptions)
+    }
+  }, [quizData])
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result
@@ -47,7 +54,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
     }
 
     if (quizData && quizData.questions[0].answerOptions) {
-      const sourceItems = quizData.questions[0].answerOptions
+      const sourceItems = answeredWords
       const movedItem = sourceItems[source.index]
 
       if (destination.droppableId === 'rhymingBox') {
@@ -63,15 +70,37 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
         // Limit to 2 items in the rhyming box
         if (newRhymingWords.length <= 2) {
           setRhymingWords(newRhymingWords)
+          setAnsweredWords((prevAnsweredWords) =>
+            prevAnsweredWords.filter((word) => word.id !== movedItem.id),
+          )
+
+          if (newRhymingWords.length === 2) {
+            if (newRhymingWords[0].rhymingWordId === newRhymingWords[1].id) {
+              // Answers are correct
+              setTimeout(() => {
+                setRhymingWords([])
+              }, 1000) // Remove the words after 1 second
+            } else {
+              // Answers are wrong
+              setTimeout(() => {
+                setRhymingWords([])
+                setAnsweredWords((prevAnsweredWords) => [
+                  ...prevAnsweredWords,
+                  ...newRhymingWords,
+                ])
+              }, 1000) // Return the words to the word bank after 1 second
+            }
+          }
         }
-      } else {
-        // Handle if the destination is not rhyming box
-        // For example, moving back to word bank or another list
-        let newRhymingWords = rhymingWords.filter(
-          (item) => item.id !== movedItem.id,
-        )
-        setRhymingWords(newRhymingWords)
       }
+    }
+  }
+
+  const playAudioClip = (word: AnswerOption) => {
+    const audioUrl = word.audioUrl
+    if (audioUrl) {
+      const audio = new Audio(audioUrl)
+      audio.play()
     }
   }
 
@@ -104,7 +133,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
                               <Text fontWeight="bold" marginBottom={2}>
                                 Word Bank
                               </Text>
-                              {question.answerOptions.map((word, index) => (
+                              {answeredWords.map((word, index) => (
                                 <Draggable
                                   key={word.id}
                                   draggableId={word.id.toString()}
@@ -120,6 +149,12 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
                                       marginBottom={2}
                                       boxShadow="md"
                                       borderRadius="md"
+                                      onMouseDown={(event) => {
+                                        if (event.button === 0) {
+                                          // Only trigger audio playback on left mouse button click
+                                          playAudioClip(word)
+                                        }
+                                      }}
                                     >
                                       {word.optionText}
                                     </Box>
@@ -130,6 +165,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
                             </Box>
                           )}
                         </Droppable>
+
                         <Droppable droppableId="rhymingBox">
                           {(provided) => (
                             <Box
@@ -182,14 +218,6 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
             )}
           </DragDropContext>
         </ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" onClick={() => {}} marginRight={4}>
-            Check
-          </Button>
-          <Button colorScheme="gray" onClick={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   )
