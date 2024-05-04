@@ -19,6 +19,7 @@ export interface Question {
   quizId: number
   answerOptions: AnswerOption[]
   extraOptions?: ExtraOption[]
+  categories?: string[]
 }
 
 export interface QuizData {
@@ -29,4 +30,8 @@ export interface QuizData {
   hasBeenAttempted: boolean
   questions: Question[]
   answerOptions: AnswerOption[]
+}
+
+export interface Categories {
+  [key: string]: AnswerOption[]
 }

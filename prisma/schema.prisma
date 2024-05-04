@@ -89,6 +89,7 @@ model Question {
   quiz          Quiz            @relation(fields: [quizId], references: [id])
   answerOptions AnswerOption[]
   extraOptions  ExtraOption[]
+  categories    String[]
 }
 
 // AnswerOption Model

@@ -5,8 +5,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  Button,
   VStack,
   Box,
   Text,
@@ -20,13 +18,17 @@ import {
 import useQuiz from './utils'
 import { Question, AnswerOption } from './QuizTypes'
 
-interface QuizModalProps {
+interface DragAndDropQuizModalProps {
   isOpen: boolean
   onClose: () => void
   lessonId: number
 }
 
-const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
+const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
+  isOpen,
+  onClose,
+  lessonId,
+}) => {
   const { quizData, selectedOptions, setSelectedOptions } = useQuiz(
     isOpen,
     lessonId,
@@ -223,4 +225,4 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, lessonId }) => {
   )
 }
 
-export default QuizModal
+export default DragAndDropQuizModal
