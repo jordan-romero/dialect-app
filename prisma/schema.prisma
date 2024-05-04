@@ -1,10 +1,12 @@
+// Prisma schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("DEV_POSTGRES_PRISMA_URL") 
+  provider = "postgresql" 
+  url = env("DEV_POSTGRES_PRISMA_URL")
   directUrl = env("DEV_POSTGRES_URL_NON_POOLING")
 }
 
@@ -17,11 +19,12 @@ model User {
   lastName                String?
   avatar                  String?
   hasAccessToPaidCourses  Boolean   @default(false)
-  // Other user-related fields
   posts                   Post[]
   comments                Comment[]
   enrollments             Enrollment[]
   lessonProgress          LessonProgress[]
+  discussions             Discussion[] @relation("DiscussionUser")
+  answers                 Answer[] @relation("AnswerUser")
 }
 
 // Course Model
@@ -29,8 +32,8 @@ model Course {
   id          Int       @id @default(autoincrement())
   title       String
   description String
-  price       Float?
-  progress    Float     @default(0.0)
+  isCompleted Boolean @default(false)
+  isGatedCourse Boolean @default(true)
   lessons     Lesson[]
   resources   Resource[]
   enrollments Enrollment[]
@@ -47,7 +50,10 @@ model Lesson {
   course      Course    @relation(fields: [courseId], references: [id])
   resources   Resource[]
   passScore   Int?
+  isCompleted Boolean @default(false)
+  isGatedLesson Boolean @default(true)
   lessonProgress LessonProgress[]
+  discussions Discussion[] @relation("LessonDiscussion")
 }
 
 // LessonProgress Model
@@ -60,7 +66,7 @@ model LessonProgress {
   updatedAt     DateTime  @updatedAt
   lesson        Lesson    @relation(fields: [lessonId], references: [id])
   user          User      @relation(fields: [userId], references: [id])
-  userId        Int       // Add this field to establish the opposite relation
+  userId        Int       
 }
 
 // Quiz model 
@@ -71,16 +77,39 @@ model Quiz {
   lesson      Lesson    @relation(fields: [lessonId], references: [id])
   score       Int?
   passScore   Int?
+  hasBeenAttempted Boolean @default(false)
 }
 
 // Question Model
 model Question {
-  id          Int       @id @default(autoincrement())
-  text        String
-  options     Json
-  correctAnswer Json
-  quizId      Int
-  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  id            Int             @id @default(autoincrement())
+  text          String
+  questionType  String
+  quizId        Int
+  quiz          Quiz            @relation(fields: [quizId], references: [id])
+  answerOptions AnswerOption[]
+  extraOptions  ExtraOption[]
+  categories    String[]
+}
+
+// AnswerOption Model
+model AnswerOption {
+  id            Int       @id @default(autoincrement())
+  optionText    String
+  isCorrect     Boolean
+  rhymeCategory String?
+  rhymingWordId Int? 
+  audioUrl      String?
+  questionId    Int
+  question      Question  @relation(fields: [questionId], references: [id])
+}
+
+// ExtraOption Model
+model ExtraOption {
+  id         Int       @id @default(autoincrement())
+  optionText String
+  questionId Int
+  question   Question  @relation(fields: [questionId], references: [id])
 }
 
 // Resource Model
@@ -95,6 +124,31 @@ model Resource {
   lesson      Lesson?   @relation(fields: [lessonId], references: [id])
   
   @@unique([courseId, lessonId])
+}
+
+// Discussion Model 
+model Discussion {
+  id          Int       @id @default(autoincrement())
+  question    String
+  lessonId    Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation("DiscussionUser", fields: [userId], references: [id])
+  userId      Int
+  answers     Answer[]  @relation("DiscussionAnswer")
+  lesson      Lesson    @relation("LessonDiscussion", fields: [lessonId], references: [id])
+}
+
+// Answer Model
+model Answer {
+  id          Int       @id @default(autoincrement())
+  content     String
+  discussionId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation("AnswerUser", fields: [userId], references: [id])
+  userId      Int
+  discussion  Discussion @relation("DiscussionAnswer", fields: [discussionId], references: [id])
 }
 
 // Post Model

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { UserProfile, useUser } from '@auth0/nextjs-auth0/client'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import CourseContainer from './Course/CourseContainer'
+import DashboardNavigationContainer from './DashNavigation/DashboardNavigationContainer'
 
 const DashboardPage = () => {
   // TODO clean this up and pull it out into a separate file
@@ -32,7 +33,6 @@ const DashboardPage = () => {
           console.log(
             `User with email ${currentUser?.user?.email} is logged in.`,
           )
-          console.log(response) // Log the response from the user creation API call
         })
         .catch((error) => {
           console.error('Error creating user:', error)
@@ -43,7 +43,11 @@ const DashboardPage = () => {
   return (
     <Box>
       Welcome {currentUser?.user?.email}!
-      <CourseContainer />
+      <Flex>
+        <DashboardNavigationContainer />
+        <CourseContainer />
+      </Flex>
+      <Flex></Flex>
     </Box>
   )
 }

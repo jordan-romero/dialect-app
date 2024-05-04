@@ -1,60 +1,114 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Flex, Text, Icon, VStack, HStack } from '@chakra-ui/react'
 import {
+  MdCheck,
   MdLockOpen,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
+  MdLock,
+  MdRadioButtonUnchecked,
 } from 'react-icons/md'
-import LessonTracker from '../Lesson/LessonTracker'
-import { Course, CourseSideBarProps } from './courseTypes'
+import { Lesson } from './courseTypes'
 
-const CourseSideBar = ({ freeCourses, onSelectLesson }: CourseSideBarProps) => {
-  const [currentLesson, setCurrentLesson] = useState<number>(0)
-  const [expandedCourses, setExpandedCourses] = useState<number[]>([])
+type CourseSideBarProps = {
+  lessons: Lesson[] | null
+  onSelectLesson: (lesson: Lesson) => void
+  hasAccessToPaidCourses: boolean
+}
 
-  const toggleCourse = (courseIndex: number) => {
-    // Toggle the course's expanded/collapsed status
-    if (expandedCourses.includes(courseIndex)) {
-      setExpandedCourses(
-        expandedCourses.filter((index) => index !== courseIndex),
-      )
+const CourseSideBar = ({
+  lessons,
+  onSelectLesson,
+  hasAccessToPaidCourses,
+}: CourseSideBarProps) => {
+  const [lessonProgress, setLessonProgress] = useState<{
+    [key: number]: number
+  }>({})
+
+  useEffect(() => {
+    const fetchLessonProgress = async () => {
+      try {
+        const response = await fetch('/api/lessonProgress')
+        if (response.ok) {
+          const data = await response.json()
+          setLessonProgress(data)
+        } else {
+          console.error(
+            'Error retrieving lesson progress:',
+            response.statusText,
+          )
+        }
+      } catch (error) {
+        console.error('Error retrieving lesson progress:', error)
+      }
+    }
+
+    fetchLessonProgress()
+  }, [])
+
+  const isLessonLocked = (lesson: Lesson, index: number) => {
+    if (index === 0) return false
+
+    // Check if the previous lesson is completed
+    if (lessons && lessonProgress[lessons[index - 1].id] === 100) {
+      return false // Unlock this lesson if the previous one is completed
+    }
+
+    return true // Lock the lesson if none of the above conditions are met
+  }
+
+  const getLessonIcon = (lesson: Lesson, index: number) => {
+    const progress = lessonProgress[lesson.id] || 0
+
+    if (isLessonLocked(lesson, index)) {
+      return MdLock // Show a locked icon if the lesson is locked
+    } else if (progress === 100) {
+      return MdCheck // Show a check mark if the lesson is completed
+    } else if (progress === 50) {
+      return MdRadioButtonUnchecked // Show an in-progress icon if the lesson is half completed
     } else {
-      setExpandedCourses([...expandedCourses, courseIndex])
+      return MdLockOpen // Show an unlocked icon for lessons that are unlocked but not started
     }
   }
 
   return (
-    <Box p={4} width={300} bg="brand.iris" color="brand.white">
-      <Flex direction="column">
-        {freeCourses &&
-          freeCourses.map((course: Course, index: number) => (
-            <Box key={index} mb={index === 0 ? 2 : 4} cursor="pointer">
-              <Flex alignItems="center" onClick={() => toggleCourse(index)}>
-                <Icon as={MdLockOpen} boxSize={4} mr={2} color="red.500" />
-                <Text fontSize="md">{course.title}</Text>
+    <Box
+      p={4}
+      width={300}
+      height="100vh"
+      bg="gray.100"
+      color="black"
+      borderTopLeftRadius="xl"
+      borderBottomLeftRadius="xl"
+    >
+      <Flex direction="column" overflowY="auto">
+        <VStack spacing={2} align="stretch">
+          {lessons &&
+            lessons.map((lesson, index) => (
+              <HStack
+                key={lesson.id}
+                onClick={() =>
+                  !isLessonLocked(lesson, index) && onSelectLesson(lesson)
+                }
+                cursor={
+                  !isLessonLocked(lesson, index) ? 'pointer' : 'not-allowed'
+                }
+                opacity={!isLessonLocked(lesson, index) ? 1 : 0.5}
+              >
                 <Icon
-                  as={
-                    expandedCourses.includes(index)
-                      ? MdKeyboardArrowUp
-                      : MdKeyboardArrowDown
+                  as={getLessonIcon(lesson, index)}
+                  boxSize={6}
+                  mr={4}
+                  color={
+                    lessonProgress[lesson.id] === 100
+                      ? 'green.500'
+                      : lessonProgress[lesson.id] === 50
+                      ? 'purple.500'
+                      : 'gray.500'
                   }
-                  boxSize={4}
-                  mr={2}
-                  color="red.500"
                 />
-              </Flex>
-              {expandedCourses.includes(index) && (
-                <Box background="lightgray" mb={6} width="100%">
-                  <LessonTracker
-                    totalLessons={course.lessons.length}
-                    currentLesson={currentLesson}
-                    lessons={course.lessons}
-                    onSelectLesson={onSelectLesson}
-                  />
-                </Box>
-              )}
-            </Box>
-          ))}
+                <Text>{lesson.title}</Text>
+              </HStack>
+            ))}
+        </VStack>
       </Flex>
     </Box>
   )

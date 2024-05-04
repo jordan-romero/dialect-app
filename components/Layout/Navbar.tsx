@@ -2,7 +2,6 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   Box,
   Flex,
-  Heading,
   HStack,
   IconButton,
   Menu,
@@ -17,6 +16,7 @@ import useMobileCheck from '../hooks/useMobileCheck'
 import NavComponent from './NavComponent'
 import Link from 'next/link'
 import router from 'next/router'
+import { useRouter } from 'next/router'
 import { useFeatureFlag } from 'configcat-react'
 import Login from '../AuthComponents/Login'
 import Logout from '../AuthComponents/Logout'
@@ -29,12 +29,13 @@ const Navbar = () => {
     false,
   )
   const user = useUser()
+  const router = useRouter()
 
-  if (isMobile) {
+  if (isMobile && !router.pathname.includes('dashboard')) {
     return <MobileNavbar />
   }
 
-  return (
+  return !isMobile && !router.pathname.includes('dashboard') ? (
     <Flex w="100%" h="24" align="center" bgColor={'brand.purple'}>
       <HStack w="100%" justify="space-between">
         <HStack align="center" bgColor={'brand.purple'} spacing={0}>
@@ -69,7 +70,7 @@ const Navbar = () => {
         </HStack>
       </HStack>
     </Flex>
-  )
+  ) : null
 }
 
 const MobileNavbar = () => {
