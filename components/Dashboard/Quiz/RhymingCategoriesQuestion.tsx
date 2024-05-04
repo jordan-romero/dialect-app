@@ -8,12 +8,14 @@ interface RhymingCategoriesQuestionProps {
   question: Question
   categories: { [key: string]: AnswerOption[] }
   wordBank: AnswerOption[]
+  playAudio: (audioUrl: string) => void
 }
 
 const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
   question,
   categories,
   wordBank,
+  playAudio,
 }) => {
   const isWordCorrect = (word: AnswerOption, category: string) => {
     return word.rhymeCategory === category
@@ -53,6 +55,7 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
                       mb={2}
                       boxShadow="md"
                       borderRadius="md"
+                      onMouseDown={() => playAudio(word.audioUrl)}
                     >
                       {word.optionText}
                     </Box>

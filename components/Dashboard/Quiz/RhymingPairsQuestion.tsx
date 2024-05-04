@@ -8,12 +8,14 @@ interface RhymingPairsQuestionProps {
   question: Question
   rhymingWords: AnswerOption[]
   answeredWords: AnswerOption[]
+  playAudio: (audioUrl: string) => void
 }
 
 const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
   question,
   rhymingWords,
   answeredWords,
+  playAudio,
 }) => {
   const isWordMatched = (word: AnswerOption, rhymingWords: AnswerOption[]) => {
     return rhymingWords.some(
@@ -53,6 +55,7 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
                       marginBottom={2}
                       boxShadow="md"
                       borderRadius="md"
+                      onMouseDown={() => playAudio(word.audioUrl)}
                     >
                       {word.optionText}
                     </Box>
