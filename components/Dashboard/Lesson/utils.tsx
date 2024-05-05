@@ -39,5 +39,5 @@ export const lessonTypeComponentMap = {
     </Box>
   ),
   symbolQuiz: (lesson: Lesson) => <SymbolQuiz lessonTitle={lesson.title} />,
-  vowelQuadrilateral: (lesson: Lesson) => <VowelQuadrilateral />,
+  vowelQuad: (lesson: Lesson) => <VowelQuadrilateral />,
 }

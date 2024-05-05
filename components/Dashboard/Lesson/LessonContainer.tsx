@@ -38,8 +38,8 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
       return 'video'
     } else if (lesson.resources && lesson.resources.length > 0) {
       return 'resource'
-    } else if (lesson.title === 'The Vowel Quadrilateral') {
-      return 'vowelQuadrilateral'
+    } else if (lesson.title === 'Diphthongs & Triphtongs (3)') {
+      return 'vowelQuad'
     } else {
       return 'symbolQuiz'
     }
