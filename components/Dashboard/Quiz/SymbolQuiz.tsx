@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Text, Grid, GridItem, Button, Flex } from '@chakra-ui/react'
+import { getQuizItems } from './symbols.utils'
 
 interface QuizItem {
   symbol: string
@@ -17,56 +18,10 @@ const SymbolQuiz: React.FC<SymbolQuizProps> = ({ lessonTitle }) => {
   >({})
   const [selectedWord, setSelectedWord] = useState<string | null>(null)
 
-  const isVowelLesson = lessonTitle.includes('Vowels')
   useEffect(() => {
-    const vowelWords = [
-      { symbol: 'i', words: ['feed', 'chief', 'nifty', 'machine'] },
-      { symbol: 'ɪ', words: ['chill', 'think', 'mischief'] },
-      { symbol: 'ɛ', words: ['scent', 'sweat', 'measure'] },
-      { symbol: 'æ', words: ['black', 'champion', 'asterisk'] },
-      { symbol: 'ɑ', words: ['blot', 'option', 'auto'] },
-      { symbol: 'ʌ', words: ['bunny', 'loving', 'trunk'] },
-      { symbol: 'ʊ', words: ['put', 'should', 'wood'] },
-      { symbol: 'u', words: ['blue', 'screw', 'move'] },
-      { symbol: 'ə', words: ['amaze', 'llama', 'unnecessary'] },
-      { symbol: 'ɚ', words: ['caller', 'perceive', 'earner'] },
-      { symbol: 'ɝ', words: ['purse', 'surf', 'learn'] },
-    ]
-
-    const consonantWords = [
-      { symbol: 'p', words: ['pretty', 'stop'] },
-      { symbol: 'b', words: ['babe', 'club'] },
-      { symbol: 'm', words: ['mist', 'comb'] },
-      { symbol: 'f', words: ['offer', 'sift'] },
-      { symbol: 'v', words: ['oven', 'vain'] },
-      { symbol: 't', words: ['tire', 'bait'] },
-      { symbol: 'd', words: ['dead', 'adorn'] },
-      { symbol: 'n', words: ['noon', 'win'] },
-      { symbol: 'ɾ', words: ['patting', 'hearty'] },
-      { symbol: 'θ', words: ['fourth', 'think'] },
-      { symbol: 'ð', words: ['breathe', 'bother'] },
-      { symbol: 's', words: ['suspect', 'cent'] },
-      { symbol: 'z', words: ['scissors', 'cheese'] },
-      { symbol: 'ʃ', words: ['shush', 'ocean'] },
-      { symbol: 'ʒ', words: ['garage', 'measure'] },
-      { symbol: 'ɹ', words: ['bring', 'arrange'] },
-      { symbol: 'l', words: ['lily', 'mellow'] },
-      { symbol: 'j', words: ['yelp', 'uniform'] },
-      { symbol: 'k', words: ['crack', 'scheme'] },
-      { symbol: 'g', words: ['gurgle', 'green'] },
-      { symbol: 'ŋ', words: ['tongue', 'think'] },
-      { symbol: 'ʔ', words: ['curtain', 'uh-oh'] },
-      { symbol: 'h', words: ['hoist', 'behemoth'] },
-      { symbol: 'ç', words: ['inhumane', 'hubris'] },
-      { symbol: 'w', words: ['one', 'inward'] },
-      { symbol: 't͡ʃ', words: ['church', 'itchy'] },
-      { symbol: 'd͡ʒ', words: ['judge', 'gerbil'] },
-      { symbol: 'ɫ', words: ['pull', 'tilt'] },
-    ]
-
-    const words = isVowelLesson ? vowelWords : consonantWords
-    const shuffledWords = words.sort(() => Math.random() - 0.5)
-    setQuizItems(shuffledWords)
+    const items = getQuizItems(lessonTitle)
+    const shuffledItems = items.sort(() => Math.random() - 0.5)
+    setQuizItems(shuffledItems)
   }, [lessonTitle])
 
   const handleSymbolSelect = (symbol: string) => {
@@ -75,7 +30,6 @@ const SymbolQuiz: React.FC<SymbolQuizProps> = ({ lessonTitle }) => {
         ...prevSymbols,
         [selectedWord]: symbol,
       }))
-      setSelectedWord(null)
     }
   }
 
@@ -88,54 +42,15 @@ const SymbolQuiz: React.FC<SymbolQuizProps> = ({ lessonTitle }) => {
     return quizItem && selectedSymbols[word] === quizItem.symbol
   }
 
-  const underlineWord = (word: string) => {
-    const underlinedWord = word.split('').map((char, index) => {
-      if (char === char.toLowerCase()) {
-        return (
-          <Text as="u" key={index}>
-            {char}
-          </Text>
-        )
-      }
-      return <Text key={index}>{char}</Text>
-    })
-    return <Text as="span">{underlinedWord}</Text>
-  }
-
-  const symbols = !isVowelLesson
-    ? ['i', 'ɪ', 'ɛ', 'æ', 'ɑ', 'ʌ', 'ʊ', 'u', 'ə', 'ɚ', 'ɝ']
-    : [
-        'p',
-        'b',
-        'm',
-        'f',
-        'v',
-        't',
-        'd',
-        'n',
-        'ɾ',
-        'θ',
-        'ð',
-        's',
-        'z',
-        'ʃ',
-        'ʒ',
-        'ɹ',
-        'l',
-        'j',
-        'k',
-        'g',
-        'ŋ',
-        'ʔ',
-        'h',
-        'ç',
-        'w',
-        't͡ʃ',
-        'd͡ʒ',
-        'ɫ',
-      ]
-
-  console.log(symbols)
+  const underlineWord = (word: string) => (
+    <Text as="span">
+      {word.split('').map((char, index) => (
+        <Text as="u" key={index}>
+          {char}
+        </Text>
+      ))}
+    </Text>
+  )
 
   return (
     <Box maxHeight="80vh" overflowY="scroll">
@@ -153,11 +68,14 @@ const SymbolQuiz: React.FC<SymbolQuizProps> = ({ lessonTitle }) => {
         zIndex={1}
         py={4}
       >
-        {symbols.map((symbol) => (
-          <GridItem key={symbol}>
-            <Button onClick={() => handleSymbolSelect(symbol)}>{symbol}</Button>
-          </GridItem>
-        ))}
+        {quizItems.length > 0 &&
+          quizItems.map((item) => (
+            <GridItem key={item.symbol}>
+              <Button onClick={() => handleSymbolSelect(item.symbol)}>
+                {item.symbol}
+              </Button>
+            </GridItem>
+          ))}
       </Grid>
       <Grid templateColumns="repeat(3, 1fr)" gap={4}>
         {quizItems.map((quizItem) =>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainer from '../Lesson/LessonContainer'
 import { Lesson } from './courseTypes'
-import { Flex, Box } from '@chakra-ui/react'
+import { Flex, Box, Spinner } from '@chakra-ui/react'
 
 const CourseContainer = () => {
   const [lessons, setLessons] = useState<Lesson[] | null>(null)
@@ -11,8 +11,10 @@ const CourseContainer = () => {
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
   }>({})
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
     fetch('/api/lessons')
       .then((response) => response.json())
       .then((data: Lesson[]) => {
@@ -26,9 +28,11 @@ const CourseContainer = () => {
             [firstLesson.id]: prev[firstLesson.id] === 100 ? 100 : 50,
           }))
         }
+        setIsLoading(false)
       })
       .catch((error) => {
         console.error('Error fetching lessons:', error)
+        setIsLoading(false)
       })
   }, [])
 
@@ -66,14 +70,34 @@ const CourseContainer = () => {
   return (
     <Flex w="100%">
       <Box w="300px">
-        <CourseSideBar
-          lessons={lessons}
-          onSelectLesson={handleSelectLesson}
-          hasAccessToPaidCourses={false}
-        />
+        {isLoading ? (
+          <Flex justifyContent="center" alignItems="center" height="400px">
+            <Spinner
+              color="brand.purple"
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
+            />
+          </Flex>
+        ) : (
+          <CourseSideBar
+            lessons={lessons}
+            onSelectLesson={handleSelectLesson}
+            hasAccessToPaidCourses={false}
+          />
+        )}
       </Box>
       <Box flex="2">
-        {selectedLesson && (
+        {isLoading ? (
+          <Flex justifyContent="center" alignItems="center" height="100vh">
+            <Spinner
+              color="brand.purple"
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
+            />
+          </Flex>
+        ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
             <LessonContainer
               lesson={selectedLesson}
@@ -82,6 +106,10 @@ const CourseContainer = () => {
                 lessonProgress && lessonProgress[selectedLesson.id] === 100
               }
             />
+          </Flex>
+        ) : (
+          <Flex justifyContent="center" alignItems="center" height="100vh">
+            <Box>No lesson selected</Box>
           </Flex>
         )}
       </Box>
