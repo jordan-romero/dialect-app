@@ -16,6 +16,7 @@ import DragAndDropQuizModal from '../Quiz/DragAndDropQuizModal'
 import ShortAnswerUI from '../Quiz/ShortAnswerUI'
 import MultipleChoiceModal from '../Quiz/MultipleChoiceModal'
 import SymbolQuiz from '../Quiz/SymbolQuiz'
+import { lessonTypeComponentMap } from './utils'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -31,6 +32,20 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
   const handleLessonComplete = () => {
     onLessonComplete(lesson.id)
   }
+
+  const getLessonType = (lesson: Lesson) => {
+    if (lesson.videoUrl) {
+      return 'video'
+    } else if (lesson.resources && lesson.resources.length > 0) {
+      return 'resource'
+    } else if (lesson.title === 'The Vowel Quadrilateral') {
+      return 'vowelQuadrilateral'
+    } else {
+      return 'symbolQuiz'
+    }
+  }
+
+  const lessonType = getLessonType(lesson)
 
   const [isOpen, setIsOpen] = useState(false)
   return (
@@ -52,58 +67,7 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
         </Text>
       </Box>
       <Box w="92%" mr="auto" ml="auto">
-        {/* Video */}
-        {lesson.videoUrl ? (
-          <Box mb={10} mr="auto" ml="auto" mt={10}>
-            <iframe
-              width="95%"
-              height="539"
-              src={lesson.videoUrl}
-              title={lesson.title}
-              allowFullScreen
-            ></iframe>
-            <Checkbox
-              size="lg"
-              colorScheme="green"
-              mt={10}
-              isChecked={isCompleted}
-              onChange={handleLessonComplete}
-            >
-              {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
-            </Checkbox>
-          </Box>
-        ) : lesson.resources && lesson.resources.length > 0 ? (
-          <Box
-            mb={10}
-            mr="auto"
-            ml="auto"
-            mt={10}
-            maxHeight="539px"
-            overflowY="scroll"
-          >
-            <iframe
-              width="95%"
-              height="500px"
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(
-                lesson.resources[0].url,
-              )}&embedded=true`}
-              title={lesson.resources[0].name}
-              allowFullScreen
-            ></iframe>
-            <Checkbox
-              size="lg"
-              colorScheme="green"
-              mt={10}
-              isChecked={isCompleted}
-              onChange={handleLessonComplete}
-            >
-              {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
-            </Checkbox>
-          </Box>
-        ) : (
-          <SymbolQuiz lessonTitle={lesson.title} />
-        )}
-
+        {lessonTypeComponentMap[lessonType](lesson)}
         {/* Tabs for Resources and Quiz */}
         <Tabs variant="enclosed">
           <TabList>
