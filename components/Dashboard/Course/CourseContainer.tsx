@@ -1,9 +1,9 @@
+// CourseContainer.tsx
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainer from '../Lesson/LessonContainer'
 import { Lesson } from './courseTypes'
 import { Flex, Box } from '@chakra-ui/react'
-import { useUser } from '@auth0/nextjs-auth0/client'
 
 const CourseContainer = () => {
   const [lessons, setLessons] = useState<Lesson[] | null>(null)
@@ -53,7 +53,6 @@ const CourseContainer = () => {
       if (!response.ok) {
         throw new Error(`Failed to update progress. Status: ${response.status}`)
       }
-
       // Update lesson progress locally if the API call succeeds
       setLessonProgress((prevProgress) => ({
         ...prevProgress,

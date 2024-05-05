@@ -42,7 +42,6 @@ const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
   const [audioPlaying, setAudioPlaying] = useState<string | null>(null)
 
-  console.log(quizData, currentQuestionIndex)
   const currentQuestion: Question | undefined =
     quizData?.questions[currentQuestionIndex]
 
@@ -123,7 +122,6 @@ const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex === quizData?.questions.length! - 1) {
-      // Last question, show confetti and move to final screen
       setIsQuestionComplete(true)
       setTimeout(() => {
         onClose()

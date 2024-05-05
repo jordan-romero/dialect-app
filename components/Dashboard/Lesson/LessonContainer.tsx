@@ -12,7 +12,10 @@ import {
   Checkbox,
 } from '@chakra-ui/react'
 import { Lesson, Resource } from '../Course/courseTypes'
-import QuizModal from '../Quiz/QuizModal'
+import DragAndDropQuizModal from '../Quiz/DragAndDropQuizModal'
+import ShortAnswerUI from '../Quiz/ShortAnswerUI'
+import MultipleChoiceModal from '../Quiz/MultipleChoiceModal'
+import SymbolQuiz from '../Quiz/SymbolQuiz'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -50,15 +53,15 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
       </Box>
       <Box w="92%" mr="auto" ml="auto">
         {/* Video */}
-        <Box mb={10} mr="auto" ml="auto" mt={10}>
-          <iframe
-            width="95%"
-            height="539"
-            src={lesson.videoUrl}
-            title={lesson.title}
-            allowFullScreen
-          ></iframe>
-          {lesson && lesson.videoUrl && (
+        {lesson.videoUrl ? (
+          <Box mb={10} mr="auto" ml="auto" mt={10}>
+            <iframe
+              width="95%"
+              height="539"
+              src={lesson.videoUrl}
+              title={lesson.title}
+              allowFullScreen
+            ></iframe>
             <Checkbox
               size="lg"
               colorScheme="green"
@@ -68,8 +71,38 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
             >
               {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
             </Checkbox>
-          )}
-        </Box>
+          </Box>
+        ) : lesson.resources && lesson.resources.length > 0 ? (
+          <Box
+            mb={10}
+            mr="auto"
+            ml="auto"
+            mt={10}
+            maxHeight="539px"
+            overflowY="scroll"
+          >
+            <iframe
+              width="95%"
+              height="500px"
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(
+                lesson.resources[0].url,
+              )}&embedded=true`}
+              title={lesson.resources[0].name}
+              allowFullScreen
+            ></iframe>
+            <Checkbox
+              size="lg"
+              colorScheme="green"
+              mt={10}
+              isChecked={isCompleted}
+              onChange={handleLessonComplete}
+            >
+              {isCompleted ? 'Lesson Completed' : 'Mark as Completed'}
+            </Checkbox>
+          </Box>
+        ) : (
+          <SymbolQuiz lessonTitle={lesson.title} />
+        )}
 
         {/* Tabs for Resources and Quiz */}
         <Tabs variant="enclosed">
@@ -118,11 +151,27 @@ const LessonContainer: React.FC<LessonContainerProps> = ({
                   Start Quiz
                 </Button>
 
-                <QuizModal
-                  isOpen={isOpen}
-                  onClose={() => setIsOpen(false)}
-                  lessonId={lesson.id}
-                />
+                {lesson.quiz.quizType === 'dragAndDrop' && isOpen && (
+                  <DragAndDropQuizModal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    lessonId={lesson.id}
+                  />
+                )}
+                {lesson.quiz.quizType === 'shortAnswer' && isOpen && (
+                  <ShortAnswerUI
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    lessonId={lesson.id}
+                  />
+                )}
+                {lesson.quiz.quizType === 'multipleChoice' && isOpen && (
+                  <MultipleChoiceModal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    lessonId={lesson.id}
+                  />
+                )}
               </TabPanel>
             )}
           </TabPanels>
