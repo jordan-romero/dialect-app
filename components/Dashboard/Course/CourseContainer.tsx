@@ -1,9 +1,9 @@
+// CourseContainer.tsx
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
-import LessonContainer from '../Lesson/LessonContainer'
+import LessonContainerV2 from '../Lesson/LessonContainerV2'
 import { Lesson } from './courseTypes'
-import { Flex, Box } from '@chakra-ui/react'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { Flex, Box, Spinner } from '@chakra-ui/react'
 
 const CourseContainer = () => {
   const [lessons, setLessons] = useState<Lesson[] | null>(null)
@@ -11,8 +11,10 @@ const CourseContainer = () => {
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
   }>({})
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
     fetch('/api/lessons')
       .then((response) => response.json())
       .then((data: Lesson[]) => {
@@ -26,9 +28,11 @@ const CourseContainer = () => {
             [firstLesson.id]: prev[firstLesson.id] === 100 ? 100 : 50,
           }))
         }
+        setIsLoading(false)
       })
       .catch((error) => {
         console.error('Error fetching lessons:', error)
+        setIsLoading(false)
       })
   }, [])
 
@@ -41,48 +45,43 @@ const CourseContainer = () => {
     }))
   }
 
-  const handleLessonComplete = async (lessonId: number) => {
-    try {
-      const response = await fetch('/api/updateProgress', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ lessonId }),
-      })
-      if (!response.ok) {
-        throw new Error(`Failed to update progress. Status: ${response.status}`)
-      }
-
-      // Update lesson progress locally if the API call succeeds
-      setLessonProgress((prevProgress) => ({
-        ...prevProgress,
-        [lessonId]: 100,
-      }))
-    } catch (error) {
-      console.error('Error updating lesson progress:', error)
-    }
-  }
-
   return (
     <Flex w="100%">
       <Box w="300px">
-        <CourseSideBar
-          lessons={lessons}
-          onSelectLesson={handleSelectLesson}
-          hasAccessToPaidCourses={false}
-        />
+        {isLoading ? (
+          <Flex justifyContent="center" alignItems="center" height="400px">
+            <Spinner
+              color="brand.purple"
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
+            />
+          </Flex>
+        ) : (
+          <CourseSideBar
+            lessons={lessons}
+            onSelectLesson={handleSelectLesson}
+            hasAccessToPaidCourses={false}
+          />
+        )}
       </Box>
       <Box flex="2">
-        {selectedLesson && (
+        {isLoading ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
-            <LessonContainer
-              lesson={selectedLesson}
-              onLessonComplete={handleLessonComplete}
-              isCompleted={
-                lessonProgress && lessonProgress[selectedLesson.id] === 100
-              }
+            <Spinner
+              color="brand.purple"
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
             />
+          </Flex>
+        ) : selectedLesson ? (
+          <Flex justifyContent="center" alignItems="center" height="100vh">
+            <LessonContainerV2 lesson={selectedLesson} />
+          </Flex>
+        ) : (
+          <Flex justifyContent="center" alignItems="center" height="100vh">
+            <Box>No lesson selected</Box>
           </Flex>
         )}
       </Box>

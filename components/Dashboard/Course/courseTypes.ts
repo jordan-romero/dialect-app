@@ -1,3 +1,5 @@
+import { AnswerOption, Question } from '../Exercises/QuizTypes'
+
 export type Course = {
   id: number
   title: string
@@ -19,8 +21,12 @@ export type Resource = {
 export type Quiz = {
   id: number
   lessonId: number
-  score: number | null // Assuming score can be nullable
+  score: number | null
   passScore: number
+  hasBeenAttempted: boolean
+  quizType: string
+  questions: Question[]
+  answerOptions: AnswerOption[]
 }
 
 export type Lesson = {

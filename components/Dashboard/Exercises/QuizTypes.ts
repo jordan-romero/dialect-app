@@ -20,6 +20,7 @@ export interface Question {
   answerOptions: AnswerOption[]
   extraOptions?: ExtraOption[]
   categories?: string[]
+  audioUrl?: string
 }
 
 export interface QuizData {
@@ -28,6 +29,7 @@ export interface QuizData {
   score: number | null
   passScore: number
   hasBeenAttempted: boolean
+  quizType: string
   questions: Question[]
   answerOptions: AnswerOption[]
 }

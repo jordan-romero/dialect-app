@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { QuizData } from './QuizTypes'
 
-const useQuiz = (isOpen: boolean, lessonId: number) => {
+const useQuiz = (lessonId: number) => {
   const [quizData, setQuizData] = useState<QuizData | null>(null)
   const [selectedOptions, setSelectedOptions] = useState<{
     [questionId: number]: number[]
@@ -13,7 +13,7 @@ const useQuiz = (isOpen: boolean, lessonId: number) => {
 
   useEffect(() => {
     const fetchQuizData = async () => {
-      if (isOpen && lessonId) {
+      if (lessonId) {
         const response = await fetch(`/api/quiz?lessonId=${lessonId}`)
         const data: QuizData = await response.json()
         setQuizData(data)
@@ -33,7 +33,7 @@ const useQuiz = (isOpen: boolean, lessonId: number) => {
     }
 
     fetchQuizData()
-  }, [isOpen, lessonId])
+  }, [lessonId])
 
   return {
     quizData,
