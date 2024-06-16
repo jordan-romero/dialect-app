@@ -1,5 +1,5 @@
 import { DropResult } from 'react-beautiful-dnd'
-import { AnswerOption } from './QuizTypes'
+import { AnswerOption } from '../QuizTypes'
 
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>
 

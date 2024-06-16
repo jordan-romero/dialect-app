@@ -1,4 +1,4 @@
-import { AnswerOption, Question } from '../Quiz/QuizTypes'
+import { AnswerOption, Question } from '../Exercises/QuizTypes'
 
 export type Course = {
   id: number

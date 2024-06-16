@@ -1,39 +1,24 @@
-// DragAndDropQuizModal.tsx
 import React, { useState, useEffect } from 'react'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Box,
-  Icon,
-} from '@chakra-ui/react'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
-import { AnswerOption, Categories, Question } from './QuizTypes'
-import useQuiz from './utils'
+import { AnswerOption, Categories, Question } from '../QuizTypes'
+import useQuiz from '../utils'
 import RhymingPairsQuestion from './RhymingPairsQuestion'
 import RhymingCategoriesQuestion from './RhymingCategoriesQuestion'
 import {
   handleDragEndRhymingPairs,
   handleDragEndRhymingCategories,
 } from './dragHandlers'
+import { Box, Button, Icon } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 
-interface DragAndDropQuizModalProps {
-  isOpen: boolean
-  onClose: () => void
+interface DragAndDropExerciseProps {
   lessonId: number
 }
 
-const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
-  isOpen,
-  onClose,
+const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   lessonId,
 }) => {
-  const { quizData } = useQuiz(isOpen, lessonId)
+  const { quizData } = useQuiz(lessonId)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [rhymingWords, setRhymingWords] = useState<AnswerOption[]>([])
   const [answeredWords, setAnsweredWords] = useState<AnswerOption[]>([])
@@ -41,6 +26,7 @@ const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
   const [wordBank, setWordBank] = useState<AnswerOption[]>([])
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
   const [audioPlaying, setAudioPlaying] = useState<string | null>(null)
+  const [isQuizComplete, setIsQuizComplete] = useState(false)
 
   const currentQuestion: Question | undefined =
     quizData?.questions[currentQuestionIndex]
@@ -122,11 +108,7 @@ const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex === quizData?.questions.length! - 1) {
-      setIsQuestionComplete(true)
-      setTimeout(() => {
-        onClose()
-        // TODO: Navigate to the final screen or show a quiz complete message
-      }, 2000)
+      setIsQuizComplete(true)
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
       setIsQuestionComplete(false)
@@ -137,85 +119,73 @@ const DragAndDropQuizModal: React.FC<DragAndDropQuizModalProps> = ({
     }
   }
 
+  const handleRhymingPairsQuestionComplete = () => {
+    setIsQuestionComplete(true)
+  }
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Modal isOpen={isOpen} onClose={onClose} size="6xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Quiz</ModalHeader>
-          <ModalBody position="relative">
-            {currentQuestion && (
-              <>
-                {currentQuestion.questionType === 'rhymingPairs' && (
-                  <RhymingPairsQuestion
-                    question={currentQuestion}
-                    rhymingWords={rhymingWords}
-                    answeredWords={answeredWords}
-                    playAudio={playAudio}
-                  />
-                )}
-                {currentQuestion.questionType === 'rhymingCategories' && (
-                  <RhymingCategoriesQuestion
-                    question={currentQuestion}
-                    categories={categories}
-                    wordBank={wordBank}
-                    playAudio={playAudio}
-                  />
-                )}
-              </>
+      <Box>
+        {currentQuestion && (
+          <>
+            {currentQuestion.questionType === 'rhymingPairs' && (
+              <RhymingPairsQuestion
+                question={currentQuestion}
+                playAudio={playAudio}
+                onQuestionComplete={handleRhymingPairsQuestionComplete}
+              />
             )}
-            {isQuestionComplete && (
-              <Box
-                position="absolute"
-                top="50%"
-                left="50%"
-                transform="translate(-50%, -50%)"
-                zIndex={1}
-                backgroundColor="rgba(255, 255, 255, 0.8)"
-                padding={4}
-                borderRadius="md"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Icon
-                  as={CheckCircleIcon}
-                  color="green.500"
-                  boxSize={8}
-                  mr={2}
-                />
-                <Box fontWeight="bold" fontSize="xl">
-                  Correct!
-                </Box>
-              </Box>
+            {currentQuestion.questionType === 'rhymingCategories' && (
+              <RhymingCategoriesQuestion
+                question={currentQuestion}
+                categories={categories}
+                wordBank={wordBank}
+                playAudio={playAudio}
+              />
             )}
-          </ModalBody>
-          {quizData && quizData.questions && (
-            <ModalFooter>
-              <Button
-                onClick={() =>
-                  setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
-                }
-                mr={4}
-                isDisabled={currentQuestionIndex === 0}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={handleNextQuestion}
-                isDisabled={!isQuestionComplete}
-              >
-                {currentQuestionIndex === quizData.questions.length - 1
-                  ? 'Finish Quiz'
-                  : 'Next'}
-              </Button>
-              <Button onClick={onClose}>Close</Button>
-            </ModalFooter>
-          )}
-        </ModalContent>
-      </Modal>
+          </>
+        )}
+        {isQuestionComplete && (
+          <Box
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            zIndex={1}
+            backgroundColor="rgba(255, 255, 255, 0.8)"
+            padding={4}
+            borderRadius="md"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Icon as={CheckCircleIcon} color="green.500" boxSize={8} mr={2} />
+            <Box fontWeight="bold" fontSize="xl">
+              Correct!
+            </Box>
+          </Box>
+        )}
+      </Box>
+      {quizData && quizData.questions && (
+        <Box mt={4}>
+          <Button
+            onClick={() =>
+              setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
+            }
+            mr={4}
+            isDisabled={currentQuestionIndex === 0}
+          >
+            Previous
+          </Button>
+          <Button onClick={handleNextQuestion} isDisabled={!isQuestionComplete}>
+            {currentQuestionIndex === quizData.questions.length - 1
+              ? 'Finish Quiz'
+              : 'Next'}
+          </Button>
+        </Box>
+      )}
     </DragDropContext>
   )
 }
 
-export default DragAndDropQuizModal
+export default DragAndDropExercise

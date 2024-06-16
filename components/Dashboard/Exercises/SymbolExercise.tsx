@@ -7,11 +7,11 @@ interface QuizItem {
   words: string[]
 }
 
-interface SymbolQuizProps {
+interface SymbolExerciseProps {
   lessonTitle: string
 }
 
-const SymbolQuiz: React.FC<SymbolQuizProps> = ({ lessonTitle }) => {
+const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
   const [quizItems, setQuizItems] = useState<QuizItem[]>([])
   const [selectedSymbols, setSelectedSymbols] = useState<
     Record<string, string>
@@ -114,4 +114,4 @@ const SymbolQuiz: React.FC<SymbolQuizProps> = ({ lessonTitle }) => {
   )
 }
 
-export default SymbolQuiz
+export default SymbolExercise

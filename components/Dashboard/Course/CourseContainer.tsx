@@ -1,7 +1,7 @@
 // CourseContainer.tsx
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
-import LessonContainer from '../Lesson/LessonContainer'
+import LessonContainerV2 from '../Lesson/LessonContainerV2'
 import { Lesson } from './courseTypes'
 import { Flex, Box, Spinner } from '@chakra-ui/react'
 
@@ -45,28 +45,6 @@ const CourseContainer = () => {
     }))
   }
 
-  const handleLessonComplete = async (lessonId: number) => {
-    try {
-      const response = await fetch('/api/updateProgress', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ lessonId }),
-      })
-      if (!response.ok) {
-        throw new Error(`Failed to update progress. Status: ${response.status}`)
-      }
-      // Update lesson progress locally if the API call succeeds
-      setLessonProgress((prevProgress) => ({
-        ...prevProgress,
-        [lessonId]: 100,
-      }))
-    } catch (error) {
-      console.error('Error updating lesson progress:', error)
-    }
-  }
-
   return (
     <Flex w="100%">
       <Box w="300px">
@@ -99,13 +77,7 @@ const CourseContainer = () => {
           </Flex>
         ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
-            <LessonContainer
-              lesson={selectedLesson}
-              onLessonComplete={handleLessonComplete}
-              isCompleted={
-                lessonProgress && lessonProgress[selectedLesson.id] === 100
-              }
-            />
+            <LessonContainerV2 lesson={selectedLesson} />
           </Flex>
         ) : (
           <Flex justifyContent="center" alignItems="center" height="100vh">

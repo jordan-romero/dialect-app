@@ -2,7 +2,7 @@
 import React from 'react'
 import { Box, Text } from '@chakra-ui/react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
-import { Question, AnswerOption } from './QuizTypes'
+import { Question, AnswerOption } from '../QuizTypes'
 
 interface RhymingCategoriesQuestionProps {
   question: Question

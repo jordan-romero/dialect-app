@@ -63,27 +63,28 @@ const ResourcesContainer = () => {
           Resources
         </Heading>
         <VStack align="stretch" spacing={8}>
-          {lessons.map((lesson) => (
-            <Box key={lesson.id}>
-              <Heading as="h3" size="lg" mb={4} color="brand.iris">
-                {lesson.title}
-              </Heading>
-              <List spacing={2}>
-                {lesson.resources.map((resource) => (
-                  <ListItem
-                    key={resource.id}
-                    onClick={() => setSelectedResource(resource)}
-                    cursor="pointer"
-                    color="brand.blue"
-                    _hover={{ color: 'brand.purpleLight' }}
-                  >
-                    {resource.name}
-                  </ListItem>
-                ))}
-              </List>
-              <Divider my={4} borderColor="util.mediumGray" />
-            </Box>
-          ))}
+          {lessons &&
+            lessons.map((lesson) => (
+              <Box key={lesson.id}>
+                <Heading as="h3" size="lg" mb={4} color="brand.iris">
+                  {lesson.title}
+                </Heading>
+                <List spacing={2}>
+                  {lesson.resources.map((resource) => (
+                    <ListItem
+                      key={resource.id}
+                      onClick={() => setSelectedResource(resource)}
+                      cursor="pointer"
+                      color="brand.blue"
+                      _hover={{ color: 'brand.purpleLight' }}
+                    >
+                      {resource.name}
+                    </ListItem>
+                  ))}
+                </List>
+                <Divider my={4} borderColor="util.mediumGray" />
+              </Box>
+            ))}
         </VStack>
       </Box>
       <Spacer />
