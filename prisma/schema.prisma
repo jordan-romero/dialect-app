@@ -44,7 +44,7 @@ model Lesson {
   title           String
   description     String
   videoUrl        String?
-  quiz        Quiz?
+  quiz        Quiz[]?
   courseId        Int
   course          Course           @relation(fields: [courseId], references: [id])
   resources       Resource[]
@@ -53,6 +53,7 @@ model Lesson {
   isGatedLesson   Boolean          @default(true)
   lessonProgress  LessonProgress[]
   discussions     Discussion[]     @relation("LessonDiscussion")
+  steps           Json? 
 }
 
 // LessonProgress Model
@@ -74,7 +75,7 @@ model LessonProgress {
 model Quiz {
   id              Int        @id @default(autoincrement())
   questions       Question[]
-  lessonId    Int       @unique
+  lessonId    Int      
   lesson      Lesson    @relation(fields: [lessonId], references: [id])
   score           Int?
   passScore       Int?

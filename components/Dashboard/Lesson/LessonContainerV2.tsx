@@ -1,3 +1,4 @@
+// LessonContainerV2.tsx
 import React, { useState } from 'react'
 import {
   Box,
@@ -9,12 +10,16 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Flex,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react'
 import { Lesson, Resource } from '../Course/courseTypes'
 import { lessonTypeComponentMap } from './utils'
 import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExercise'
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
+import SymbolExercise from '../Exercises/SymbolExercise'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -22,6 +27,8 @@ type LessonContainerProps = {
 
 const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
   const [selectedTab, setSelectedTab] = useState(0)
+
+  console.log(lesson, 'lesson')
 
   const getLessonType = (lesson: Lesson) => {
     if (lesson.videoUrl) {
@@ -33,6 +40,17 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
     } else {
       return 'symbolQuiz'
     }
+  }
+
+  if (!lesson) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100vh">
+        <Alert status="error">
+          <AlertIcon />
+          No lesson data available
+        </Alert>
+      </Flex>
+    )
   }
 
   const lessonType = getLessonType(lesson)
@@ -69,7 +87,7 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
             )}
             {lesson.resources && lesson.resources.length > 0 && (
               <Tab _selected={{ color: 'util.white', bg: 'brand.iris' }}>
-                Resources
+                Handouts
               </Tab>
             )}
             {lesson.description && (
@@ -77,7 +95,6 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
                 Description
               </Tab>
             )}
-
             {lesson.quiz && (
               <Tab _selected={{ color: 'util.white', bg: 'brand.iris' }}>
                 Exercises
@@ -127,7 +144,7 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
             <TabPanel>
               <Text>{lesson.description}</Text>
             </TabPanel>
-            {lesson && lesson.quiz && (
+            {lesson.quiz && (
               <TabPanel>
                 {lesson.quiz.quizType === 'dragAndDrop' && (
                   <DragAndDropExercise lessonId={lesson.id} />
@@ -137,6 +154,9 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
                 )}
                 {lesson.quiz.quizType === 'multipleChoice' && (
                   <MultipleChoiceExercise lessonId={lesson.id} />
+                )}
+                {lesson.quiz.quizType === 'symbolQuiz' && (
+                  <SymbolExercise lessonTitle={lesson.title} />
                 )}
               </TabPanel>
             )}

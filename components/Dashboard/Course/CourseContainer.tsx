@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainerV2 from '../Lesson/LessonContainerV2'
-import { Lesson } from './courseTypes'
+import { Course, Lesson } from './courseTypes'
 import { Flex, Box, Spinner } from '@chakra-ui/react'
+import LessonContainerV3 from '../Lesson/LessonContainerV3'
 
 const CourseContainer = () => {
-  const [lessons, setLessons] = useState<Lesson[] | null>(null)
+  const [courses, setCourses] = useState<Course[] | null>(null)
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
@@ -15,23 +16,40 @@ const CourseContainer = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    fetch('/api/lessons')
-      .then((response) => response.json())
-      .then((data: Lesson[]) => {
-        setLessons(data)
-        if (data && data.length > 0) {
-          const firstLesson = data[0]
-          setSelectedLesson(firstLesson)
-          // Set the first lesson as in progress if it's not completed
-          setLessonProgress((prev) => ({
-            ...prev,
-            [firstLesson.id]: prev[firstLesson.id] === 100 ? 100 : 50,
-          }))
-        }
-        setIsLoading(false)
-      })
+    Promise.all([
+      fetch('/api/courses').then((response) => response.json()),
+      fetch('/api/lessonProgress').then((response) => response.json()),
+    ])
+      .then(
+        ([coursesData, progressData]: [
+          Course[],
+          { [key: number]: number },
+        ]) => {
+          setCourses(coursesData)
+          setLessonProgress(progressData)
+
+          // Find the first incomplete lesson or the last lesson if all are complete
+          let lessonToSelect: Lesson | null = null
+          for (const course of coursesData) {
+            for (const lesson of course.lessons) {
+              if (progressData[lesson.id] !== 100) {
+                lessonToSelect = lesson
+                break
+              }
+              lessonToSelect = lesson // This will be the last lesson if all are complete
+            }
+            if (lessonToSelect && progressData[lessonToSelect.id] !== 100) break
+          }
+
+          if (lessonToSelect) {
+            setSelectedLesson(lessonToSelect)
+          }
+
+          setIsLoading(false)
+        },
+      )
       .catch((error) => {
-        console.error('Error fetching lessons:', error)
+        console.error('Error fetching data:', error)
         setIsLoading(false)
       })
   }, [])
@@ -59,9 +77,10 @@ const CourseContainer = () => {
           </Flex>
         ) : (
           <CourseSideBar
-            lessons={lessons}
+            courses={courses}
             onSelectLesson={handleSelectLesson}
             hasAccessToPaidCourses={false}
+            currentLessonId={selectedLesson?.id || null}
           />
         )}
       </Box>
@@ -77,7 +96,11 @@ const CourseContainer = () => {
           </Flex>
         ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
-            <LessonContainerV2 lesson={selectedLesson} />
+            {selectedLesson.steps ? (
+              <LessonContainerV3 lesson={selectedLesson} />
+            ) : (
+              <LessonContainerV2 lesson={selectedLesson} />
+            )}
           </Flex>
         ) : (
           <Flex justifyContent="center" alignItems="center" height="100vh">
