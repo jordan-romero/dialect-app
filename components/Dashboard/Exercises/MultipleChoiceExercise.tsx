@@ -7,12 +7,14 @@ import { AnswerOption } from './QuizTypes'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
+  quizIndex: number // Add quizIndex to specify which quiz to render
 }
 
 const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   lessonId,
+  quizIndex,
 }) => {
-  const { quizData } = useQuiz(lessonId)
+  const { quizzes } = useQuiz(lessonId)
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, number>
   >({})
@@ -24,6 +26,8 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   const [shuffledPart2Questions, setShuffledPart2Questions] = useState<any[]>(
     [],
   )
+
+  const quizData = quizzes[quizIndex]
 
   useEffect(() => {
     if (

@@ -5,10 +5,14 @@ import useQuiz from './utils'
 
 interface ShortAnswerQuizProps {
   lessonId: number
+  quizIndex: number
 }
 
-const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({ lessonId }) => {
-  const { quizData } = useQuiz(lessonId)
+const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
+  lessonId,
+  quizIndex,
+}) => {
+  const { quizzes } = useQuiz(lessonId)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<
     Record<number, Record<number, string>>
@@ -16,7 +20,8 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({ lessonId }) => {
   const [showSentence, setShowSentence] = useState(false)
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
 
-  const currentQuestion = quizData?.questions[currentQuestionIndex]
+  const currentQuiz = quizzes[quizIndex]
+  const currentQuestion = currentQuiz?.questions[currentQuestionIndex]
 
   useEffect(() => {
     setIsQuestionComplete(false)
@@ -37,7 +42,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({ lessonId }) => {
   }
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex === quizData?.questions.length! - 1) {
+    if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuestionComplete(true)
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
@@ -93,7 +98,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({ lessonId }) => {
                     {currentQuestion.extraOptions[0].optionText}
                   </Text>
                 )}
-              {currentQuestionIndex === quizData!.questions.length - 1 && (
+              {currentQuestionIndex === currentQuiz!.questions.length - 1 && (
                 <Button onClick={handleNextQuestion} mt={2} variant="brandBold">
                   Next
                 </Button>
@@ -131,7 +136,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({ lessonId }) => {
           </Box>
         </Box>
       )}
-      {quizData && quizData.questions && (
+      {currentQuiz && currentQuiz.questions && (
         <Box mt={4}>
           <Button
             onClick={() =>
@@ -143,7 +148,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({ lessonId }) => {
           >
             Previous
           </Button>
-          {currentQuestionIndex === quizData.questions.length - 1 && (
+          {currentQuestionIndex === currentQuiz.questions.length - 1 && (
             <Button
               onClick={handleNextQuestion}
               isDisabled={!showSentence}

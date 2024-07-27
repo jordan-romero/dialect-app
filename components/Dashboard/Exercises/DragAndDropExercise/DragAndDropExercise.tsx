@@ -13,12 +13,16 @@ import { CheckCircleIcon } from '@chakra-ui/icons'
 
 interface DragAndDropExerciseProps {
   lessonId: number
+  quizIndex: number // Pass the current quiz index
 }
 
 const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   lessonId,
+  quizIndex,
 }) => {
-  const { quizData } = useQuiz(lessonId)
+  const { quizzes } = useQuiz(lessonId)
+
+  console.log(quizzes, 'quizzes')
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [rhymingWords, setRhymingWords] = useState<AnswerOption[]>([])
   const [answeredWords, setAnsweredWords] = useState<AnswerOption[]>([])
@@ -28,8 +32,9 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   const [audioPlaying, setAudioPlaying] = useState<string | null>(null)
   const [isQuizComplete, setIsQuizComplete] = useState(false)
 
+  const currentQuiz = quizzes[quizIndex]
   const currentQuestion: Question | undefined =
-    quizData?.questions[currentQuestionIndex]
+    currentQuiz?.questions[currentQuestionIndex]
 
   useEffect(() => {
     if (!currentQuestion) {
@@ -107,7 +112,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   }
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex === quizData?.questions.length! - 1) {
+    if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuizComplete(true)
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
@@ -166,7 +171,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
           </Box>
         )}
       </Box>
-      {quizData && quizData.questions && (
+      {currentQuiz && currentQuiz.questions && (
         <Box mt={4}>
           <Button
             onClick={() =>
@@ -178,7 +183,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
             Previous
           </Button>
           <Button onClick={handleNextQuestion} isDisabled={!isQuestionComplete}>
-            {currentQuestionIndex === quizData.questions.length - 1
+            {currentQuestionIndex === currentQuiz.questions.length - 1
               ? 'Finish Quiz'
               : 'Next'}
           </Button>

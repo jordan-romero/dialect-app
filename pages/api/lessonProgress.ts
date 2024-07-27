@@ -15,16 +15,36 @@ export default async function handler(
       const session = await getSession(req, res)
 
       if (!session || !session.user) {
+        console.log('Unauthorized access attempt detected.')
         res.status(401).json({ message: 'Unauthorized' })
         return
       }
 
-      const userId = session.user.id
+      const userId = session.user.sub
+
+      // Log session data for debugging
+      console.log('Session Data:', session)
+      console.log('Fetching lesson progress for User ID:', userId)
+
+      const userIdFromDb = await prisma.user.findUnique({
+        where: {
+          email: session.user.email,
+        },
+        select: {
+          id: true,
+        },
+      })
+
+      if (!userIdFromDb) {
+        console.error('User not found in database:', session.user.email)
+        res.status(404).json({ message: 'User not found' })
+        return
+      }
 
       // Retrieve the lesson progress data for the current user
       const lessonProgress = await prisma.lessonProgress.findMany({
         where: {
-          userId,
+          userId: userIdFromDb.id,
         },
         select: {
           lessonId: true,

@@ -31,20 +31,38 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
   console.log(steps, 'steps')
   console.log(currentStep, 'currentStep')
 
+  const getCurrentResourceIndex = () => {
+    return (
+      steps
+        .slice(0, currentStepIndex + 1)
+        .filter((step) => step.type === 'resource').length - 1
+    )
+  }
+
+  const getCurrentQuizIndex = () => {
+    return (
+      steps
+        .slice(0, currentStepIndex + 1)
+        .filter((step) => step.type === 'quiz').length - 1
+    )
+  }
+
   const renderStepContent = () => {
     switch (currentStep.type) {
       case 'video':
         return lesson.videoUrl ? lessonTypeComponentMap['video'](lesson) : null
       case 'resource':
-        return lesson.resources && lesson.resources.length > 0 ? (
+        const resourceIndex = getCurrentResourceIndex()
+        const resource = lesson.resources[resourceIndex]
+        return resource ? (
           <Box>
             <iframe
               width="95%"
               height="500px"
               src={`https://docs.google.com/viewer?url=${encodeURIComponent(
-                lesson.resources[0].url,
+                resource.url,
               )}&embedded=true`}
-              title={lesson.resources[0].name}
+              title={resource.name}
               allowFullScreen
             ></iframe>
           </Box>
@@ -52,21 +70,47 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
       case 'description':
         return lesson.description ? <Text>{lesson.description}</Text> : null
       case 'quiz':
-        if (lesson.quiz) {
-          switch (lesson.quiz.quizType) {
-            case 'dragAndDrop':
-              return <DragAndDropExercise lessonId={lesson.id} />
-            case 'shortAnswer':
-              return <ShortAnswerExercise lessonId={lesson.id} />
-            case 'multipleChoice':
-              return <MultipleChoiceExercise lessonId={lesson.id} />
-            case 'symbolQuiz':
-              return <SymbolExercise lessonTitle={lesson.title} />
-            default:
-              return null
-          }
-        }
-        return null
+        const quizIndex = getCurrentQuizIndex()
+        const quiz = lesson.quiz[quizIndex]
+        console.log(quiz, quizIndex)
+        return quiz ? (
+          <Box>
+            {(() => {
+              switch (quiz.quizType) {
+                case 'dragAndDrop':
+                  return (
+                    <DragAndDropExercise
+                      lessonId={lesson.id}
+                      quizIndex={quizIndex}
+                    />
+                  )
+                case 'shortAnswer':
+                  return (
+                    <ShortAnswerExercise
+                      lessonId={lesson.id}
+                      quizIndex={quizIndex}
+                    />
+                  )
+                case 'multipleChoice':
+                  return (
+                    <MultipleChoiceExercise
+                      lessonId={lesson.id}
+                      quizIndex={quizIndex}
+                    />
+                  )
+                case 'symbolQuiz':
+                  return (
+                    <SymbolExercise
+                      lessonTitle={lesson.title}
+                      quizIndex={quizIndex}
+                    />
+                  )
+                default:
+                  return null
+              }
+            })()}
+          </Box>
+        ) : null
       default:
         return null
     }

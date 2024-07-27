@@ -43,6 +43,6 @@ export type Lesson = {
   isCompleted: boolean
   passScore: number | null // Assuming passScore can be nullable
   resources: Resource[]
-  quiz: Quiz | null // Assuming quiz can be nullable
+  quiz: Quiz[]
   steps?: LessonStep[]
 }

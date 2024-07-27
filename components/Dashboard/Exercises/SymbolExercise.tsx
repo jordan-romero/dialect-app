@@ -9,9 +9,13 @@ interface QuizItem {
 
 interface SymbolExerciseProps {
   lessonTitle: string
+  quizIndex: number // Add quizIndex to specify which quiz to render
 }
 
-const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
+const SymbolExercise: React.FC<SymbolExerciseProps> = ({
+  lessonTitle,
+  quizIndex,
+}) => {
   const [quizItems, setQuizItems] = useState<QuizItem[]>([])
   const [selectedSymbols, setSelectedSymbols] = useState<
     Record<string, string>
@@ -22,7 +26,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
     const items = getQuizItems(lessonTitle)
     const shuffledItems = items.sort(() => Math.random() - 0.5)
     setQuizItems(shuffledItems)
-  }, [lessonTitle])
+  }, [lessonTitle, quizIndex])
 
   const handleSymbolSelect = (symbol: string) => {
     if (selectedWord) {
@@ -30,6 +34,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
         ...prevSymbols,
         [selectedWord]: symbol,
       }))
+      setSelectedWord(null) // Clear the selected word after assigning a symbol
     }
   }
 
@@ -71,7 +76,11 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
         {quizItems.length > 0 &&
           quizItems.map((item) => (
             <GridItem key={item.symbol}>
-              <Button onClick={() => handleSymbolSelect(item.symbol)}>
+              <Button
+                onClick={() => handleSymbolSelect(item.symbol)}
+                variant="outline"
+                colorScheme={selectedWord ? 'blue' : 'gray'}
+              >
                 {item.symbol}
               </Button>
             </GridItem>
@@ -88,6 +97,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
                 borderColor={selectedWord === word ? 'blue.500' : 'gray.200'}
                 borderRadius="md"
                 p={2}
+                backgroundColor={selectedWord === word ? 'blue.50' : 'white'}
               >
                 {underlineWord(word)}
                 <Flex justifyContent="center" mt={2}>
@@ -99,7 +109,11 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({ lessonTitle }) => {
                     minWidth="40px"
                     textAlign="center"
                     backgroundColor={
-                      isWordCorrect(word) ? 'green.100' : 'red.100'
+                      selectedSymbols[word]
+                        ? isWordCorrect(word)
+                          ? 'green.100'
+                          : 'red.100'
+                        : 'gray.100'
                     }
                   >
                     {selectedSymbols[word] || '?'}
