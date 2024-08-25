@@ -26,23 +26,25 @@ const useQuiz = (lessonId: number) => {
           [quizId: number]: { [questionId: number]: boolean }
         } = {}
 
-        data.forEach((quiz) => {
-          initialSelectedOptions[quiz.id] = quiz.questions.reduce(
-            (acc, question) => {
-              acc[question.id] = []
-              return acc
-            },
-            {} as { [questionId: number]: number[] },
-          )
+        if (data && Array.isArray(data)) {
+          data.forEach((quiz) => {
+            initialSelectedOptions[quiz.id] = quiz.questions.reduce(
+              (acc, question) => {
+                acc[question.id] = []
+                return acc
+              },
+              {} as { [questionId: number]: number[] },
+            )
 
-          initialShowCorrectMessage[quiz.id] = quiz.questions.reduce(
-            (acc, question) => {
-              acc[question.id] = false
-              return acc
-            },
-            {} as { [questionId: number]: boolean },
-          )
-        })
+            initialShowCorrectMessage[quiz.id] = quiz.questions.reduce(
+              (acc, question) => {
+                acc[question.id] = false
+                return acc
+              },
+              {} as { [questionId: number]: boolean },
+            )
+          })
+        }
 
         setSelectedOptions(initialSelectedOptions)
         setShowCorrectMessage(initialShowCorrectMessage)

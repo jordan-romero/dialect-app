@@ -44,6 +44,7 @@ export default async function handler(
     const existingLessonProgress = await prisma.lessonProgress.findFirst({
       where: {
         lessonId: Number(lessonId),
+        user: { email: userEmail },
       },
     })
 
@@ -53,8 +54,7 @@ export default async function handler(
       },
     })
 
-    // Calculate the progress based on whether the lesson has a quiz or not
-    const progress = quiz && quiz.hasBeenAttempted === false ? 50 : 100
+    const progress = 100
 
     if (existingLessonProgress) {
       // Update the existing lesson progress record
@@ -87,27 +87,11 @@ export default async function handler(
       })
     }
 
-    // Update the lesson's isCompleted field if progress reaches 100
-
-    // Update the lesson's isCompleted field if progress reaches 100
-    if (progress === 100) {
-      console.log('Updating lesson isCompleted to true')
-      try {
-        await prisma.lesson.update({
-          where: { id: Number(lessonId) },
-          data: { isCompleted: true },
-        })
-        console.log('Lesson isCompleted updated successfully')
-      } catch (error) {
-        console.error('Error updating lesson isCompleted:', error)
-      }
-    }
-
     res.status(200).json({ message: 'Progress updated successfully' })
   } catch (error) {
     console.error('Error updating progress:', error)
     res.status(500).json({ message: 'Error updating progress' })
   } finally {
-    await prisma.$disconnect() // Disconnect Prisma client after handling the request
+    await prisma.$disconnect()
   }
 }

@@ -1,4 +1,3 @@
-// CourseContainer.tsx
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainerV2 from '../Lesson/LessonContainerV2'
@@ -25,26 +24,13 @@ const CourseContainer = () => {
           Course[],
           { [key: number]: number },
         ]) => {
+          console.log('Courses Data:', coursesData)
+          console.log('Lesson Progress Data:', progressData)
+
           setCourses(coursesData)
           setLessonProgress(progressData)
 
-          // Find the first incomplete lesson or the last lesson if all are complete
-          let lessonToSelect: Lesson | null = null
-          for (const course of coursesData) {
-            for (const lesson of course.lessons) {
-              if (progressData[lesson.id] !== 100) {
-                lessonToSelect = lesson
-                break
-              }
-              lessonToSelect = lesson // This will be the last lesson if all are complete
-            }
-            if (lessonToSelect && progressData[lessonToSelect.id] !== 100) break
-          }
-
-          if (lessonToSelect) {
-            setSelectedLesson(lessonToSelect)
-          }
-
+          selectNextLesson(coursesData, progressData)
           setIsLoading(false)
         },
       )
@@ -54,6 +40,27 @@ const CourseContainer = () => {
       })
   }, [])
 
+  const selectNextLesson = (
+    courses: Course[],
+    progress: { [key: number]: number },
+  ) => {
+    let lessonToSelect: Lesson | null = null
+    for (const course of courses) {
+      for (const lesson of course.lessons) {
+        if (progress[lesson.id] !== 100) {
+          lessonToSelect = lesson
+          break
+        }
+        lessonToSelect = lesson // This will be the last lesson if all are complete
+      }
+      if (lessonToSelect && progress[lessonToSelect.id] !== 100) break
+    }
+
+    if (lessonToSelect) {
+      setSelectedLesson(lessonToSelect)
+    }
+  }
+
   const handleSelectLesson = (lesson: Lesson) => {
     setSelectedLesson(lesson)
     // Set the lesson as in progress when selected, if not already completed
@@ -61,6 +68,30 @@ const CourseContainer = () => {
       ...prev,
       [lesson.id]: prev[lesson.id] === 100 ? 100 : 50,
     }))
+  }
+
+  const handleLessonComplete = () => {
+    if (selectedLesson) {
+      console.log(`Marking lesson ${selectedLesson.id} as complete`)
+
+      setLessonProgress((prev) => {
+        const updatedProgress = {
+          ...prev,
+          [selectedLesson.id]: 100,
+        }
+
+        console.log('Updated Lesson Progress:', updatedProgress)
+        return updatedProgress
+      })
+
+      // Select the next lesson after marking the current one as complete
+      if (courses) {
+        selectNextLesson(courses, {
+          ...lessonProgress,
+          [selectedLesson.id]: 100,
+        })
+      }
+    }
   }
 
   return (
@@ -81,6 +112,7 @@ const CourseContainer = () => {
             onSelectLesson={handleSelectLesson}
             hasAccessToPaidCourses={false}
             currentLessonId={selectedLesson?.id || null}
+            lessonProgress={lessonProgress} // Pass lesson progress down as a prop
           />
         )}
       </Box>
@@ -97,7 +129,10 @@ const CourseContainer = () => {
         ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
             {selectedLesson.steps ? (
-              <LessonContainerV3 lesson={selectedLesson} />
+              <LessonContainerV3
+                lesson={selectedLesson}
+                onLessonComplete={handleLessonComplete}
+              />
             ) : (
               <LessonContainerV2 lesson={selectedLesson} />
             )}

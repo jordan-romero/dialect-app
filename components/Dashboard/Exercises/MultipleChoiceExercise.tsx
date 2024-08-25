@@ -1,18 +1,35 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from 'react'
-import { Button, Box, Text, VStack, Icon } from '@chakra-ui/react'
+import { Button, Box, Text, SimpleGrid, Icon, Flex } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
-  quizIndex: number // Add quizIndex to specify which quiz to render
+  quizIndex: number
+  onComplete: () => void
+}
+
+const AudioButton: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
+  const [audio] = useState(new Audio(audioUrl))
+
+  const playAudio = () => {
+    audio.play()
+  }
+
+  return (
+    <Button onClick={playAudio} size="sm" leftIcon={<MdVolumeUp />}>
+      Play Audio
+    </Button>
+  )
 }
 
 const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   lessonId,
   quizIndex,
+  onComplete,
 }) => {
   const { quizzes } = useQuiz(lessonId)
   const [selectedAnswers, setSelectedAnswers] = useState<
@@ -91,6 +108,7 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   }
 
   const isQuizComplete = () => {
+    onComplete()
     return (
       quizData?.questions.length === Object.keys(selectedAnswers).length &&
       Object.values(selectedAnswers).every((answerId) => answerId !== undefined)
@@ -130,113 +148,95 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     return text
   }
 
+  const renderQuestion = (question: any) => (
+    <Box key={question.id} mb={8} width="100%">
+      <Flex alignItems="center" mb={4}>
+        <Text fontWeight="bold" mr={4} fontSize="2xl">
+          {question.categories && question.categories.length > 0
+            ? underlineText(question.text, question.categories[0])
+            : question.text}
+        </Text>
+        {question.audioUrl && <AudioButton audioUrl={question.audioUrl} />}
+      </Flex>
+      <SimpleGrid columns={2} spacing={4} width="100%">
+        {question.answerOptions.map((option: AnswerOption) => (
+          <Button
+            key={option.id}
+            onClick={() => handleAnswerSelect(question.id, option.id)}
+            fontFamily="'Charis SIL', serif"
+            variant={
+              selectedAnswers[question.id] === option.id ? 'solid' : 'outline'
+            }
+            colorScheme={
+              selectedAnswers[question.id] === option.id
+                ? isQuestionCorrect(question.id)
+                  ? 'green'
+                  : 'red'
+                : 'gray'
+            }
+          >
+            {option.optionText}
+            {selectedAnswers[question.id] === option.id &&
+              isQuestionCorrect(question.id) && (
+                <Icon
+                  as={CheckCircleIcon}
+                  color="green.500"
+                  ml={2}
+                  boxSize={4}
+                />
+              )}
+          </Button>
+        ))}
+      </SimpleGrid>
+    </Box>
+  )
+
   return (
     <Box>
       {currentPart === 1 && (
         <>
-          <Text fontStyle="italic" mb={4}>
-            Instructions: Choose the correct symbol that matches the sound in
-            the underlined part of the word.
-          </Text>
-          <Text fontStyle="italic" mb={8}>
-            Note, when doing these exercises you may be tempted to check a
-            dictionary to "help" you with these answers – we caution you that
-            the transcription might be more "broad" than what we are teaching
-            you, therefore not as helpful. When in doubt, check the "Expanded
-            Lexical Sets" worksheet from section 2.
-          </Text>
-          <VStack spacing={8} align="start">
-            {shuffledPart1Questions?.map((question) => (
-              <Box key={question.id} width="100%">
-                <Text fontWeight="bold" mb={4}>
-                  {question.categories && question.categories.length > 0
-                    ? underlineText(question.text, question.categories[0])
-                    : question.text}
-                </Text>
-                <VStack align="start" spacing={4}>
-                  {question.answerOptions.map((option: AnswerOption) => (
-                    <Button
-                      key={option.id}
-                      onClick={() => handleAnswerSelect(question.id, option.id)}
-                      variant={
-                        selectedAnswers[question.id] === option.id
-                          ? 'solid'
-                          : 'outline'
-                      }
-                      colorScheme={
-                        selectedAnswers[question.id] === option.id
-                          ? isQuestionCorrect(question.id)
-                            ? 'green'
-                            : 'red'
-                          : 'gray'
-                      }
-                      width="100%"
-                    >
-                      {option.optionText}
-                      {selectedAnswers[question.id] === option.id &&
-                        isQuestionCorrect(question.id) && (
-                          <Icon
-                            as={CheckCircleIcon}
-                            color="green.500"
-                            ml={2}
-                            boxSize={4}
-                          />
-                        )}
-                    </Button>
-                  ))}
-                </VStack>
-              </Box>
-            ))}
-          </VStack>
+          <Box
+            position="sticky"
+            top="0"
+            bg="white"
+            zIndex="1"
+            py={4}
+            borderColor="gray.200"
+          >
+            <Text fontStyle="italic" mb={4}>
+              Instructions: Choose the correct symbol that matches the sound in
+              the underlined part of the word. Click the "Play Audio" button to
+              hear the word.
+            </Text>
+            <Text fontFamily="'Charis SIL', serif" mb={8}>
+              Note, when doing these exercises you may be tempted to check a
+              dictionary to "help" you with these answers – we caution you that
+              the transcription might be more "broad" than what we are teaching
+              you, therefore not as helpful. When in doubt, check the "Expanded
+              Lexical Sets" worksheet from section 2.
+            </Text>
+          </Box>
+          {shuffledPart1Questions?.map(renderQuestion)}
         </>
       )}
       {currentPart === 2 && (
         <>
-          <Text fontStyle="italic" mb={8}>
-            Instructions: Choose the correct word that contains the sound of the
-            presented symbol.
-          </Text>
-          <VStack spacing={8} align="start">
-            {shuffledPart2Questions?.map((question) => (
-              <Box key={question.id} width="100%">
-                <Text fontWeight="bold" mb={4}>
-                  {question.text}
-                </Text>
-                <VStack align="start" spacing={4}>
-                  {question.answerOptions.map((option: AnswerOption) => (
-                    <Button
-                      key={option.id}
-                      onClick={() => handleAnswerSelect(question.id, option.id)}
-                      variant={
-                        selectedAnswers[question.id] === option.id
-                          ? 'solid'
-                          : 'outline'
-                      }
-                      colorScheme={
-                        selectedAnswers[question.id] === option.id
-                          ? isQuestionCorrect(question.id)
-                            ? 'green'
-                            : 'red'
-                          : 'gray'
-                      }
-                      width="100%"
-                    >
-                      {option.optionText}
-                      {selectedAnswers[question.id] === option.id &&
-                        isQuestionCorrect(question.id) && (
-                          <Icon
-                            as={CheckCircleIcon}
-                            color="green.500"
-                            ml={2}
-                            boxSize={4}
-                          />
-                        )}
-                    </Button>
-                  ))}
-                </VStack>
-              </Box>
-            ))}
-          </VStack>
+          <Box
+            position="sticky"
+            top="0"
+            bg="white"
+            zIndex="1"
+            py={4}
+            borderBottom="1px solid"
+            borderColor="gray.200"
+          >
+            <Text fontStyle="italic" mb={8}>
+              Instructions: Choose the correct word that contains the sound of
+              the presented symbol. Click the "Play Audio" button to hear the
+              symbol.
+            </Text>
+          </Box>
+          {shuffledPart2Questions?.map(renderQuestion)}
         </>
       )}
       {currentPart === 1 && (

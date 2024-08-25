@@ -6,11 +6,13 @@ import useQuiz from './utils'
 interface ShortAnswerQuizProps {
   lessonId: number
   quizIndex: number
+  onComplete: () => void
 }
 
 const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   lessonId,
   quizIndex,
+  onComplete,
 }) => {
   const { quizzes } = useQuiz(lessonId)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -23,8 +25,13 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion = currentQuiz?.questions[currentQuestionIndex]
 
+  const revealSentenceOption = currentQuestion?.answerOptions.find(
+    (option) => option.audioUrl,
+  )
+
   useEffect(() => {
     setIsQuestionComplete(false)
+    setShowSentence(false)
   }, [currentQuestion])
 
   const handleAnswerChange = (
@@ -44,22 +51,20 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const handleNextQuestion = () => {
     if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuestionComplete(true)
+      onComplete()
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
       setShowSentence(false)
-      setIsQuestionComplete(false)
     }
   }
 
-  const allInputsFilled = currentQuestion?.answerOptions.every(
-    (option) => answers[currentQuestion.id]?.[option.id],
-  )
+  const allInputsFilled = currentQuestion?.answerOptions
+    .filter((option) => !option.audioUrl)
+    .every((option) => answers[currentQuestion.id]?.[option.id])
 
-  const playAudio = () => {
-    if (currentQuestion?.audioUrl) {
-      const audio = new Audio(currentQuestion.audioUrl)
-      audio.play()
-    }
+  const playAudio = (audioUrl: string | undefined) => {
+    const audio = new Audio(audioUrl)
+    audio.play()
   }
 
   return (
@@ -68,43 +73,48 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
         <Box>
           <Text fontSize="xl">{currentQuestion.text}</Text>
           {currentQuestion.audioUrl && (
-            <Button onClick={playAudio}>Play Audio</Button>
+            <Button
+              onClick={() => playAudio(currentQuestion.audioUrl)}
+              mt={2}
+              mb={4}
+            >
+              Play Question Audio
+            </Button>
           )}
           <VStack spacing={4} mt={4} align="start">
-            {currentQuestion.answerOptions.map((option) => (
-              <Box key={option.id} width="100%">
-                <Text>{option.optionText}</Text>
-                <Input
-                  type="text"
-                  value={answers[currentQuestion.id]?.[option.id] || ''}
-                  onChange={(e) =>
-                    handleAnswerChange(
-                      currentQuestion.id,
-                      option.id,
-                      e.target.value,
-                    )
-                  }
-                  width="100%"
-                  marginBottom={2}
-                />
-              </Box>
-            ))}
+            {currentQuestion.answerOptions
+              .filter((option) => !option.audioUrl)
+              .map((option) => (
+                <Box key={option.id} width="100%">
+                  <Text>{option.optionText}</Text>
+                  <Input
+                    type="text"
+                    value={answers[currentQuestion.id]?.[option.id] || ''}
+                    onChange={(e) =>
+                      handleAnswerChange(
+                        currentQuestion.id,
+                        option.id,
+                        e.target.value,
+                      )
+                    }
+                    width="100%"
+                    marginBottom={2}
+                  />
+                </Box>
+              ))}
           </VStack>
-          {showSentence && currentQuestion.extraOptions ? (
+          {showSentence && revealSentenceOption && (
             <Box mt={4}>
-              {currentQuestion.extraOptions &&
-                currentQuestion.extraOptions[0] && (
-                  <Text mt={2}>
-                    {currentQuestion.extraOptions[0].optionText}
-                  </Text>
-                )}
-              {currentQuestionIndex === currentQuiz!.questions.length - 1 && (
-                <Button onClick={handleNextQuestion} mt={2} variant="brandBold">
-                  Next
-                </Button>
-              )}
+              <Text>{revealSentenceOption.optionText}</Text>
+              <Button
+                onClick={() => playAudio(revealSentenceOption.audioUrl)}
+                mt={2}
+              >
+                Play Sentence Audio
+              </Button>
             </Box>
-          ) : (
+          )}
+          {!showSentence && revealSentenceOption && (
             <Button
               onClick={() => setShowSentence(true)}
               mt={4}
@@ -116,6 +126,29 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           )}
         </Box>
       )}
+      <Box mt={4}>
+        <Button
+          onClick={() =>
+            setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
+          }
+          mr={4}
+          isDisabled={currentQuestionIndex === 0}
+          variant="brandGhost"
+        >
+          Previous
+        </Button>
+        <Button
+          onClick={handleNextQuestion}
+          isDisabled={
+            !(showSentence || (allInputsFilled && !revealSentenceOption))
+          }
+          variant="brandBold"
+        >
+          {currentQuestionIndex === currentQuiz?.questions.length! - 1
+            ? 'Finish Quiz'
+            : 'Next'}
+        </Button>
+      </Box>
       {isQuestionComplete && (
         <Box
           position="absolute"
@@ -134,29 +167,6 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           <Box fontWeight="bold" fontSize="xl">
             Good Job!
           </Box>
-        </Box>
-      )}
-      {currentQuiz && currentQuiz.questions && (
-        <Box mt={4}>
-          <Button
-            onClick={() =>
-              setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
-            }
-            mr={4}
-            isDisabled={currentQuestionIndex === 0}
-            variant="brandGhost"
-          >
-            Previous
-          </Button>
-          {currentQuestionIndex === currentQuiz.questions.length - 1 && (
-            <Button
-              onClick={handleNextQuestion}
-              isDisabled={!showSentence}
-              variant="brandBold"
-            >
-              Finish Quiz
-            </Button>
-          )}
         </Box>
       )}
     </Box>

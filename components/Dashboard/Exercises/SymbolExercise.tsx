@@ -9,7 +9,8 @@ interface QuizItem {
 
 interface SymbolExerciseProps {
   lessonTitle: string
-  quizIndex: number // Add quizIndex to specify which quiz to render
+  quizIndex: number
+  onComplete: () => void
 }
 
 const SymbolExercise: React.FC<SymbolExerciseProps> = ({

@@ -13,12 +13,14 @@ import { CheckCircleIcon } from '@chakra-ui/icons'
 
 interface DragAndDropExerciseProps {
   lessonId: number
-  quizIndex: number // Pass the current quiz index
+  quizIndex: number
+  onComplete: () => void
 }
 
 const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   lessonId,
   quizIndex,
+  onComplete,
 }) => {
   const { quizzes } = useQuiz(lessonId)
 
@@ -114,6 +116,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   const handleNextQuestion = () => {
     if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuizComplete(true)
+      onComplete()
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
       setIsQuestionComplete(false)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Flex, Text, Icon, VStack, HStack, Button } from '@chakra-ui/react'
 import {
   MdCheck,
@@ -14,7 +14,8 @@ type CourseSideBarProps = {
   courses: Course[] | null
   onSelectLesson: (lesson: Lesson) => void
   hasAccessToPaidCourses: boolean
-  currentLessonId: number | null // Add this prop to know the current lesson
+  currentLessonId: number | null
+  lessonProgress: { [key: number]: number } // Receive lesson progress as a prop
 }
 
 const CourseSideBar = ({
@@ -22,34 +23,11 @@ const CourseSideBar = ({
   onSelectLesson,
   hasAccessToPaidCourses,
   currentLessonId,
+  lessonProgress,
 }: CourseSideBarProps) => {
-  const [lessonProgress, setLessonProgress] = useState<{
-    [key: number]: number
-  }>({})
   const [expandedCourses, setExpandedCourses] = useState<{
     [key: number]: boolean
   }>({})
-
-  useEffect(() => {
-    const fetchLessonProgress = async () => {
-      try {
-        const response = await fetch('/api/lessonProgress')
-        if (response.ok) {
-          const data = await response.json()
-          setLessonProgress(data)
-        } else {
-          console.error(
-            'Error retrieving lesson progress:',
-            response.statusText,
-          )
-        }
-      } catch (error) {
-        console.error('Error retrieving lesson progress:', error)
-      }
-    }
-
-    fetchLessonProgress()
-  }, [])
 
   useEffect(() => {
     // Automatically expand the course containing the current lesson

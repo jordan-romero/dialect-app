@@ -38,11 +38,6 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
     )
   }
 
-  console.log(
-    lesson.quiz.map((quiz) => quiz.quizType),
-    'quizTypes',
-  )
-
   const renderQuizzes = () => {
     return lesson.quiz.map((quiz, index) => {
       switch (quiz.quizType) {

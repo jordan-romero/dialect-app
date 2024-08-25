@@ -6,13 +6,20 @@ import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExe
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
+import LessonDescription from './LessonDescription'
 
 type LessonContainerProps = {
   lesson: Lesson
+  onLessonComplete: () => void // Callback function to be called when lesson is complete
 }
 
-const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
+const LessonContainerV3: React.FC<LessonContainerProps> = ({
+  lesson,
+  onLessonComplete,
+}) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  const [isMarkingComplete, setIsMarkingComplete] = useState(false)
+  const [quizCompleted, setQuizCompleted] = useState(false)
 
   if (!lesson || !lesson.steps || lesson.steps.length === 0) {
     return (
@@ -28,15 +35,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
   const steps = lesson.steps
   const currentStep = steps[currentStepIndex]
 
-  console.log(steps, 'steps')
-  console.log(currentStep, 'currentStep')
-
   const getCurrentResourceIndex = () => {
-    return (
+    const currentResource =
       steps
         .slice(0, currentStepIndex + 1)
         .filter((step) => step.type === 'resource').length - 1
-    )
+    console.log(currentResource, 'currentResource')
+    return currentResource
   }
 
   const getCurrentQuizIndex = () => {
@@ -47,6 +52,37 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
     )
   }
 
+  const markLessonComplete = async () => {
+    setIsMarkingComplete(true)
+    try {
+      const response = await fetch('/api/updateProgress', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ lessonId: lesson.id }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to mark lesson as complete')
+      }
+
+      const result = await response.json()
+      console.log('Lesson marked as complete:', result)
+
+      // Call onLessonComplete to update the parent state immediately
+      onLessonComplete()
+    } catch (error) {
+      console.error('Error marking lesson as complete:', error)
+    } finally {
+      setIsMarkingComplete(false)
+    }
+  }
+
+  const handleQuizCompletion = () => {
+    setQuizCompleted(true)
+  }
+
   const renderStepContent = () => {
     switch (currentStep.type) {
       case 'video':
@@ -55,10 +91,10 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
         const resourceIndex = getCurrentResourceIndex()
         const resource = lesson.resources[resourceIndex]
         return resource ? (
-          <Box>
+          <Box height="100%">
             <iframe
               width="95%"
-              height="500px"
+              height="750px"
               src={`https://docs.google.com/viewer?url=${encodeURIComponent(
                 resource.url,
               )}&embedded=true`}
@@ -68,11 +104,15 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
           </Box>
         ) : null
       case 'description':
-        return lesson.description ? <Text>{lesson.description}</Text> : null
+        return (
+          <LessonDescription
+            lessonDescription={lesson.description}
+            resources={lesson.resources}
+          />
+        )
       case 'quiz':
         const quizIndex = getCurrentQuizIndex()
         const quiz = lesson.quiz[quizIndex]
-        console.log(quiz, quizIndex)
         return quiz ? (
           <Box>
             {(() => {
@@ -82,6 +122,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
                     <DragAndDropExercise
                       lessonId={lesson.id}
                       quizIndex={quizIndex}
+                      onComplete={handleQuizCompletion}
                     />
                   )
                 case 'shortAnswer':
@@ -89,6 +130,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
                     <ShortAnswerExercise
                       lessonId={lesson.id}
                       quizIndex={quizIndex}
+                      onComplete={handleQuizCompletion}
                     />
                   )
                 case 'multipleChoice':
@@ -96,6 +138,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
                     <MultipleChoiceExercise
                       lessonId={lesson.id}
                       quizIndex={quizIndex}
+                      onComplete={handleQuizCompletion}
                     />
                   )
                 case 'symbolQuiz':
@@ -103,6 +146,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
                     <SymbolExercise
                       lessonTitle={lesson.title}
                       quizIndex={quizIndex}
+                      onComplete={handleQuizCompletion}
                     />
                   )
                 default:
@@ -117,7 +161,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
   }
 
   return (
-    <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
+    <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
       {/* Lesson Title */}
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
@@ -133,21 +177,46 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({ lesson }) => {
           {lesson.title}
         </Text>
       </Box>
-      <Box w="92%" mr="auto" ml="auto" mt="8">
-        {renderStepContent()}
+      <Box
+        w="96%"
+        mr="auto"
+        ml="auto"
+        mt="8"
+        minHeight="calc(100vh - 300px)"
+        overflowY="auto"
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
+        <Box flex="1">{renderStepContent()}</Box>
         <Flex justifyContent="space-between" mt={4}>
-          <Button
-            onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
-            isDisabled={currentStepIndex === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
-            isDisabled={currentStepIndex === steps.length - 1}
-          >
-            Next
-          </Button>
+          {currentStepIndex > 0 && (
+            <Button
+              onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+              isDisabled={currentStepIndex === 0}
+            >
+              Previous
+            </Button>
+          )}
+          {currentStepIndex < steps.length - 1 ? (
+            <Button
+              onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
+              isDisabled={
+                currentStepIndex === steps.length - 1 ||
+                (currentStep.type === 'quiz' && !quizCompleted)
+              }
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              onClick={markLessonComplete}
+              isLoading={isMarkingComplete}
+              isDisabled={isMarkingComplete}
+            >
+              Finish
+            </Button>
+          )}
         </Flex>
       </Box>
     </Box>
