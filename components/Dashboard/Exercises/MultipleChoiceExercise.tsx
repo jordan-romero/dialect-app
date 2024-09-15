@@ -5,6 +5,7 @@ import { CheckCircleIcon } from '@chakra-ui/icons'
 import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
+import QuizNavigation from './QuizNavigation'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -36,7 +37,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     Record<number, number>
   >({})
   const [currentPart, setCurrentPart] = useState(1)
-  const [part1Complete, setPart1Complete] = useState(false)
   const [shuffledPart1Questions, setShuffledPart1Questions] = useState<any[]>(
     [],
   )
@@ -45,15 +45,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   )
 
   const quizData = quizzes[quizIndex]
-
-  useEffect(() => {
-    if (
-      shuffledPart1Questions &&
-      Object.keys(selectedAnswers).length === shuffledPart1Questions.length
-    ) {
-      setPart1Complete(true)
-    }
-  }, [shuffledPart1Questions, selectedAnswers])
 
   useEffect(() => {
     if (quizData?.questions) {
@@ -107,14 +98,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     return selectedAnswer === correctOption?.id
   }
 
-  const isQuizComplete = () => {
-    onComplete()
-    return (
-      quizData?.questions.length === Object.keys(selectedAnswers).length &&
-      Object.values(selectedAnswers).every((answerId) => answerId !== undefined)
-    )
-  }
-
   const underlineText = (text: string, category: string) => {
     if (category === 'Last Two') {
       return (
@@ -146,6 +129,26 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       )
     }
     return text
+  }
+
+  const handlePreviousPart = () => {
+    if (currentPart === 2) {
+      setCurrentPart(1)
+    }
+  }
+
+  const handleNextPart = () => {
+    if (currentPart === 1) {
+      setCurrentPart(2)
+    } else {
+      onComplete()
+    }
+  }
+
+  const isPartComplete = (part: number) => {
+    const questions =
+      part === 1 ? shuffledPart1Questions : shuffledPart2Questions
+    return questions.every((question) => selectedAnswers[question.id])
   }
 
   const renderQuestion = (question: any) => (
@@ -193,72 +196,39 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
 
   return (
     <Box>
-      {currentPart === 1 && (
-        <>
-          <Box
-            position="sticky"
-            top="0"
-            bg="white"
-            zIndex="1"
-            py={4}
-            borderColor="gray.200"
-          >
-            <Text fontStyle="italic" mb={4}>
-              Instructions: Choose the correct symbol that matches the sound in
-              the underlined part of the word. Click the "Play Audio" button to
-              hear the word.
-            </Text>
-            <Text fontFamily="'Charis SIL', serif" mb={8}>
-              Note, when doing these exercises you may be tempted to check a
-              dictionary to "help" you with these answers – we caution you that
-              the transcription might be more "broad" than what we are teaching
-              you, therefore not as helpful. When in doubt, check the "Expanded
-              Lexical Sets" worksheet from section 2.
-            </Text>
-          </Box>
-          {shuffledPart1Questions?.map(renderQuestion)}
-        </>
-      )}
-      {currentPart === 2 && (
-        <>
-          <Box
-            position="sticky"
-            top="0"
-            bg="white"
-            zIndex="1"
-            py={4}
-            borderBottom="1px solid"
-            borderColor="gray.200"
-          >
-            <Text fontStyle="italic" mb={8}>
-              Instructions: Choose the correct word that contains the sound of
-              the presented symbol. Click the "Play Audio" button to hear the
-              symbol.
-            </Text>
-          </Box>
-          {shuffledPart2Questions?.map(renderQuestion)}
-        </>
-      )}
-      {currentPart === 1 && (
-        <Button
-          onClick={() => setCurrentPart(2)}
-          variant="brandBold"
-          mt={8}
-          isDisabled={!part1Complete}
-        >
-          Next Part
-        </Button>
-      )}
-      {currentPart === 2 && (
-        <Button
-          onClick={() => {}}
-          variant="brandBold"
-          mt={8}
-          isDisabled={!isQuizComplete()}
-        >
-          Submit Quiz
-        </Button>
-      )}
+      <Box
+        position="sticky"
+        top="0"
+        bg="white"
+        zIndex="1"
+        py={4}
+        borderColor="gray.200"
+      >
+        <Text fontStyle="italic" mb={4}>
+          {currentPart === 1
+            ? 'Instructions: Choose the correct symbol that matches the sound in the underlined part of the word. Click the "Play Audio" button to hear the word.'
+            : 'Instructions: Choose the correct word that contains the sound of the presented symbol. Click the "Play Audio" button to hear the symbol.'}
+        </Text>
+        {currentPart === 1 && (
+          <Text fontFamily="'Charis SIL', serif" mb={8}>
+            Note, when doing these exercises you may be tempted to check a
+            dictionary to "help" you with these answers – we caution you that
+            the transcription might be more "broad" than what we are teaching
+            you, therefore not as helpful. When in doubt, check the "Expanded
+            Lexical Sets" worksheet from section 2.
+          </Text>
+        )}
+      </Box>
+      {currentPart === 1 && shuffledPart1Questions.map(renderQuestion)}
+      {currentPart === 2 && shuffledPart2Questions.map(renderQuestion)}
+      <QuizNavigation
+        currentQuestion={currentPart}
+        totalQuestions={2}
+        onPrevious={handlePreviousPart}
+        onNext={handleNextPart}
+        onFinish={onComplete}
+        isNextDisabled={!isPartComplete(currentPart)}
+      />
     </Box>
   )
 }

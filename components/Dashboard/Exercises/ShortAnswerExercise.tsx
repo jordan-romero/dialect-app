@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Box, Text, VStack, Input, Icon } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import useQuiz from './utils'
+import QuizNavigation from './QuizNavigation'
 
 interface ShortAnswerQuizProps {
   lessonId: number
@@ -48,6 +49,10 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     }))
   }
 
+  const handlePreviousQuestion = () => {
+    setCurrentQuestionIndex((prevIndex) => Math.max(0, prevIndex - 1))
+  }
+
   const handleNextQuestion = () => {
     if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuestionComplete(true)
@@ -66,6 +71,11 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     const audio = new Audio(audioUrl)
     audio.play()
   }
+
+  const isNextDisabled = !(
+    showSentence ||
+    (allInputsFilled && !revealSentenceOption)
+  )
 
   return (
     <Box>
@@ -126,48 +136,15 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           )}
         </Box>
       )}
-      <Box mt={4}>
-        <Button
-          onClick={() =>
-            setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
-          }
-          mr={4}
-          isDisabled={currentQuestionIndex === 0}
-          variant="brandGhost"
-        >
-          Previous
-        </Button>
-        <Button
-          onClick={handleNextQuestion}
-          isDisabled={
-            !(showSentence || (allInputsFilled && !revealSentenceOption))
-          }
-          variant="brandBold"
-        >
-          {currentQuestionIndex === currentQuiz?.questions.length! - 1
-            ? 'Finish Quiz'
-            : 'Next'}
-        </Button>
-      </Box>
-      {isQuestionComplete && (
-        <Box
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          zIndex={1}
-          backgroundColor="rgba(255, 255, 255, 0.8)"
-          padding={4}
-          borderRadius="md"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Icon as={CheckCircleIcon} color="green.500" boxSize={8} mr={2} />
-          <Box fontWeight="bold" fontSize="xl">
-            Good Job!
-          </Box>
-        </Box>
+      {currentQuiz && currentQuiz.questions && (
+        <QuizNavigation
+          currentQuestion={currentQuestionIndex + 1}
+          totalQuestions={currentQuiz.questions.length}
+          onPrevious={handlePreviousQuestion}
+          onNext={handleNextQuestion}
+          onFinish={handleNextQuestion}
+          isNextDisabled={isNextDisabled}
+        />
       )}
     </Box>
   )

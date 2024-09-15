@@ -8,8 +8,9 @@ import {
   handleDragEndRhymingPairs,
   handleDragEndRhymingCategories,
 } from './dragHandlers'
-import { Box, Button, Icon } from '@chakra-ui/react'
+import { Box, Icon } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import QuizNavigation from '../QuizNavigation'
 
 interface DragAndDropExerciseProps {
   lessonId: number
@@ -60,7 +61,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   }, [currentQuestion])
 
   useEffect(() => {
-    if (!currentQuestion || !currentQuestion.categories) return // Ensures the current question is available before proceeding.
+    if (!currentQuestion || !currentQuestion.categories) return
 
     if (currentQuestion.questionType === 'rhymingPairs') {
       const isComplete =
@@ -68,19 +69,17 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
         answeredWords.every((word) => word.rhymingWordId === null)
       setIsQuestionComplete(isComplete)
     } else if (currentQuestion.questionType === 'rhymingCategories') {
-      // Correct calculation for uncategorized words count
       const uncategorizedWordsCount = currentQuestion.answerOptions.filter(
         (word) => word.rhymeCategory === null,
       ).length
 
-      // Set question complete if word bank is empty or matches uncategorized words count
       if (
         wordBank.length === 0 ||
         wordBank.length === uncategorizedWordsCount
       ) {
         setIsQuestionComplete(true)
       } else {
-        setIsQuestionComplete(false) // Ensure that the state is explicitly set in all cases
+        setIsQuestionComplete(false)
       }
     }
   }, [currentQuestion, rhymingWords, answeredWords, wordBank, categories])
@@ -111,6 +110,10 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
       audio.play()
       setAudioPlaying(audioUrl)
     }
+  }
+
+  const handlePreviousQuestion = () => {
+    setCurrentQuestionIndex((prevIndex) => Math.max(0, prevIndex - 1))
   }
 
   const handleNextQuestion = () => {
@@ -153,44 +156,16 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
             )}
           </>
         )}
-        {isQuestionComplete && (
-          <Box
-            position="absolute"
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -50%)"
-            zIndex={1}
-            backgroundColor="rgba(255, 255, 255, 0.8)"
-            padding={4}
-            borderRadius="md"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Icon as={CheckCircleIcon} color="green.500" boxSize={8} mr={2} />
-            <Box fontWeight="bold" fontSize="xl">
-              Correct!
-            </Box>
-          </Box>
-        )}
       </Box>
       {currentQuiz && currentQuiz.questions && (
-        <Box mt={4}>
-          <Button
-            onClick={() =>
-              setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
-            }
-            mr={4}
-            isDisabled={currentQuestionIndex === 0}
-          >
-            Previous
-          </Button>
-          <Button onClick={handleNextQuestion} isDisabled={!isQuestionComplete}>
-            {currentQuestionIndex === currentQuiz.questions.length - 1
-              ? 'Finish Quiz'
-              : 'Next'}
-          </Button>
-        </Box>
+        <QuizNavigation
+          currentQuestion={currentQuestionIndex + 1}
+          totalQuestions={currentQuiz.questions.length}
+          onPrevious={handlePreviousQuestion}
+          onNext={handleNextQuestion}
+          onFinish={handleNextQuestion}
+          isNextDisabled={!isQuestionComplete}
+        />
       )}
     </DragDropContext>
   )

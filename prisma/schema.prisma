@@ -82,6 +82,7 @@ model Quiz {
   hasBeenAttempted Boolean   @default(false)
   quizType String?
   order Int                   @default(0)
+  isCompleted Boolean @default(false)
 }
 
 // Question Model

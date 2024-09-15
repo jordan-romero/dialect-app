@@ -7,10 +7,11 @@ import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
+import Paper from '../../theme/Paper'
 
 type LessonContainerProps = {
   lesson: Lesson
-  onLessonComplete: () => void // Callback function to be called when lesson is complete
+  onLessonComplete: () => void
 }
 
 const LessonContainerV3: React.FC<LessonContainerProps> = ({
@@ -70,7 +71,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       const result = await response.json()
       console.log('Lesson marked as complete:', result)
 
-      // Call onLessonComplete to update the parent state immediately
       onLessonComplete()
     } catch (error) {
       console.error('Error marking lesson as complete:', error)
@@ -114,7 +114,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         const quizIndex = getCurrentQuizIndex()
         const quiz = lesson.quiz[quizIndex]
         return quiz ? (
-          <Box>
+          <Paper>
             {(() => {
               switch (quiz.quizType) {
                 case 'dragAndDrop':
@@ -153,16 +153,19 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                   return null
               }
             })()}
-          </Box>
+          </Paper>
         ) : null
       default:
         return null
     }
   }
 
+  const isLastStep = currentStepIndex === steps.length - 1
+  const isLastStepQuiz = isLastStep && currentStep.type === 'quiz'
+  const isFinishButtonDisabled = isLastStepQuiz ? !quizCompleted : false
+
   return (
     <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
-      {/* Lesson Title */}
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
         w="100%"
@@ -198,13 +201,10 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               Previous
             </Button>
           )}
-          {currentStepIndex < steps.length - 1 ? (
+          {!isLastStep ? (
             <Button
               onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
-              isDisabled={
-                currentStepIndex === steps.length - 1 ||
-                (currentStep.type === 'quiz' && !quizCompleted)
-              }
+              isDisabled={currentStep.type === 'quiz' && !quizCompleted}
             >
               Next
             </Button>
@@ -212,7 +212,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
             <Button
               onClick={markLessonComplete}
               isLoading={isMarkingComplete}
-              isDisabled={isMarkingComplete}
+              isDisabled={isMarkingComplete || isFinishButtonDisabled}
             >
               Finish
             </Button>
