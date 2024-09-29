@@ -45,7 +45,6 @@ export default async function handler(
             include: {
               resources: true,
               quiz: true,
-              discussions: true,
             },
             orderBy: {
               id: 'asc',

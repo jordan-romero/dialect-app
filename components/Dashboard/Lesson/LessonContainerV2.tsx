@@ -47,6 +47,7 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
               key={index}
               lessonId={lesson.id}
               quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
             />
           )
         case 'shortAnswer':
@@ -55,6 +56,7 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
               key={index}
               lessonId={lesson.id}
               quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
             />
           )
         case 'multipleChoice':
@@ -63,6 +65,7 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
               key={index}
               lessonId={lesson.id}
               quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
             />
           )
         case 'symbolQuiz':
@@ -71,6 +74,7 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
               key={index}
               lessonTitle={lesson.title}
               quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
             />
           )
         default:
