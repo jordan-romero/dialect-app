@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Text, Grid, GridItem, Button, Flex } from '@chakra-ui/react'
 import { getQuizItems } from './symbols.utils'
+import QuizNavigation from './QuizNavigation'
 
 interface QuizItem {
   symbol: string
@@ -16,12 +17,14 @@ interface SymbolExerciseProps {
 const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   lessonTitle,
   quizIndex,
+  onComplete,
 }) => {
   const [quizItems, setQuizItems] = useState<QuizItem[]>([])
   const [selectedSymbols, setSelectedSymbols] = useState<
     Record<string, string>
   >({})
   const [selectedWord, setSelectedWord] = useState<string | null>(null)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 
   useEffect(() => {
     const items = getQuizItems(lessonTitle)
@@ -57,6 +60,24 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
       ))}
     </Text>
   )
+
+  const areAllAnswersCorrect = () => {
+    return quizItems.every((item) =>
+      item.words.every((word) => isWordCorrect(word)),
+    )
+  }
+
+  const handlePreviousQuestion = () => {
+    setCurrentQuestionIndex((prevIndex) => Math.max(0, prevIndex - 1))
+  }
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex === quizItems.length - 1) {
+      onComplete()
+    } else {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
+    }
+  }
 
   return (
     <Box maxHeight="80vh" overflowY="scroll">
@@ -125,6 +146,14 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
           )),
         )}
       </Grid>
+      <QuizNavigation
+        currentQuestion={currentQuestionIndex + 1}
+        totalQuestions={quizItems.length}
+        onPrevious={handlePreviousQuestion}
+        onNext={handleNextQuestion}
+        onFinish={onComplete}
+        isNextDisabled={!areAllAnswersCorrect()}
+      />
     </Box>
   )
 }

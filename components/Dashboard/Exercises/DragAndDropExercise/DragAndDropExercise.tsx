@@ -8,8 +8,7 @@ import {
   handleDragEndRhymingPairs,
   handleDragEndRhymingCategories,
 } from './dragHandlers'
-import { Box, Icon } from '@chakra-ui/react'
-import { CheckCircleIcon } from '@chakra-ui/icons'
+import { Box } from '@chakra-ui/react'
 import QuizNavigation from '../QuizNavigation'
 
 interface DragAndDropExerciseProps {
@@ -24,8 +23,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   onComplete,
 }) => {
   const { quizzes } = useQuiz(lessonId)
-
-  console.log(quizzes, 'quizzes')
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [rhymingWords, setRhymingWords] = useState<AnswerOption[]>([])
   const [answeredWords, setAnsweredWords] = useState<AnswerOption[]>([])
@@ -59,30 +56,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
     }
     setIsQuestionComplete(false)
   }, [currentQuestion])
-
-  useEffect(() => {
-    if (!currentQuestion || !currentQuestion.categories) return
-
-    if (currentQuestion.questionType === 'rhymingPairs') {
-      const isComplete =
-        answeredWords.length > 0 &&
-        answeredWords.every((word) => word.rhymingWordId === null)
-      setIsQuestionComplete(isComplete)
-    } else if (currentQuestion.questionType === 'rhymingCategories') {
-      const uncategorizedWordsCount = currentQuestion.answerOptions.filter(
-        (word) => word.rhymeCategory === null,
-      ).length
-
-      if (
-        wordBank.length === 0 ||
-        wordBank.length === uncategorizedWordsCount
-      ) {
-        setIsQuestionComplete(true)
-      } else {
-        setIsQuestionComplete(false)
-      }
-    }
-  }, [currentQuestion, rhymingWords, answeredWords, wordBank, categories])
 
   const handleDragEnd = (result: DropResult) => {
     if (currentQuestion?.questionType === 'rhymingPairs') {
@@ -134,6 +107,82 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
     setIsQuestionComplete(true)
   }
 
+  const handleRhymingCategoriesQuestionStatusChange = () => {
+    console.log('Current categories:', categories)
+    console.log('Current wordBank:', wordBank)
+
+    const allCategoriesCorrect = Object.entries(categories).every(
+      ([category, words]) => {
+        if (category.toLowerCase() === 'thought') {
+          // For 'thought' category:
+          // 1. Check if all placed words don't rhyme with 'thought'
+          // 2. Check if the number of placed words equals the total number of non-rhyming words
+          const correctWordsPlaced = words.every(
+            (word) => word.rhymeCategory !== 'thought',
+          )
+          const totalNonRhymingWords =
+            currentQuestion?.answerOptions.filter(
+              (w) => w.rhymeCategory !== 'thought',
+            ).length || 0
+          const onlyCorrectWordsPlaced = words.length === totalNonRhymingWords
+
+          console.log('Thought category check:')
+          console.log('- Correct words placed:', correctWordsPlaced)
+          console.log('- Only correct words placed:', onlyCorrectWordsPlaced)
+          console.log('- Words in category:', words.length)
+          console.log('- Total non-rhyming words:', totalNonRhymingWords)
+
+          return correctWordsPlaced && onlyCorrectWordsPlaced
+        } else {
+          // For other categories, check if all words in the category are correct
+          const categoryCorrect = words.every(
+            (word) => word.rhymeCategory === category,
+          )
+          console.log(`${category} category check:`, categoryCorrect)
+          return categoryCorrect
+        }
+      },
+    )
+
+    // Check if all words are placed for non-'thought' categories
+    const allWordsPlacedForOtherCategories = Object.entries(categories).every(
+      ([category, words]) => {
+        if (category.toLowerCase() !== 'thought') {
+          return (
+            words.length ===
+            currentQuestion?.answerOptions.filter(
+              (w) => w.rhymeCategory === category,
+            ).length
+          )
+        }
+        return true
+      },
+    )
+
+    // The wordBank should be empty except for the rhyming words in the 'thought' category
+    const remainingWordsAreThoughtRhymes = wordBank.every(
+      (word) => word.rhymeCategory === 'thought',
+    )
+
+    const finalIsComplete =
+      allCategoriesCorrect &&
+      allWordsPlacedForOtherCategories &&
+      remainingWordsAreThoughtRhymes
+
+    console.log('All categories correct:', allCategoriesCorrect)
+    console.log(
+      'All words placed for other categories:',
+      allWordsPlacedForOtherCategories,
+    )
+    console.log(
+      'Remaining words are thought rhymes:',
+      remainingWordsAreThoughtRhymes,
+    )
+    console.log('Final isComplete status:', finalIsComplete)
+
+    setIsQuestionComplete(finalIsComplete)
+  }
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Box>
@@ -152,6 +201,9 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
                 categories={categories}
                 wordBank={wordBank}
                 playAudio={playAudio}
+                onQuestionStatusChange={
+                  handleRhymingCategoriesQuestionStatusChange
+                }
               />
             )}
           </>
