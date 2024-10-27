@@ -68,15 +68,6 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
               onComplete={() => console.log('Drag and drop quiz complete')}
             />
           )
-        case 'symbolQuiz':
-          return (
-            <SymbolExercise
-              key={index}
-              lessonTitle={lesson.title}
-              quizIndex={index}
-              onComplete={() => console.log('Drag and drop quiz complete')}
-            />
-          )
         default:
           return null
       }

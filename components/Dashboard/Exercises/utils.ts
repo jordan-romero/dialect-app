@@ -16,7 +16,6 @@ const useQuiz = (lessonId: number) => {
         const response = await fetch(`/api/quizzes?lessonId=${lessonId}`)
         const data: QuizData[] = await response.json()
 
-        console.log(data, 'quiz data in hook')
         setQuizzes(data)
 
         const initialSelectedOptions: {

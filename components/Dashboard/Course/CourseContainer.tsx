@@ -24,9 +24,6 @@ const CourseContainer = () => {
           Course[],
           { [key: number]: number },
         ]) => {
-          console.log('Courses Data:', coursesData)
-          console.log('Lesson Progress Data:', progressData)
-
           setCourses(coursesData)
           setLessonProgress(progressData)
 
@@ -72,15 +69,11 @@ const CourseContainer = () => {
 
   const handleLessonComplete = () => {
     if (selectedLesson) {
-      console.log(`Marking lesson ${selectedLesson.id} as complete`)
-
       setLessonProgress((prev) => {
         const updatedProgress = {
           ...prev,
           [selectedLesson.id]: 100,
         }
-
-        console.log('Updated Lesson Progress:', updatedProgress)
         return updatedProgress
       })
 

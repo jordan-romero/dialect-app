@@ -8,6 +8,7 @@ import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
+import LessonOutro from './LessonOutro'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -20,7 +21,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
 }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isMarkingComplete, setIsMarkingComplete] = useState(false)
-  const [quizCompleted, setQuizCompleted] = useState(false)
+  const [completedQuizzes, setCompletedQuizzes] = useState<number[]>([])
 
   if (!lesson || !lesson.steps || lesson.steps.length === 0) {
     return (
@@ -41,16 +42,21 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       steps
         .slice(0, currentStepIndex + 1)
         .filter((step) => step.type === 'resource').length - 1
-    console.log(currentResource, 'currentResource')
     return currentResource
   }
 
-  const getCurrentQuizIndex = () => {
-    return (
-      steps
-        .slice(0, currentStepIndex + 1)
-        .filter((step) => step.type === 'quiz').length - 1
-    )
+  console.log(lesson.quiz, 'lesson.quiz')
+
+  const getCurrentQuiz = () => {
+    if (currentStep.type !== 'quiz' || !lesson.quiz) return null
+
+    // Count how many quiz steps we've seen up to current step
+    const quizStepsCount = steps
+      .slice(0, currentStepIndex + 1)
+      .filter((step) => step.type === 'quiz').length
+
+    // Find the quiz with matching order
+    return lesson.quiz.find((quiz) => quiz.order === quizStepsCount - 1) || null
   }
 
   const markLessonComplete = async () => {
@@ -68,9 +74,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         throw new Error('Failed to mark lesson as complete')
       }
 
-      const result = await response.json()
-      console.log('Lesson marked as complete:', result)
-
+      await response.json()
       onLessonComplete()
     } catch (error) {
       console.error('Error marking lesson as complete:', error)
@@ -79,8 +83,8 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     }
   }
 
-  const handleQuizCompletion = () => {
-    setQuizCompleted(true)
+  const handleQuizCompletion = (quizOrder: number) => {
+    setCompletedQuizzes((prev) => [...prev, quizOrder])
   }
 
   const renderStepContent = () => {
@@ -110,43 +114,44 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
             resources={lesson.resources}
           />
         )
+      case 'outro':
+        return <LessonOutro resources={lesson.resources} />
       case 'quiz':
-        const quizIndex = getCurrentQuizIndex()
-        const quiz = lesson.quiz[quizIndex]
-        return quiz ? (
+        const currentQuiz = getCurrentQuiz()
+        return currentQuiz ? (
           <Paper>
             {(() => {
-              switch (quiz.quizType) {
+              switch (currentQuiz.quizType) {
                 case 'dragAndDrop':
                   return (
                     <DragAndDropExercise
                       lessonId={lesson.id}
-                      quizIndex={quizIndex}
-                      onComplete={handleQuizCompletion}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
                 case 'shortAnswer':
                   return (
                     <ShortAnswerExercise
                       lessonId={lesson.id}
-                      quizIndex={quizIndex}
-                      onComplete={handleQuizCompletion}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
                 case 'multipleChoice':
                   return (
                     <MultipleChoiceExercise
                       lessonId={lesson.id}
-                      quizIndex={quizIndex}
-                      onComplete={handleQuizCompletion}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
-                case 'symbolQuiz':
+                case 'symbolPicker':
                   return (
                     <SymbolExercise
-                      lessonTitle={lesson.title}
-                      quizIndex={quizIndex}
-                      onComplete={handleQuizCompletion}
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
                 default:
@@ -161,8 +166,12 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   }
 
   const isLastStep = currentStepIndex === steps.length - 1
-  const isLastStepQuiz = isLastStep && currentStep.type === 'quiz'
-  const isFinishButtonDisabled = isLastStepQuiz ? !quizCompleted : false
+  const currentQuiz = currentStep.type === 'quiz' ? getCurrentQuiz() : null
+  const isCurrentQuizCompleted = currentQuiz
+    ? completedQuizzes.includes(currentQuiz.order)
+    : true
+  const isFinishButtonDisabled =
+    isLastStep && currentStep.type === 'quiz' ? !isCurrentQuizCompleted : false
 
   return (
     <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
@@ -204,7 +213,9 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
           {!isLastStep ? (
             <Button
               onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
-              isDisabled={currentStep.type === 'quiz' && !quizCompleted}
+              isDisabled={
+                currentStep.type === 'quiz' && !isCurrentQuizCompleted
+              }
             >
               Next
             </Button>

@@ -16,19 +16,16 @@ export default async function handler(
 
   try {
     const lessonId = parseInt(id, 10)
-    console.log(`Fetching lesson with ID: ${lessonId}`)
 
     const lesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
       include: {
         resources: true,
         quiz: true,
-        discussions: true,
       },
     })
 
     if (!lesson) {
-      console.log(`Lesson with ID ${lessonId} not found`)
       return res.status(404).json({ error: 'Lesson not found' })
     }
 

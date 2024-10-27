@@ -108,9 +108,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   }
 
   const handleRhymingCategoriesQuestionStatusChange = () => {
-    console.log('Current categories:', categories)
-    console.log('Current wordBank:', wordBank)
-
     const allCategoriesCorrect = Object.entries(categories).every(
       ([category, words]) => {
         if (category.toLowerCase() === 'thought') {
@@ -126,19 +123,12 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
             ).length || 0
           const onlyCorrectWordsPlaced = words.length === totalNonRhymingWords
 
-          console.log('Thought category check:')
-          console.log('- Correct words placed:', correctWordsPlaced)
-          console.log('- Only correct words placed:', onlyCorrectWordsPlaced)
-          console.log('- Words in category:', words.length)
-          console.log('- Total non-rhyming words:', totalNonRhymingWords)
-
           return correctWordsPlaced && onlyCorrectWordsPlaced
         } else {
           // For other categories, check if all words in the category are correct
           const categoryCorrect = words.every(
             (word) => word.rhymeCategory === category,
           )
-          console.log(`${category} category check:`, categoryCorrect)
           return categoryCorrect
         }
       },
@@ -168,17 +158,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
       allCategoriesCorrect &&
       allWordsPlacedForOtherCategories &&
       remainingWordsAreThoughtRhymes
-
-    console.log('All categories correct:', allCategoriesCorrect)
-    console.log(
-      'All words placed for other categories:',
-      allWordsPlacedForOtherCategories,
-    )
-    console.log(
-      'Remaining words are thought rhymes:',
-      remainingWordsAreThoughtRhymes,
-    )
-    console.log('Final isComplete status:', finalIsComplete)
 
     setIsQuestionComplete(finalIsComplete)
   }

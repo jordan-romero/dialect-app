@@ -22,10 +22,6 @@ export default async function handler(
 
       const userId = session.user.sub
 
-      // Log session data for debugging
-      console.log('Session Data:', session)
-      console.log('Fetching lesson progress for User ID:', userId)
-
       const userIdFromDb = await prisma.user.findUnique({
         where: {
           email: session.user.email,

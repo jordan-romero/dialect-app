@@ -27,10 +27,11 @@ export type Quiz = {
   quizType: string
   questions: Question[]
   answerOptions: AnswerOption[]
+  order: number
 }
 
 type LessonStep = {
-  type: 'description' | 'video' | 'resource' | 'quiz'
+  type: 'description' | 'video' | 'resource' | 'quiz' | 'outro'
 }
 
 export type Lesson = {

@@ -1,14 +1,6 @@
 import React from 'react'
-import {
-  Box,
-  Text,
-  Image,
-  Link as ChakraLink,
-  Tooltip,
-  Icon,
-} from '@chakra-ui/react'
+import { Box, Text, Image, Tooltip, Icon, Button } from '@chakra-ui/react'
 import { Resource } from '../Course/courseTypes'
-import Link from 'next/link'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 
 type LessonDescriptionProps = {
@@ -44,16 +36,14 @@ const LessonDescription = ({
         <Text mb="4">{lessonDescription}</Text>
         <Box>
           <Text fontSize="lg" fontWeight="semibold" mb="2">
-            Resources:
+            Outline:
           </Text>
           {resources.length > 0 &&
             resources.map((resource) => (
               <Box key={resource.id} mb="2">
-                <Link href={resource.url} passHref>
-                  <ChakraLink color="purple.500" textDecoration="underline">
-                    {resource.name}
-                  </ChakraLink>
-                </Link>
+                <Text color="purple.500" textDecoration="underline">
+                  {resource.name}
+                </Text>
               </Box>
             ))}
         </Box>
