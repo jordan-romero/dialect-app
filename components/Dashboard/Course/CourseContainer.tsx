@@ -42,16 +42,21 @@ const CourseContainer = () => {
     progress: { [key: number]: number },
   ) => {
     let lessonToSelect: Lesson | null = null
-    for (const course of courses) {
-      for (const lesson of course.lessons) {
-        if (progress[lesson.id] !== 100) {
-          lessonToSelect = lesson
-          break
-        }
-        lessonToSelect = lesson // This will be the last lesson if all are complete
-      }
-      if (lessonToSelect && progress[lessonToSelect.id] !== 100) break
-    }
+
+    // Get all lessons across all courses and sort them by displayOrder
+    const allLessons = courses
+      .flatMap((course) =>
+        course.lessons.map((lesson) => ({
+          ...lesson,
+          courseId: course.id, // Keep track of which course the lesson belongs to
+        })),
+      )
+      .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+
+    // Find the first incomplete lesson
+    lessonToSelect =
+      allLessons.find((lesson) => progress[lesson.id] !== 100) ??
+      allLessons[allLessons.length - 1] // Fallback to last lesson if all complete
 
     if (lessonToSelect) {
       setSelectedLesson(lessonToSelect)
@@ -123,6 +128,7 @@ const CourseContainer = () => {
           <Flex justifyContent="center" alignItems="center" height="100vh">
             {selectedLesson.steps ? (
               <LessonContainerV3
+                key={selectedLesson.id}
                 lesson={selectedLesson}
                 onLessonComplete={handleLessonComplete}
               />

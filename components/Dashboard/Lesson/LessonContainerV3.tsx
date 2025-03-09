@@ -9,6 +9,7 @@ import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
+import { VowelQuadrilateral } from '../Exercises/VowelQuadrilateral'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -55,8 +56,21 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       .slice(0, currentStepIndex + 1)
       .filter((step) => step.type === 'quiz').length
 
-    // Find the quiz with matching order
-    return lesson.quiz.find((quiz) => quiz.order === quizStepsCount - 1) || null
+    const currentOrder = quizStepsCount - 1 // This will be 0 for the first quiz
+    const quiz = lesson.quiz.find((quiz) => quiz.order === currentOrder)
+
+    console.log('🎲 getCurrentQuiz Debug:', {
+      quizStepsCount,
+      currentOrder,
+      foundQuiz: quiz,
+      allQuizzes: lesson.quiz.map((q) => ({
+        id: q.id,
+        type: q.quizType.trim(),
+        order: q.order,
+      })),
+    })
+
+    return quiz
   }
 
   const markLessonComplete = async () => {
@@ -118,9 +132,17 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         return <LessonOutro resources={lesson.resources} />
       case 'quiz':
         const currentQuiz = getCurrentQuiz()
+        console.log('🎯 Quiz rendering debug:', {
+          currentQuiz,
+          quizType: currentQuiz?.quizType,
+          lessonId: lesson.id,
+          quizOrder: currentQuiz?.order,
+          isQuizNull: currentQuiz === null,
+        })
         return currentQuiz ? (
           <Paper>
             {(() => {
+              console.log('🎲 Quiz type switch:', currentQuiz.quizType)
               switch (currentQuiz.quizType) {
                 case 'dragAndDrop':
                   return (
@@ -154,6 +176,8 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
+                case 'vowelQuadrilateral':
+                  return <VowelQuadrilateral />
                 default:
                   return null
               }

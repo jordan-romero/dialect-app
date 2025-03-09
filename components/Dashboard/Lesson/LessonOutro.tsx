@@ -38,7 +38,7 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
           boxSize="200px"
         />
         <Text fontSize="xl" fontWeight="semibold">
-          Additional Resources:
+          Module Resources:
         </Text>
       </VStack>
 

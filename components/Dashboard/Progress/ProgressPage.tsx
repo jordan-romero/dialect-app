@@ -1,7 +1,8 @@
 import React from 'react'
+import { VowelQuadrilateral } from '../Exercises/VowelQuadrilateral'
 
 const ProgressPage = () => {
-  return <div>ProgressPage</div>
+  return <VowelQuadrilateral />
 }
 
 export default ProgressPage

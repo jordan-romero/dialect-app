@@ -31,17 +31,24 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   onComplete,
 }) => {
   const { quizzes } = useQuiz(lessonId)
-  const [selectedSymbols, setSelectedSymbols] = useState<
-    Record<number, string>
-  >({})
-  const [selectedWord, setSelectedWord] = useState<number | null>(null)
-  const [shuffledQuestions, setShuffledQuestions] = useState<any[]>([])
+  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
+  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [shuffledAnswerOptions, setShuffledAnswerOptions] = useState<any[]>([])
+  const [currentWordIndex, setCurrentWordIndex] = useState(0)
+  const [completedWords, setCompletedWords] = useState<any[]>([])
 
   const quizData = quizzes[quizIndex]
 
   useEffect(() => {
     if (quizData?.questions) {
-      setShuffledQuestions(shuffleArray(quizData.questions))
+      // Get all answer options and flatten them with their corresponding question's correct symbol
+      const allOptions = quizData.questions.flatMap((q) =>
+        q.answerOptions.map((opt) => ({
+          ...opt,
+          correctSymbol: q.text, // The IPA symbol this option should match with
+        })),
+      )
+      setShuffledAnswerOptions(shuffleArray(allOptions))
     }
   }, [quizData?.questions])
 
@@ -57,67 +64,108 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     return shuffledArray
   }
 
-  const handleSymbolSelect = (symbol: string) => {
-    if (selectedWord !== null) {
-      setSelectedSymbols((prevSymbols) => ({
-        ...prevSymbols,
-        [selectedWord]: symbol,
-      }))
-      setSelectedWord(null)
-    }
-  }
-
-  const handleWordClick = (questionId: number) => {
-    setSelectedWord(questionId)
-  }
-
-  const getUniqueSymbols = () => {
+  const getSymbolBank = () => {
     if (!quizData?.questions) return []
-    const symbols = quizData.questions.flatMap((q) =>
-      q.answerOptions.map((option) => option.optionText),
-    )
-    return Array.from(new Set(symbols))
+    // Get unique IPA symbols from questions
+    return Array.from(new Set(quizData.questions.map((q) => q.text)))
   }
 
-  const underlineWord = (word: string, rhymeCategory?: string) => {
-    if (!rhymeCategory) return word
+  const handleSymbolSelect = (symbol: string) => {
+    setSelectedSymbol(selectedSymbol === symbol ? null : symbol)
+  }
 
-    switch (rhymeCategory) {
-      case 'Last Two':
-        return (
-          <Text as="span" fontFamily="'Charis SIL', serif">
-            {word.slice(0, -2)}
-            <Text as="u">{word.slice(-2)}</Text>
-          </Text>
-        )
-      case 'Last Three':
-        return (
-          <Text as="span" fontFamily="'Charis SIL', serif">
-            {word.slice(0, -3)}
-            <Text as="u">{word.slice(-3)}</Text>
-          </Text>
-        )
-      case 'First':
-        return (
-          <Text as="span" fontFamily="'Charis SIL', serif">
-            <Text as="u">{word.slice(0, 1)}</Text>
-            {word.slice(1)}
-          </Text>
-        )
-      case 'First Two':
-        return (
-          <Text as="span" fontFamily="'Charis SIL', serif">
-            <Text as="u">{word.slice(0, 2)}</Text>
-            {word.slice(2)}
-          </Text>
-        )
-      default:
-        return word
+  const handleAnswerClick = (answerId: number, correctSymbol: string) => {
+    if (selectedSymbol) {
+      const isCorrect = selectedSymbol === correctSymbol
+      if (isCorrect) {
+        // Add current word to completed words
+        setCompletedWords((prev) => [
+          ...prev,
+          shuffledAnswerOptions[currentWordIndex],
+        ])
+        // Move to next word
+        setCurrentWordIndex((prev) => prev + 1)
+      }
+      setAnswers((prev) => ({
+        ...prev,
+        [answerId]: selectedSymbol,
+      }))
+      setSelectedSymbol(null)
     }
   }
 
-  const areAllWordsAnswered = () => {
-    return shuffledQuestions.every((q) => selectedSymbols[q.id])
+  const underlineWord = (word: string, rhymeCategories: string | string[]) => {
+    if (!rhymeCategories) {
+      return (
+        <Text as="span" fontFamily="'Charis SIL', serif">
+          {word}
+        </Text>
+      )
+    }
+
+    // Parse the rhymeCategories if it's a string
+    const categories =
+      typeof rhymeCategories === 'string'
+        ? JSON.parse(rhymeCategories)
+        : rhymeCategories
+
+    let result = word.split('')
+    const underlineIndices = new Set<number>()
+
+    categories.forEach((category: string) => {
+      switch (category) {
+        case 'First':
+          underlineIndices.add(0)
+          break
+        case 'First Two':
+          underlineIndices.add(0)
+          underlineIndices.add(1)
+          break
+        case 'Last':
+          underlineIndices.add(word.length - 1)
+          break
+        case 'Last Two':
+          underlineIndices.add(word.length - 2)
+          underlineIndices.add(word.length - 1)
+          break
+        case 'Last Three':
+          underlineIndices.add(word.length - 3)
+          underlineIndices.add(word.length - 2)
+          underlineIndices.add(word.length - 1)
+          break
+        case 'Second To Last':
+          underlineIndices.add(word.length - 2)
+          break
+      }
+    })
+
+    return (
+      <Text as="span" fontFamily="'Charis SIL', serif">
+        {result.map((char, index) =>
+          underlineIndices.has(index) ? (
+            <Text as="u" display="inline" key={index}>
+              {char}
+            </Text>
+          ) : (
+            <Text as="span" display="inline" key={index}>
+              {char}
+            </Text>
+          ),
+        )}
+      </Text>
+    )
+  }
+  const isAnswerCorrect = (answerId: number, correctSymbol: string) => {
+    return answers[answerId] === correctSymbol
+  }
+
+  const getBackgroundColor = (answerId: number, correctSymbol: string) => {
+    if (!answers[answerId]) return 'white'
+    return isAnswerCorrect(answerId, correctSymbol) ? 'green.100' : 'red.100'
+  }
+
+  const areAllAnswered = () => {
+    return currentWordIndex >= shuffledAnswerOptions.length
   }
 
   return (
@@ -136,78 +184,114 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
         </Text>
       </Box>
 
-      <Grid
-        templateColumns="repeat(4, 1fr)"
-        gap={4}
-        mb={8}
-        position="sticky"
-        top="70px"
-        backgroundColor="white"
-        zIndex={1}
-        py={4}
-      >
-        {getUniqueSymbols().map((symbol) => (
-          <GridItem key={symbol}>
-            <Button
-              onClick={() => handleSymbolSelect(symbol)}
-              variant="outline"
-              colorScheme={selectedWord !== null ? 'blue' : 'gray'}
-              fontFamily="'Charis SIL', serif"
-              width="100%"
-            >
-              {symbol}
-            </Button>
-          </GridItem>
-        ))}
-      </Grid>
-
-      <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-        {shuffledQuestions.map((question) => {
-          const rhymeCategory = question.answerOptions[0]?.rhymeCategory
-
-          return (
-            <GridItem key={question.id}>
-              <Box
-                onClick={() => handleWordClick(question.id)}
-                cursor="pointer"
-                borderWidth={1}
-                borderColor={
-                  selectedWord === question.id ? 'blue.500' : 'gray.200'
-                }
-                borderRadius="md"
-                p={4}
-                backgroundColor={
-                  selectedWord === question.id ? 'blue.50' : 'white'
-                }
+      {/* Symbol Bank */}
+      <Box mb={8}>
+        <Text fontWeight="bold" mb={2}>
+          Symbol Bank:
+        </Text>
+        <Grid
+          templateColumns="repeat(7, 1fr)"
+          gap={2}
+          position="sticky"
+          top="70px"
+          backgroundColor="white"
+          zIndex={1}
+          py={4}
+        >
+          {getSymbolBank().map((symbol) => (
+            <GridItem key={symbol}>
+              <Button
+                onClick={() => handleSymbolSelect(symbol)}
+                variant={selectedSymbol === symbol ? 'solid' : 'outline'}
+                colorScheme={selectedSymbol === symbol ? 'blue' : 'gray'}
+                fontFamily="'Charis SIL', serif"
+                width="100%"
               >
-                <Flex alignItems="center" justifyContent="space-between" mb={2}>
-                  <Text fontWeight="bold" fontSize="xl">
-                    {underlineWord(question.text, rhymeCategory)}
-                  </Text>
-                  {question.audioUrl && (
-                    <AudioButton audioUrl={question.audioUrl} />
-                  )}
-                </Flex>
-                <Flex justifyContent="center" mt={2}>
-                  <Box
-                    borderWidth={1}
-                    borderColor="gray.200"
-                    borderRadius="md"
-                    p={2}
-                    minWidth="60px"
-                    textAlign="center"
-                    backgroundColor="gray.100"
-                  >
-                    <Text fontFamily="'Charis SIL', serif">
-                      {selectedSymbols[question.id] || '?'}
-                    </Text>
-                  </Box>
-                </Flex>
-              </Box>
+                {symbol}
+              </Button>
             </GridItem>
-          )
-        })}
-      </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      {/* Current Word */}
+      <Box mb={8}>
+        {currentWordIndex < shuffledAnswerOptions.length && (
+          <Box
+            borderWidth={1}
+            borderColor="gray.200"
+            borderRadius="md"
+            p={4}
+            backgroundColor={
+              answers[shuffledAnswerOptions[currentWordIndex].id]
+                ? getBackgroundColor(
+                    shuffledAnswerOptions[currentWordIndex].id,
+                    shuffledAnswerOptions[currentWordIndex].correctSymbol,
+                  )
+                : 'white'
+            }
+            onClick={() =>
+              handleAnswerClick(
+                shuffledAnswerOptions[currentWordIndex].id,
+                shuffledAnswerOptions[currentWordIndex].correctSymbol,
+              )
+            }
+            cursor="pointer"
+            _hover={{ borderColor: 'gray.300' }}
+          >
+            <Flex alignItems="center" justify="space-between">
+              <Flex alignItems="center" gap={2}>
+                <Box>
+                  {underlineWord(
+                    shuffledAnswerOptions[currentWordIndex].optionText,
+                    shuffledAnswerOptions[currentWordIndex].rhymeCategory,
+                  )}
+                </Box>
+                {shuffledAnswerOptions[currentWordIndex].audioUrl && (
+                  <AudioButton
+                    audioUrl={shuffledAnswerOptions[currentWordIndex].audioUrl}
+                  />
+                )}
+              </Flex>
+              {answers[shuffledAnswerOptions[currentWordIndex].id] && (
+                <Text
+                  fontFamily="'Charis SIL', serif"
+                  fontWeight="bold"
+                  fontSize="lg"
+                >
+                  {answers[shuffledAnswerOptions[currentWordIndex].id]}
+                </Text>
+              )}
+            </Flex>
+          </Box>
+        )}
+      </Box>
+
+      {/* Completed Words */}
+      <Box mb={8}>
+        <Text fontWeight="bold" mb={2}>
+          Completed Words:
+        </Text>
+        <Flex flexWrap="wrap" gap={2}>
+          {completedWords.map((word, index) => (
+            <Box
+              key={index}
+              borderWidth={1}
+              borderColor="gray.200"
+              borderRadius="md"
+              p={2}
+              backgroundColor="green.100"
+            >
+              <Flex alignItems="center" gap={2}>
+                <Text>{word.optionText}</Text>
+                <Text fontFamily="'Charis SIL', serif">
+                  ({word.correctSymbol})
+                </Text>
+              </Flex>
+            </Box>
+          ))}
+        </Flex>
+      </Box>
 
       <QuizNavigation
         currentQuestion={1}
@@ -215,7 +299,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
         onPrevious={() => {}}
         onNext={onComplete}
         onFinish={onComplete}
-        isNextDisabled={!areAllWordsAnswered()}
+        isNextDisabled={!areAllAnswered()}
       />
     </Box>
   )

@@ -46,4 +46,5 @@ export type Lesson = {
   resources: Resource[]
   quiz: Quiz[]
   steps?: LessonStep[]
+  displayOrder: number
 }

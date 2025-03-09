@@ -50,6 +50,7 @@ model Lesson {
   isGatedLesson   Boolean          @default(true)
   lessonProgress  LessonProgress[]
   steps           Json? 
+  displayOrder    Int?
 }
 
 // LessonProgress Model

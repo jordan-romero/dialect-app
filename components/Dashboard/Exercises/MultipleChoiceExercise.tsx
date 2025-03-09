@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Button, Box, Text, SimpleGrid, Icon, Flex } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { MdVolumeUp } from 'react-icons/md'
@@ -44,9 +44,30 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     [],
   )
 
-  const quizData = quizzes[quizIndex]
+  const quizData = useMemo(() => {
+    console.log('🎲 Quiz Selection:', {
+      foundQuizzes: quizzes?.length,
+      targetIndex: quizIndex,
+      quizzes: quizzes?.map((q) => ({
+        id: q.id,
+        order: q.order,
+        type: q.quizType,
+      })),
+    })
+    return quizzes?.find((quiz) => quiz.order === quizIndex)
+  }, [quizzes, quizIndex])
 
   useEffect(() => {
+    console.log('🎯 Questions Data:', {
+      hasQuizData: !!quizData,
+      questionsCount: quizData?.questions?.length,
+      questions: quizData?.questions?.map((q) => ({
+        id: q.id,
+        text: q.text,
+        answerOptionsCount: q.answerOptions?.length,
+      })),
+    })
+
     if (quizData?.questions) {
       const part1 = quizData.questions.filter(
         (question) => question.categories?.[0] !== undefined,
@@ -55,20 +76,32 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         (question) => question.categories?.[0] === undefined,
       )
 
-      const shuffledPart1 = part1.map((question) => ({
-        ...question,
-        answerOptions: shuffleArray(question.answerOptions),
-      }))
+      console.log('📝 Parts Debug:', {
+        part1Count: part1.length,
+        part2Count: part2.length,
+        shuffledPart1: shuffledPart1Questions.length,
+        shuffledPart2: shuffledPart2Questions.length,
+      })
 
-      const shuffledPart2 = part2.map((question) => ({
-        ...question,
-        answerOptions: shuffleArray(question.answerOptions),
-      }))
-
-      setShuffledPart1Questions(shuffledPart1)
-      setShuffledPart2Questions(shuffledPart2)
+      setShuffledPart1Questions(part1)
+      setShuffledPart2Questions(part2)
     }
   }, [quizData?.questions])
+
+  // Log render state
+  console.log('🎨 Render State:', {
+    hasQuizzes: quizzes?.length > 0,
+    hasQuizData: !!quizData,
+    part1Questions: shuffledPart1Questions.length,
+    part2Questions: shuffledPart2Questions.length,
+  })
+
+  const getMultipleChoiceQuiz = () => {
+    return quizzes.find((quiz) => quiz.quizType === 'multipleChoice')
+  }
+
+  const multipleChoiceQuiz = getMultipleChoiceQuiz()
+  console.log('🎯 Multiple choice quiz:', multipleChoiceQuiz)
 
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffledArray = [...array]
@@ -91,7 +124,9 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
 
   const isQuestionCorrect = (questionId: number) => {
     const selectedAnswer = selectedAnswers[questionId]
-    const question = quizData?.questions.find((q) => q.id === questionId)
+    const question = multipleChoiceQuiz?.questions.find(
+      (q) => q.id === questionId,
+    )
     const correctOption = question?.answerOptions.find(
       (option) => option.isCorrect,
     )
