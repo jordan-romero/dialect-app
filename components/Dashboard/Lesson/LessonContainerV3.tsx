@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Text, Button, Flex, Alert, AlertIcon } from '@chakra-ui/react'
 import { Lesson } from '../Course/courseTypes'
 import { lessonTypeComponentMap } from './utils'
@@ -9,7 +9,7 @@ import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
-import { VowelQuadrilateral } from '../Exercises/VowelQuadrilateral'
+import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -23,6 +23,45 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isMarkingComplete, setIsMarkingComplete] = useState(false)
   const [completedQuizzes, setCompletedQuizzes] = useState<number[]>([])
+  const [quizCompletionStatus, setQuizCompletionStatus] = useState<{[quizId: number]: boolean}>({})
+
+  // Load quiz completion status from database
+  useEffect(() => {
+    const loadQuizCompletionStatus = async () => {
+      if (!lesson.quiz || lesson.quiz.length === 0) return
+
+      try {
+        const completionPromises = lesson.quiz.map(async (quiz) => {
+          const response = await fetch(
+            `/api/userQuizProgress?quizId=${quiz.id}&lessonId=${lesson.id}`,
+          )
+          if (response.ok) {
+            const data = await response.json()
+            return { quizId: quiz.id, isCompleted: data.isCompleted }
+          }
+          return { quizId: quiz.id, isCompleted: false }
+        })
+
+        const results = await Promise.all(completionPromises)
+        const completionMap = results.reduce((acc, { quizId, isCompleted }) => {
+          acc[quizId] = isCompleted
+          return acc
+        }, {} as {[quizId: number]: boolean})
+
+        setQuizCompletionStatus(completionMap)
+
+        // Also update completedQuizzes for backward compatibility
+        const completedOrders = lesson.quiz
+          .filter(quiz => completionMap[quiz.id])
+          .map(quiz => quiz.order)
+        setCompletedQuizzes(completedOrders)
+      } catch (error) {
+        console.error('Error loading quiz completion status:', error)
+      }
+    }
+
+    loadQuizCompletionStatus()
+  }, [lesson.id, lesson.quiz])
 
   if (!lesson || !lesson.steps || lesson.steps.length === 0) {
     return (
@@ -47,6 +86,8 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   }
 
   console.log(lesson.quiz, 'lesson.quiz')
+  console.log('Quiz types:', lesson.quiz?.map(q => ({ id: q.id, type: q.quizType, order: q.order })))
+  console.log('Lesson steps:', lesson.steps)
 
   const getCurrentQuiz = () => {
     if (currentStep.type !== 'quiz' || !lesson.quiz) return null
@@ -60,14 +101,17 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     const quiz = lesson.quiz.find((quiz) => quiz.order === currentOrder)
 
     console.log('🎲 getCurrentQuiz Debug:', {
+      currentStepIndex,
+      currentStepType: currentStep.type,
       quizStepsCount,
       currentOrder,
       foundQuiz: quiz,
       allQuizzes: lesson.quiz.map((q) => ({
         id: q.id,
-        type: q.quizType.trim(),
+        type: q.quizType?.trim(),
         order: q.order,
       })),
+      stepsSlice: steps.slice(0, currentStepIndex + 1),
     })
 
     return quiz
@@ -99,6 +143,15 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
 
   const handleQuizCompletion = (quizOrder: number) => {
     setCompletedQuizzes((prev) => [...prev, quizOrder])
+
+    // Also update the quiz completion status
+    const quiz = lesson.quiz?.find(q => q.order === quizOrder)
+    if (quiz) {
+      setQuizCompletionStatus(prev => ({
+        ...prev,
+        [quiz.id]: true
+      }))
+    }
   }
 
   const renderStepContent = () => {
@@ -176,8 +229,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
-                case 'vowelQuadrilateral':
-                  return <VowelQuadrilateral />
+                case 'vowelQuad':
+                  return (
+                    <VowelQuadrilateralExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
                 default:
                   return null
               }
@@ -192,7 +251,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const isLastStep = currentStepIndex === steps.length - 1
   const currentQuiz = currentStep.type === 'quiz' ? getCurrentQuiz() : null
   const isCurrentQuizCompleted = currentQuiz
-    ? completedQuizzes.includes(currentQuiz.order)
+    ? quizCompletionStatus[currentQuiz.id] || completedQuizzes.includes(currentQuiz.order)
     : true
   const isFinishButtonDisabled =
     isLastStep && currentStep.type === 'quiz' ? !isCurrentQuizCompleted : false

@@ -4,12 +4,12 @@
   "score": null,
   "passScore": 80,
   "hasBeenAttempted": false,
-  "quizType": "vowelQuadrilateral",
+  "quizType": "vowelQuad",
   "questions": [
     {
       "id": 1,
       "text": "Place the correct vowel symbols on the IPA vowel chart",
-      "questionType": "vowelQuadrilateral",
+      "questionType": "vowelQuad",
       "quizId": 1,
       "answerOptions": [],
       "extraOptions": [],
@@ -20,16 +20,17 @@
   "answerOptions": [],
   "order": 1,
   "vowelPositions": {
-    "closeFront1": { "top": 10, "left": 15, "vowel": "i", "isCorrect": true },
-    "closeFront2": { "top": 10, "left": 25, "vowel": "y", "isCorrect": true },
-    "closeCentral1": { "top": 10, "left": 50, "vowel": "ɨ", "isCorrect": true },
-    "closeBack1": { "top": 10, "left": 85, "vowel": "u", "isCorrect": true },
-    "midFront1": { "top": 30, "left": 20, "vowel": "e", "isCorrect": true },
-    "midCentral1": { "top": 30, "left": 50, "vowel": "ə", "isCorrect": true },
-    "midBack1": { "top": 30, "left": 80, "vowel": "o", "isCorrect": true },
-    "openFront1": { "top": 75, "left": 20, "vowel": "a", "isCorrect": true },
-    "openCentral1": { "top": 75, "left": 50, "vowel": "ɐ", "isCorrect": true },
-    "openBack1": { "top": 75, "left": 80, "vowel": "ɑ", "isCorrect": true }
+    "closeFront1": { "top": 16, "left": 22, "vowel": "i", "isCorrect": true },
+    "closeFront2": { "top": 12, "left": 40, "vowel": "y", "isCorrect": true },
+    "closeCentral1": { "top": 12, "left": 70, "vowel": "ɨ", "isCorrect": true },
+    "closeBack1": { "top": 15, "left": 93, "vowel": "u", "isCorrect": true },
+    "midCentral1": { "top": 26, "left": 36.5, "vowel": "ɪ", "isCorrect": true },
+    "midBack1": { "top": 26, "left": 78.5, "vowel": "ʊ", "isCorrect": true },
+    "openMidFront1": { "top": 59, "left": 43, "vowel": "ɛ", "isCorrect": true },
+    "openMidCentral1": { "top": 49, "left": 65, "vowel": "ə", "isCorrect": true },
+    "openMidBack1": { "top": 59, "left": 86, "vowel": "ʌ", "isCorrect": true },
+    "openFront1": { "top": 72.5, "left": 48, "vowel": "a", "isCorrect": true },
+    "openBack1": { "top": 81, "left": 86, "vowel": "ɑ", "isCorrect": true }
   },
   "availableVowels": [
     "i",
