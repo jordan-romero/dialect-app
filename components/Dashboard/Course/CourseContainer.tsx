@@ -126,7 +126,7 @@ const CourseContainer = () => {
           </Flex>
         ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
-            {selectedLesson.steps ? (
+            {selectedLesson.steps && selectedLesson.steps.length > 0 ? (
               <LessonContainerV3
                 key={selectedLesson.id}
                 lesson={selectedLesson}

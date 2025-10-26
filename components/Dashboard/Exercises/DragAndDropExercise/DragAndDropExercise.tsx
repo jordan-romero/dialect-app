@@ -8,7 +8,7 @@ import {
   handleDragEndRhymingPairs,
   handleDragEndRhymingCategories,
 } from './dragHandlers'
-import { Box } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import QuizNavigation from '../QuizNavigation'
 
 interface DragAndDropExerciseProps {
@@ -31,10 +31,33 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
   const [audioPlaying, setAudioPlaying] = useState<string | null>(null)
   const [isQuizComplete, setIsQuizComplete] = useState(false)
+  const [isCompleted, setIsCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion: Question | undefined =
     currentQuiz?.questions[currentQuestionIndex]
+
+  // Load saved progress when component mounts
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (!currentQuiz) return
+
+      try {
+        const response = await fetch(
+          `/api/userQuizProgress?quizId=${currentQuiz.id}&lessonId=${lessonId}`,
+        )
+        if (response.ok) {
+          const data = await response.json()
+          setIsCompleted(data.isCompleted)
+        }
+      } catch (error) {
+        console.error('Error loading quiz progress:', error)
+      }
+    }
+
+    loadProgress()
+  }, [currentQuiz, lessonId])
 
   useEffect(() => {
     if (!currentQuestion) {
@@ -92,7 +115,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   const handleNextQuestion = () => {
     if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuizComplete(true)
-      onComplete()
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
       setIsQuestionComplete(false)
@@ -100,6 +122,47 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
       setAnsweredWords([])
       setCategories({})
       setWordBank([])
+    }
+  }
+
+  const handleFinish = async () => {
+    await submitQuiz()
+    onComplete()
+  }
+
+  const submitQuiz = async () => {
+    if (!currentQuiz) return
+
+    setIsLoading(true)
+    try {
+      // For drag and drop, we'll save the current state as answers
+      // This is a simplified approach - you might want to save more detailed state
+      const answersToSubmit = currentQuiz.questions.map((question, index) => ({
+        questionId: question.id,
+        textAnswer: index === currentQuestionIndex ? 'completed' : 'pending',
+      }))
+
+      const response = await fetch('/api/submitQuiz', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quizId: currentQuiz.id,
+          lessonId: lessonId,
+          answers: answersToSubmit,
+        }),
+      })
+
+      if (response.ok) {
+        setIsCompleted(true)
+      } else {
+        console.error('Failed to submit quiz')
+      }
+    } catch (error) {
+      console.error('Error submitting quiz:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -188,14 +251,21 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
           </>
         )}
       </Box>
+      {isCompleted && (
+        <Box mt={4} p={4} bg="green.100" borderRadius="md">
+          <Text color="green.800" fontWeight="bold">
+            ✓ Quiz completed! Your answers have been saved.
+          </Text>
+        </Box>
+      )}
       {currentQuiz && currentQuiz.questions && (
         <QuizNavigation
           currentQuestion={currentQuestionIndex + 1}
           totalQuestions={currentQuiz.questions.length}
           onPrevious={handlePreviousQuestion}
           onNext={handleNextQuestion}
-          onFinish={handleNextQuestion}
-          isNextDisabled={!isQuestionComplete}
+          onFinish={handleFinish}
+          isNextDisabled={!isQuestionComplete || isLoading || isCompleted}
         />
       )}
     </DragDropContext>

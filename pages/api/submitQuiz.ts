@@ -1,80 +1,113 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
+
+const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query'],
+  })
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' })
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const session = await getSession(req, res)
+  if (!session || !session.user) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  const userId = session.user.sub
+  const { quizId, lessonId, answers } = req.body
+
+  console.log('🔍 Debug - Session user:', {
+    sub: session.user.sub,
+    email: session.user.email,
+    userId: userId,
+  })
+
+  if (!quizId || !lessonId || !Array.isArray(answers)) {
+    return res.status(400).json({ error: 'Missing required fields' })
   }
 
   try {
-    const { quizId, userId, answers } = req.body
-
-    if (!quizId || !userId || !answers) {
-      return res.status(400).json({ message: 'Missing required fields' })
-    }
-
-    const quiz = await prisma.quiz.findUnique({
-      where: { id: quizId },
-      include: { questions: true },
+    // Get the internal user id
+    const user = await prisma.user.findUnique({ where: { auth0Id: userId } })
+    console.log('🔍 Debug - User lookup result:', {
+      user: user ? { id: user.id, email: user.email } : null,
     })
 
-    if (!quiz) {
-      return res.status(404).json({ message: 'Quiz not found' })
+    if (!user) {
+      console.log('❌ User not found in database. Available users:')
+      const allUsers = await prisma.user.findMany({
+        select: { id: true, auth0Id: true, email: true },
+      })
+      console.log(allUsers)
+      return res.status(404).json({ error: 'User not found' })
     }
 
-    // Handle short answer submissions
-    if (quiz.quizType === 'shortAnswer') {
-      for (const [questionId, answer] of Object.entries(answers)) {
+    // Save each answer
+    for (const answer of answers) {
+      const existingAnswer = await prisma.userAnswer.findFirst({
+        where: {
+          userId: user.id,
+          questionId: answer.questionId,
+          quizId: quizId,
+        },
+      })
+
+      if (existingAnswer) {
+        await prisma.userAnswer.update({
+          where: { id: existingAnswer.id },
+          data: { textAnswer: answer.textAnswer },
+        })
+      } else {
         await prisma.userAnswer.create({
           data: {
-            quizId,
-            questionId: parseInt(questionId),
-            userId,
-            textAnswer: answer as string,
+            userId: user.id,
+            quizId: quizId,
+            questionId: answer.questionId,
+            textAnswer: answer.textAnswer,
           },
         })
       }
     }
 
-    // Mark the quiz as completed
-    const updatedQuiz = await prisma.quiz.update({
-      where: { id: quizId },
-      data: {
-        isCompleted: true,
-        hasBeenAttempted: true,
-      },
-    })
-
-    // Update LessonProgress
-    const lessonProgress = await prisma.lessonProgress.findFirst({
+    // Mark quiz as completed for this user/lesson
+    const existingProgress = await prisma.lessonProgress.findFirst({
       where: {
-        lessonId: quiz.lessonId,
-        userId,
+        userId: user.id,
+        lessonId: lessonId,
       },
     })
 
-    if (lessonProgress) {
+    if (existingProgress) {
       await prisma.lessonProgress.update({
-        where: { id: lessonProgress.id },
+        where: { id: existingProgress.id },
+        data: { hasQuizBeenCompleted: true },
+      })
+    } else {
+      await prisma.lessonProgress.create({
         data: {
+          userId: user.id,
+          lessonId: lessonId,
+          progress: 100,
           hasQuizBeenCompleted: true,
         },
       })
     }
 
-    res.status(200).json({
-      message: 'Quiz submitted successfully',
-      quiz: updatedQuiz,
-    })
+    return res.status(200).json({ success: true })
   } catch (error) {
-    console.error('Error submitting quiz:', error)
-    res.status(500).json({ message: 'Internal Server Error' })
-  } finally {
-    await prisma.$disconnect()
+    console.error(error)
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }

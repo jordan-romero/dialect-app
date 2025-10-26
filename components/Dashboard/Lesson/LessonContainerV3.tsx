@@ -226,32 +226,36 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       >
         <Box flex="1">{renderStepContent()}</Box>
         <Flex justifyContent="space-between" mt={4}>
-          {currentStepIndex > 0 && (
-            <Button
-              onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
-              isDisabled={currentStepIndex === 0}
-            >
-              Previous
-            </Button>
-          )}
-          {!isLastStep ? (
-            <Button
-              onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
-              isDisabled={
-                currentStep.type === 'quiz' && !isCurrentQuizCompleted
-              }
-            >
-              Next
-            </Button>
-          ) : (
-            <Button
-              onClick={markLessonComplete}
-              isLoading={isMarkingComplete}
-              isDisabled={isMarkingComplete || isFinishButtonDisabled}
-            >
-              Finish
-            </Button>
-          )}
+          <Box>
+            {currentStepIndex > 0 && (
+              <Button
+                onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+                isDisabled={currentStepIndex === 0}
+              >
+                Previous
+              </Button>
+            )}
+          </Box>
+          <Box>
+            {!isLastStep ? (
+              <Button
+                onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
+                isDisabled={
+                  currentStep.type === 'quiz' && !isCurrentQuizCompleted
+                }
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                onClick={markLessonComplete}
+                isLoading={isMarkingComplete}
+                isDisabled={isMarkingComplete || isFinishButtonDisabled}
+              >
+                Finish
+              </Button>
+            )}
+          </Box>
         </Flex>
       </Box>
     </Box>

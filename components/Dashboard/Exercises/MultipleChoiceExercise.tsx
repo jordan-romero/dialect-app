@@ -1,6 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect, useMemo } from 'react'
-import { Button, Box, Text, SimpleGrid, Icon, Flex } from '@chakra-ui/react'
+import {
+  Button,
+  Box,
+  Text,
+  SimpleGrid,
+  Icon,
+  Flex,
+  useToast,
+} from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
@@ -43,6 +51,9 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   const [shuffledPart2Questions, setShuffledPart2Questions] = useState<any[]>(
     [],
   )
+  const [isCompleted, setIsCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const toast = useToast()
 
   const quizData = useMemo(() => {
     console.log('🎲 Quiz Selection:', {
@@ -102,6 +113,36 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
 
   const multipleChoiceQuiz = getMultipleChoiceQuiz()
   console.log('🎯 Multiple choice quiz:', multipleChoiceQuiz)
+
+  // Load saved progress when component mounts
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (!multipleChoiceQuiz) return
+
+      try {
+        const response = await fetch(
+          `/api/userQuizProgress?quizId=${multipleChoiceQuiz.id}&lessonId=${lessonId}`,
+        )
+        if (response.ok) {
+          const data = await response.json()
+          setIsCompleted(data.isCompleted)
+
+          // Restore saved answers
+          if (data.answers && data.answers.length > 0) {
+            const savedAnswers: Record<number, number> = {}
+            data.answers.forEach((answer: any) => {
+              savedAnswers[answer.questionId] = parseInt(answer.textAnswer)
+            })
+            setSelectedAnswers(savedAnswers)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading quiz progress:', error)
+      }
+    }
+
+    loadProgress()
+  }, [multipleChoiceQuiz, lessonId])
 
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffledArray = [...array]
@@ -175,8 +216,69 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   const handleNextPart = () => {
     if (currentPart === 1) {
       setCurrentPart(2)
-    } else {
-      onComplete()
+    }
+  }
+
+  const handleFinish = async () => {
+    await submitQuiz()
+    onComplete()
+  }
+
+  const submitQuiz = async () => {
+    if (!multipleChoiceQuiz) return
+
+    setIsLoading(true)
+    try {
+      // Prepare answers in the format expected by the API
+      const answersToSubmit = Object.entries(selectedAnswers).map(
+        ([questionId, answerId]) => ({
+          questionId: parseInt(questionId),
+          textAnswer: answerId.toString(),
+        }),
+      )
+
+      const response = await fetch('/api/submitQuiz', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quizId: multipleChoiceQuiz.id,
+          lessonId: lessonId,
+          answers: answersToSubmit,
+        }),
+      })
+
+      if (response.ok) {
+        setIsCompleted(true)
+        toast({
+          title: 'Quiz Completed!',
+          description: 'Your answers have been saved successfully.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+      } else {
+        console.error('Failed to submit quiz')
+        toast({
+          title: 'Error',
+          description: 'Failed to save your answers. Please try again.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+    } catch (error) {
+      console.error('Error submitting quiz:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to save your answers. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -256,13 +358,22 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       </Box>
       {currentPart === 1 && shuffledPart1Questions.map(renderQuestion)}
       {currentPart === 2 && shuffledPart2Questions.map(renderQuestion)}
+      {isCompleted && (
+        <Box mt={4} p={4} bg="green.100" borderRadius="md">
+          <Text color="green.800" fontWeight="bold">
+            ✓ Quiz completed! Your answers have been saved.
+          </Text>
+        </Box>
+      )}
       <QuizNavigation
         currentQuestion={currentPart}
         totalQuestions={2}
         onPrevious={handlePreviousPart}
         onNext={handleNextPart}
-        onFinish={onComplete}
-        isNextDisabled={!isPartComplete(currentPart)}
+        onFinish={handleFinish}
+        isNextDisabled={
+          !isPartComplete(currentPart) || isLoading || isCompleted
+        }
       />
     </Box>
   )
