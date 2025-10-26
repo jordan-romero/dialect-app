@@ -3,7 +3,7 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { Lesson } from '../Course/courseTypes'
-import VowelQuadrilateral from '../Exercises/VowelQuadrilateral'
+import { VowelQuadrilateral } from '../Exercises/VowelQuadrilateral'
 
 export const lessonTypeComponentMap = {
   video: (lesson: Lesson) => (
