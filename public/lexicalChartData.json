@@ -1,0 +1,220 @@
+{
+  "id": 2,
+  "lessonId": 1,
+  "quizType": "lexicalChart",
+  "questions": [
+    {
+      "id": 2,
+      "text": "Instructions: Click on IPA symbols from the bank below and place them in their correct corresponding spots for a General American dialect.",
+      "questionType": "lexicalChart",
+      "quizId": 2,
+      "answerOptions": [],
+      "extraOptions": [],
+      "categories": [],
+      "audioUrl": null
+    }
+  ],
+  "lexicalItems": [
+    {
+      "id": "kit",
+      "exampleWord": "KIT",
+      "ipaSymbol": "ɪ",
+      "wordBank": ["bee", "agree", "leaf", "scheme", "ski"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "fleece",
+      "exampleWord": "FLEECE",
+      "ipaSymbol": "i",
+      "wordBank": ["bee", "agree", "leaf", "scheme", "ski"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "happy",
+      "exampleWord": "HAPPY",
+      "ipaSymbol": "ɪ",
+      "wordBank": ["anything", "Melanie", "every", "freely", "angry"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "dress",
+      "exampleWord": "DRESS",
+      "ipaSymbol": "ɛ",
+      "wordBank": ["bed", "bent", "avenge", "pedal", "deflect"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "trap",
+      "exampleWord": "TRAP",
+      "ipaSymbol": "æ",
+      "wordBank": ["bath", "mass", "scramble", "avast", "plaid"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "lot",
+      "exampleWord": "LOT",
+      "ipaSymbol": "ɑ",
+      "wordBank": ["cloth", "palm", "shop", "fall", "father"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "foot",
+      "exampleWord": "FOOT",
+      "ipaSymbol": "ʊ",
+      "wordBank": ["put", "could", "wood", "pudding", "crook"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "goose",
+      "exampleWord": "GOOSE",
+      "ipaSymbol": "u",
+      "wordBank": ["blue", "shoe", "grew", "boost", "flute"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "comma",
+      "exampleWord": "COMMA",
+      "ipaSymbol": "ə",
+      "wordBank": ["upon", "arena", "congrats", "the", "machete"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "strut",
+      "exampleWord": "STRUT",
+      "ipaSymbol": "ʌ",
+      "wordBank": ["stung", "above", "wonder", "blood", "rough"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "letter",
+      "exampleWord": "LETTER",
+      "ipaSymbol": "ɚ",
+      "wordBank": ["surfer", "percussion", "water", "ordered", "future"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "nurse",
+      "exampleWord": "NURSE",
+      "ipaSymbol": "ɝ",
+      "wordBank": ["emerge", "nerve", "inertia", "refer", "burn"],
+      "category": "monophthongs"
+    },
+    {
+      "id": "face",
+      "exampleWord": "FACE",
+      "ipaSymbol": "eɪ",
+      "wordBank": ["gain", "scale", "avian", "paste", "invasion"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "price",
+      "exampleWord": "PRICE",
+      "ipaSymbol": "aɪ",
+      "wordBank": ["height", "my", "align", "fight", "ivy"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "choice",
+      "exampleWord": "CHOICE",
+      "ipaSymbol": "ɔɪ",
+      "wordBank": ["boy", "oil", "soy", "avoid", "paranoid"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "mouth",
+      "exampleWord": "MOUTH",
+      "ipaSymbol": "aʊ",
+      "wordBank": ["wow", "bounty", "sauerkraut", "owl", "house"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "goat",
+      "exampleWord": "GOAT",
+      "ipaSymbol": "oʊ",
+      "wordBank": ["over", "oboe", "show", "road", "own"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "view",
+      "exampleWord": "VIEW",
+      "ipaSymbol": "ju",
+      "wordBank": ["music", "beauty", "excuse", "cute", "pewter"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "near",
+      "exampleWord": "NEAR",
+      "ipaSymbol": "ɪr",
+      "wordBank": ["fear", "eerie", "steer", "weird", "endear"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "square",
+      "exampleWord": "SQUARE",
+      "ipaSymbol": "ɛr",
+      "wordBank": ["hair", "bare", "ensnare", "pair", "wear"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "start",
+      "exampleWord": "START",
+      "ipaSymbol": "ɑr",
+      "wordBank": ["heart", "aardvark", "bark", "garner", "are"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "north",
+      "exampleWord": "NORTH",
+      "ipaSymbol": "ɔr",
+      "wordBank": ["force", "order", "boar", "forlorn", "torn"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "cure",
+      "exampleWord": "CURE",
+      "ipaSymbol": "ʊr",
+      "wordBank": ["lure", "pure", "tour", "allure", "liqueur"],
+      "category": "diphthongs"
+    },
+    {
+      "id": "fire",
+      "exampleWord": "FIRE",
+      "ipaSymbol": "aɪr",
+      "wordBank": ["liar", "pyre", "mire", "Ireland", "inspire"],
+      "category": "triphthongs"
+    },
+    {
+      "id": "hour",
+      "exampleWord": "HOUR",
+      "ipaSymbol": "aʊr",
+      "wordBank": ["our", "flour", "sour", "tower", "power"],
+      "category": "triphthongs"
+    },
+    {
+      "id": "lawyer",
+      "exampleWord": "LAWYER",
+      "ipaSymbol": "ɔɪr",
+      "wordBank": ["employer", "Sawyer", "voyeur", "destroyer"],
+      "category": "triphthongs"
+    },
+    {
+      "id": "player",
+      "exampleWord": "PLAYER",
+      "ipaSymbol": "eɪr",
+      "wordBank": ["lair", "mayor", "player", "sayer", "surveyor"],
+      "category": "triphthongs"
+    },
+    {
+      "id": "lower",
+      "exampleWord": "LOWER",
+      "ipaSymbol": "oʊr",
+      "wordBank": ["goer", "blower", "thrower", "sewer", "mower"],
+      "category": "triphthongs"
+    }
+  ],
+  "availableSymbols": [
+    "ɪ", "i", "ɛ", "æ", "ɑ", "ʊ", "u", "ə", "ʌ", "ɚ", "ɝ",
+    "eɪ", "aɪ", "ɔɪ", "aʊ", "oʊ", "ju", "ɪr", "ɛr", "ɑr", "ɔr", "ʊr",
+    "aɪr", "aʊr", "ɔɪr", "eɪr", "oʊr"
+  ]
+}

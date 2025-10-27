@@ -1,8 +1,8 @@
 import React from 'react'
-import { Text } from '@chakra-ui/react'
+import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 
 const ProgressPage = () => {
-  return <Text>Progress tracking will be implemented here.</Text>
+  return <LexicalChartExercise lessonId={1} quizIndex={0} onComplete={() => {}} />
 }
 
 export default ProgressPage

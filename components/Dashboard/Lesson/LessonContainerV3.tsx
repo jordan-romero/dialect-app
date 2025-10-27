@@ -10,6 +10,7 @@ import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
 import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
+import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -232,6 +233,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                 case 'vowelQuad':
                   return (
                     <VowelQuadrilateralExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'lexicalChart':
+                  return (
+                    <LexicalChartExercise
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
