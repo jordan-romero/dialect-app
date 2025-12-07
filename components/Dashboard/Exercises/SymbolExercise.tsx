@@ -3,7 +3,6 @@ import { Box, Text, Grid, GridItem, Button, Flex } from '@chakra-ui/react'
 import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
-import { AnswerOption } from './QuizTypes'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface SymbolExerciseProps {
