@@ -67,39 +67,49 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
   // Handle keyboard shortcuts - Use Ctrl+Shift for formatting to avoid IPA keyboard conflicts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle shortcuts if we're focused in this editor
+      if (document.activeElement !== editorRef.current) return
+
       if (e.ctrlKey || e.metaKey) {
         // Formatting shortcuts use Ctrl+Shift+Key
         if (e.shiftKey) {
           switch (e.key.toLowerCase()) {
             case 'b':
               e.preventDefault()
+              e.stopPropagation()
               executeCommand('bold')
               break
             case 'i':
               e.preventDefault()
+              e.stopPropagation()
               executeCommand('italic')
               break
             case 'u':
               e.preventDefault()
+              e.stopPropagation()
               executeCommand('underline')
               break
             case 'z':
               // Ctrl+Shift+Z is redo
               e.preventDefault()
+              e.stopPropagation()
               handleRedo()
               break
           }
         } else {
-          // Undo/Redo without Shift
+          // Only handle undo/redo, let other Ctrl shortcuts pass through for IPA keyboard
           switch (e.key.toLowerCase()) {
             case 'z':
               e.preventDefault()
+              e.stopPropagation()
               handleUndo()
               break
             case 'y':
               e.preventDefault()
+              e.stopPropagation()
               handleRedo()
               break
+            // Let all other Ctrl+Key combinations pass through to IPA keyboard
           }
         }
       }
@@ -177,8 +187,8 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
     }, 10)
   }
 
-  // Insert IPA symbol at cursor
-  const insertSymbol = useCallback((symbol: string) => {
+  // Insert IPA symbol at cursor with T9-style replacement support
+  const insertSymbol = useCallback((symbol: string, shouldReplace: boolean = false) => {
     const editor = editorRef.current
     if (!editor) return
 
@@ -188,7 +198,22 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
     const selection = window.getSelection()
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0)
-      range.deleteContents()
+
+      // If shouldReplace is true, try to delete the previous character (for T9 cycling)
+      if (shouldReplace && range.collapsed) {
+        // Move range start back by one character to delete previous symbol
+        const startContainer = range.startContainer
+        const startOffset = range.startOffset
+
+        if (startOffset > 0) {
+          // Delete previous character
+          range.setStart(startContainer, startOffset - 1)
+          range.deleteContents()
+        }
+      } else if (!shouldReplace) {
+        // Not replacing, just delete any selected content
+        range.deleteContents()
+      }
 
       const textNode = document.createTextNode(symbol)
       range.insertNode(textNode)
@@ -285,7 +310,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
       >
         <HStack spacing={1} wrap="wrap">
           {/* Text Formatting */}
-          <Tooltip label="Bold">
+          <Tooltip label="Bold (Ctrl+Shift+B)">
             <IconButton
               aria-label="Bold"
               icon={<Box as={RiBold} boxSize={5} />}
@@ -298,7 +323,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
             />
           </Tooltip>
 
-          <Tooltip label="Italic">
+          <Tooltip label="Italic (Ctrl+Shift+I)">
             <IconButton
               aria-label="Italic"
               icon={<Box as={RiItalic} boxSize={5} />}
@@ -311,7 +336,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
             />
           </Tooltip>
 
-          <Tooltip label="Underline">
+          <Tooltip label="Underline (Ctrl+Shift+U)">
             <IconButton
               aria-label="Underline"
               icon={<Box as={RiUnderline} boxSize={5} />}

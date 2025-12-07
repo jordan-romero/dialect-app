@@ -692,6 +692,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           // If preview callback is provided, use that for cycling feedback
           if (onSymbolPreview) {
             onSymbolPreview(symbol)
+          } else if (useRichTextEditor && editorRef.current?.insertSymbol) {
+            // For rich text editor, use T9-style cycling
+            // Replace if we're still within the 1-second window (timeDiff < 1000)
+            const shouldReplace = timeDiff <= 1000
+            editorRef.current.insertSymbol(symbol, shouldReplace)
           } else {
             // Otherwise, update text area for visual feedback
             setText((prev) => {
@@ -714,7 +719,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             if (onSymbolClick && symbol) {
               onSymbolClick(symbol)
               // Clear the text since it was sent to the external handler
-              if (!onSymbolPreview) {
+              if (!onSymbolPreview && !useRichTextEditor) {
                 setText('')
               }
             }
@@ -742,6 +747,8 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     onSymbolPreview,
     timeoutId,
     filteredGroups,
+    useRichTextEditor,
+    editorRef,
   ])
 
   const handleSymbolClick = (symbol: string) => {
@@ -816,15 +823,6 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             {!compact &&
               'Use T9-style shortcuts: Ctrl+A (1st A symbol), Ctrl+A+A (2nd A symbol), Ctrl+A+A+A (3rd A symbol), etc. Symbols cycle directly in the text area - the last symbol is replaced until you stop pressing or press a different key.'}
           </Text>
-          {!compact && (
-            <Text fontSize="sm" color="gray.600" mt={1}>
-              <Text as="span" fontWeight="bold">
-                Font Note:
-              </Text>{' '}
-              For best results, use a Unicode font with IPA support like Charis
-              SIL, Arial Unicode MS, or Lucida Grande.
-            </Text>
-          )}
         </Box>
       )}
 

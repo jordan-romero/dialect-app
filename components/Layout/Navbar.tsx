@@ -1,4 +1,4 @@
-import { HamburgerIcon } from '@chakra-ui/icons'
+import { HamburgerIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
   Flex,
@@ -10,6 +10,8 @@ import {
   MenuList,
   VStack,
   Image,
+  Button,
+  Text,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import useMobileCheck from '../hooks/useMobileCheck'
@@ -62,6 +64,28 @@ const Navbar = () => {
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
+
+          {/* Tools Dropdown */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant="ghost"
+              color="util.white"
+              fontSize="xl"
+              fontWeight="bold"
+              _hover={{ color: 'brand.blueLight', bg: 'transparent' }}
+              _active={{ bg: 'transparent' }}
+            >
+              Tools
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => router.push('/ipa-keyboard')}>
+                IPA Keyboard
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
           {signUpAndLoginVisible && user.user === undefined ? <Login /> : null}
           {signUpAndLoginVisible && user.user !== undefined ? (
             <NavComponent navText="Dashboard" />
@@ -87,7 +111,7 @@ const MobileNavbar = () => {
         />
 
         <MenuList>
-          <VStack p="4" spacing="4">
+          <VStack p="4" spacing="4" align="stretch">
             {menuItems.map((item, index) => (
               <MenuItem
                 key={index}
@@ -97,6 +121,16 @@ const MobileNavbar = () => {
                 {item}
               </MenuItem>
             ))}
+
+            {/* Tools submenu */}
+            <Box pl={2}>
+              <Text fontWeight="semibold" mb={2} fontSize="sm" color="gray.600">
+                Tools
+              </Text>
+              <MenuItem onClick={() => router.push('/ipa-keyboard')} pl={4}>
+                IPA Keyboard
+              </MenuItem>
+            </Box>
           </VStack>
         </MenuList>
       </Menu>
