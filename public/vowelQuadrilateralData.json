@@ -21,37 +21,24 @@
   "order": 1,
   "vowelPositions": {
     "closeFront1": { "top": 16, "left": 22, "vowel": "i", "isCorrect": true },
-    "closeFront2": { "top": 12, "left": 40, "vowel": "y", "isCorrect": true },
-    "closeCentral1": { "top": 12, "left": 70, "vowel": "ɨ", "isCorrect": true },
     "closeBack1": { "top": 15, "left": 93, "vowel": "u", "isCorrect": true },
     "midCentral1": { "top": 26, "left": 36.5, "vowel": "ɪ", "isCorrect": true },
     "midBack1": { "top": 26, "left": 78.5, "vowel": "ʊ", "isCorrect": true },
     "openMidFront1": { "top": 59, "left": 43, "vowel": "ɛ", "isCorrect": true },
-    "openMidCentral1": { "top": 49, "left": 65, "vowel": "ə", "isCorrect": true },
+    "openMidCentral1": {
+      "top": 49,
+      "left": 65,
+      "vowel": "ə",
+      "isCorrect": true
+    },
     "openMidBack1": { "top": 59, "left": 86, "vowel": "ʌ", "isCorrect": true },
-    "openFront1": { "top": 72.5, "left": 48, "vowel": "a", "isCorrect": true },
+    "nearOpenFront1": {
+      "top": 73,
+      "left": 48,
+      "vowel": "æ",
+      "isCorrect": true
+    },
     "openBack1": { "top": 81, "left": 86, "vowel": "ɑ", "isCorrect": true }
   },
-  "availableVowels": [
-    "i",
-    "y",
-    "ɨ",
-    "u",
-    "e",
-    "ə",
-    "o",
-    "a",
-    "ɐ",
-    "ɑ",
-    "ɪ",
-    "ʏ",
-    "ɯ",
-    "ɘ",
-    "ɛ",
-    "œ",
-    "ɜ",
-    "ʌ",
-    "ɔ",
-    "æ"
-  ]
+  "availableVowels": ["i", "ɪ", "ɛ", "æ", "ɑ", "ʌ", "ʊ", "u", "ə", "ɚ", "ɝ"]
 }

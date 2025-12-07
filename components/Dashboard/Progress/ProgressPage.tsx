@@ -1,8 +1,8 @@
 import React from 'react'
-import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
+import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
 
 const ProgressPage = () => {
-  return <LexicalChartExercise lessonId={1} quizIndex={0} onComplete={() => {}} />
+  return <HangmanIPAExercise lessonId={1} quizIndex={0} onComplete={() => {}} />
 }
 
 export default ProgressPage

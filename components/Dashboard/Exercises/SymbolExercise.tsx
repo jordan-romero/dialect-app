@@ -4,6 +4,7 @@ import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import { AnswerOption } from './QuizTypes'
+import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface SymbolExerciseProps {
   lessonId: number
@@ -186,32 +187,15 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
 
       {/* Symbol Bank */}
       <Box mb={8}>
-        <Text fontWeight="bold" mb={2}>
-          Symbol Bank:
-        </Text>
-        <Grid
-          templateColumns="repeat(7, 1fr)"
-          gap={2}
-          position="sticky"
-          top="70px"
-          backgroundColor="white"
-          zIndex={1}
-          py={4}
-        >
-          {getSymbolBank().map((symbol) => (
-            <GridItem key={symbol}>
-              <Button
-                onClick={() => handleSymbolSelect(symbol)}
-                variant={selectedSymbol === symbol ? 'solid' : 'outline'}
-                colorScheme={selectedSymbol === symbol ? 'blue' : 'gray'}
-                fontFamily="'Charis SIL', serif"
-                width="100%"
-              >
-                {symbol}
-              </Button>
-            </GridItem>
-          ))}
-        </Grid>
+        <IPAKeyboard
+          customSymbols={getSymbolBank()}
+          autoDetectCategory={true}
+          onSymbolClick={handleSymbolSelect}
+          showTextArea={false}
+          compact={true}
+          hideInstructions={true}
+          title="Symbol Bank"
+        />
       </Box>
 
       {/* Current Word */}
