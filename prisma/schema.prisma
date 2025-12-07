@@ -1,10 +1,12 @@
+// Prisma schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url = env("DEV_POSTGRES_PRISMA_URL") 
+  url = env("DEV_POSTGRES_PRISMA_URL")
   directUrl = env("DEV_POSTGRES_URL_NON_POOLING")
 }
 
@@ -17,11 +19,9 @@ model User {
   lastName                String?
   avatar                  String?
   hasAccessToPaidCourses  Boolean   @default(false)
-  // Other user-related fields
-  posts                   Post[]
-  comments                Comment[]
   enrollments             Enrollment[]
   lessonProgress          LessonProgress[]
+  userAnswers             UserAnswer[]
 }
 
 // Course Model
@@ -29,25 +29,28 @@ model Course {
   id          Int       @id @default(autoincrement())
   title       String
   description String
-  price       Float?
-  progress    Float     @default(0.0)
+  isCompleted Boolean @default(false)
+  isGatedCourse Boolean @default(true)
   lessons     Lesson[]
   resources   Resource[]
   enrollments Enrollment[]
 }
 
-// Lesson Model
 model Lesson {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  videoUrl    String?
-  quiz        Quiz?
-  courseId    Int
-  course      Course    @relation(fields: [courseId], references: [id])
-  resources   Resource[]
-  passScore   Int?
-  lessonProgress LessonProgress[]
+  id              Int              @id @default(autoincrement())
+  title           String
+  description     String
+  videoUrl        String?
+  quiz            Quiz[]
+  courseId        Int
+  course          Course           @relation(fields: [courseId], references: [id])
+  resources       Resource[]
+  passScore       Int?
+  isCompleted     Boolean          @default(false)
+  isGatedLesson   Boolean          @default(true)
+  lessonProgress  LessonProgress[]
+  steps           Json?
+  displayOrder    Int?
 }
 
 // LessonProgress Model
@@ -60,27 +63,59 @@ model LessonProgress {
   updatedAt     DateTime  @updatedAt
   lesson        Lesson    @relation(fields: [lessonId], references: [id])
   user          User      @relation(fields: [userId], references: [id])
-  userId        Int       // Add this field to establish the opposite relation
+  userId        Int
+  hasVideoBeenWatched Boolean?
+  hasQuizBeenCompleted Boolean?
+  @@unique([userId, lessonId])
 }
 
-// Quiz model 
+// Quiz model
 model Quiz {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   questions   Question[]
-  lessonId    Int       @unique
+  lessonId    Int
   lesson      Lesson    @relation(fields: [lessonId], references: [id])
   score       Int?
   passScore   Int?
+  hasBeenAttempted Boolean   @default(false)
+  quizType    String?
+  order Int                   @default(0)
+  isCompleted Boolean @default(false)
+  userAnswers   UserAnswer[]
 }
 
 // Question Model
 model Question {
-  id          Int       @id @default(autoincrement())
-  text        String
-  options     Json
-  correctAnswer Json
-  quizId      Int
-  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  id            Int             @id @default(autoincrement())
+  text          String
+  questionType  String
+  quizId        Int
+  quiz          Quiz            @relation(fields: [quizId], references: [id])
+  answerOptions AnswerOption[]
+  extraOptions  ExtraOption[]
+  categories    String[]
+  audioUrl   String?
+  userAnswers   UserAnswer[]
+}
+
+// AnswerOption Model
+model AnswerOption {
+  id            Int       @id @default(autoincrement())
+  optionText    String
+  isCorrect     Boolean
+  rhymeCategory String?
+  rhymingWordId Int?
+  audioUrl      String?
+  questionId    Int
+  question      Question  @relation(fields: [questionId], references: [id])
+}
+
+// ExtraOption Model
+model ExtraOption {
+  id         Int       @id @default(autoincrement())
+  optionText String
+  questionId Int
+  question   Question  @relation(fields: [questionId], references: [id])
 }
 
 // Resource Model
@@ -93,32 +128,24 @@ model Resource {
   lessonId    Int?
   course      Course?   @relation(fields: [courseId], references: [id])
   lesson      Lesson?   @relation(fields: [lessonId], references: [id])
-  
+  order       Int       @default(0)
   @@unique([courseId, lessonId])
 }
 
-// Post Model
-model Post {
-  id          Int       @id @default(autoincrement())
-  title       String
-  content     String
-  userId      Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation(fields: [userId], references: [id])
-  comments    Comment[]
-}
 
-// Comment Model
-model Comment {
+// UserAnswer Model
+model UserAnswer {
   id          Int       @id @default(autoincrement())
-  content     String
-  postId      Int
+  quizId      Int
+  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  questionId  Int
+  question    Question  @relation(fields: [questionId], references: [id])
   userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  textAnswer  String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  post        Post      @relation(fields: [postId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
+  @@unique([userId, questionId, quizId])
 }
 
 // Enrollment Model

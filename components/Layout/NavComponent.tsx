@@ -5,10 +5,12 @@ import Link from 'next/link'
 
 type Props = {
   navText: string
+  href?: string
 }
 
-const NavComponent = ({ navText }: Props) => {
+const NavComponent = ({ navText, href }: Props) => {
   const formattedNavText = navText.toLowerCase()
+  const linkHref = href || (navText === 'Home' ? '/' : `/${formattedNavText}`)
 
   return (
     <Center w="auto" h="10" p={2} borderRadius="md">
@@ -18,7 +20,7 @@ const NavComponent = ({ navText }: Props) => {
         color="util.white"
         _hover={{ color: 'brand.blueLight' }}
       >
-        <Link href={navText === 'Home' ? '/' : `/${formattedNavText}`}>
+        <Link href={linkHref}>
           {navText}
         </Link>
       </Text>

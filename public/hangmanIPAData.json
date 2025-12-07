@@ -1,0 +1,90 @@
+{
+  "id": 3,
+  "lessonId": 1,
+  "quizType": "hangman",
+  "questions": [
+    {
+      "id": 3,
+      "text": "IPA Transcription Quiz - Fill in the blanks with the correct IPA symbols",
+      "questionType": "hangman",
+      "quizId": 3,
+      "order": 1
+    }
+  ],
+  "symbolBankCategories": {
+    "consonants": ["p", "b", "m", "f", "v", "t", "d", "n", "ɾ", "θ", "ð", "s", "z", "ʃ", "ʒ", "ɹ", "l", "j", "k", "g", "ŋ", "ʔ", "h", "ç", "w", "t͡ʃ", "d͡ʒ", "ɫ"],
+    "monophthongs": ["i", "ɪ", "ɛ", "æ", "ɑ", "ʌ", "ʊ", "u", "ə", "ɚ", "ɝ"],
+    "diphthongs": ["aɪ̆", "eɪ̆", "oʊ̆", "aʊ̆", "ɪ̆u", "ɔɪ̆", "ɑɚ̆", "ɔɚ̆", "ɛɚ̆", "ɪɚ̆", "ʊɚ̆"],
+    "triphthongs": ["aɪ̆ɚ̆", "aɪ̆ə̆", "aʊ̆ɚ̆", "ɔɪ̆ɚ̆", "ɪ̆ʊɚ̆", "ɛɪ̆ɚ̆", "oʊ̆ɚ̆"],
+    "diacritics": ["ˈ", "ˌ", ".", "‿"]
+  },
+  "symbolBank": [
+    "p", "b", "m", "f", "v", "t", "d", "n", "ɾ", "θ", "ð", "s", "z", "ʃ", "ʒ", "ɹ", "l", "j", "k", "g", "ŋ", "ʔ", "h", "ç", "w", "t͡ʃ", "d͡ʒ", "ɫ",
+    "i", "ɪ", "ɛ", "æ", "ɑ", "ʌ", "ʊ", "u", "ə", "ɚ", "ɝ",
+    "aɪ̆", "eɪ̆", "oʊ̆", "aʊ̆", "ɪ̆u", "ɔɪ̆", "ɑɚ̆", "ɔɚ̆", "ɛɚ̆", "ɪɚ̆", "ʊɚ̆",
+    "aɪ̆ɚ̆", "aɪ̆ə̆", "aʊ̆ɚ̆", "ɔɪ̆ɚ̆", "ɪ̆ʊɚ̆", "ɛɪ̆ɚ̆", "oʊ̆ɚ̆",
+    "ˈ", "ˌ", ".", "‿"
+  ],
+  "questions_data": [
+    {
+      "id": 1,
+      "word": "Cord",
+      "blanks": 3,
+      "correctAnswer": ["k", "ɔɚ̆", "d"]
+    },
+    {
+      "id": 2,
+      "word": "Merge",
+      "blanks": 3,
+      "correctAnswer": ["m", "ɝ", "d͡ʒ"]
+    },
+    {
+      "id": 3,
+      "word": "Think",
+      "blanks": 4,
+      "correctAnswer": ["θ", "ɪ", "ŋ", "k"]
+    },
+    {
+      "id": 4,
+      "word": "Through",
+      "blanks": 3,
+      "correctAnswer": ["θ", "ɹ", "u"]
+    },
+    {
+      "id": 5,
+      "word": "Church",
+      "blanks": 3,
+      "correctAnswer": ["t͡ʃ", "ɝ", "t͡ʃ"]
+    },
+    {
+      "id": 6,
+      "word": "Judge",
+      "blanks": 3,
+      "correctAnswer": ["d͡ʒ", "ʌ", "d͡ʒ"]
+    },
+    {
+      "id": 7,
+      "word": "Sing",
+      "blanks": 3,
+      "correctAnswer": ["s", "ɪ", "ŋ"]
+    },
+    {
+      "id": 8,
+      "word": "Thing",
+      "blanks": 3,
+      "correctAnswer": ["θ", "ɪ", "ŋ"]
+    },
+    {
+      "id": 9,
+      "word": "Ring",
+      "blanks": 3,
+      "correctAnswer": ["ɹ", "ɪ", "ŋ"]
+    },
+    {
+      "id": 10,
+      "word": "King",
+      "blanks": 3,
+      "correctAnswer": ["k", "ɪ", "ŋ"]
+    }
+  ]
+}
