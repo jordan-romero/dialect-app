@@ -8,17 +8,21 @@ import {
   handleDragEndRhymingPairs,
   handleDragEndRhymingCategories,
 } from './dragHandlers'
-import { Box, Button, Icon } from '@chakra-ui/react'
-import { CheckCircleIcon } from '@chakra-ui/icons'
+import { Box, Text } from '@chakra-ui/react'
+import QuizNavigation from '../QuizNavigation'
 
 interface DragAndDropExerciseProps {
   lessonId: number
+  quizIndex: number
+  onComplete: () => void
 }
 
 const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   lessonId,
+  quizIndex,
+  onComplete,
 }) => {
-  const { quizData } = useQuiz(lessonId)
+  const { quizzes } = useQuiz(lessonId)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [rhymingWords, setRhymingWords] = useState<AnswerOption[]>([])
   const [answeredWords, setAnsweredWords] = useState<AnswerOption[]>([])
@@ -27,9 +31,33 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
   const [audioPlaying, setAudioPlaying] = useState<string | null>(null)
   const [isQuizComplete, setIsQuizComplete] = useState(false)
+  const [isCompleted, setIsCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
+  const currentQuiz = quizzes[quizIndex]
   const currentQuestion: Question | undefined =
-    quizData?.questions[currentQuestionIndex]
+    currentQuiz?.questions[currentQuestionIndex]
+
+  // Load saved progress when component mounts
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (!currentQuiz) return
+
+      try {
+        const response = await fetch(
+          `/api/userQuizProgress?quizId=${currentQuiz.id}&lessonId=${lessonId}`,
+        )
+        if (response.ok) {
+          const data = await response.json()
+          setIsCompleted(data.isCompleted)
+        }
+      } catch (error) {
+        console.error('Error loading quiz progress:', error)
+      }
+    }
+
+    loadProgress()
+  }, [currentQuiz, lessonId])
 
   useEffect(() => {
     if (!currentQuestion) {
@@ -51,32 +79,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
     }
     setIsQuestionComplete(false)
   }, [currentQuestion])
-
-  useEffect(() => {
-    if (!currentQuestion || !currentQuestion.categories) return // Ensures the current question is available before proceeding.
-
-    if (currentQuestion.questionType === 'rhymingPairs') {
-      const isComplete =
-        answeredWords.length > 0 &&
-        answeredWords.every((word) => word.rhymingWordId === null)
-      setIsQuestionComplete(isComplete)
-    } else if (currentQuestion.questionType === 'rhymingCategories') {
-      // Correct calculation for uncategorized words count
-      const uncategorizedWordsCount = currentQuestion.answerOptions.filter(
-        (word) => word.rhymeCategory === null,
-      ).length
-
-      // Set question complete if word bank is empty or matches uncategorized words count
-      if (
-        wordBank.length === 0 ||
-        wordBank.length === uncategorizedWordsCount
-      ) {
-        setIsQuestionComplete(true)
-      } else {
-        setIsQuestionComplete(false) // Ensure that the state is explicitly set in all cases
-      }
-    }
-  }, [currentQuestion, rhymingWords, answeredWords, wordBank, categories])
 
   const handleDragEnd = (result: DropResult) => {
     if (currentQuestion?.questionType === 'rhymingPairs') {
@@ -106,8 +108,12 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
     }
   }
 
+  const handlePreviousQuestion = () => {
+    setCurrentQuestionIndex((prevIndex) => Math.max(0, prevIndex - 1))
+  }
+
   const handleNextQuestion = () => {
-    if (currentQuestionIndex === quizData?.questions.length! - 1) {
+    if (currentQuestionIndex === currentQuiz?.questions.length! - 1) {
       setIsQuizComplete(true)
     } else {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
@@ -119,8 +125,104 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
     }
   }
 
+  const handleFinish = async () => {
+    await submitQuiz()
+    onComplete()
+  }
+
+  const submitQuiz = async () => {
+    if (!currentQuiz) return
+
+    setIsLoading(true)
+    try {
+      // For drag and drop, we'll save the current state as answers
+      // This is a simplified approach - you might want to save more detailed state
+      const answersToSubmit = currentQuiz.questions.map((question, index) => ({
+        questionId: question.id,
+        textAnswer: index === currentQuestionIndex ? 'completed' : 'pending',
+      }))
+
+      const response = await fetch('/api/submitQuiz', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quizId: currentQuiz.id,
+          lessonId: lessonId,
+          answers: answersToSubmit,
+        }),
+      })
+
+      if (response.ok) {
+        setIsCompleted(true)
+      } else {
+        console.error('Failed to submit quiz')
+      }
+    } catch (error) {
+      console.error('Error submitting quiz:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleRhymingPairsQuestionComplete = () => {
     setIsQuestionComplete(true)
+  }
+
+  const handleRhymingCategoriesQuestionStatusChange = () => {
+    const allCategoriesCorrect = Object.entries(categories).every(
+      ([category, words]) => {
+        if (category.toLowerCase() === 'thought') {
+          // For 'thought' category:
+          // 1. Check if all placed words don't rhyme with 'thought'
+          // 2. Check if the number of placed words equals the total number of non-rhyming words
+          const correctWordsPlaced = words.every(
+            (word) => word.rhymeCategory !== 'thought',
+          )
+          const totalNonRhymingWords =
+            currentQuestion?.answerOptions.filter(
+              (w) => w.rhymeCategory !== 'thought',
+            ).length || 0
+          const onlyCorrectWordsPlaced = words.length === totalNonRhymingWords
+
+          return correctWordsPlaced && onlyCorrectWordsPlaced
+        } else {
+          // For other categories, check if all words in the category are correct
+          const categoryCorrect = words.every(
+            (word) => word.rhymeCategory === category,
+          )
+          return categoryCorrect
+        }
+      },
+    )
+
+    // Check if all words are placed for non-'thought' categories
+    const allWordsPlacedForOtherCategories = Object.entries(categories).every(
+      ([category, words]) => {
+        if (category.toLowerCase() !== 'thought') {
+          return (
+            words.length ===
+            currentQuestion?.answerOptions.filter(
+              (w) => w.rhymeCategory === category,
+            ).length
+          )
+        }
+        return true
+      },
+    )
+
+    // The wordBank should be empty except for the rhyming words in the 'thought' category
+    const remainingWordsAreThoughtRhymes = wordBank.every(
+      (word) => word.rhymeCategory === 'thought',
+    )
+
+    const finalIsComplete =
+      allCategoriesCorrect &&
+      allWordsPlacedForOtherCategories &&
+      remainingWordsAreThoughtRhymes
+
+    setIsQuestionComplete(finalIsComplete)
   }
 
   return (
@@ -141,48 +243,30 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
                 categories={categories}
                 wordBank={wordBank}
                 playAudio={playAudio}
+                onQuestionStatusChange={
+                  handleRhymingCategoriesQuestionStatusChange
+                }
               />
             )}
           </>
         )}
-        {isQuestionComplete && (
-          <Box
-            position="absolute"
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -50%)"
-            zIndex={1}
-            backgroundColor="rgba(255, 255, 255, 0.8)"
-            padding={4}
-            borderRadius="md"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Icon as={CheckCircleIcon} color="green.500" boxSize={8} mr={2} />
-            <Box fontWeight="bold" fontSize="xl">
-              Correct!
-            </Box>
-          </Box>
-        )}
       </Box>
-      {quizData && quizData.questions && (
-        <Box mt={4}>
-          <Button
-            onClick={() =>
-              setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
-            }
-            mr={4}
-            isDisabled={currentQuestionIndex === 0}
-          >
-            Previous
-          </Button>
-          <Button onClick={handleNextQuestion} isDisabled={!isQuestionComplete}>
-            {currentQuestionIndex === quizData.questions.length - 1
-              ? 'Finish Quiz'
-              : 'Next'}
-          </Button>
+      {isCompleted && (
+        <Box mt={4} p={4} bg="green.100" borderRadius="md">
+          <Text color="green.800" fontWeight="bold">
+            ✓ Quiz completed! Your answers have been saved.
+          </Text>
         </Box>
+      )}
+      {currentQuiz && currentQuiz.questions && (
+        <QuizNavigation
+          currentQuestion={currentQuestionIndex + 1}
+          totalQuestions={currentQuiz.questions.length}
+          onPrevious={handlePreviousQuestion}
+          onNext={handleNextQuestion}
+          onFinish={handleFinish}
+          isNextDisabled={!isQuestionComplete || isLoading || isCompleted}
+        />
       )}
     </DragDropContext>
   )

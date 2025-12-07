@@ -1,34 +1,52 @@
-// useQuiz.ts
 import { useEffect, useState } from 'react'
 import { QuizData } from './QuizTypes'
 
 const useQuiz = (lessonId: number) => {
-  const [quizData, setQuizData] = useState<QuizData | null>(null)
+  const [quizzes, setQuizzes] = useState<QuizData[]>([])
   const [selectedOptions, setSelectedOptions] = useState<{
-    [questionId: number]: number[]
+    [quizId: number]: { [questionId: number]: number[] }
   }>({})
   const [showCorrectMessage, setShowCorrectMessage] = useState<{
-    [questionId: number]: boolean
+    [quizId: number]: { [questionId: number]: boolean }
   }>({})
 
   useEffect(() => {
     const fetchQuizData = async () => {
       if (lessonId) {
-        const response = await fetch(`/api/quiz?lessonId=${lessonId}`)
-        const data: QuizData = await response.json()
-        setQuizData(data)
-        setSelectedOptions(
-          data.questions.reduce((acc, question) => {
-            acc[question.id] = []
-            return acc
-          }, {} as { [questionId: number]: number[] }),
-        )
-        setShowCorrectMessage(
-          data.questions.reduce((acc, question) => {
-            acc[question.id] = false
-            return acc
-          }, {} as { [questionId: number]: boolean }),
-        )
+        const response = await fetch(`/api/quizzes?lessonId=${lessonId}`)
+        const data: QuizData[] = await response.json()
+
+        setQuizzes(data)
+
+        const initialSelectedOptions: {
+          [quizId: number]: { [questionId: number]: number[] }
+        } = {}
+        const initialShowCorrectMessage: {
+          [quizId: number]: { [questionId: number]: boolean }
+        } = {}
+
+        if (data && Array.isArray(data)) {
+          data.forEach((quiz) => {
+            initialSelectedOptions[quiz.id] = quiz.questions.reduce(
+              (acc, question) => {
+                acc[question.id] = []
+                return acc
+              },
+              {} as { [questionId: number]: number[] },
+            )
+
+            initialShowCorrectMessage[quiz.id] = quiz.questions.reduce(
+              (acc, question) => {
+                acc[question.id] = false
+                return acc
+              },
+              {} as { [questionId: number]: boolean },
+            )
+          })
+        }
+
+        setSelectedOptions(initialSelectedOptions)
+        setShowCorrectMessage(initialShowCorrectMessage)
       }
     }
 
@@ -36,7 +54,7 @@ const useQuiz = (lessonId: number) => {
   }, [lessonId])
 
   return {
-    quizData,
+    quizzes,
     selectedOptions,
     setSelectedOptions,
     showCorrectMessage,

@@ -4,7 +4,7 @@ export type Course = {
   id: number
   title: string
   description: string
-  lessons: []
+  lessons: Lesson[]
   isGatedCourse: boolean
   isCompleted: boolean
 }
@@ -27,6 +27,11 @@ export type Quiz = {
   quizType: string
   questions: Question[]
   answerOptions: AnswerOption[]
+  order: number
+}
+
+type LessonStep = {
+  type: 'description' | 'video' | 'resource' | 'quiz' | 'outro'
 }
 
 export type Lesson = {
@@ -39,5 +44,7 @@ export type Lesson = {
   isCompleted: boolean
   passScore: number | null // Assuming passScore can be nullable
   resources: Resource[]
-  quiz: Quiz | null // Assuming quiz can be nullable
+  quiz: Quiz[]
+  steps?: LessonStep[]
+  displayOrder: number
 }

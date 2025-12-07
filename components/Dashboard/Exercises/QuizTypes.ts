@@ -32,6 +32,7 @@ export interface QuizData {
   quizType: string
   questions: Question[]
   answerOptions: AnswerOption[]
+  order: number
 }
 
 export interface Categories {

@@ -3,8 +3,7 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { Lesson } from '../Course/courseTypes'
-import SymbolQuiz from '../Exercises/SymbolExercise'
-import VowelQuadrilateral from '../Exercises/VowelQuadrilateral'
+import { VowelQuadrilateral } from '../Exercises/VowelQuadrilateral'
 
 export const lessonTypeComponentMap = {
   video: (lesson: Lesson) => (
@@ -38,6 +37,5 @@ export const lessonTypeComponentMap = {
       ></iframe>
     </Box>
   ),
-  symbolQuiz: (lesson: Lesson) => <SymbolQuiz lessonTitle={lesson.title} />,
   vowelQuad: (lesson: Lesson) => <VowelQuadrilateral />,
 }

@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
   url = env("DEV_POSTGRES_PRISMA_URL")
   directUrl = env("DEV_POSTGRES_URL_NON_POOLING")
 }
@@ -19,12 +19,9 @@ model User {
   lastName                String?
   avatar                  String?
   hasAccessToPaidCourses  Boolean   @default(false)
-  posts                   Post[]
-  comments                Comment[]
   enrollments             Enrollment[]
   lessonProgress          LessonProgress[]
-  discussions             Discussion[] @relation("DiscussionUser")
-  answers                 Answer[] @relation("AnswerUser")
+  userAnswers             UserAnswer[]
 }
 
 // Course Model
@@ -44,7 +41,7 @@ model Lesson {
   title           String
   description     String
   videoUrl        String?
-  quiz        Quiz?
+  quiz            Quiz[]
   courseId        Int
   course          Course           @relation(fields: [courseId], references: [id])
   resources       Resource[]
@@ -52,7 +49,8 @@ model Lesson {
   isCompleted     Boolean          @default(false)
   isGatedLesson   Boolean          @default(true)
   lessonProgress  LessonProgress[]
-  discussions     Discussion[]     @relation("LessonDiscussion")
+  steps           Json?
+  displayOrder    Int?
 }
 
 // LessonProgress Model
@@ -65,21 +63,25 @@ model LessonProgress {
   updatedAt     DateTime  @updatedAt
   lesson        Lesson    @relation(fields: [lessonId], references: [id])
   user          User      @relation(fields: [userId], references: [id])
-  userId        Int     
-  hasVideoBeenWatched Boolean? 
-  hasQuizBeenCompleted Boolean?   
+  userId        Int
+  hasVideoBeenWatched Boolean?
+  hasQuizBeenCompleted Boolean?
+  @@unique([userId, lessonId])
 }
 
 // Quiz model
 model Quiz {
-  id              Int        @id @default(autoincrement())
-  questions       Question[]
-  lessonId    Int       @unique
+  id          Int        @id @default(autoincrement())
+  questions   Question[]
+  lessonId    Int
   lesson      Lesson    @relation(fields: [lessonId], references: [id])
-  score           Int?
-  passScore       Int?
+  score       Int?
+  passScore   Int?
   hasBeenAttempted Boolean   @default(false)
-  quizType String?
+  quizType    String?
+  order Int                   @default(0)
+  isCompleted Boolean @default(false)
+  userAnswers   UserAnswer[]
 }
 
 // Question Model
@@ -92,7 +94,8 @@ model Question {
   answerOptions AnswerOption[]
   extraOptions  ExtraOption[]
   categories    String[]
-  audioUrl   String? 
+  audioUrl   String?
+  userAnswers   UserAnswer[]
 }
 
 // AnswerOption Model
@@ -101,7 +104,7 @@ model AnswerOption {
   optionText    String
   isCorrect     Boolean
   rhymeCategory String?
-  rhymingWordId Int? 
+  rhymingWordId Int?
   audioUrl      String?
   questionId    Int
   question      Question  @relation(fields: [questionId], references: [id])
@@ -125,57 +128,24 @@ model Resource {
   lessonId    Int?
   course      Course?   @relation(fields: [courseId], references: [id])
   lesson      Lesson?   @relation(fields: [lessonId], references: [id])
-  
+  order       Int       @default(0)
   @@unique([courseId, lessonId])
 }
 
-// Discussion Model 
-model Discussion {
-  id          Int       @id @default(autoincrement())
-  question    String
-  lessonId    Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation("DiscussionUser", fields: [userId], references: [id])
-  userId      Int
-  answers     Answer[]  @relation("DiscussionAnswer")
-  lesson      Lesson    @relation("LessonDiscussion", fields: [lessonId], references: [id])
-}
 
-// Answer Model
-model Answer {
+// UserAnswer Model
+model UserAnswer {
   id          Int       @id @default(autoincrement())
-  content     String
-  discussionId Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation("AnswerUser", fields: [userId], references: [id])
+  quizId      Int
+  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  questionId  Int
+  question    Question  @relation(fields: [questionId], references: [id])
   userId      Int
-  discussion  Discussion @relation("DiscussionAnswer", fields: [discussionId], references: [id])
-}
-
-// Post Model
-model Post {
-  id          Int       @id @default(autoincrement())
-  title       String
-  content     String
-  userId      Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id])
-  comments    Comment[]
-}
-
-// Comment Model
-model Comment {
-  id          Int       @id @default(autoincrement())
-  content     String
-  postId      Int
-  userId      Int
+  textAnswer  String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  post        Post      @relation(fields: [postId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
+  @@unique([userId, questionId, quizId])
 }
 
 // Enrollment Model

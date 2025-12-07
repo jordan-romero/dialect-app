@@ -1,4 +1,3 @@
-// RhymingPairsQuestion.tsx
 import React, { useState, useEffect, useCallback } from 'react'
 import { Box, Text, VStack, Button } from '@chakra-ui/react'
 import { Question, AnswerOption } from '../QuizTypes'
@@ -16,6 +15,7 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
 }) => {
   const [selectedWords, setSelectedWords] = useState<AnswerOption[]>([])
   const [matchedWords, setMatchedWords] = useState<AnswerOption[]>([])
+  const [incorrectPair, setIncorrectPair] = useState<AnswerOption[]>([])
 
   const isQuizComplete = useCallback(() => {
     const wordsWithoutMatch = question.answerOptions.filter(
@@ -36,6 +36,7 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
   const handleWordClick = (word: AnswerOption) => {
     if (selectedWords.length === 0) {
       setSelectedWords([word])
+      setIncorrectPair([])
     } else if (selectedWords.length === 1) {
       const [firstWord] = selectedWords
       if (
@@ -44,16 +45,28 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
       ) {
         setMatchedWords([...matchedWords, firstWord, word])
         setSelectedWords([])
+        setIncorrectPair([])
       } else {
-        setSelectedWords([...selectedWords, word])
+        setIncorrectPair([firstWord, word])
+        setSelectedWords([])
       }
     } else {
       setSelectedWords([word])
+      setIncorrectPair([])
     }
   }
 
-  const isWordMatched = (word: AnswerOption) => {
-    return matchedWords.includes(word)
+  const getButtonColorScheme = (word: AnswerOption) => {
+    if (matchedWords.includes(word)) {
+      return 'green'
+    }
+    if (incorrectPair.includes(word)) {
+      return 'red'
+    }
+    if (selectedWords.includes(word)) {
+      return 'blue'
+    }
+    return 'gray'
   }
 
   const column1Words: AnswerOption[] = []
@@ -85,28 +98,30 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
 
   return (
     <VStack spacing={8}>
-      <Text fontWeight="bold">{question.text}</Text>
+      <Box>
+        <Text>
+          <b>Instructions:</b>
+          English spelling is incredibly inconsistent, as you will discover in
+          this exercise.
+          <b>{question.text}</b>
+          Be careful, some words do not have a rhyming partner.
+        </Text>
+      </Box>
       <Box display="flex" justifyContent="space-between" width="100%">
         <Box width="45%">
-          <Text fontWeight="bold" marginBottom={2}>
-            Column 1
-          </Text>
+          <Text marginBottom={2}>Column 1</Text>
           {column1Words.map((word) => (
             <Button
               key={word.id}
               onClick={() => handleWordClick(word)}
               variant={
-                selectedWords.includes(word) || isWordMatched(word)
+                selectedWords.includes(word) ||
+                matchedWords.includes(word) ||
+                incorrectPair.includes(word)
                   ? 'solid'
                   : 'outline'
               }
-              colorScheme={
-                selectedWords.includes(word)
-                  ? 'red'
-                  : isWordMatched(word)
-                  ? 'green'
-                  : 'gray'
-              }
+              colorScheme={getButtonColorScheme(word)}
               width="100%"
               marginBottom={2}
               onMouseDown={() => playAudio(word.audioUrl)}
@@ -116,25 +131,19 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
           ))}
         </Box>
         <Box width="45%">
-          <Text fontWeight="bold" marginBottom={2}>
-            Column 2
-          </Text>
+          <Text marginBottom={2}>Column 2</Text>
           {column2Words.map((word) => (
             <Button
               key={word.id}
               onClick={() => handleWordClick(word)}
               variant={
-                selectedWords.includes(word) || isWordMatched(word)
+                selectedWords.includes(word) ||
+                matchedWords.includes(word) ||
+                incorrectPair.includes(word)
                   ? 'solid'
                   : 'outline'
               }
-              colorScheme={
-                selectedWords.includes(word)
-                  ? 'red'
-                  : isWordMatched(word)
-                  ? 'green'
-                  : 'gray'
-              }
+              colorScheme={getButtonColorScheme(word)}
               width="100%"
               marginBottom={2}
               onMouseDown={() => playAudio(word.audioUrl)}

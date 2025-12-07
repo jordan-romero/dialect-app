@@ -9,12 +9,16 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Flex,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react'
 import { Lesson, Resource } from '../Course/courseTypes'
 import { lessonTypeComponentMap } from './utils'
 import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExercise'
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
+import SymbolExercise from '../Exercises/SymbolExercise'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -23,19 +27,52 @@ type LessonContainerProps = {
 const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
   const [selectedTab, setSelectedTab] = useState(0)
 
-  const getLessonType = (lesson: Lesson) => {
-    if (lesson.videoUrl) {
-      return 'video'
-    } else if (lesson.resources && lesson.resources.length > 0) {
-      return 'resource'
-    } else if (lesson.title === 'Diphthongs & Triphtongs (3)') {
-      return 'vowelQuad'
-    } else {
-      return 'symbolQuiz'
-    }
+  if (!lesson) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100vh">
+        <Alert status="error">
+          <AlertIcon />
+          No lesson data available
+        </Alert>
+      </Flex>
+    )
   }
 
-  const lessonType = getLessonType(lesson)
+  const renderQuizzes = () => {
+    return lesson.quiz.map((quiz, index) => {
+      switch (quiz.quizType) {
+        case 'dragAndDrop':
+          return (
+            <DragAndDropExercise
+              key={index}
+              lessonId={lesson.id}
+              quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
+            />
+          )
+        case 'shortAnswer':
+          return (
+            <ShortAnswerExercise
+              key={index}
+              lessonId={lesson.id}
+              quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
+            />
+          )
+        case 'multipleChoice':
+          return (
+            <MultipleChoiceExercise
+              key={index}
+              lessonId={lesson.id}
+              quizIndex={index}
+              onComplete={() => console.log('Drag and drop quiz complete')}
+            />
+          )
+        default:
+          return null
+      }
+    })
+  }
 
   return (
     <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
@@ -62,14 +99,14 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
           onChange={(index) => setSelectedTab(index)}
         >
           <TabList justifyContent="flex-end">
-            {lessonType === 'video' && (
+            {lesson.videoUrl && (
               <Tab _selected={{ color: 'util.white', bg: 'brand.iris' }}>
                 Video
               </Tab>
             )}
             {lesson.resources && lesson.resources.length > 0 && (
               <Tab _selected={{ color: 'util.white', bg: 'brand.iris' }}>
-                Resources
+                Handouts
               </Tab>
             )}
             {lesson.description && (
@@ -77,16 +114,15 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
                 Description
               </Tab>
             )}
-
-            {lesson.quiz && (
+            {lesson.quiz && lesson.quiz.length > 0 && (
               <Tab _selected={{ color: 'util.white', bg: 'brand.iris' }}>
                 Exercises
               </Tab>
             )}
           </TabList>
           <TabPanels>
-            {lessonType === 'video' && (
-              <TabPanel>{lessonTypeComponentMap[lessonType](lesson)}</TabPanel>
+            {lesson.videoUrl && (
+              <TabPanel>{lessonTypeComponentMap['video'](lesson)}</TabPanel>
             )}
             {lesson.resources && lesson.resources.length > 0 && (
               <TabPanel>
@@ -95,12 +131,12 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
                   mr="auto"
                   ml="auto"
                   mt={10}
-                  maxHeight="539px"
                   overflowY="scroll"
+                  minHeight="1000px"
                 >
                   <iframe
                     width="95%"
-                    height="500px"
+                    height="700px"
                     src={`https://docs.google.com/viewer?url=${encodeURIComponent(
                       lesson.resources[0].url,
                     )}&embedded=true`}
@@ -124,21 +160,13 @@ const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
                 </ul>
               </TabPanel>
             )}
-            <TabPanel>
-              <Text>{lesson.description}</Text>
-            </TabPanel>
-            {lesson && lesson.quiz && (
+            {lesson.description && (
               <TabPanel>
-                {lesson.quiz.quizType === 'dragAndDrop' && (
-                  <DragAndDropExercise lessonId={lesson.id} />
-                )}
-                {lesson.quiz.quizType === 'shortAnswer' && (
-                  <ShortAnswerExercise lessonId={lesson.id} />
-                )}
-                {lesson.quiz.quizType === 'multipleChoice' && (
-                  <MultipleChoiceExercise lessonId={lesson.id} />
-                )}
+                <Text>{lesson.description}</Text>
               </TabPanel>
+            )}
+            {lesson.quiz && lesson.quiz.length > 0 && (
+              <TabPanel>{renderQuizzes()}</TabPanel>
             )}
           </TabPanels>
         </Tabs>
