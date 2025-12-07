@@ -1,0 +1,44 @@
+{
+  "id": 1,
+  "lessonId": 1,
+  "score": null,
+  "passScore": 80,
+  "hasBeenAttempted": false,
+  "quizType": "vowelQuad",
+  "questions": [
+    {
+      "id": 1,
+      "text": "Place the correct vowel symbols on the IPA vowel chart",
+      "questionType": "vowelQuad",
+      "quizId": 1,
+      "answerOptions": [],
+      "extraOptions": [],
+      "categories": [],
+      "audioUrl": null
+    }
+  ],
+  "answerOptions": [],
+  "order": 1,
+  "vowelPositions": {
+    "closeFront1": { "top": 16, "left": 22, "vowel": "i", "isCorrect": true },
+    "closeBack1": { "top": 15, "left": 93, "vowel": "u", "isCorrect": true },
+    "midCentral1": { "top": 26, "left": 36.5, "vowel": "ɪ", "isCorrect": true },
+    "midBack1": { "top": 26, "left": 78.5, "vowel": "ʊ", "isCorrect": true },
+    "openMidFront1": { "top": 59, "left": 43, "vowel": "ɛ", "isCorrect": true },
+    "openMidCentral1": {
+      "top": 49,
+      "left": 65,
+      "vowel": "ə",
+      "isCorrect": true
+    },
+    "openMidBack1": { "top": 59, "left": 86, "vowel": "ʌ", "isCorrect": true },
+    "nearOpenFront1": {
+      "top": 73,
+      "left": 48,
+      "vowel": "æ",
+      "isCorrect": true
+    },
+    "openBack1": { "top": 81, "left": 86, "vowel": "ɑ", "isCorrect": true }
+  },
+  "availableVowels": ["i", "ɪ", "ɛ", "æ", "ɑ", "ʌ", "ʊ", "u", "ə", "ɚ", "ɝ"]
+}

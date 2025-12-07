@@ -1,8 +1,7 @@
-import { HamburgerIcon } from '@chakra-ui/icons'
+import { HamburgerIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
   Flex,
-  Heading,
   HStack,
   IconButton,
   Menu,
@@ -11,12 +10,15 @@ import {
   MenuList,
   VStack,
   Image,
+  Button,
+  Text,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import useMobileCheck from '../hooks/useMobileCheck'
 import NavComponent from './NavComponent'
 import Link from 'next/link'
 import router from 'next/router'
+import { useRouter } from 'next/router'
 import { useFeatureFlag } from 'configcat-react'
 import Login from '../AuthComponents/Login'
 import Logout from '../AuthComponents/Logout'
@@ -29,12 +31,13 @@ const Navbar = () => {
     false,
   )
   const user = useUser()
+  const router = useRouter()
 
-  if (isMobile) {
+  if (isMobile && !router.pathname.includes('dashboard')) {
     return <MobileNavbar />
   }
 
-  return (
+  return !isMobile && !router.pathname.includes('dashboard') ? (
     <Flex w="100%" h="24" align="center" bgColor={'brand.purple'}>
       <HStack w="100%" justify="space-between">
         <HStack align="center" bgColor={'brand.purple'} spacing={0}>
@@ -61,6 +64,28 @@ const Navbar = () => {
           <NavComponent navText="Home" />
           <NavComponent navText="About" />
           <NavComponent navText="Contact" />
+
+          {/* Tools Dropdown */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant="ghost"
+              color="util.white"
+              fontSize="xl"
+              fontWeight="bold"
+              _hover={{ color: 'brand.blueLight', bg: 'transparent' }}
+              _active={{ bg: 'transparent' }}
+            >
+              Tools
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => router.push('/ipa-keyboard')}>
+                IPA Keyboard
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
           {signUpAndLoginVisible && user.user === undefined ? <Login /> : null}
           {signUpAndLoginVisible && user.user !== undefined ? (
             <NavComponent navText="Dashboard" />
@@ -69,7 +94,7 @@ const Navbar = () => {
         </HStack>
       </HStack>
     </Flex>
-  )
+  ) : null
 }
 
 const MobileNavbar = () => {
@@ -86,7 +111,7 @@ const MobileNavbar = () => {
         />
 
         <MenuList>
-          <VStack p="4" spacing="4">
+          <VStack p="4" spacing="4" align="stretch">
             {menuItems.map((item, index) => (
               <MenuItem
                 key={index}
@@ -96,6 +121,16 @@ const MobileNavbar = () => {
                 {item}
               </MenuItem>
             ))}
+
+            {/* Tools submenu */}
+            <Box pl={2}>
+              <Text fontWeight="semibold" mb={2} fontSize="sm" color="gray.600">
+                Tools
+              </Text>
+              <MenuItem onClick={() => router.push('/ipa-keyboard')} pl={4}>
+                IPA Keyboard
+              </MenuItem>
+            </Box>
           </VStack>
         </MenuList>
       </Menu>

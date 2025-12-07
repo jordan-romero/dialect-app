@@ -1,61 +1,157 @@
-import React, { useState } from 'react'
-import { Box, Flex, Text, Icon, VStack, HStack } from '@chakra-ui/react'
+import React, { useState, useEffect } from 'react'
+import { Box, Flex, Text, Icon, VStack, HStack, Button } from '@chakra-ui/react'
 import {
+  MdCheck,
   MdLockOpen,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
+  MdLock,
+  MdRadioButtonUnchecked,
+  MdExpandMore,
+  MdExpandLess,
 } from 'react-icons/md'
-import LessonTracker from '../Lesson/LessonTracker'
-import { Course, CourseSideBarProps } from './courseTypes'
+import { Course, Lesson } from './courseTypes'
 
-const CourseSideBar = ({ freeCourses, onSelectLesson }: CourseSideBarProps) => {
-  const [currentLesson, setCurrentLesson] = useState<number>(0)
-  const [expandedCourses, setExpandedCourses] = useState<number[]>([])
+type CourseSideBarProps = {
+  courses: Course[] | null
+  onSelectLesson: (lesson: Lesson) => void
+  hasAccessToPaidCourses: boolean
+  currentLessonId: number | null
+  lessonProgress: { [key: number]: number } // Receive lesson progress as a prop
+}
 
-  const toggleCourse = (courseIndex: number) => {
-    // Toggle the course's expanded/collapsed status
-    if (expandedCourses.includes(courseIndex)) {
-      setExpandedCourses(
-        expandedCourses.filter((index) => index !== courseIndex),
+const CourseSideBar = ({
+  courses,
+  onSelectLesson,
+  hasAccessToPaidCourses,
+  currentLessonId,
+  lessonProgress,
+}: CourseSideBarProps) => {
+  const [expandedCourses, setExpandedCourses] = useState<{
+    [key: number]: boolean
+  }>({})
+
+  useEffect(() => {
+    // Automatically expand the course containing the current lesson
+    if (currentLessonId && courses) {
+      const currentCourse = courses.find((course) =>
+        course.lessons.some((lesson) => lesson.id === currentLessonId),
       )
+      if (currentCourse) {
+        setExpandedCourses((prev) => ({ ...prev, [currentCourse.id]: true }))
+      }
+    }
+  }, [currentLessonId, courses])
+
+  const isLessonLocked = (
+    lesson: Lesson,
+    index: number,
+    courseLessons: Lesson[],
+  ) => {
+    if (index === 0) return false
+
+    // Check if any previous lesson is not completed
+    for (let i = 0; i < index; i++) {
+      if (lessonProgress[courseLessons[i].id] !== 100) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  const getLessonIcon = (
+    lesson: Lesson,
+    index: number,
+    courseLessons: Lesson[],
+  ) => {
+    const progress = lessonProgress[lesson.id] || 0
+
+    if (isLessonLocked(lesson, index, courseLessons)) {
+      return MdLock
+    } else if (progress === 100) {
+      return MdCheck
+    } else if (progress > 0) {
+      return MdRadioButtonUnchecked
     } else {
-      setExpandedCourses([...expandedCourses, courseIndex])
+      return MdLockOpen
     }
   }
 
+  const toggleCourseExpansion = (courseId: number) => {
+    setExpandedCourses((prev) => ({
+      ...prev,
+      [courseId]: !prev[courseId],
+    }))
+  }
+
   return (
-    <Box p={4} width={300} bg="brand.iris" color="brand.white">
-      <Flex direction="column">
-        {freeCourses &&
-          freeCourses.map((course: Course, index: number) => (
-            <Box key={index} mb={index === 0 ? 2 : 4} cursor="pointer">
-              <Flex alignItems="center" onClick={() => toggleCourse(index)}>
-                <Icon as={MdLockOpen} boxSize={4} mr={2} color="red.500" />
-                <Text fontSize="md">{course.title}</Text>
+    <Box
+      p={4}
+      width={300}
+      height="100vh"
+      bg="gray.100"
+      color="black"
+      borderTopLeftRadius="xl"
+      borderBottomLeftRadius="xl"
+      overflowY="auto"
+    >
+      <VStack spacing={4} align="stretch">
+        {courses &&
+          courses.map((course) => (
+            <Box key={course.id}>
+              <Button
+                variant="ghost"
+                justifyContent="space-between"
+                width="100%"
+                onClick={() => toggleCourseExpansion(course.id)}
+              >
+                <Text fontWeight="bold" fontSize="lg">
+                  {course.title}
+                </Text>
                 <Icon
-                  as={
-                    expandedCourses.includes(index)
-                      ? MdKeyboardArrowUp
-                      : MdKeyboardArrowDown
-                  }
-                  boxSize={4}
-                  mr={2}
-                  color="red.500"
+                  as={expandedCourses[course.id] ? MdExpandLess : MdExpandMore}
+                  boxSize={6}
                 />
-              </Flex>
-              {expandedCourses.includes(index) && (
-                <Box background="lightgray" mb={6} width="100%">
-                  <LessonTracker
-                    totalLessons={course.lessons.length}
-                    currentLesson={currentLesson}
-                    lessons={course.lessons}
-                    onSelectLesson={onSelectLesson}
-                  />
-                </Box>
+              </Button>
+              {expandedCourses[course.id] && (
+                <VStack spacing={2} align="stretch" pl={4} mt={2}>
+                  {course.lessons.map((lesson, index) => {
+                    const isLocked = isLessonLocked(
+                      lesson,
+                      index,
+                      course.lessons,
+                    )
+                    const isCurrent = lesson.id === currentLessonId
+                    return (
+                      <HStack
+                        key={lesson.id}
+                        onClick={() => !isLocked && onSelectLesson(lesson)}
+                        cursor={isLocked ? 'not-allowed' : 'pointer'}
+                        opacity={isLocked ? 0.5 : 1}
+                        bg={isCurrent ? 'blue.100' : 'transparent'}
+                        p={2}
+                        borderRadius="md"
+                      >
+                        <Icon
+                          as={getLessonIcon(lesson, index, course.lessons)}
+                          boxSize={6}
+                          mr={4}
+                          color={
+                            lessonProgress[lesson.id] === 100
+                              ? 'green.500'
+                              : lessonProgress[lesson.id] > 0
+                              ? 'purple.500'
+                              : 'gray.500'
+                          }
+                        />
+                        <Text>{`${index + 1}. ${lesson.title}`}</Text>
+                      </HStack>
+                    )
+                  })}
+                </VStack>
               )}
             </Box>
           ))}
-      </Flex>
+      </VStack>
     </Box>
   )
 }

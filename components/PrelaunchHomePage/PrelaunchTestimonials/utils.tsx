@@ -116,15 +116,7 @@ export const cards = [
     image: './bradYanagida.jpeg',
     altText: 'Photographer Credit: Rebecca Prephan',
   },
-  {
-    id: 13,
-    testimonial:
-      'I think what sets Krista apart as a dialect coach is her attention to detail and nuance. A broad, general dialect will get the job done, but the subtleties Krista brings to her coaching, pinpointing a character to a specific location is thrilling to hear and see!',
-    name: 'J Schmidt',
-    subtitle: 'Actor',
-    image: 'jschmidt.jpg',
-    altText: 'Photographer Credit:',
-  },
+
   {
     id: 13,
     testimonial:

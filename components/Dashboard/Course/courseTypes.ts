@@ -1,14 +1,12 @@
+import { AnswerOption, Question } from '../Exercises/QuizTypes'
+
 export type Course = {
   id: number
   title: string
   description: string
-  lessons: []
-  // Define other fields in your Course type as needed
-}
-
-export type CourseSideBarProps = {
-  freeCourses: Course[] | null
-  onSelectLesson: (lesson: Lesson) => void
+  lessons: Lesson[]
+  isGatedCourse: boolean
+  isCompleted: boolean
 }
 
 export type Resource = {
@@ -23,8 +21,17 @@ export type Resource = {
 export type Quiz = {
   id: number
   lessonId: number
-  score: number | null // Assuming score can be nullable
+  score: number | null
   passScore: number
+  hasBeenAttempted: boolean
+  quizType: string
+  questions: Question[]
+  answerOptions: AnswerOption[]
+  order: number
+}
+
+type LessonStep = {
+  type: 'description' | 'video' | 'resource' | 'quiz' | 'outro'
 }
 
 export type Lesson = {
@@ -33,7 +40,11 @@ export type Lesson = {
   description: string
   videoUrl: string
   courseId: number
+  isGatedLesson: boolean
+  isCompleted: boolean
   passScore: number | null // Assuming passScore can be nullable
   resources: Resource[]
-  quiz: Quiz | null // Assuming quiz can be nullable
+  quiz: Quiz[]
+  steps?: LessonStep[]
+  displayOrder: number
 }
