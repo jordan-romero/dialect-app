@@ -71,23 +71,34 @@ const IPAKeyboardPage: React.FC = () => {
                 Keyboard Shortcuts:
               </Text>
               <VStack align="start" spacing={1} pl={4} mb={4}>
-                <Text fontSize="sm" color="gray.700">
+                <Text fontSize="sm" color="gray.700" fontWeight="semibold" mt={1}>
+                  IPA Symbols (Ctrl only):
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">Ctrl+[Letter]</Text> - Cycle through symbols (e.g., Ctrl+A for a, ɑ, æ, etc.)
                 </Text>
-                <Text fontSize="sm" color="gray.700">
+
+                <Text fontSize="sm" color="gray.700" fontWeight="semibold" mt={2}>
+                  Text Formatting (Ctrl+Shift):
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">Ctrl+Shift+B</Text> - Bold
                 </Text>
-                <Text fontSize="sm" color="gray.700">
+                <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">Ctrl+Shift+I</Text> - Italic
                 </Text>
-                <Text fontSize="sm" color="gray.700">
+                <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">Ctrl+Shift+U</Text> - Underline
                 </Text>
-                <Text fontSize="sm" color="gray.700">
-                  <Text as="span" fontWeight="semibold">Ctrl+Z</Text> - Undo
+
+                <Text fontSize="sm" color="gray.700" fontWeight="semibold" mt={2}>
+                  History (Ctrl+Shift):
                 </Text>
-                <Text fontSize="sm" color="gray.700">
-                  <Text as="span" fontWeight="semibold">Ctrl+Y</Text> - Redo
+                <Text fontSize="sm" color="gray.700" pl={2}>
+                  <Text as="span" fontWeight="semibold">Ctrl+Shift+Z</Text> - Undo
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
+                  <Text as="span" fontWeight="semibold">Ctrl+Shift+Y</Text> - Redo
                 </Text>
               </VStack>
 
@@ -96,16 +107,6 @@ const IPAKeyboardPage: React.FC = () => {
                 <ChakraLink href="/" color="brand.iris" fontWeight="semibold">
                   Visit Acting Accents
                 </ChakraLink>
-              </Text>
-            </Box>
-
-            {/* Footer */}
-            <Box textAlign="center" py={4}>
-              <Text fontSize="sm" color="gray.600">
-                © {new Date().getFullYear()} Acting Accents. Free IPA Keyboard Tool.
-              </Text>
-              <Text fontSize="sm" color="gray.500" mt={2}>
-                Made with ❤️ for actors and linguists
               </Text>
             </Box>
           </VStack>

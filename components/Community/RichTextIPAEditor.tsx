@@ -64,64 +64,6 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
     setActiveFormats(formats)
   }, [])
 
-  // Handle keyboard shortcuts - Use Ctrl+Shift for formatting to avoid IPA keyboard conflicts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Only handle shortcuts if we're focused in this editor
-      if (document.activeElement !== editorRef.current) return
-
-      if (e.ctrlKey || e.metaKey) {
-        // Formatting shortcuts use Ctrl+Shift+Key
-        if (e.shiftKey) {
-          switch (e.key.toLowerCase()) {
-            case 'b':
-              e.preventDefault()
-              e.stopPropagation()
-              executeCommand('bold')
-              break
-            case 'i':
-              e.preventDefault()
-              e.stopPropagation()
-              executeCommand('italic')
-              break
-            case 'u':
-              e.preventDefault()
-              e.stopPropagation()
-              executeCommand('underline')
-              break
-            case 'z':
-              // Ctrl+Shift+Z is redo
-              e.preventDefault()
-              e.stopPropagation()
-              handleRedo()
-              break
-          }
-        } else {
-          // Only handle undo/redo, let other Ctrl shortcuts pass through for IPA keyboard
-          switch (e.key.toLowerCase()) {
-            case 'z':
-              e.preventDefault()
-              e.stopPropagation()
-              handleUndo()
-              break
-            case 'y':
-              e.preventDefault()
-              e.stopPropagation()
-              handleRedo()
-              break
-            // Let all other Ctrl+Key combinations pass through to IPA keyboard
-          }
-        }
-      }
-    }
-
-    const editor = editorRef.current
-    if (editor) {
-      editor.addEventListener('keydown', handleKeyDown)
-      return () => editor.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [historyIndex])
-
   // Save to history
   const saveToHistory = useCallback(() => {
     if (!editorRef.current) return
@@ -140,14 +82,37 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
     setHistory(newHistory)
   }, [history, historyIndex])
 
-  // Handle input changes
-  const handleInput = useCallback(() => {
-    updateActiveFormats()
-    saveToHistory()
-  }, [updateActiveFormats, saveToHistory])
+  // Undo/Redo
+  const handleUndo = useCallback(() => {
+    if (historyIndex > 0) {
+      const newIndex = historyIndex - 1
+      setHistoryIndex(newIndex)
+      if (editorRef.current) {
+        editorRef.current.innerHTML = history[newIndex]
+      }
+    }
+  }, [historyIndex, history])
+
+  const handleRedo = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      const newIndex = historyIndex + 1
+      setHistoryIndex(newIndex)
+      if (editorRef.current) {
+        editorRef.current.innerHTML = history[newIndex]
+      }
+    }
+  }, [historyIndex, history])
+
+  // Clear content
+  const handleClear = useCallback(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = ''
+      saveToHistory()
+    }
+  }, [saveToHistory])
 
   // Execute formatting command
-  const executeCommand = (command: FormatCommand) => {
+  const executeCommand = useCallback((command: FormatCommand) => {
     const editor = editorRef.current
     if (!editor) return
 
@@ -185,7 +150,13 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
     setTimeout(() => {
       saveToHistory()
     }, 10)
-  }
+  }, [updateActiveFormats, saveToHistory])
+
+  // Handle input changes
+  const handleInput = useCallback(() => {
+    updateActiveFormats()
+    saveToHistory()
+  }, [updateActiveFormats, saveToHistory])
 
   // Insert IPA symbol at cursor with T9-style replacement support
   const insertSymbol = useCallback((symbol: string, shouldReplace: boolean = false) => {
@@ -235,42 +206,63 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
     }
   }, [onSymbolInsert, saveToHistory])
 
+  // Handle keyboard shortcuts - Use Ctrl+Shift for formatting and undo/redo to avoid IPA keyboard conflicts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle shortcuts if we're focused in this editor
+      if (document.activeElement !== editorRef.current) return
+
+      if (e.ctrlKey || e.metaKey) {
+        // Formatting and undo/redo shortcuts use Ctrl+Shift+Key
+        if (e.shiftKey) {
+          switch (e.key.toLowerCase()) {
+            case 'b':
+              e.preventDefault()
+              e.stopPropagation()
+              executeCommand('bold')
+              break
+            case 'i':
+              e.preventDefault()
+              e.stopPropagation()
+              executeCommand('italic')
+              break
+            case 'u':
+              e.preventDefault()
+              e.stopPropagation()
+              executeCommand('underline')
+              break
+            case 'z':
+              // Ctrl+Shift+Z is undo
+              e.preventDefault()
+              e.stopPropagation()
+              handleUndo()
+              break
+            case 'y':
+              // Ctrl+Shift+Y is redo
+              e.preventDefault()
+              e.stopPropagation()
+              handleRedo()
+              break
+          }
+        }
+        // Let all Ctrl+Key (without Shift) pass through to IPA keyboard
+      }
+    }
+
+    const editor = editorRef.current
+    if (editor) {
+      editor.addEventListener('keydown', handleKeyDown)
+      return () => editor.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [executeCommand, handleRedo, handleUndo])
+
   // Expose insertSymbol method via ref
   useImperativeHandle(ref, () => ({
     insertSymbol,
     getContent: () => editorRef.current?.innerHTML || '',
     getTextContent: () => editorRef.current?.innerText || '',
     clear: handleClear,
-  }), [insertSymbol])
-
-  // Undo/Redo
-  const handleUndo = () => {
-    if (historyIndex > 0) {
-      const newIndex = historyIndex - 1
-      setHistoryIndex(newIndex)
-      if (editorRef.current) {
-        editorRef.current.innerHTML = history[newIndex]
-      }
-    }
-  }
-
-  const handleRedo = () => {
-    if (historyIndex < history.length - 1) {
-      const newIndex = historyIndex + 1
-      setHistoryIndex(newIndex)
-      if (editorRef.current) {
-        editorRef.current.innerHTML = history[newIndex]
-      }
-    }
-  }
-
-  // Clear content
-  const handleClear = () => {
-    if (editorRef.current) {
-      editorRef.current.innerHTML = ''
-      saveToHistory()
-    }
-  }
+  }), [insertSymbol, handleClear])
 
   // Copy to clipboard
   const handleCopy = async () => {
@@ -394,7 +386,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
           <Divider orientation="vertical" h="24px" borderColor="gray.300" />
 
           {/* History Controls */}
-          <Tooltip label="Undo (Ctrl+Z)">
+          <Tooltip label="Undo (Ctrl+Shift+Z)">
             <IconButton
               aria-label="Undo"
               icon={<RepeatClockIcon />}
@@ -408,7 +400,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(({
             />
           </Tooltip>
 
-          <Tooltip label="Redo (Ctrl+Y)">
+          <Tooltip label="Redo (Ctrl+Shift+Y)">
             <IconButton
               aria-label="Redo"
               icon={<RepeatIcon />}

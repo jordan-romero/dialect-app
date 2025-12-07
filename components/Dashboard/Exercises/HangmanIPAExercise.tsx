@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import {
   Box,
   Button,
@@ -136,6 +136,17 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
     loadProgress()
   }, [quizData, lessonId])
 
+  const checkQuestionCompletion = useCallback((question: HangmanQuestion) => {
+    const userAnswer = userAnswers[question.id] || []
+    return (
+      userAnswer.every((answer) => answer !== '') &&
+      userAnswer.length === question.blanks &&
+      userAnswer.every(
+        (answer, index) => answer === question.correctAnswer[index],
+      )
+    )
+  }, [userAnswers])
+
   // Auto-advance to next question when current question is completed
   useEffect(() => {
     if (!quizData) return
@@ -158,7 +169,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         setCurrentQuestionIndex(nextQuestionIndex)
       }
     }
-  }, [userAnswers, currentQuestionIndex, quizData, completedQuestions])
+  }, [userAnswers, currentQuestionIndex, quizData, completedQuestions, checkQuestionCompletion])
 
   const handleSymbolSelect = (symbol: string) => {
     setSelectedSymbol(symbol)
@@ -228,17 +239,6 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
       newAnswers[questionId] = questionAnswers
       return newAnswers
     })
-  }
-
-  const checkQuestionCompletion = (question: HangmanQuestion) => {
-    const userAnswer = userAnswers[question.id] || []
-    return (
-      userAnswer.every((answer) => answer !== '') &&
-      userAnswer.length === question.blanks &&
-      userAnswer.every(
-        (answer, index) => answer === question.correctAnswer[index],
-      )
-    )
   }
 
   const checkOverallCompletion = () => {
@@ -456,7 +456,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           </Text>
 
           <Text fontSize="xl" fontWeight="bold" mb={2}>
-            "{currentQuestion.word}"
+            &ldquo;{currentQuestion.word}&rdquo;
           </Text>
 
           {/* Blank spaces */}
@@ -568,7 +568,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             🎉 Congratulations!
           </Text>
           <Text fontSize="lg" color="green.700">
-            You've completed all {quizData.questions_data.length} questions!
+            You&apos;ve completed all {quizData.questions_data.length} questions!
           </Text>
         </Box>
       )}
