@@ -165,7 +165,6 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         if (!editor) return
 
         // Restore selection if it exists
-        const selection = window.getSelection()
 
         // Focus the editor
         editor.focus()
