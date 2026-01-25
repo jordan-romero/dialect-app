@@ -22,4 +22,3 @@ export const IPAKeyboardWithRichText: React.FC = () => {
 }
 
 export default IPAKeyboardWithRichText
-

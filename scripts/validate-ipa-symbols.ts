@@ -1,24 +1,107 @@
 /**
  * IPA Keyboard Symbol Validation Script
- * 
+ *
  * This script validates that all IPA symbols are correctly categorized
  * and that there are no duplicate or missing symbols.
  */
 
 // Import symbol data from keyboard component
 const VOWELS = [
-  'i', 'ɪ', 'ɛ', 'æ', 'ɑ', 'ʌ', 'ʊ', 'u', 'ə', 'ɚ', 'ɝ',
-  'e', 'o', 'ɔ', 'ɨ', 'ʏ', 'ɤ', 'ø', 'œ', 'ɵ', 'y', 'ɐ',
-  'ɞ', 'ɒ', 'ɘ',
+  'i',
+  'ɪ',
+  'ɛ',
+  'æ',
+  'ɑ',
+  'ʌ',
+  'ʊ',
+  'u',
+  'ə',
+  'ɚ',
+  'ɝ',
+  'e',
+  'o',
+  'ɔ',
+  'ɨ',
+  'ʏ',
+  'ɤ',
+  'ø',
+  'œ',
+  'ɵ',
+  'y',
+  'ɐ',
+  'ɞ',
+  'ɒ',
+  'ɘ',
 ]
 
 const CONSONANTS = [
-  'p', 'b', 'm', 'f', 'v', 't', 'd', 'n', 'ɾ', 'θ', 'ð', 's', 'z',
-  'ʃ', 'ʒ', 'ɹ', 'l', 'j', 'k', 'g', 'ŋ', 'ʔ', 'h', 'ç', 'w',
-  't͡ʃ', 'd͡ʒ', 't͡s', 'd͡z', 'ɫ', 'ɡ', 'ɣ', 'ɠ', 'β', 'ɓ', 'ɕ',
-  'ɖ', 'ɗ', 'ɟ', 'ʄ', 'ɬ', 'ɭ', 'ʟ', 'ɮ', 'ɱ', 'ɲ', 'ɳ', 'ɴ',
-  'ɸ', 'q', 'ʀ', 'ʁ', 'ɻ', 'ɽ', 'ʂ', 'ʈ', 'ʋ', 'ʍ', 'χ', 'x',
-  'ʎ', 'ʐ', 'ʑ', 'r', 'c', 'ɰ', 'ɢ',
+  'p',
+  'b',
+  'm',
+  'f',
+  'v',
+  't',
+  'd',
+  'n',
+  'ɾ',
+  'θ',
+  'ð',
+  's',
+  'z',
+  'ʃ',
+  'ʒ',
+  'ɹ',
+  'l',
+  'j',
+  'k',
+  'g',
+  'ŋ',
+  'ʔ',
+  'h',
+  'ç',
+  'w',
+  't͡ʃ',
+  'd͡ʒ',
+  't͡s',
+  'd͡z',
+  'ɫ',
+  'ɡ',
+  'ɣ',
+  'ɠ',
+  'β',
+  'ɓ',
+  'ɕ',
+  'ɖ',
+  'ɗ',
+  'ɟ',
+  'ʄ',
+  'ɬ',
+  'ɭ',
+  'ʟ',
+  'ɮ',
+  'ɱ',
+  'ɲ',
+  'ɳ',
+  'ɴ',
+  'ɸ',
+  'q',
+  'ʀ',
+  'ʁ',
+  'ɻ',
+  'ɽ',
+  'ʂ',
+  'ʈ',
+  'ʋ',
+  'ʍ',
+  'χ',
+  'x',
+  'ʎ',
+  'ʐ',
+  'ʑ',
+  'r',
+  'c',
+  'ɰ',
+  'ɢ',
 ]
 
 const LETTER_GROUPS = [
@@ -97,9 +180,9 @@ const validateIPASymbols = (): ValidationResult => {
   // Test 4: Check for tie-bar consistency in affricates
   const affricatesWithTieBar = ['t͡ʃ', 'd͡ʒ', 't͡s', 'd͡z']
   const affricatesWithoutTieBar = ['tʃ', 'dʒ', 'ts', 'dz']
-  
+
   const allSymbols = LETTER_GROUPS.flatMap((g) => g.symbols)
-  
+
   affricatesWithoutTieBar.forEach((affricate) => {
     if (allSymbols.includes(affricate)) {
       result.warnings.push(
@@ -154,7 +237,9 @@ const validateIPASymbols = (): ValidationResult => {
 
   // Test 7: Check that O category includes ø (consolidated from '0')
   if (oCategory && !oCategory.symbols.includes('ø')) {
-    result.errors.push('Symbol ø missing from O category (should be consolidated)')
+    result.errors.push(
+      'Symbol ø missing from O category (should be consolidated)',
+    )
     result.isValid = false
   } else if (oCategory) {
     result.info.push('✓ O category includes ø (consolidated)')
@@ -194,7 +279,7 @@ const validateIPASymbols = (): ValidationResult => {
 // Run validation
 const runValidation = () => {
   console.log('=== IPA Keyboard Symbol Validation ===\n')
-  
+
   const result = validateIPASymbols()
 
   if (result.errors.length > 0) {
@@ -229,4 +314,3 @@ if (require.main === module) {
 }
 
 export { validateIPASymbols, VOWELS, CONSONANTS, LETTER_GROUPS }
-
