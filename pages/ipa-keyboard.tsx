@@ -72,8 +72,7 @@ const IPAKeyboardPage: React.FC = () => {
                   Subscript)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
-                  ✓ T9-style keyboard shortcuts (Alt+A cycles through A symbols,
-                  Option+A on Mac)
+                  ✓ T9-style keyboard shortcuts (Shift+A cycles through A symbols)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
                   ✓ Copy to clipboard functionality
@@ -96,14 +95,13 @@ const IPAKeyboardPage: React.FC = () => {
                   fontWeight="semibold"
                   mt={1}
                 >
-                  IPA Symbols (Alt/Option):
+                  IPA Symbols (Shift):
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Alt+[Letter]
+                    Shift+[Letter]
                   </Text>{' '}
-                  (Option+[Letter] on Mac) - Cycle through symbols (e.g., Alt+A
-                  for a, ɑ, æ, etc.)
+                  - Cycle through symbols (e.g., Shift+A for a, ɑ, æ, etc.)
                 </Text>
 
                 <Text

@@ -28,6 +28,7 @@ import {
 
 interface RichTextIPAEditorProps {
   onSymbolInsert?: (symbol: string) => void
+  onClear?: () => void
   placeholder?: string
   minHeight?: string
   maxHeight?: string
@@ -45,12 +46,14 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
   (
     {
       onSymbolInsert,
+      onClear,
       placeholder = 'Type or click symbols to create IPA transcription...',
       minHeight = '200px',
       maxHeight = '400px',
     },
     ref,
   ) => {
+    const STORAGE_KEY = 'ipa-richtext-content'
     const editorRef = useRef<HTMLDivElement>(null)
     const [activeFormats, setActiveFormats] = useState<Set<FormatCommand>>(
       new Set(),
@@ -58,6 +61,33 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
     const [history, setHistory] = useState<string[]>([''])
     const [historyIndex, setHistoryIndex] = useState(0)
     const toast = useToast()
+
+    // Load saved content from localStorage on mount
+    useEffect(() => {
+      if (typeof window !== 'undefined' && editorRef.current) {
+        const saved = localStorage.getItem(STORAGE_KEY)
+        if (saved) {
+          editorRef.current.innerHTML = saved
+          setHistory([saved])
+          setHistoryIndex(0)
+        }
+      }
+    }, [])
+
+    // Save content to localStorage on changes (debounced)
+    useEffect(() => {
+      if (typeof window !== 'undefined' && editorRef.current) {
+        const content = editorRef.current.innerHTML
+        // Only save if there's actual content (not just empty tags)
+        if (content && content.trim() !== '') {
+          const timeoutId = setTimeout(() => {
+            localStorage.setItem(STORAGE_KEY, content)
+          }, 500) // Debounce 500ms
+
+          return () => clearTimeout(timeoutId)
+        }
+      }
+    }, [history, historyIndex])
 
     // Update active formats based on cursor position
     const updateActiveFormats = useCallback(() => {
@@ -118,8 +148,15 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
       if (editorRef.current) {
         editorRef.current.innerHTML = ''
         saveToHistory()
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem(STORAGE_KEY)
+        }
+        // Notify parent component to clear symbol history
+        if (onClear) {
+          onClear()
+        }
       }
-    }, [saveToHistory])
+    }, [saveToHistory, onClear])
 
     // Execute formatting command
     const executeCommand = useCallback(
