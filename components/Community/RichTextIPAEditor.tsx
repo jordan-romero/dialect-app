@@ -222,14 +222,103 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
 
           // If shouldReplace is true, try to delete the previous character (for T9 cycling)
           if (shouldReplace && range.collapsed) {
-            // Move range start back by one character to delete previous symbol
-            const startContainer = range.startContainer
-            const startOffset = range.startOffset
+            // Helper function to find the previous text node and character
+            const findPreviousCharacter = () => {
+              let container = range.startContainer
+              let offset = range.startOffset
 
-            if (startOffset > 0) {
-              // Delete previous character
-              range.setStart(startContainer, startOffset - 1)
-              range.deleteContents()
+              // If we're at the start of a text node or non-text node, find previous text node
+              if (container.nodeType === Node.TEXT_NODE && offset === 0) {
+                // Walk backwards to find previous text node
+                let node: Node | null = container
+                while (node) {
+                  // Check previous sibling
+                  if (node.previousSibling) {
+                    node = node.previousSibling
+                    // If it's a text node with content, use it
+                    if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+                      return {
+                        container: node,
+                        offset: node.textContent.length,
+                      }
+                    }
+                    // If it's an element, find the last text node within it
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                      const walker = document.createTreeWalker(
+                        node,
+                        NodeFilter.SHOW_TEXT,
+                        null,
+                      )
+                      let lastTextNode: Node | null = null
+                      let currentNode: Node | null
+                      while ((currentNode = walker.nextNode())) {
+                        lastTextNode = currentNode
+                      }
+                      if (lastTextNode && lastTextNode.textContent) {
+                        return {
+                          container: lastTextNode,
+                          offset: lastTextNode.textContent.length,
+                        }
+                      }
+                    }
+                  } else {
+                    // Move up to parent
+                    node = node.parentNode
+                    if (node === editor) break // Don't go beyond the editor
+                  }
+                }
+                return null
+              } else if (container.nodeType !== Node.TEXT_NODE) {
+                // If we're in an element node, find the text node at the offset
+                if (offset > 0 && container.childNodes[offset - 1]) {
+                  const prevNode = container.childNodes[offset - 1]
+                  if (prevNode.nodeType === Node.TEXT_NODE && prevNode.textContent) {
+                    return {
+                      container: prevNode,
+                      offset: prevNode.textContent.length,
+                    }
+                  }
+                  // If it's an element, find last text node within it
+                  if (prevNode.nodeType === Node.ELEMENT_NODE) {
+                    const walker = document.createTreeWalker(
+                      prevNode,
+                      NodeFilter.SHOW_TEXT,
+                      null,
+                    )
+                    let lastTextNode: Node | null = null
+                    let currentNode: Node | null
+                    while ((currentNode = walker.nextNode())) {
+                      lastTextNode = currentNode
+                    }
+                    if (lastTextNode && lastTextNode.textContent) {
+                      return {
+                        container: lastTextNode,
+                        offset: lastTextNode.textContent.length,
+                      }
+                    }
+                  }
+                }
+                return null
+              }
+
+              // We're in a text node with offset > 0, just use it
+              return { container, offset }
+            }
+
+            const previousChar = findPreviousCharacter()
+            if (previousChar && previousChar.offset > 0) {
+              // Create a new range to delete the previous character
+              const deleteRange = document.createRange()
+              deleteRange.setStart(
+                previousChar.container,
+                previousChar.offset - 1,
+              )
+              deleteRange.setEnd(previousChar.container, previousChar.offset)
+              deleteRange.deleteContents()
+
+              // Update our main range to the deletion point
+              range.setStart(previousChar.container, previousChar.offset - 1)
+              range.collapse(true)
             }
           } else if (!shouldReplace) {
             // Not replacing, just delete any selected content
