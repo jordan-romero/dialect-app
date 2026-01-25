@@ -100,16 +100,15 @@ const SYMBOL_NAMES: { [key: string]: string } = {
   l: 'alveolar lateral approximant',
   j: 'palatal approximant',
   k: 'voiceless velar plosive',
-  g: 'voiced velar plosive',
   ŋ: 'velar nasal',
   ʔ: 'glottal stop',
   h: 'voiceless glottal fricative',
   ç: 'voiceless palatal fricative',
   w: 'labial-velar approximant',
-  't͡ʃ': 'voiceless postalveolar affricate',
-  'tʃ': 'voiceless postalveolar affricate',
-  'd͡ʒ': 'voiced postalveolar affricate',
-  'dʒ': 'voiced postalveolar affricate',
+  t͡ʃ: 'voiceless postalveolar affricate',
+  tʃ: 'voiceless postalveolar affricate',
+  d͡ʒ: 'voiced postalveolar affricate',
+  dʒ: 'voiced postalveolar affricate',
   ɫ: 'velarized alveolar lateral approximant',
   ɡ: 'voiced velar plosive',
   ɣ: 'voiced velar fricative',
@@ -146,9 +145,9 @@ const SYMBOL_NAMES: { [key: string]: string } = {
   ʑ: 'voiced alveolo-palatal fricative',
   r: 'alveolar trill',
   c: 'voiceless palatal plosive',
-  't͡s': 'voiceless alveolar affricate',
-  'ts': 'voiceless alveolar affricate',
-  'd͡z': 'voiced alveolar affricate',
+  t͡s: 'voiceless alveolar affricate',
+  ts: 'voiceless alveolar affricate',
+  d͡z: 'voiced alveolar affricate',
   ɰ: 'velar approximant',
   ɒ: 'open back rounded vowel',
   ɞ: 'open-mid central rounded vowel',
@@ -159,41 +158,41 @@ const SYMBOL_NAMES: { [key: string]: string } = {
 
   // Diphthongs
   eɪ: 'FACE vowel',
-  'eɪ̆': 'FACE vowel',
+  eɪ̆: 'FACE vowel',
   aɪ: 'PRICE vowel',
-  'aɪ̆': 'PRICE vowel',
+  aɪ̆: 'PRICE vowel',
   ɔɪ: 'CHOICE vowel',
-  'ɔɪ̆': 'CHOICE vowel',
+  ɔɪ̆: 'CHOICE vowel',
   aʊ: 'MOUTH vowel',
-  'aʊ̆': 'MOUTH vowel',
+  aʊ̆: 'MOUTH vowel',
   oʊ: 'GOAT vowel',
-  'oʊ̆': 'GOAT vowel',
+  oʊ̆: 'GOAT vowel',
   ju: 'VIEW sequence',
-  'ɪ̆u': 'VIEW sequence',
+  ɪ̆u: 'VIEW sequence',
   ɪr: 'NEAR vowel',
   ɛr: 'SQUARE vowel',
   ɑr: 'START vowel',
   ɔr: 'NORTH vowel',
   ʊr: 'CURE vowel',
-  'ɑɚ̆': 'START vowel',
-  'ɔɚ̆': 'NORTH vowel',
-  'ɛɚ̆': 'SQUARE vowel',
-  'ɪɚ̆': 'NEAR vowel',
-  'ʊɚ̆': 'CURE vowel',
+  ɑɚ̆: 'START vowel',
+  ɔɚ̆: 'NORTH vowel',
+  ɛɚ̆: 'SQUARE vowel',
+  ɪɚ̆: 'NEAR vowel',
+  ʊɚ̆: 'CURE vowel',
 
   // Triphthongs
   aɪr: 'FIRE vowel',
-  'aɪ̆ɚ̆': 'FIRE vowel',
+  aɪ̆ɚ̆: 'FIRE vowel',
   aʊr: 'HOUR vowel',
-  'aʊ̆ɚ̆': 'HOUR vowel',
+  aʊ̆ɚ̆: 'HOUR vowel',
   ɔɪr: 'LAWYER vowel',
-  'ɔɪ̆ɚ̆': 'LAWYER vowel',
+  ɔɪ̆ɚ̆: 'LAWYER vowel',
   eɪr: 'PLAYER vowel',
-  'ɛɪ̆ɚ̆': 'PLAYER vowel',
+  ɛɪ̆ɚ̆: 'PLAYER vowel',
   oʊr: 'LOWER vowel',
-  'oʊ̆ɚ̆': 'LOWER vowel',
-  'aɪ̆ə̆': 'FIRE vowel (alternate)',
-  'ɪ̆ʊɚ̆': 'triphthong',
+  oʊ̆ɚ̆: 'LOWER vowel',
+  aɪ̆ə̆: 'FIRE vowel (alternate)',
+  ɪ̆ʊɚ̆: 'triphthong',
 
   // Diacritics
   '̥': 'voiceless',
@@ -215,11 +214,11 @@ const SYMBOL_NAMES: { [key: string]: string } = {
   '˞': 'rhoticity',
   '̚': 'no audible release',
   '̃': 'nasalized',
-  'ʰ': 'aspirated',
-  'ʷ': 'labialized',
-  'ʲ': 'palatalized',
-  'ˠ': 'velarized',
-  'ˤ': 'pharyngealized',
+  ʰ: 'aspirated',
+  ʷ: 'labialized',
+  ʲ: 'palatalized',
+  ˠ: 'velarized',
+  ˤ: 'pharyngealized',
   '̴': 'velarized or pharyngealized',
   '̝': 'raised',
   '̞': 'lowered',
@@ -227,12 +226,12 @@ const SYMBOL_NAMES: { [key: string]: string } = {
   '̙': 'retracted tongue root',
 
   // Stress
-  'ˈ': 'primary stress',
-  'ˌ': 'secondary stress',
+  ˈ: 'primary stress',
+  ˌ: 'secondary stress',
 
   // Length
-  'ː': 'long',
-  'ˑ': 'half-long',
+  ː: 'long',
+  ˑ: 'half-long',
   '̆': 'extra-short',
 
   // Suprasegmentals
@@ -265,7 +264,7 @@ const getSymbolShortcut = (symbol: string): string | null => {
   for (const group of LETTER_GROUPS) {
     const symbolIndex = group.symbols.indexOf(symbol)
     if (symbolIndex !== -1) {
-      return `Ctrl+${group.letter.toLowerCase()} ${symbolIndex + 1}x`
+      return `Shift+${group.letter.toLowerCase()} ${symbolIndex + 1}x`
     }
   }
   return null
@@ -320,7 +319,6 @@ const SYMBOL_CATEGORIES = {
     'l',
     'j',
     'k',
-    'g',
     'ŋ',
     'ʔ',
     'h',
@@ -483,19 +481,19 @@ const buildGroupsFromSymbols = (symbols: string[]) => {
 
 // IPA symbols organized by Latin letters (matching TypeIt layout)
 const LETTER_GROUPS = [
-  { letter: 'A', symbols: ['a', 'ɑ','ɐ', 'æ', 'ɑ̃'] },
+  { letter: 'A', symbols: ['a', 'ɑ', 'ɐ', 'æ', 'ɑ̃'] },
   { letter: 'B', symbols: ['b', 'β', 'ɓ'] },
   { letter: 'C', symbols: ['c', 'ç', 'ɕ'] },
-  { letter: 'D', symbols: ['d', 'd͡ʒ', 'ð', 'ɖ', 'ɗ',] },
+  { letter: 'D', symbols: ['d', 'd͡ʒ', 'ð', 'ɖ', 'ɗ'] },
   { letter: 'E', symbols: ['e', 'ə', 'ɚ', 'ɛ', 'ɞ', 'ɘ'] },
   { letter: 'F', symbols: ['f'] },
-  { letter: 'G', symbols: ['g', 'ɡ', 'ɠ', 'ɢ'] },
+  { letter: 'G', symbols: ['ɡ', 'ɠ', 'ɢ'] },
   { letter: 'H', symbols: ['h', 'ħ', 'ɦ', 'ɥ', 'ʜ', 'ɧ'] },
   { letter: 'I', symbols: ['i', 'ɪ', 'ɨ', 'ï'] },
   { letter: 'J', symbols: ['j', 'ʝ', 'ɟ', 'ʄ'] },
   { letter: 'K', symbols: ['k'] },
   { letter: 'L', symbols: ['l', 'ɬ', 'ɫ', 'ɭ', 'ʟ', 'ɮ'] },
-  { letter: 'M', symbols: ['m', 'ɱ', 'ɰ'] },
+  { letter: 'M', symbols: ['m', 'ɱ'] },
   { letter: 'N', symbols: ['n', 'ŋ', 'ɲ', 'ɳ', 'ɴ'] },
   { letter: 'O', symbols: ['o', 'ɔ', 'œ', 'ɵ', 'ɔ̃', 'ɒ', 'ø'] },
   { letter: 'P', symbols: ['p', 'ɸ'] },
@@ -589,7 +587,33 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   useRichTextEditor = false,
   editorRef: externalEditorRef,
 }) => {
-  const [text, setText] = useState('')
+  const STORAGE_KEY = 'ipa-keyboard-text'
+  const HISTORY_KEY = 'ipa-keyboard-history'
+
+  // Load saved text from localStorage on mount
+  const [text, setText] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      return saved || ''
+    }
+    return ''
+  })
+
+  // Track clicked symbols for blue highlighting
+  const [clickedSymbols, setClickedSymbols] = useState<Set<string>>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(HISTORY_KEY)
+      if (saved) {
+        try {
+          return new Set(JSON.parse(saved))
+        } catch (e) {
+          return new Set()
+        }
+      }
+    }
+    return new Set()
+  })
+
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
   const toast = useToast()
   const internalEditorRef = useRef<any>(null)
@@ -602,6 +626,20 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   const [lastKeyTime, setLastKeyTime] = useState<{ [key: string]: number }>({})
   const [currentSymbol, setCurrentSymbol] = useState<string | null>(null)
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
+
+  // Save text to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !useRichTextEditor) {
+      localStorage.setItem(STORAGE_KEY, text)
+    }
+  }, [text, useRichTextEditor])
+
+  // Save clicked symbols to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(Array.from(clickedSymbols)))
+    }
+  }, [clickedSymbols])
 
   // Get filtered symbol groups based on props
   const getFilteredSymbols = () => {
@@ -651,9 +689,30 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   // T9-style keyboard shortcut handling
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Check if Ctrl/Cmd is pressed
+      // Don't interfere with native copy/paste or other Ctrl/Cmd shortcuts
       if (event.ctrlKey || event.metaKey) {
-        const key = event.key.toLowerCase()
+        return
+      }
+
+      // Check if Shift is pressed (without Ctrl/Cmd)
+      if (event.shiftKey && !event.ctrlKey && !event.metaKey) {
+        // Use event.code to get the physical key, not the character it produces
+        // event.code format is like "KeyA", "KeyB", "Digit1", etc.
+        const code = event.code
+        let key = ''
+
+        if (code.startsWith('Key')) {
+          // Extract the letter from "KeyA" -> "A"
+          key = code.substring(3).toLowerCase()
+        } else if (code.startsWith('Digit')) {
+          // Extract the digit from "Digit1" -> "1"
+          key = code.substring(5)
+        }
+
+        // Skip if no key was extracted (e.g., just Shift key press)
+        if (!key) {
+          return
+        }
 
         // Find the letter group (including numbers and special keys)
         const letterGroup = filteredGroups.find(
@@ -673,19 +732,24 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             setTimeoutId(null)
           }
 
-          // Reset count if more than 1 second has passed (like T9)
+          // Determine the new count
+          let newCount: number
           if (timeDiff > 1000) {
-            setKeyPressCount((prev) => ({ ...prev, [key]: 0 }))
+            // More than 1 second has passed - start fresh at index 0
+            newCount = 0
+          } else {
+            // Within 1 second - cycle to next symbol
+            const currentCount = keyPressCount[key] || 0
+            newCount = (currentCount + 1) % letterGroup.symbols.length
           }
 
-          // Increment press count
-          const newCount =
-            ((keyPressCount[key] || 0) + 1) % letterGroup.symbols.length
           setKeyPressCount((prev) => ({ ...prev, [key]: newCount }))
           setLastKeyTime((prev) => ({ ...prev, [key]: now }))
 
           // Get the symbol at the current count
           const symbol = letterGroup.symbols[newCount]
+          const previousSymbol = newCount > 0 ? letterGroup.symbols[newCount - 1] : null
+
           setSelectedSymbol(symbol)
           setCurrentSymbol(symbol)
 
@@ -700,21 +764,37 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           } else {
             // Otherwise, update text area for visual feedback
             setText((prev) => {
-              // Remove the last symbol if it was from the same letter group
-              const lastSymbol = prev.slice(-1)
-              const isLastSymbolFromSameGroup =
-                letterGroup.symbols.includes(lastSymbol)
-
-              if (isLastSymbolFromSameGroup) {
-                return prev.slice(0, -1) + symbol
-              } else {
-                return prev + symbol
+              // Check if we're within the cycling window (should replace)
+              if (timeDiff <= 1000 && newCount > 0) {
+                // We're cycling - replace the last symbol from this group
+                // Find the previous symbol in the cycle
+                const symbolToReplace = previousSymbol || letterGroup.symbols[letterGroup.symbols.length - 1]
+                const lastIndex = prev.lastIndexOf(symbolToReplace)
+                if (lastIndex !== -1) {
+                  return prev.substring(0, lastIndex) + symbol
+                }
               }
+              // Otherwise just append
+              return prev + symbol
             })
           }
 
           // Set timeout to commit the symbol after 1 second of no activity
           const newTimeoutId = setTimeout(() => {
+            // Add symbol to clicked history when it's committed (printed)
+            setClickedSymbols((prev) => {
+              const newSet = new Set(prev)
+              newSet.add(symbol)
+              return newSet
+            })
+
+            // Small delay before clearing selection to show permanent color
+            setTimeout(() => {
+              setCurrentSymbol(null)
+              setSelectedSymbol(null)
+              setTimeoutId(null)
+            }, 50)
+
             // Call onSymbolClick when the symbol is committed (after timeout)
             if (onSymbolClick && symbol) {
               onSymbolClick(symbol)
@@ -723,9 +803,6 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 setText('')
               }
             }
-            setCurrentSymbol(null)
-            setSelectedSymbol(null)
-            setTimeoutId(null)
           }, 1000)
 
           setTimeoutId(newTimeoutId)
@@ -749,9 +826,17 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     filteredGroups,
     useRichTextEditor,
     editorRef,
+    currentSymbol,
   ])
 
   const handleSymbolClick = (symbol: string) => {
+    // Track that this symbol was clicked (immediately printed)
+    setClickedSymbols((prev) => {
+      const newSet = new Set(prev)
+      newSet.add(symbol)
+      return newSet
+    })
+
     if (onSymbolClick) {
       onSymbolClick(symbol)
     } else if (useRichTextEditor && editorRef.current?.insertSymbol) {
@@ -759,7 +844,25 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     } else {
       setText((prev) => prev + symbol)
     }
-    setSelectedSymbol(symbol)
+  }
+
+  // Helper to get button background color
+  const getButtonBg = (symbol: string) => {
+    const isSelected = selectedSymbol === symbol
+    const isInHistory = clickedSymbols.has(symbol)
+
+    // Light turquoise for currently cycling symbol (temporary highlight during T9)
+    if (isSelected) {
+      return 'brand.blueLight'
+    }
+
+    // Blue for symbols that have been used (permanent highlight)
+    if (isInHistory) {
+      return 'brand.blue'
+    }
+
+    // White for unused symbols
+    return 'white'
   }
 
   const handleCopy = async () => {
@@ -785,6 +888,17 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
   const clearText = () => {
     setText('')
+    setClickedSymbols(new Set()) // Clear the history
+
+    // If using rich text editor, clear it too
+    if (useRichTextEditor && editorRef.current?.clear) {
+      editorRef.current.clear()
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(HISTORY_KEY) // Clear history from storage
+    }
   }
 
   return (
@@ -821,7 +935,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             </Text>{' '}
             Click on any symbol to add it to your text.{' '}
             {!compact &&
-              'Use T9-style shortcuts: Ctrl+A (1st A symbol), Ctrl+A+A (2nd A symbol), Ctrl+A+A+A (3rd A symbol), etc. Symbols cycle directly in the text area - the last symbol is replaced until you stop pressing or press a different key.'}
+              'Use T9-style shortcuts: Shift+A (1st A symbol), Shift+A+A (2nd A symbol), Shift+A+A+A (3rd A symbol), etc. Symbols cycle directly in the text area - the last symbol is replaced until you stop pressing or press a different key.'}
           </Text>
         </Box>
       )}
@@ -840,201 +954,216 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             {showCategoriesInCompact && symbolBankCategories ? (
               // Categorized compact mode with letter badges
               <VStack spacing={3} align="stretch">
-                {symbolBankCategories.consonants && symbolBankCategories.consonants.length > 0 && (
-                  <Box bg="gray.50" p={2} borderRadius="md">
-                    <Flex align="center" gap={2} flexWrap="wrap">
-                      <Badge
-                        colorScheme="purple"
-                        fontSize="md"
-                        px={2}
-                        py={1}
-                        borderRadius="full"
-                        minW="fit-content"
-                      >
-                        Consonants
-                      </Badge>
-                      {symbolBankCategories.consonants.map((symbol, index) => {
-                        const shortcut = getSymbolShortcut(symbol)
-                        const label = shortcut
-                          ? `${getSymbolName(symbol)} (${shortcut})`
-                          : getSymbolName(symbol)
-                        return (
-                        <Tooltip key={index} label={label}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            fontFamily="'Charis SIL', serif"
-                            fontSize={buttonFontSize}
-                            minW={buttonSize}
-                            h={buttonSize}
-                            onClick={() => handleSymbolClick(symbol)}
-                            _hover={{ bg: 'brand.blueLight' }}
-                            bg={selectedSymbol === symbol ? 'brand.blueLight' : 'white'}
-                          >
-                            {symbol}
-                          </Button>
-                        </Tooltip>
-                        )
-                      })}
-                    </Flex>
-                  </Box>
-                )}
-                {symbolBankCategories.monophthongs && symbolBankCategories.monophthongs.length > 0 && (
-                  <Box bg="gray.50" p={2} borderRadius="md">
-                    <Flex align="center" gap={2} flexWrap="wrap">
-                      <Badge
-                        colorScheme="purple"
-                        fontSize="md"
-                        px={2}
-                        py={1}
-                        borderRadius="full"
-                        minW="fit-content"
-                      >
-                        Monophthongs
-                      </Badge>
-                      {symbolBankCategories.monophthongs.map((symbol, index) => {
-                        const shortcut = getSymbolShortcut(symbol)
-                        const label = shortcut
-                          ? `${getSymbolName(symbol)} (${shortcut})`
-                          : getSymbolName(symbol)
-                        return (
-                        <Tooltip key={index} label={label}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            fontFamily="'Charis SIL', serif"
-                            fontSize={buttonFontSize}
-                            minW={buttonSize}
-                            h={buttonSize}
-                            onClick={() => handleSymbolClick(symbol)}
-                            _hover={{ bg: 'brand.blueLight' }}
-                            bg={selectedSymbol === symbol ? 'brand.blueLight' : 'white'}
-                          >
-                            {symbol}
-                          </Button>
-                        </Tooltip>
-                        )
-                      })}
-                    </Flex>
-                  </Box>
-                )}
-                {symbolBankCategories.diphthongs && symbolBankCategories.diphthongs.length > 0 && (
-                  <Box bg="gray.50" p={2} borderRadius="md">
-                    <Flex align="center" gap={2} flexWrap="wrap">
-                      <Badge
-                        colorScheme="purple"
-                        fontSize="md"
-                        px={2}
-                        py={1}
-                        borderRadius="full"
-                        minW="fit-content"
-                      >
-                        Diphthongs
-                      </Badge>
-                      {symbolBankCategories.diphthongs.map((symbol, index) => {
-                        const shortcut = getSymbolShortcut(symbol)
-                        const label = shortcut
-                          ? `${getSymbolName(symbol)} (${shortcut})`
-                          : getSymbolName(symbol)
-                        return (
-                        <Tooltip key={index} label={label}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            fontFamily="'Charis SIL', serif"
-                            fontSize={buttonFontSize}
-                            minW={buttonSize}
-                            h={buttonSize}
-                            onClick={() => handleSymbolClick(symbol)}
-                            _hover={{ bg: 'brand.blueLight' }}
-                            bg={selectedSymbol === symbol ? 'brand.blueLight' : 'white'}
-                          >
-                            {symbol}
-                          </Button>
-                        </Tooltip>
-                        )
-                      })}
-                    </Flex>
-                  </Box>
-                )}
-                {symbolBankCategories.triphthongs && symbolBankCategories.triphthongs.length > 0 && (
-                  <Box bg="gray.50" p={2} borderRadius="md">
-                    <Flex align="center" gap={2} flexWrap="wrap">
-                      <Badge
-                        colorScheme="purple"
-                        fontSize="md"
-                        px={2}
-                        py={1}
-                        borderRadius="full"
-                        minW="fit-content"
-                      >
-                        Triphthongs
-                      </Badge>
-                      {symbolBankCategories.triphthongs.map((symbol, index) => {
-                        const shortcut = getSymbolShortcut(symbol)
-                        const label = shortcut
-                          ? `${getSymbolName(symbol)} (${shortcut})`
-                          : getSymbolName(symbol)
-                        return (
-                        <Tooltip key={index} label={label}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            fontFamily="'Charis SIL', serif"
-                            fontSize={buttonFontSize}
-                            minW={buttonSize}
-                            h={buttonSize}
-                            onClick={() => handleSymbolClick(symbol)}
-                            _hover={{ bg: 'brand.blueLight' }}
-                            bg={selectedSymbol === symbol ? 'brand.blueLight' : 'white'}
-                          >
-                            {symbol}
-                          </Button>
-                        </Tooltip>
-                        )
-                      })}
-                    </Flex>
-                  </Box>
-                )}
-                {symbolBankCategories.diacritics && symbolBankCategories.diacritics.length > 0 && (
-                  <Box bg="gray.50" p={2} borderRadius="md">
-                    <Flex align="center" gap={2} flexWrap="wrap">
-                      <Badge
-                        colorScheme="purple"
-                        fontSize="md"
-                        px={2}
-                        py={1}
-                        borderRadius="full"
-                        minW="fit-content"
-                      >
-                        Diacritics
-                      </Badge>
-                      {symbolBankCategories.diacritics.map((symbol, index) => {
-                        const shortcut = getSymbolShortcut(symbol)
-                        const label = shortcut
-                          ? `${getSymbolName(symbol)} (${shortcut})`
-                          : getSymbolName(symbol)
-                        return (
-                        <Tooltip key={index} label={label}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            fontFamily="'Charis SIL', serif"
-                            fontSize={buttonFontSize}
-                            minW={buttonSize}
-                            h={buttonSize}
-                            onClick={() => handleSymbolClick(symbol)}
-                            _hover={{ bg: 'brand.blueLight' }}
-                            bg={selectedSymbol === symbol ? 'brand.blueLight' : 'white'}
-                          >
-                            {symbol}
-                          </Button>
-                        </Tooltip>
-                        )
-                      })}
-                    </Flex>
-                  </Box>
-                )}
+                {symbolBankCategories.consonants &&
+                  symbolBankCategories.consonants.length > 0 && (
+                    <Box bg="gray.50" p={2} borderRadius="md">
+                      <Flex align="center" gap={2} flexWrap="wrap">
+                        <Badge
+                          colorScheme="purple"
+                          fontSize="md"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                          minW="fit-content"
+                        >
+                          Consonants
+                        </Badge>
+                        {symbolBankCategories.consonants.map(
+                          (symbol, index) => {
+                            const shortcut = getSymbolShortcut(symbol)
+                            const label = shortcut
+                              ? `${getSymbolName(symbol)} (${shortcut})`
+                              : getSymbolName(symbol)
+                            return (
+                              <Tooltip key={index} label={label}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="ipa-text"
+                                  fontSize={buttonFontSize}
+                                  minW={buttonSize}
+                                  h={buttonSize}
+                                  onClick={() => handleSymbolClick(symbol)}
+                                  _hover={{ bg: 'brand.blueLight' }}
+                                  bg={getButtonBg(symbol)}
+                                >
+                                  {symbol}
+                                </Button>
+                              </Tooltip>
+                            )
+                          },
+                        )}
+                      </Flex>
+                    </Box>
+                  )}
+                {symbolBankCategories.monophthongs &&
+                  symbolBankCategories.monophthongs.length > 0 && (
+                    <Box bg="gray.50" p={2} borderRadius="md">
+                      <Flex align="center" gap={2} flexWrap="wrap">
+                        <Badge
+                          colorScheme="purple"
+                          fontSize="md"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                          minW="fit-content"
+                        >
+                          Monophthongs
+                        </Badge>
+                        {symbolBankCategories.monophthongs.map(
+                          (symbol, index) => {
+                            const shortcut = getSymbolShortcut(symbol)
+                            const label = shortcut
+                              ? `${getSymbolName(symbol)} (${shortcut})`
+                              : getSymbolName(symbol)
+                            return (
+                              <Tooltip key={index} label={label}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="ipa-text"
+                                  fontSize={buttonFontSize}
+                                  minW={buttonSize}
+                                  h={buttonSize}
+                                  onClick={() => handleSymbolClick(symbol)}
+                                  _hover={{ bg: 'brand.blueLight' }}
+                                  bg={getButtonBg(symbol)}
+                                >
+                                  {symbol}
+                                </Button>
+                              </Tooltip>
+                            )
+                          },
+                        )}
+                      </Flex>
+                    </Box>
+                  )}
+                {symbolBankCategories.diphthongs &&
+                  symbolBankCategories.diphthongs.length > 0 && (
+                    <Box bg="gray.50" p={2} borderRadius="md">
+                      <Flex align="center" gap={2} flexWrap="wrap">
+                        <Badge
+                          colorScheme="purple"
+                          fontSize="md"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                          minW="fit-content"
+                        >
+                          Diphthongs
+                        </Badge>
+                        {symbolBankCategories.diphthongs.map(
+                          (symbol, index) => {
+                            const shortcut = getSymbolShortcut(symbol)
+                            const label = shortcut
+                              ? `${getSymbolName(symbol)} (${shortcut})`
+                              : getSymbolName(symbol)
+                            return (
+                              <Tooltip key={index} label={label}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="ipa-text"
+                                  fontSize={buttonFontSize}
+                                  minW={buttonSize}
+                                  h={buttonSize}
+                                  onClick={() => handleSymbolClick(symbol)}
+                                  _hover={{ bg: 'brand.blueLight' }}
+                                  bg={getButtonBg(symbol)}
+                                >
+                                  {symbol}
+                                </Button>
+                              </Tooltip>
+                            )
+                          },
+                        )}
+                      </Flex>
+                    </Box>
+                  )}
+                {symbolBankCategories.triphthongs &&
+                  symbolBankCategories.triphthongs.length > 0 && (
+                    <Box bg="gray.50" p={2} borderRadius="md">
+                      <Flex align="center" gap={2} flexWrap="wrap">
+                        <Badge
+                          colorScheme="purple"
+                          fontSize="md"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                          minW="fit-content"
+                        >
+                          Triphthongs
+                        </Badge>
+                        {symbolBankCategories.triphthongs.map(
+                          (symbol, index) => {
+                            const shortcut = getSymbolShortcut(symbol)
+                            const label = shortcut
+                              ? `${getSymbolName(symbol)} (${shortcut})`
+                              : getSymbolName(symbol)
+                            return (
+                              <Tooltip key={index} label={label}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="ipa-text"
+                                  fontSize={buttonFontSize}
+                                  minW={buttonSize}
+                                  h={buttonSize}
+                                  onClick={() => handleSymbolClick(symbol)}
+                                  _hover={{ bg: 'brand.blueLight' }}
+                                  bg={getButtonBg(symbol)}
+                                >
+                                  {symbol}
+                                </Button>
+                              </Tooltip>
+                            )
+                          },
+                        )}
+                      </Flex>
+                    </Box>
+                  )}
+                {symbolBankCategories.diacritics &&
+                  symbolBankCategories.diacritics.length > 0 && (
+                    <Box bg="gray.50" p={2} borderRadius="md">
+                      <Flex align="center" gap={2} flexWrap="wrap">
+                        <Badge
+                          colorScheme="purple"
+                          fontSize="md"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                          minW="fit-content"
+                        >
+                          Diacritics
+                        </Badge>
+                        {symbolBankCategories.diacritics.map(
+                          (symbol, index) => {
+                            const shortcut = getSymbolShortcut(symbol)
+                            const label = shortcut
+                              ? `${getSymbolName(symbol)} (${shortcut})`
+                              : getSymbolName(symbol)
+                            return (
+                              <Tooltip key={index} label={label}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="ipa-text"
+                                  fontSize={buttonFontSize}
+                                  minW={buttonSize}
+                                  h={buttonSize}
+                                  onClick={() => handleSymbolClick(symbol)}
+                                  _hover={{ bg: 'brand.blueLight' }}
+                                  bg={getButtonBg(symbol)}
+                                >
+                                  {symbol}
+                                </Button>
+                              </Tooltip>
+                            )
+                          },
+                        )}
+                      </Flex>
+                    </Box>
+                  )}
               </VStack>
             ) : (
               // Simple compact mode
@@ -1045,21 +1174,21 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     ? `${getSymbolName(symbol)} (${shortcut})`
                     : getSymbolName(symbol)
                   return (
-                  <Tooltip key={index} label={label}>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      fontFamily="'Charis SIL', serif"
-                      fontSize={buttonFontSize}
-                      minW={buttonSize}
-                      h={buttonSize}
-                      onClick={() => handleSymbolClick(symbol)}
-                      _hover={{ bg: 'brand.blueLight' }}
-                      bg={selectedSymbol === symbol ? 'brand.blueLight' : 'white'}
-                    >
-                      {symbol}
-                    </Button>
-                  </Tooltip>
+                    <Tooltip key={index} label={label}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="ipa-text"
+                        fontSize={buttonFontSize}
+                        minW={buttonSize}
+                        h={buttonSize}
+                        onClick={() => handleSymbolClick(symbol)}
+                        _hover={{ bg: 'brand.blueLight' }}
+                        bg={getButtonBg(symbol)}
+                      >
+                        {symbol}
+                      </Button>
+                    </Tooltip>
                   )
                 })}
               </Flex>
@@ -1073,7 +1202,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 .filter(
                   (group) =>
                     group.symbols.length > 0 &&
-                    !['Linking', 'Diacritics', 'Tones', 'Length', 'Suprasegmentals'].includes(group.letter)
+                    ![
+                      'Linking',
+                      'Diacritics',
+                      'Tones',
+                      'Length',
+                      'Suprasegmentals',
+                    ].includes(group.letter),
                 )
                 .map((group) => (
                   <Box
@@ -1086,7 +1221,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     <Flex align="center" gap={2}>
                       {!hideKeyboardShortcuts && (
                         <Tooltip
-                          label={`Ctrl+${group.letter.toLowerCase()} - Press multiple times to cycle`}
+                          label={`Shift+${group.letter.toLowerCase()} - Press multiple times to cycle`}
                         >
                           <Badge
                             colorScheme="purple"
@@ -1106,7 +1241,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                             label={
                               hideKeyboardShortcuts
                                 ? `${symbol} - ${getSymbolName(symbol)}`
-                                : `${symbol} - ${getSymbolName(symbol)} (Ctrl+${group.letter.toLowerCase()} ${
+                                : `${symbol} - ${getSymbolName(
+                                     symbol,
+                                   )} (Shift+${group.letter.toLowerCase()} ${
                                     idx + 1
                                   }x)`
                             }
@@ -1120,11 +1257,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                               h={buttonSize}
                               onClick={() => handleSymbolClick(symbol)}
                               _hover={{ bg: 'brand.blueLight' }}
-                              bg={
-                                selectedSymbol === symbol
-                                  ? 'brand.blueLight'
-                                  : 'white'
-                              }
+                              bg={getButtonBg(symbol)}
                             >
                               {symbol}
                             </Button>
@@ -1187,7 +1320,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                 {group.symbols.map((symbol, idx) => (
                                   <Tooltip
                                     key={idx}
-                                    label={`${symbol} - ${getSymbolName(symbol)} (${letter})`}
+                                    label={`${symbol} - ${getSymbolName(
+                                      symbol,
+                                    )} (${letter})`}
                                   >
                                     <Button
                                       size="sm"
@@ -1198,11 +1333,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                       h={buttonSize}
                                       onClick={() => handleSymbolClick(symbol)}
                                       _hover={{ bg: 'brand.blueLight' }}
-                                      bg={
-                                        selectedSymbol === symbol
-                                          ? 'brand.blueLight'
-                                          : 'white'
-                                      }
+                                      bg={getButtonBg(symbol)}
                                     >
                                       {symbol}
                                     </Button>
@@ -1234,6 +1365,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 }
                 setSelectedSymbol(symbol)
               }}
+              onClear={() => {
+                // When rich text editor is cleared, also clear symbol history
+                setClickedSymbols(new Set())
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem(HISTORY_KEY)
+                }
+              }}
               placeholder="Type or click symbols to create IPA transcription..."
               minHeight="200px"
               maxHeight="500px"
@@ -1251,7 +1389,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Type or click symbols to create IPA transcription..."
-                fontFamily="'Charis SIL', serif"
+                className="ipa-text"
                 fontSize="lg"
                 minH="100px"
                 resize="vertical"
@@ -1261,12 +1399,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 pr="100px" // Make room for buttons
               />
               {/* Action buttons positioned inside textarea */}
-              <Flex
-                position="absolute"
-                top="6"
-                right="6"
-                gap={1}
-              >
+              <Flex position="absolute" top="6" right="6" gap={1}>
                 {text && (
                   <Tooltip label="Clear">
                     <IconButton

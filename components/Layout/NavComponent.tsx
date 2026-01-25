@@ -20,9 +20,7 @@ const NavComponent = ({ navText, href }: Props) => {
         color="util.white"
         _hover={{ color: 'brand.blueLight' }}
       >
-        <Link href={linkHref}>
-          {navText}
-        </Link>
+        <Link href={linkHref}>{navText}</Link>
       </Text>
     </Center>
   )

@@ -11,7 +11,7 @@ import React from 'react'
 
 const Footer = () => {
   const handleEmailClick = () => {
-    window.open('mailto:jordan@romerodev.co')
+    window.open('mailto:info@actingaccents.com')
   }
 
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -32,7 +32,6 @@ const Footer = () => {
         >
           <Link href="/about">About</Link>
           <Link href="/testimonials">Testimonials</Link>
-          <Link href="/contact">Contact</Link>
           <Link href="/contact">Contact</Link>
           <Link href="https://www.actorsdialectcoach.com/" isExternal>
             Need immediate dialect coaching? Reach out now!
