@@ -266,8 +266,31 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         if (document.activeElement !== editorRef.current) return
 
         if (e.ctrlKey || e.metaKey) {
-          // Formatting and undo/redo shortcuts use Ctrl+Shift+Key
+          // Ctrl+Shift+Letter = capitalize the letter (insert uppercase)
           if (e.shiftKey) {
+            // Check if it's a letter key (a-z)
+            if (e.key.length === 1 && /[a-z]/i.test(e.key)) {
+              // Let the capital letter be typed naturally
+              return
+            }
+
+            // Still handle special shortcuts with Shift
+            switch (e.key.toLowerCase()) {
+              case 'z':
+                // Ctrl+Shift+Z is undo
+                e.preventDefault()
+                e.stopPropagation()
+                handleUndo()
+                break
+              case 'y':
+                // Ctrl+Shift+Y is redo
+                e.preventDefault()
+                e.stopPropagation()
+                handleRedo()
+                break
+            }
+          } else {
+            // Ctrl+Key (without Shift) for formatting
             switch (e.key.toLowerCase()) {
               case 'b':
                 e.preventDefault()
@@ -285,20 +308,19 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
                 executeCommand('underline')
                 break
               case 'z':
-                // Ctrl+Shift+Z is undo
+                // Ctrl+Z is undo (standard)
                 e.preventDefault()
                 e.stopPropagation()
                 handleUndo()
                 break
               case 'y':
-                // Ctrl+Shift+Y is redo
+                // Ctrl+Y is redo (standard)
                 e.preventDefault()
                 e.stopPropagation()
                 handleRedo()
                 break
             }
           }
-          // Let all Ctrl+Key (without Shift) pass through to allow native copy/paste
         }
         // Let all Alt+Key events pass through to IPA keyboard handler
       }

@@ -110,25 +110,25 @@ const IPAKeyboardPage: React.FC = () => {
                   fontWeight="semibold"
                   mt={2}
                 >
-                  Text Formatting (Ctrl+Shift or Cmd+Shift):
+                  Text Formatting:
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Ctrl+Shift+B
+                    Ctrl+B
                   </Text>{' '}
-                  (Cmd+Shift+B on Mac) - Bold
+                  (Cmd+B on Mac) - Bold
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Ctrl+Shift+I
+                    Ctrl+I
                   </Text>{' '}
-                  (Cmd+Shift+I on Mac) - Italic
+                  (Cmd+I on Mac) - Italic
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Ctrl+Shift+U
+                    Ctrl+U
                   </Text>{' '}
-                  (Cmd+Shift+U on Mac) - Underline
+                  (Cmd+U on Mac) - Underline
                 </Text>
 
                 <Text
@@ -137,19 +137,19 @@ const IPAKeyboardPage: React.FC = () => {
                   fontWeight="semibold"
                   mt={2}
                 >
-                  History (Ctrl+Shift or Cmd+Shift):
+                  History:
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Ctrl+Shift+Z
+                    Ctrl+Z
                   </Text>{' '}
-                  (Cmd+Shift+Z on Mac) - Undo
+                  (Cmd+Z on Mac) - Undo
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Ctrl+Shift+Y
+                    Ctrl+Y
                   </Text>{' '}
-                  (Cmd+Shift+Y on Mac) - Redo
+                  (Cmd+Y on Mac) - Redo
                 </Text>
               </VStack>
 
