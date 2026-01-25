@@ -24,8 +24,9 @@ const theme = extendTheme({
   },
   fonts: {
     heading: `Arimo, ${base.fonts?.heading}`,
-    body: `Arimo, ${base.fonts?.heading}`,
-    longBody: `Charis SIL,, serif`,
+    body: `Arimo, ${base.fonts?.body}`,
+    longBody: `Charis SIL, serif`,
+    ipa: `'Noto Sans', 'Charis SIL', 'Doulos SIL', 'DejaVu Sans', serif`,
   },
   components: {
     Button: {
