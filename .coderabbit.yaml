@@ -30,6 +30,40 @@ reviews:
   # Enable incremental reviews (only review changed lines in new commits)
   incremental_review: true
 
+  # Path-based instructions for different parts of the codebase
+  path_instructions:
+    - path: "components/**/*.tsx"
+      instructions: |
+        - Check for proper TypeScript types
+        - Ensure React hooks follow rules of hooks
+        - Verify accessibility (a11y) attributes
+        - Check for proper error handling
+        - Look for potential performance issues
+
+    - path: "components/**/*.ts"
+      instructions: |
+        - Verify TypeScript types are properly defined
+        - Check for proper error handling
+        - Look for code reusability opportunities
+
+    - path: "pages/**/*.tsx"
+      instructions: |
+        - Check for proper Next.js patterns
+        - Verify SEO metadata
+        - Check for proper page-level error handling
+
+    - path: "**/*.css"
+      instructions: |
+        - Check for consistent styling patterns
+        - Look for potential CSS conflicts
+        - Verify responsive design considerations
+
+    - path: "**/*.test.ts"
+      instructions: |
+        - Ensure tests are comprehensive
+        - Check for edge cases
+        - Verify test descriptions are clear
+
 # Chat settings
 chat:
   # Enable chat commands in PR comments
@@ -37,40 +71,6 @@ chat:
 
 # Tone of reviews
 tone_instructions: "Be helpful, constructive, and friendly. Focus on code quality, best practices, and potential bugs."
-
-# Path-based instructions for different parts of the codebase
-path_instructions:
-  - path: "components/**/*.tsx"
-    instructions: |
-      - Check for proper TypeScript types
-      - Ensure React hooks follow rules of hooks
-      - Verify accessibility (a11y) attributes
-      - Check for proper error handling
-      - Look for potential performance issues
-
-  - path: "components/**/*.ts"
-    instructions: |
-      - Verify TypeScript types are properly defined
-      - Check for proper error handling
-      - Look for code reusability opportunities
-
-  - path: "pages/**/*.tsx"
-    instructions: |
-      - Check for proper Next.js patterns
-      - Verify SEO metadata
-      - Check for proper page-level error handling
-
-  - path: "**/*.css"
-    instructions: |
-      - Check for consistent styling patterns
-      - Look for potential CSS conflicts
-      - Verify responsive design considerations
-
-  - path: "**/*.test.ts"
-    instructions: |
-      - Ensure tests are comprehensive
-      - Check for edge cases
-      - Verify test descriptions are clear
 
 # Files to ignore in reviews
 ignore:
