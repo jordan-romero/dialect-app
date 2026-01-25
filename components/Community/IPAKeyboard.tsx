@@ -733,7 +733,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           }
 
           // Determine the new count
-          let newCount
+          let newCount: number
           if (timeDiff > 1000) {
             // More than 1 second has passed - start fresh at index 0
             newCount = 0
