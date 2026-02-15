@@ -72,7 +72,8 @@ const IPAKeyboardPage: React.FC = () => {
                   Subscript)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
-                  ✓ T9-style keyboard shortcuts (Shift+A cycles through A symbols)
+                  ✓ T9-style keyboard shortcuts (Shift+A cycles through A
+                  symbols)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
                   ✓ Copy to clipboard functionality
