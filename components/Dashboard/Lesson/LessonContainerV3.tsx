@@ -28,6 +28,10 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const [quizCompletionStatus, setQuizCompletionStatus] = useState<{
     [quizId: number]: boolean
   }>({})
+  /** File-based quizzes (e.g. vowel quad) report when all answers are correct so we can unlock Next */
+  const [fileBasedQuizAllCorrect, setFileBasedQuizAllCorrect] = useState<
+    Set<number>
+  >(new Set())
 
   // Load quiz completion status from database
   useEffect(() => {
@@ -242,6 +246,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      onAllCorrectChange={(allCorrect) => {
+                        setFileBasedQuizAllCorrect((prev) => {
+                          const next = new Set(prev)
+                          if (allCorrect) next.add(currentQuiz.order)
+                          else next.delete(currentQuiz.order)
+                          return next
+                        })
+                      }}
                     />
                   )
                 case 'lexicalChart':
@@ -275,7 +287,8 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const currentQuiz = currentStep.type === 'quiz' ? getCurrentQuiz() : null
   const isCurrentQuizCompleted = currentQuiz
     ? quizCompletionStatus[currentQuiz.id] ||
-      completedQuizzes.includes(currentQuiz.order)
+      completedQuizzes.includes(currentQuiz.order) ||
+      fileBasedQuizAllCorrect.has(currentQuiz.order)
     : true
   const isFinishButtonDisabled =
     isLastStep && currentStep.type === 'quiz' ? !isCurrentQuizCompleted : false
