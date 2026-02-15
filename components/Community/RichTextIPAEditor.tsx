@@ -272,7 +272,10 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
                 // If we're in an element node, find the text node at the offset
                 if (offset > 0 && container.childNodes[offset - 1]) {
                   const prevNode = container.childNodes[offset - 1]
-                  if (prevNode.nodeType === Node.TEXT_NODE && prevNode.textContent) {
+                  if (
+                    prevNode.nodeType === Node.TEXT_NODE &&
+                    prevNode.textContent
+                  ) {
                     return {
                       container: prevNode,
                       offset: prevNode.textContent.length,
@@ -668,18 +671,18 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               fontStyle: 'italic',
             },
           }}
-           sx={{
-             // Ensure IPA symbols render correctly
-             fontFeatureSettings: "'ccmp' 1, 'mark' 1, 'mkmk' 1",
-             textRendering: 'optimizeLegibility',
-             WebkitFontSmoothing: 'antialiased',
-             MozOsxFontSmoothing: 'grayscale',
-             '& *': {
-               fontFamily:
-                 "'Charis SIL', 'Noto Sans', 'Doulos SIL', 'Arial Unicode MS', sans-serif !important",
-             },
-           }}
-         />
+          sx={{
+            // Ensure IPA symbols render correctly
+            fontFeatureSettings: "'ccmp' 1, 'mark' 1, 'mkmk' 1",
+            textRendering: 'optimizeLegibility',
+            WebkitFontSmoothing: 'antialiased',
+            MozOsxFontSmoothing: 'grayscale',
+            '& *': {
+              fontFamily:
+                "'Charis SIL', 'Noto Sans', 'Doulos SIL', 'Arial Unicode MS', sans-serif !important",
+            },
+          }}
+        />
       </VStack>
     )
   },
