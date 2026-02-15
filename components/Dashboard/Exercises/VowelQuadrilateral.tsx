@@ -38,11 +38,13 @@ interface VowelQuadrilateralExerciseProps {
   lessonId: number
   quizIndex: number
   onComplete: () => void
+  /** Called when user has placed all vowels correctly, so the lesson nav can unlock Next */
+  onAllCorrectChange?: (allCorrect: boolean) => void
 }
 
 export const VowelQuadrilateralExercise: React.FC<
   VowelQuadrilateralExerciseProps
-> = ({ lessonId, quizIndex, onComplete }) => {
+> = ({ lessonId, quizIndex, onComplete, onAllCorrectChange }) => {
   const [selectedVowel, setSelectedVowel] = useState<string | null>(null)
   const [vowelPositions, setVowelPositions] = useState<{
     [key: string]: VowelPosition
@@ -160,6 +162,21 @@ export const VowelQuadrilateralExercise: React.FC<
       },
     )
   }
+
+  // Tell the lesson nav when all answers are correct so it can unlock Next
+  useEffect(() => {
+    if (!onAllCorrectChange || !quizData) return
+    const allCorrect = Object.entries(quizData.vowelPositions).every(
+      ([key, correctPosition]) => {
+        if (correctPosition.isCorrect) {
+          const userPosition = vowelPositions[key]
+          return userPosition.vowel === correctPosition.vowel
+        }
+        return true
+      },
+    )
+    onAllCorrectChange(allCorrect)
+  }, [vowelPositions, quizData, onAllCorrectChange])
 
   const handleFinish = async () => {
     await submitQuiz()

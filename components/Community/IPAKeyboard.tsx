@@ -51,6 +51,8 @@ interface IPAKeyboardProps {
   showCategoriesInCompact?: boolean
   useRichTextEditor?: boolean
   editorRef?: React.RefObject<any>
+  /** When false, symbol bank does not remember or highlight previously clicked symbols (e.g. for quizzes). Default true. */
+  persistClickedSymbols?: boolean
 }
 
 // Symbol names for tooltips
@@ -229,20 +231,16 @@ const SYMBOL_NAMES: { [key: string]: string } = {
   ˈ: 'primary stress',
   ˌ: 'secondary stress',
 
-  // Length
-  ː: 'long',
-  ˑ: 'half-long',
-  '̆': 'extra-short',
-
-  // Suprasegmentals
+  // Suprasegmentals (includes linking and length)
   '|': 'minor (foot) group',
   '‖': 'major (intonation) group',
   '.': 'syllable break',
   '‿': 'linking (absence of break)',
+  '͡': 'tie bar above',
   '-': 'hyphen',
-
-  // Linking
-  '͜': 'tie bar above',
+  'ː': 'long',
+  'ˑ': 'half-long',
+  '̆': 'extra-short',
 
   // Tones
   '˥': 'extra high tone',
@@ -481,34 +479,34 @@ const buildGroupsFromSymbols = (symbols: string[]) => {
 
 // IPA symbols organized by Latin letters (matching TypeIt layout)
 const LETTER_GROUPS = [
-  { letter: 'A', symbols: ['a', 'ɑ', 'ɐ', 'æ', 'ɑ̃'] },
+  { letter: 'A', symbols: ['a', 'æ', 'ɑ', 'ɐ',] },
   { letter: 'B', symbols: ['b', 'β', 'ɓ'] },
   { letter: 'C', symbols: ['c', 'ç', 'ɕ'] },
-  { letter: 'D', symbols: ['d', 'd͡ʒ', 'ð', 'ɖ', 'ɗ'] },
+  { letter: 'D', symbols: ['d', 'ð', 'ɖ', 'ɗ'] },
   { letter: 'E', symbols: ['e', 'ə', 'ɚ', 'ɛ', 'ɞ', 'ɘ'] },
   { letter: 'F', symbols: ['f'] },
-  { letter: 'G', symbols: ['ɡ', 'ɠ', 'ɢ'] },
+  { letter: 'G', symbols: ['g', 'ɠ', 'ɢ'] },
   { letter: 'H', symbols: ['h', 'ħ', 'ɦ', 'ɥ', 'ʜ', 'ɧ'] },
-  { letter: 'I', symbols: ['i', 'ɪ', 'ɨ', 'ï'] },
+  { letter: 'I', symbols: ['i', 'ɪ', 'ɨ'] },
   { letter: 'J', symbols: ['j', 'ʝ', 'ɟ', 'ʄ'] },
   { letter: 'K', symbols: ['k'] },
-  { letter: 'L', symbols: ['l', 'ɬ', 'ɫ', 'ɭ', 'ʟ', 'ɮ'] },
+  { letter: 'L', symbols: ['l', 'ɫ', 'ɬ', 'ɭ', 'ʟ', 'ɮ'] },
   { letter: 'M', symbols: ['m', 'ɱ'] },
   { letter: 'N', symbols: ['n', 'ŋ', 'ɲ', 'ɳ', 'ɴ'] },
-  { letter: 'O', symbols: ['o', 'ɔ', 'œ', 'ɵ', 'ɔ̃', 'ɒ', 'ø'] },
+  { letter: 'O', symbols: ['o', 'ɔ', 'ɒ', 'œ', 'ɵ', 'ø'] },
   { letter: 'P', symbols: ['p', 'ɸ'] },
   { letter: 'Q', symbols: ['q', 'ˈ', 'ˌ'] },
   { letter: 'R', symbols: ['r', 'ɹ', 'ɾ', 'ɻ', 'ʀ', 'ʁ', 'ɽ'] },
   { letter: 'S', symbols: ['s', 'ʃ', 'ʂ'] },
-  { letter: 'T', symbols: ['t', 'θ', 'ʈ', 't͡ʃ', 't͡s'] },
-  { letter: 'U', symbols: ['u', 'ʊ', 'ʉ', 'ũ'] },
+  { letter: 'T', symbols: ['t', 'θ'] },
+  { letter: 'U', symbols: ['u', 'ʊ', 'ʉ'] },
   { letter: 'V', symbols: ['v', 'ʌ', 'ʋ', 'ⱱ'] },
   { letter: 'W', symbols: ['w', 'ʍ', 'ɯ', 'ɰ'] },
   { letter: 'X', symbols: ['x', 'χ'] },
   { letter: 'Y', symbols: ['y', 'ɣ', 'ʏ', 'ʎ', 'ɤ'] },
-  { letter: 'Z', symbols: ['z', 'ʒ', 'ʐ', 'ʑ', 'd͡z'] },
+  { letter: 'Z', symbols: ['z', 'ʒ', 'ʐ', 'ʑ'] },
   { letter: '2', symbols: ['ʔ', 'ʕ', 'ʡ', 'ʢ'] },
-  { letter: '3', symbols: ['ɜ', 'ɝ', 'ɛ̃'] },
+  { letter: '3', symbols: ['ɜ', 'ɝ'] },
   // Additional symbol groups
   {
     letter: 'Diacritics',
@@ -544,7 +542,10 @@ const LETTER_GROUPS = [
       '̙',
     ],
   },
-  { letter: 'Linking', symbols: ['‿', '͜'] },
+  {
+    letter: 'Suprasegmentals',
+    symbols: ['̆', 'ː', 'ˑ', '‿', '͡', '|', '||'],
+  },
   {
     letter: 'Tones',
     symbols: [
@@ -568,8 +569,6 @@ const LETTER_GROUPS = [
       '↘',
     ],
   },
-  { letter: 'Length', symbols: ['ː', 'ˑ', '̆'] },
-  { letter: 'Suprasegmentals', symbols: ['|', '‖', '.', '‿', '-'] },
 ]
 
 export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
@@ -586,6 +585,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   showCategoriesInCompact = false,
   useRichTextEditor = false,
   editorRef: externalEditorRef,
+  persistClickedSymbols = true,
 }) => {
   const STORAGE_KEY = 'ipa-keyboard-text'
   const HISTORY_KEY = 'ipa-keyboard-history'
@@ -599,8 +599,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     return ''
   })
 
-  // Track clicked symbols for blue highlighting
+  // Track clicked symbols for blue highlighting (only when persistClickedSymbols)
   const [clickedSymbols, setClickedSymbols] = useState<Set<string>>(() => {
+    if (!persistClickedSymbols) return new Set()
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(HISTORY_KEY)
       if (saved) {
@@ -634,12 +635,15 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     }
   }, [text, useRichTextEditor])
 
-  // Save clicked symbols to localStorage
+  // Save clicked symbols to localStorage (only when persistClickedSymbols)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(Array.from(clickedSymbols)))
+    if (persistClickedSymbols && typeof window !== 'undefined') {
+      localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(Array.from(clickedSymbols)),
+      )
     }
-  }, [clickedSymbols])
+  }, [clickedSymbols, persistClickedSymbols])
 
   // Get filtered symbol groups based on props
   const getFilteredSymbols = () => {
@@ -748,7 +752,8 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
           // Get the symbol at the current count
           const symbol = letterGroup.symbols[newCount]
-          const previousSymbol = newCount > 0 ? letterGroup.symbols[newCount - 1] : null
+          const previousSymbol =
+            newCount > 0 ? letterGroup.symbols[newCount - 1] : null
 
           setSelectedSymbol(symbol)
           setCurrentSymbol(symbol)
@@ -768,7 +773,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
               if (timeDiff <= 1000 && newCount > 0) {
                 // We're cycling - replace the last symbol from this group
                 // Find the previous symbol in the cycle
-                const symbolToReplace = previousSymbol || letterGroup.symbols[letterGroup.symbols.length - 1]
+                const symbolToReplace =
+                  previousSymbol ||
+                  letterGroup.symbols[letterGroup.symbols.length - 1]
                 const lastIndex = prev.lastIndexOf(symbolToReplace)
                 if (lastIndex !== -1) {
                   return prev.substring(0, lastIndex) + symbol
@@ -782,11 +789,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           // Set timeout to commit the symbol after 1 second of no activity
           const newTimeoutId = setTimeout(() => {
             // Add symbol to clicked history when it's committed (printed)
-            setClickedSymbols((prev) => {
-              const newSet = new Set(prev)
-              newSet.add(symbol)
-              return newSet
-            })
+            if (persistClickedSymbols) {
+              setClickedSymbols((prev) => {
+                const newSet = new Set(prev)
+                newSet.add(symbol)
+                return newSet
+              })
+            }
 
             // Small delay before clearing selection to show permanent color
             setTimeout(() => {
@@ -827,15 +836,18 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     useRichTextEditor,
     editorRef,
     currentSymbol,
+    persistClickedSymbols,
   ])
 
   const handleSymbolClick = (symbol: string) => {
     // Track that this symbol was clicked (immediately printed)
-    setClickedSymbols((prev) => {
-      const newSet = new Set(prev)
-      newSet.add(symbol)
-      return newSet
-    })
+    if (persistClickedSymbols) {
+      setClickedSymbols((prev) => {
+        const newSet = new Set(prev)
+        newSet.add(symbol)
+        return newSet
+      })
+    }
 
     if (onSymbolClick) {
       onSymbolClick(symbol)
@@ -1200,15 +1212,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             <Flex wrap="wrap" gap={2}>
               {filteredGroups
                 .filter(
-                  (group) =>
+                    (group) =>
                     group.symbols.length > 0 &&
-                    ![
-                      'Linking',
-                      'Diacritics',
-                      'Tones',
-                      'Length',
-                      'Suprasegmentals',
-                    ].includes(group.letter),
+                    !['Diacritics', 'Suprasegmentals', 'Tones'].includes(
+                      group.letter,
+                    ),
                 )
                 .map((group) => (
                   <Box
@@ -1242,8 +1250,8 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                               hideKeyboardShortcuts
                                 ? `${symbol} - ${getSymbolName(symbol)}`
                                 : `${symbol} - ${getSymbolName(
-                                     symbol,
-                                   )} (Shift+${group.letter.toLowerCase()} ${
+                                    symbol,
+                                  )} (Shift+${group.letter.toLowerCase()} ${
                                     idx + 1
                                   }x)`
                             }
@@ -1287,13 +1295,8 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                   </AccordionButton>
                   <AccordionPanel pb={4} pt={3}>
                     <Flex wrap="wrap" gap={2}>
-                      {[
-                        'Diacritics',
-                        'Linking',
-                        'Tones',
-                        'Length',
-                        'Suprasegmentals',
-                      ].map((letter) => {
+                      {['Diacritics', 'Suprasegmentals', 'Tones'].map(
+                        (letter) => {
                         const group = filteredGroups.find(
                           (g) => g.letter === letter,
                         )

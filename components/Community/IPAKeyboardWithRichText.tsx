@@ -1,5 +1,5 @@
 import React from 'react'
-import { VStack, Box, Text } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import { IPAKeyboard } from './IPAKeyboard'
 
 /**

@@ -32,7 +32,7 @@ reviews:
 
   # Path-based instructions for different parts of the codebase
   path_instructions:
-    - path: "components/**/*.tsx"
+    - path: 'components/**/*.tsx'
       instructions: |
         - Check for proper TypeScript types
         - Ensure React hooks follow rules of hooks
@@ -40,25 +40,25 @@ reviews:
         - Check for proper error handling
         - Look for potential performance issues
 
-    - path: "components/**/*.ts"
+    - path: 'components/**/*.ts'
       instructions: |
         - Verify TypeScript types are properly defined
         - Check for proper error handling
         - Look for code reusability opportunities
 
-    - path: "pages/**/*.tsx"
+    - path: 'pages/**/*.tsx'
       instructions: |
         - Check for proper Next.js patterns
         - Verify SEO metadata
         - Check for proper page-level error handling
 
-    - path: "**/*.css"
+    - path: '**/*.css'
       instructions: |
         - Check for consistent styling patterns
         - Look for potential CSS conflicts
         - Verify responsive design considerations
 
-    - path: "**/*.test.ts"
+    - path: '**/*.test.ts'
       instructions: |
         - Ensure tests are comprehensive
         - Check for edge cases
@@ -70,41 +70,40 @@ chat:
   auto_reply: true
 
 # Tone of reviews
-tone_instructions: "Be helpful, constructive, and friendly. Focus on code quality, best practices, and potential bugs."
+tone_instructions: 'Be helpful, constructive, and friendly. Focus on code quality, best practices, and potential bugs.'
 
 # Files to ignore in reviews
 ignore:
-  - "**/*.md"
-  - "**/*.json"
-  - "**/package-lock.json"
-  - "**/yarn.lock"
-  - "**/.next/**"
-  - "**/node_modules/**"
-  - "**/dist/**"
-  - "**/build/**"
+  - '**/*.md'
+  - '**/*.json'
+  - '**/package-lock.json'
+  - '**/yarn.lock'
+  - '**/.next/**'
+  - '**/node_modules/**'
+  - '**/dist/**'
+  - '**/build/**'
 
 # Enable/disable specific review features
 enable_free_tier: true
 
 # Knowledge base - provide context about your project
 knowledge_base:
-  - "This is a Next.js application for Acting Accents, a dialect training platform"
-  - "Uses TypeScript, React, Chakra UI, and Auth0 for authentication"
-  - "IPA (International Phonetic Alphabet) keyboard is a key feature"
-  - "Focus on accessibility and user experience for actors and linguists"
+  - 'This is a Next.js application for Acting Accents, a dialect training platform'
+  - 'Uses TypeScript, React, Chakra UI, and Auth0 for authentication'
+  - 'IPA (International Phonetic Alphabet) keyboard is a key feature'
+  - 'Focus on accessibility and user experience for actors and linguists'
 
 # Review effort estimation
 review_effort_levels:
-  - name: "simple"
+  - name: 'simple'
     max_files: 3
     max_lines: 100
-  - name: "moderate"
+  - name: 'moderate'
     max_files: 10
     max_lines: 500
-  - name: "complex"
+  - name: 'complex'
     max_files: 20
     max_lines: 1000
-  - name: "epic"
+  - name: 'epic'
     max_files: 50
     max_lines: 2500
-
