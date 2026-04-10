@@ -12,7 +12,7 @@ export const lessonTypeComponentMap = {
         width="95%"
         height="530"
         src={lesson.videoUrl}
-        title={lesson.title}
+        title={lesson.videoTitle?.trim() || lesson.title}
         allowFullScreen
       ></iframe>
     </Box>

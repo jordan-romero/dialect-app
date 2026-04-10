@@ -419,7 +419,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   Active Blank:
                 </Text>{' '}
                 Position {activeBlankIndex + 1} - Click a symbol above or use
-                Ctrl+Letter shortcuts. The symbol will cycle in the blank space
+                Ctrl+letter shortcuts. The symbol will cycle in the blank space
                 and be committed after 1 second.
               </Text>
             </Box>
@@ -447,7 +447,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             click a blank space first
           </Text>{' '}
           (it will turn blue), then click symbols from the keyboard or use
-          Ctrl+Letter shortcuts. Double-click on a filled space to clear it.
+          Ctrl+letter shortcuts. Double-click on a filled space to clear it.
         </Text>
       </Box>
 

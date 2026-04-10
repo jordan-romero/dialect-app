@@ -143,7 +143,7 @@ const CourseSideBar = ({
                               : 'gray.500'
                           }
                         />
-                        <Text>{`${index + 1}. ${lesson.title}`}</Text>
+                        <Text>{lesson.displayOrder ? `${lesson.displayOrder}. ${lesson.title}` : lesson.title}</Text>
                       </HStack>
                     )
                   })}

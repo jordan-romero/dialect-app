@@ -20,8 +20,16 @@ export default async function handler(
     const lesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
       include: {
-        resources: true,
-        quiz: true,
+        resources: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
+        quiz: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
       },
     })
 

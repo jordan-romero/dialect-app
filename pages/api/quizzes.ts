@@ -32,6 +32,7 @@ export default async function handler(
     try {
       const quizzes = await prisma.quiz.findMany({
         where: { lessonId: parseInt(lessonId) },
+        orderBy: { order: 'asc' },
         include: {
           questions: {
             include: {

@@ -43,8 +43,16 @@ export default async function handler(
         include: {
           lessons: {
             include: {
-              resources: true,
-              quiz: true,
+              resources: {
+                orderBy: {
+                  order: 'asc',
+                },
+              },
+              quiz: {
+                orderBy: {
+                  order: 'asc',
+                },
+              },
             },
             orderBy: {
               id: 'asc',

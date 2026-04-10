@@ -41,6 +41,7 @@ model Lesson {
   title           String
   description     String
   videoUrl        String?
+  videoTitle      String?
   quiz            Quiz[]
   courseId        Int
   course          Course           @relation(fields: [courseId], references: [id])
@@ -72,6 +73,7 @@ model LessonProgress {
 // Quiz model
 model Quiz {
   id          Int        @id @default(autoincrement())
+  title       String?
   questions   Question[]
   lessonId    Int
   lesson      Lesson    @relation(fields: [lessonId], references: [id])

@@ -186,12 +186,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
           </Box>
         ) : null
       case 'description':
-        return (
-          <LessonDescription
-            lessonDescription={lesson.description}
-            resources={lesson.resources}
-          />
-        )
+        return <LessonDescription lesson={lesson} />
       case 'outro':
         return <LessonOutro resources={lesson.resources} />
       case 'quiz':

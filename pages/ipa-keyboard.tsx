@@ -72,8 +72,8 @@ const IPAKeyboardPage: React.FC = () => {
                   Subscript)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
-                  ✓ T9-style keyboard shortcuts (Shift+A cycles through A
-                  symbols)
+                  ✓ T9-style shortcuts: Ctrl+letter (press repeatedly within 1s
+                  to cycle symbols for that letter)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
                   ✓ Copy to clipboard functionality
@@ -96,13 +96,43 @@ const IPAKeyboardPage: React.FC = () => {
                   fontWeight="semibold"
                   mt={1}
                 >
-                  IPA Symbols (Shift):
+                  IPA symbols:
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
-                    Shift+[Letter]
+                    Ctrl+[Letter]
                   </Text>{' '}
-                  - Cycle through symbols (e.g., Shift+A for a, ɑ, æ, etc.)
+                  — press again within a second to cycle (e.g. a, ɑ, æ for A)
+                </Text>
+
+                <Text
+                  fontSize="sm"
+                  color="gray.700"
+                  fontWeight="semibold"
+                  mt={2}
+                >
+                  Diacritics (direct access):
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
+                  <Text as="span" fontWeight="semibold">
+                    Shift+Alt+O
+                  </Text>{' '}
+                  — voiceless (̥), <Text as="span" fontWeight="semibold">Shift+Alt+OO</Text> — voiceless above (̊)
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
+                  <Text as="span" fontWeight="semibold">
+                    Shift+Alt+D
+                  </Text>{' '}
+                  — dental (̪), <Text as="span" fontWeight="semibold">Alt+F</Text> — tie bar (͡)
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
+                  <Text as="span" fontWeight="semibold">
+                    Alt+.
+                  </Text>{' '}
+                  — extra-short (̆), <Text as="span" fontWeight="semibold">Alt+..</Text> — long (ː)
+                </Text>
+                <Text fontSize="sm" color="gray.700" pl={2}>
+                  Hover over any symbol to see its specific shortcut
                 </Text>
 
                 <Text
@@ -150,7 +180,11 @@ const IPAKeyboardPage: React.FC = () => {
                   <Text as="span" fontWeight="semibold">
                     Ctrl+Y
                   </Text>{' '}
-                  (Cmd+Y on Mac) - Redo
+                  (Windows) or{' '}
+                  <Text as="span" fontWeight="semibold">
+                    Cmd+Shift+Z
+                  </Text>{' '}
+                  (Mac) — Redo
                 </Text>
               </VStack>
 

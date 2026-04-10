@@ -3,6 +3,7 @@ import React, {
   useRef,
   useCallback,
   useEffect,
+  useMemo,
   forwardRef,
   useImperativeHandle,
 } from 'react'
@@ -42,34 +43,187 @@ type FormatCommand =
   | 'subscript'
   | 'superscript'
 
+type IpaHistoryEntry = { html: string; selStart: number; selEnd: number }
+
+/** Length of `Range.toString()` over root — matches line breaks for &lt;br&gt; in contenteditable */
+const getTotalStringMetricLength = (root: HTMLElement): number => {
+  const r = document.createRange()
+  r.selectNodeContents(root)
+  return r.toString().length
+}
+
+const boundaryToStringOffset = (
+  root: HTMLElement,
+  container: Node,
+  offset: number,
+): number => {
+  const r = document.createRange()
+  r.selectNodeContents(root)
+  r.setEnd(container, offset)
+  return r.toString().length
+}
+
+const getSelectionOffsets = (
+  root: HTMLElement,
+): { selStart: number; selEnd: number } => {
+  const sel = window.getSelection()
+  if (!sel || sel.rangeCount === 0) {
+    const len = getTotalStringMetricLength(root)
+    return { selStart: len, selEnd: len }
+  }
+  const range = sel.getRangeAt(0)
+  if (!root.contains(range.commonAncestorContainer)) {
+    const len = getTotalStringMetricLength(root)
+    return { selStart: len, selEnd: len }
+  }
+  const selStart = boundaryToStringOffset(
+    root,
+    range.startContainer,
+    range.startOffset,
+  )
+  const selEnd = boundaryToStringOffset(
+    root,
+    range.endContainer,
+    range.endOffset,
+  )
+  return selStart <= selEnd
+    ? { selStart, selEnd }
+    : { selStart: selEnd, selEnd: selStart }
+}
+
+/** Inverse of boundaryToStringOffset — same walk order as Range.toString() (text + BR as one char) */
+const findBoundaryAtOffset = (
+  root: HTMLElement,
+  target: number,
+): [Node, number] => {
+  const max = getTotalStringMetricLength(root)
+  const t = Math.max(0, Math.min(target, max))
+  let pos = 0
+
+  const walk = (parent: Node): [Node, number] | null => {
+    for (let i = 0; i < parent.childNodes.length; i++) {
+      const child = parent.childNodes[i]
+      if (child.nodeType === Node.TEXT_NODE) {
+        const len = child.textContent?.length ?? 0
+        if (t <= pos + len) {
+          return [child, t - pos]
+        }
+        pos += len
+      } else if (child.nodeName === 'BR') {
+        if (t <= pos) {
+          return [parent, i]
+        }
+        if (t <= pos + 1) {
+          return [parent, i + 1]
+        }
+        pos += 1
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        const inner = walk(child)
+        if (inner) return inner
+      }
+    }
+    return null
+  }
+
+  const found = walk(root)
+  if (found) return found
+  return [root, root.childNodes.length]
+}
+
+const setSelectionOffsets = (
+  root: HTMLElement,
+  selStart: number,
+  selEnd: number,
+): void => {
+  const max = getTotalStringMetricLength(root)
+  const s = Math.max(0, Math.min(selStart, max))
+  const e = Math.max(0, Math.min(selEnd, max))
+  const startP = findBoundaryAtOffset(root, s)
+  const endP = findBoundaryAtOffset(root, e)
+  const range = document.createRange()
+  range.setStart(startP[0], startP[1])
+  range.setEnd(endP[0], endP[1])
+  const sel = window.getSelection()
+  sel?.removeAllRanges()
+  sel?.addRange(range)
+}
+
 export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
   (
     {
       onSymbolInsert,
       onClear,
       placeholder = 'Type or click symbols to create IPA transcription...',
-      minHeight = '200px',
-      maxHeight = '400px',
+      minHeight = '120px',
+      maxHeight = '280px',
     },
     ref,
   ) => {
     const STORAGE_KEY = 'ipa-richtext-content'
     const editorRef = useRef<HTMLDivElement>(null)
+    /** Skip history snapshots from synthetic input while we batch delete+insert (T9) */
+    const suppressHistoryUntilRef = useRef(0)
+    /** Undo/redo/load/clear set innerHTML — that fires `input`; must not append history (causes runaway updates). */
+    const isApplyingHistoryRef = useRef(false)
+    const historyRef = useRef<IpaHistoryEntry[]>([
+      { html: '', selStart: 0, selEnd: 0 },
+    ])
+    const historyIndexRef = useRef(0)
     const [activeFormats, setActiveFormats] = useState<Set<FormatCommand>>(
       new Set(),
     )
-    const [history, setHistory] = useState<string[]>([''])
+    const [history, setHistory] = useState<IpaHistoryEntry[]>([
+      { html: '', selStart: 0, selEnd: 0 },
+    ])
     const [historyIndex, setHistoryIndex] = useState(0)
     const toast = useToast()
+
+    const shortcutLabels = useMemo(() => {
+      const apple =
+        typeof navigator !== 'undefined' &&
+        /Mac|iPhone|iPod|iPad/i.test(navigator.platform ?? '')
+      return {
+        bold: apple ? '⌘B' : 'Ctrl+B',
+        italic: apple ? '⌘I' : 'Ctrl+I',
+        underline: apple ? '⌘U' : 'Ctrl+U',
+        undo: apple ? '⌘Z' : 'Ctrl+Z',
+        redo: apple ? '⌘⇧Z' : 'Ctrl+Y or Ctrl+Shift+Z',
+      }
+    }, [])
+
+    useEffect(() => {
+      historyRef.current = history
+    }, [history])
+
+    useEffect(() => {
+      historyIndexRef.current = historyIndex
+    }, [historyIndex])
 
     // Load saved content from localStorage on mount
     useEffect(() => {
       if (typeof window !== 'undefined' && editorRef.current) {
         const saved = localStorage.getItem(STORAGE_KEY)
         if (saved) {
+          isApplyingHistoryRef.current = true
           editorRef.current.innerHTML = saved
-          setHistory([saved])
+          const len = getTotalStringMetricLength(editorRef.current)
+          const entry: IpaHistoryEntry = {
+            html: saved,
+            selStart: len,
+            selEnd: len,
+          }
+          setHistory([entry])
+          historyRef.current = [entry]
           setHistoryIndex(0)
+          historyIndexRef.current = 0
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              if (editorRef.current) {
+                setSelectionOffsets(editorRef.current, len, len)
+              }
+              isApplyingHistoryRef.current = false
+            })
+          })
         }
       }
     }, [])
@@ -101,57 +255,115 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
       if (document.queryCommandState('subscript')) formats.add('subscript')
       if (document.queryCommandState('superscript')) formats.add('superscript')
 
-      setActiveFormats(formats)
+      setActiveFormats((prev) => {
+        if (prev.size !== formats.size) return formats
+        const nextArr = Array.from(formats)
+        const prevArr = Array.from(prev)
+        for (let i = 0; i < nextArr.length; i += 1) {
+          if (!prev.has(nextArr[i])) return formats
+        }
+        for (let i = 0; i < prevArr.length; i += 1) {
+          if (!formats.has(prevArr[i])) return formats
+        }
+        return prev
+      })
     }, [])
 
-    // Save to history
     const saveToHistory = useCallback(() => {
       if (!editorRef.current) return
 
       const content = editorRef.current.innerHTML
-      const newHistory = history.slice(0, historyIndex + 1)
-      newHistory.push(content)
-
-      // Limit history to 50 items
-      if (newHistory.length > 50) {
-        newHistory.shift()
-      } else {
-        setHistoryIndex(historyIndex + 1)
+      const { selStart, selEnd } = getSelectionOffsets(editorRef.current)
+      const idx = historyIndexRef.current
+      const prev = historyRef.current
+      const currentAtIdx = prev[idx]
+      if (
+        currentAtIdx &&
+        currentAtIdx.html === content &&
+        currentAtIdx.selStart === selStart &&
+        currentAtIdx.selEnd === selEnd
+      ) {
+        return
       }
+      const truncated = prev.slice(0, idx + 1)
+      let next: IpaHistoryEntry[] = [
+        ...truncated,
+        { html: content, selStart, selEnd },
+      ]
+      if (next.length > 50) {
+        next = next.slice(-50)
+      }
+      const newIdx = next.length - 1
+      historyRef.current = next
+      historyIndexRef.current = newIdx
+      setHistory(next)
+      setHistoryIndex(newIdx)
+    }, [])
 
-      setHistory(newHistory)
-    }, [history, historyIndex])
-
-    // Undo/Redo
     const handleUndo = useCallback(() => {
-      if (historyIndex > 0) {
-        const newIndex = historyIndex - 1
-        setHistoryIndex(newIndex)
-        if (editorRef.current) {
-          editorRef.current.innerHTML = history[newIndex]
-        }
-      }
-    }, [historyIndex, history])
+      const hist = historyRef.current
+      const idx = historyIndexRef.current
+      if (idx <= 0) return
+      const newIndex = idx - 1
+      const entry = hist[newIndex]
+      if (!editorRef.current) return
+      isApplyingHistoryRef.current = true
+      editorRef.current.innerHTML = entry.html
+      setHistoryIndex(newIndex)
+      historyIndexRef.current = newIndex
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (!editorRef.current) return
+          editorRef.current.focus()
+          setSelectionOffsets(
+            editorRef.current,
+            entry.selStart,
+            entry.selEnd,
+          )
+          isApplyingHistoryRef.current = false
+        })
+      })
+    }, [])
 
     const handleRedo = useCallback(() => {
-      if (historyIndex < history.length - 1) {
-        const newIndex = historyIndex + 1
-        setHistoryIndex(newIndex)
-        if (editorRef.current) {
-          editorRef.current.innerHTML = history[newIndex]
-        }
-      }
-    }, [historyIndex, history])
+      const hist = historyRef.current
+      const idx = historyIndexRef.current
+      if (idx >= hist.length - 1) return
+      const newIndex = idx + 1
+      const entry = hist[newIndex]
+      if (!editorRef.current) return
+      isApplyingHistoryRef.current = true
+      editorRef.current.innerHTML = entry.html
+      setHistoryIndex(newIndex)
+      historyIndexRef.current = newIndex
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (!editorRef.current) return
+          editorRef.current.focus()
+          setSelectionOffsets(
+            editorRef.current,
+            entry.selStart,
+            entry.selEnd,
+          )
+          isApplyingHistoryRef.current = false
+        })
+      })
+    }, [])
 
     // Clear content
     const handleClear = useCallback(() => {
       if (editorRef.current) {
+        isApplyingHistoryRef.current = true
         editorRef.current.innerHTML = ''
         saveToHistory()
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            isApplyingHistoryRef.current = false
+          })
+        })
         if (typeof window !== 'undefined') {
           localStorage.removeItem(STORAGE_KEY)
         }
-        // Notify parent component to clear symbol history
         if (onClear) {
           onClear()
         }
@@ -201,13 +413,60 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
       [updateActiveFormats, saveToHistory],
     )
 
-    // Handle input changes
     const handleInput = useCallback(() => {
       updateActiveFormats()
-      saveToHistory()
+      if (isApplyingHistoryRef.current) return
+      if (Date.now() < suppressHistoryUntilRef.current) return
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (isApplyingHistoryRef.current) return
+          if (Date.now() < suppressHistoryUntilRef.current) return
+          saveToHistory()
+        })
+      })
     }, [updateActiveFormats, saveToHistory])
 
-    // Insert IPA symbol at cursor with T9-style replacement support
+    const insertSymbolFallback = (
+      editor: HTMLDivElement,
+      symbol: string,
+      shouldReplace: boolean,
+    ) => {
+      const selection = window.getSelection()
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0)
+        if (shouldReplace && range.collapsed) {
+          document.execCommand('delete', false, undefined)
+        } else if (!shouldReplace) {
+          range.deleteContents()
+        }
+        const textNode = document.createTextNode(symbol)
+        range.insertNode(textNode)
+        range.setStartAfter(textNode)
+        range.setEndAfter(textNode)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else {
+        editor.appendChild(document.createTextNode(symbol))
+      }
+    }
+
+    /** After execCommand('delete'), insertText failed — do not call deleteContents() again */
+    const insertSymbolAtCaretOnly = (editor: HTMLDivElement, symbol: string) => {
+      const selection = window.getSelection()
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0)
+        const textNode = document.createTextNode(symbol)
+        range.insertNode(textNode)
+        range.setStartAfter(textNode)
+        range.setEndAfter(textNode)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else {
+        editor.appendChild(document.createTextNode(symbol))
+      }
+    }
+
+    // insertText keeps combining marks (e.g. U+031A) attached to base letters correctly
     const insertSymbol = useCallback(
       (symbol: string, shouldReplace: boolean = false) => {
         const editor = editorRef.current
@@ -215,133 +474,43 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
 
         editor.focus()
 
-        // Get selection and insert symbol
-        const selection = window.getSelection()
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0)
-
-          // If shouldReplace is true, try to delete the previous character (for T9 cycling)
-          if (shouldReplace && range.collapsed) {
-            // Helper function to find the previous text node and character
-            const findPreviousCharacter = () => {
-              let container = range.startContainer
-              let offset = range.startOffset
-
-              // If we're at the start of a text node or non-text node, find previous text node
-              if (container.nodeType === Node.TEXT_NODE && offset === 0) {
-                // Walk backwards to find previous text node
-                let node: Node | null = container
-                while (node) {
-                  // Check previous sibling
-                  if (node.previousSibling) {
-                    node = node.previousSibling
-                    // If it's a text node with content, use it
-                    if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-                      return {
-                        container: node,
-                        offset: node.textContent.length,
-                      }
-                    }
-                    // If it's an element, find the last text node within it
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                      const walker = document.createTreeWalker(
-                        node,
-                        NodeFilter.SHOW_TEXT,
-                        null,
-                      )
-                      let lastTextNode: Node | null = null
-                      let currentNode: Node | null
-                      while ((currentNode = walker.nextNode())) {
-                        lastTextNode = currentNode
-                      }
-                      if (lastTextNode && lastTextNode.textContent) {
-                        return {
-                          container: lastTextNode,
-                          offset: lastTextNode.textContent.length,
-                        }
-                      }
-                    }
-                  } else {
-                    // Move up to parent
-                    node = node.parentNode
-                    if (node === editor) break // Don't go beyond the editor
-                  }
-                }
-                return null
-              } else if (container.nodeType !== Node.TEXT_NODE) {
-                // If we're in an element node, find the text node at the offset
-                if (offset > 0 && container.childNodes[offset - 1]) {
-                  const prevNode = container.childNodes[offset - 1]
-                  if (
-                    prevNode.nodeType === Node.TEXT_NODE &&
-                    prevNode.textContent
-                  ) {
-                    return {
-                      container: prevNode,
-                      offset: prevNode.textContent.length,
-                    }
-                  }
-                  // If it's an element, find last text node within it
-                  if (prevNode.nodeType === Node.ELEMENT_NODE) {
-                    const walker = document.createTreeWalker(
-                      prevNode,
-                      NodeFilter.SHOW_TEXT,
-                      null,
-                    )
-                    let lastTextNode: Node | null = null
-                    let currentNode: Node | null
-                    while ((currentNode = walker.nextNode())) {
-                      lastTextNode = currentNode
-                    }
-                    if (lastTextNode && lastTextNode.textContent) {
-                      return {
-                        container: lastTextNode,
-                        offset: lastTextNode.textContent.length,
-                      }
-                    }
-                  }
-                }
-                return null
-              }
-
-              // We're in a text node with offset > 0, just use it
-              return { container, offset }
-            }
-
-            const previousChar = findPreviousCharacter()
-            if (previousChar && previousChar.offset > 0) {
-              // Create a new range to delete the previous character
-              const deleteRange = document.createRange()
-              deleteRange.setStart(
-                previousChar.container,
-                previousChar.offset - 1,
-              )
-              deleteRange.setEnd(previousChar.container, previousChar.offset)
-              deleteRange.deleteContents()
-
-              // Update our main range to the deletion point
-              range.setStart(previousChar.container, previousChar.offset - 1)
-              range.collapse(true)
-            }
-          } else if (!shouldReplace) {
-            // Not replacing, just delete any selected content
-            range.deleteContents()
-          }
-
-          const textNode = document.createTextNode(symbol)
-          range.insertNode(textNode)
-
-          // Move cursor after inserted symbol
-          range.setStartAfter(textNode)
-          range.setEndAfter(textNode)
-          selection.removeAllRanges()
-          selection.addRange(range)
-        } else {
-          // If no selection, insert at end
-          editor.appendChild(document.createTextNode(symbol))
+        if (shouldReplace) {
+          suppressHistoryUntilRef.current = Date.now() + 120
+          document.execCommand('delete', false, undefined)
         }
 
-        saveToHistory()
+        let ok = false
+        try {
+          ok = document.execCommand('insertText', false, symbol)
+        } catch {
+          ok = false
+        }
+
+        if (!ok) {
+          if (shouldReplace) {
+            suppressHistoryUntilRef.current = Date.now() + 120
+            insertSymbolAtCaretOnly(editor, symbol)
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                saveToHistory()
+                suppressHistoryUntilRef.current = 0
+              })
+            })
+          } else {
+            suppressHistoryUntilRef.current = 0
+            insertSymbolFallback(editor, symbol, false)
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => saveToHistory())
+            })
+          }
+        } else if (shouldReplace) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              saveToHistory()
+              suppressHistoryUntilRef.current = 0
+            })
+          })
+        }
 
         if (onSymbolInsert) {
           onSymbolInsert(symbol)
@@ -350,70 +519,64 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
       [onSymbolInsert, saveToHistory],
     )
 
-    // Handle keyboard shortcuts - Use Ctrl+Shift for formatting and undo/redo to avoid IPA keyboard conflicts
+    // Cmd/Ctrl for formatting + undo/redo; IPA shortcuts use Option/Alt (handled on window in IPAKeyboard)
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
-        // Only handle shortcuts if we're focused in this editor
         if (document.activeElement !== editorRef.current) return
 
-        if (e.ctrlKey || e.metaKey) {
-          // Ctrl+Shift+Letter = capitalize the letter (insert uppercase)
-          if (e.shiftKey) {
-            // Check if it's a letter key (a-z)
-            if (e.key.length === 1 && /[a-z]/i.test(e.key)) {
-              // Let the capital letter be typed naturally
-              return
-            }
+        const mod = e.metaKey || e.ctrlKey
+        if (!mod) return
 
-            // Still handle special shortcuts with Shift
-            switch (e.key.toLowerCase()) {
-              case 'z':
-                // Ctrl+Shift+Z is undo
-                e.preventDefault()
-                e.stopPropagation()
-                handleUndo()
-                break
-              case 'y':
-                // Ctrl+Shift+Y is redo
-                e.preventDefault()
-                e.stopPropagation()
-                handleRedo()
-                break
-            }
-          } else {
-            // Ctrl+Key (without Shift) for formatting
-            switch (e.key.toLowerCase()) {
-              case 'b':
-                e.preventDefault()
-                e.stopPropagation()
-                executeCommand('bold')
-                break
-              case 'i':
-                e.preventDefault()
-                e.stopPropagation()
-                executeCommand('italic')
-                break
-              case 'u':
-                e.preventDefault()
-                e.stopPropagation()
-                executeCommand('underline')
-                break
-              case 'z':
-                // Ctrl+Z is undo (standard)
-                e.preventDefault()
-                e.stopPropagation()
-                handleUndo()
-                break
-              case 'y':
-                // Ctrl+Y is redo (standard)
-                e.preventDefault()
-                e.stopPropagation()
-                handleRedo()
-                break
-            }
-          }
+        const key = e.key.toLowerCase()
+
+        // Cmd/Ctrl+Shift+Z = redo (macOS standard); Ctrl+Y = redo (Windows)
+        if (e.shiftKey && key === 'z') {
+          e.preventDefault()
+          e.stopPropagation()
+          handleRedo()
+          return
         }
-        // Let all Alt+Key events pass through to IPA keyboard handler
+
+        // Let Cmd/Ctrl+Shift+letter through for typing capitals (e.g. US layouts)
+        if (e.shiftKey && e.key.length === 1 && /[a-z]/i.test(e.key)) {
+          return
+        }
+
+        if (e.shiftKey) return
+
+        if (key === 'z') {
+          e.preventDefault()
+          e.stopPropagation()
+          handleUndo()
+          return
+        }
+
+        if (key === 'y' && e.ctrlKey && !e.metaKey) {
+          e.preventDefault()
+          e.stopPropagation()
+          handleRedo()
+          return
+        }
+
+        switch (key) {
+          case 'b':
+            e.preventDefault()
+            e.stopPropagation()
+            executeCommand('bold')
+            break
+          case 'i':
+            e.preventDefault()
+            e.stopPropagation()
+            executeCommand('italic')
+            break
+          case 'u':
+            e.preventDefault()
+            e.stopPropagation()
+            executeCommand('underline')
+            break
+          default:
+            break
+        }
       }
 
       const editor = editorRef.current
@@ -422,6 +585,28 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         return () => editor.removeEventListener('keydown', handleKeyDown)
       }
     }, [executeCommand, handleRedo, handleUndo])
+
+    // Route browser Edit → Undo/Redo to our history stack
+    useEffect(() => {
+      const editor = editorRef.current
+      if (!editor) return
+
+      const onBeforeInput = (e: Event) => {
+        const ie = e as InputEvent
+        if (ie.inputType === 'historyUndo') {
+          e.preventDefault()
+          handleUndo()
+        } else if (ie.inputType === 'historyRedo') {
+          e.preventDefault()
+          handleRedo()
+        }
+      }
+
+      editor.addEventListener('beforeinput', onBeforeInput, true)
+      return () => {
+        editor.removeEventListener('beforeinput', onBeforeInput, true)
+      }
+    }, [handleRedo, handleUndo])
 
     // Expose insertSymbol method via ref
     useImperativeHandle(
@@ -467,13 +652,13 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
           bg="white"
           borderBottom="2px solid"
           borderColor="gray.200"
-          px={3}
-          py={2}
+          px={2}
+          py={1}
           borderTopRadius="lg"
         >
           <HStack spacing={1} wrap="wrap">
             {/* Text Formatting */}
-            <Tooltip label="Bold (Ctrl+Shift+B)">
+            <Tooltip label={`Bold (${shortcutLabels.bold})`}>
               <IconButton
                 aria-label="Bold"
                 icon={<Box as={RiBold} boxSize={5} />}
@@ -488,7 +673,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               />
             </Tooltip>
 
-            <Tooltip label="Italic (Ctrl+Shift+I)">
+            <Tooltip label={`Italic (${shortcutLabels.italic})`}>
               <IconButton
                 aria-label="Italic"
                 icon={<Box as={RiItalic} boxSize={5} />}
@@ -503,7 +688,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               />
             </Tooltip>
 
-            <Tooltip label="Underline (Ctrl+Shift+U)">
+            <Tooltip label={`Underline (${shortcutLabels.underline})`}>
               <IconButton
                 aria-label="Underline"
                 icon={<Box as={RiUnderline} boxSize={5} />}
@@ -581,7 +766,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
             <Divider orientation="vertical" h="24px" borderColor="gray.300" />
 
             {/* History Controls */}
-            <Tooltip label="Undo (Ctrl+Shift+Z)">
+            <Tooltip label={`Undo (${shortcutLabels.undo})`}>
               <IconButton
                 aria-label="Undo"
                 icon={<RepeatClockIcon />}
@@ -595,7 +780,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               />
             </Tooltip>
 
-            <Tooltip label="Redo (Ctrl+Shift+Y)">
+            <Tooltip label={`Redo (${shortcutLabels.redo})`}>
               <IconButton
                 aria-label="Redo"
                 icon={<RepeatIcon />}
@@ -650,7 +835,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
           onKeyUp={updateActiveFormats}
           className="ipa-text"
           bg="white"
-          p={4}
+          p={2.5}
           minH={minHeight}
           maxH={maxHeight}
           overflowY="auto"
@@ -659,7 +844,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
           borderTop="none"
           borderColor="brand.iris"
           fontSize="lg"
-          lineHeight="1.8"
+          lineHeight="1.6"
           outline="none"
           _focus={{
             boxShadow: '0 0 0 1px var(--chakra-colors-brand-iris)',
@@ -672,14 +857,13 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
             },
           }}
           sx={{
-            // Ensure IPA symbols render correctly
             fontFeatureSettings: "'ccmp' 1, 'mark' 1, 'mkmk' 1",
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
             '& *': {
               fontFamily:
-                "'Charis SIL', 'Noto Sans', 'Doulos SIL', 'Arial Unicode MS', sans-serif !important",
+                "'Arimo', 'Charis SIL', 'Noto Sans', 'Doulos SIL', 'Arial Unicode MS', sans-serif !important",
             },
           }}
         />
