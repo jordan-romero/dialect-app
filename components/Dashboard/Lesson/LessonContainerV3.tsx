@@ -13,6 +13,7 @@ import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
 import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExercise'
 import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
+import UnlockCourseButton from '../../UnlockCourseButton'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -324,6 +325,42 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     : true
   const isFinishButtonDisabled =
     isLastStep && currentStep.type === 'quiz' ? !isCurrentQuizCompleted : false
+
+  // Paid-content gate: gated lessons come back from the API with `locked: true`
+  // and their content stripped. Show a paywall instead of the lesson.
+  if ((lesson as any).locked) {
+    return (
+      <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          h="100%"
+          textAlign="center"
+          gap={5}
+        >
+          <Text fontSize="2xl" fontWeight="bold">
+            🔒 {lesson.title?.trim()}
+          </Text>
+          {(lesson as any).lockReason === 'phase' ? (
+            <Text maxW="480px" color="gray.600">
+              This phase is locked. Finish <b>every</b> lesson in the previous
+              phase to unlock it.
+            </Text>
+          ) : (
+            <>
+              <Text maxW="480px" color="gray.600">
+                This lesson is part of the full course. The first three lessons
+                are free — unlock the rest to access all videos, handouts, and
+                exercises.
+              </Text>
+              <UnlockCourseButton />
+            </>
+          )}
+        </Flex>
+      </Box>
+    )
+  }
 
   return (
     <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">

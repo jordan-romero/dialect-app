@@ -78,14 +78,19 @@ const CourseSideBar = ({
     return false
   }
 
+  // A whole phase (course) is locked until the previous phase is complete.
+  // The courses API sets `unlocked` per course.
+  const isCourseLocked = (course: Course) => (course as any).unlocked === false
+
   const getLessonIcon = (
     lesson: Lesson,
     index: number,
     courseLessons: Lesson[],
+    courseLocked = false,
   ) => {
     const progress = lessonProgress[lesson.id] || 0
 
-    if (isLessonLocked(lesson, index, courseLessons)) {
+    if (courseLocked || isLessonLocked(lesson, index, courseLessons)) {
       return MdLock
     } else if (progress === 100) {
       return MdCheck
@@ -115,62 +120,78 @@ const CourseSideBar = ({
       overflowY="auto"
     >
       <VStack spacing={4} align="stretch">
-        {courseList.map((course) => (
-          <Box key={course.id}>
-            <Button
-              variant="ghost"
-              justifyContent="space-between"
-              width="100%"
-              onClick={() => toggleCourseExpansion(course.id)}
-            >
-              <Text fontWeight="bold" fontSize="lg">
-                {course.title}
-              </Text>
-              <Icon
-                as={expandedCourses[course.id] ? MdExpandLess : MdExpandMore}
-                boxSize={6}
-              />
-            </Button>
-            {expandedCourses[course.id] && (
-              <VStack spacing={2} align="stretch" pl={4} mt={2}>
-                {(course.lessons ?? []).map((lesson, index) => {
-                  const courseLessons = course.lessons ?? []
-                  const isLocked = isLessonLocked(lesson, index, courseLessons)
-                  const isCurrent = lesson.id === currentLessonId
-                  return (
-                    <HStack
-                      key={lesson.id}
-                      onClick={() => !isLocked && onSelectLesson(lesson)}
-                      cursor={isLocked ? 'not-allowed' : 'pointer'}
-                      opacity={isLocked ? 0.5 : 1}
-                      bg={isCurrent ? 'blue.100' : 'transparent'}
-                      p={2}
-                      borderRadius="md"
-                    >
-                      <Icon
-                        as={getLessonIcon(lesson, index, courseLessons)}
-                        boxSize={6}
-                        mr={4}
-                        color={
-                          lessonProgress[lesson.id] === 100
-                            ? 'green.500'
-                            : lessonProgress[lesson.id] > 0
-                            ? 'purple.500'
-                            : 'gray.500'
-                        }
-                      />
-                      <Text>
-                        {lesson.displayOrder
-                          ? `${lesson.displayOrder}. ${lesson.title}`
-                          : lesson.title}
-                      </Text>
-                    </HStack>
-                  )
-                })}
-              </VStack>
-            )}
-          </Box>
-        ))}
+        {courseList.map((course) => {
+          const courseLocked = isCourseLocked(course)
+          return (
+            <Box key={course.id}>
+              <Button
+                variant="ghost"
+                justifyContent="space-between"
+                width="100%"
+                opacity={courseLocked ? 0.6 : 1}
+                onClick={() => toggleCourseExpansion(course.id)}
+              >
+                <HStack>
+                  {courseLocked && (
+                    <Icon as={MdLock} boxSize={4} color="gray.500" />
+                  )}
+                  <Text fontWeight="bold" fontSize="lg">
+                    {course.title}
+                  </Text>
+                </HStack>
+                <Icon
+                  as={expandedCourses[course.id] ? MdExpandLess : MdExpandMore}
+                  boxSize={6}
+                />
+              </Button>
+              {expandedCourses[course.id] && (
+                <VStack spacing={2} align="stretch" pl={4} mt={2}>
+                  {(course.lessons ?? []).map((lesson, index) => {
+                    const courseLessons = course.lessons ?? []
+                    const isLocked =
+                      courseLocked ||
+                      isLessonLocked(lesson, index, courseLessons)
+                    const isCurrent = lesson.id === currentLessonId
+                    return (
+                      <HStack
+                        key={lesson.id}
+                        onClick={() => !isLocked && onSelectLesson(lesson)}
+                        cursor={isLocked ? 'not-allowed' : 'pointer'}
+                        opacity={isLocked ? 0.5 : 1}
+                        bg={isCurrent ? 'blue.100' : 'transparent'}
+                        p={2}
+                        borderRadius="md"
+                      >
+                        <Icon
+                          as={getLessonIcon(
+                            lesson,
+                            index,
+                            courseLessons,
+                            courseLocked,
+                          )}
+                          boxSize={6}
+                          mr={4}
+                          color={
+                            lessonProgress[lesson.id] === 100
+                              ? 'green.500'
+                              : lessonProgress[lesson.id] > 0
+                              ? 'purple.500'
+                              : 'gray.500'
+                          }
+                        />
+                        <Text>
+                          {lesson.displayOrder
+                            ? `${lesson.displayOrder}. ${lesson.title}`
+                            : lesson.title}
+                        </Text>
+                      </HStack>
+                    )
+                  })}
+                </VStack>
+              )}
+            </Box>
+          )
+        })}
       </VStack>
     </Box>
   )

@@ -9,6 +9,7 @@ import {
 } from '@prisma/client'
 import { getSession } from '@auth0/nextjs-auth0'
 import { signDeep } from '../../lib/s3'
+import { hasPaidAccess, getUnlockedCourseIds } from '../../lib/access'
 
 const prisma = new PrismaClient()
 
@@ -38,6 +39,28 @@ export default async function handler(
     }
 
     try {
+      // Gate quizzes behind phase progression + paid access.
+      const lessonRow = await prisma.lesson.findUnique({
+        where: { id: parseInt(lessonId) },
+        select: { isGatedLesson: true, courseId: true },
+      })
+      if (lessonRow) {
+        const email = session.user.email
+        const unlockedCourses = await getUnlockedCourseIds(prisma, email)
+        if (!unlockedCourses.has(lessonRow.courseId)) {
+          res
+            .status(403)
+            .json({ message: 'Complete the previous phase to unlock this.' })
+          return
+        }
+        if (lessonRow.isGatedLesson && !(await hasPaidAccess(prisma, email))) {
+          res
+            .status(403)
+            .json({ message: 'This lesson requires full course access.' })
+          return
+        }
+      }
+
       const quizzes = await prisma.quiz.findMany({
         where: { lessonId: parseInt(lessonId) },
         orderBy: { order: 'asc' },

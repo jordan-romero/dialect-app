@@ -62,32 +62,42 @@ const CourseContainer = () => {
       })
   }, [])
 
+  // All lessons across courses in true course order: by course, then by
+  // displayOrder. Checkpoints have a null displayOrder, so place them last
+  // within their course (not first, which `?? 0` used to do).
+  const orderedLessons = (coursesArg: Course[]) =>
+    (Array.isArray(coursesArg) ? coursesArg : [])
+      .flatMap((course) =>
+        (course.lessons ?? []).map((lesson) => ({
+          ...lesson,
+          courseId: course.id,
+        })),
+      )
+      .sort((a, b) =>
+        a.courseId !== b.courseId
+          ? a.courseId - b.courseId
+          : (a.displayOrder ?? Number.POSITIVE_INFINITY) -
+            (b.displayOrder ?? Number.POSITIVE_INFINITY),
+      )
+
+  // On initial load: resume at the first incomplete lesson (fall back to the
+  // first lesson if everything is already complete).
   const selectNextLesson = (
     coursesArg: Course[],
     progress: { [key: number]: number },
   ) => {
-    let lessonToSelect: Lesson | null = null
+    const all = orderedLessons(coursesArg)
+    const lessonToSelect =
+      all.find((lesson) => progress[lesson.id] !== 100) ?? all[0]
+    if (lessonToSelect) setSelectedLesson(lessonToSelect)
+  }
 
-    const coursesList = Array.isArray(coursesArg) ? coursesArg : []
-
-    // Get all lessons across all courses and sort them by displayOrder
-    const allLessons = coursesList
-      .flatMap((course) =>
-        (course.lessons ?? []).map((lesson) => ({
-          ...lesson,
-          courseId: course.id, // Keep track of which course the lesson belongs to
-        })),
-      )
-      .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-
-    // Find the first incomplete lesson
-    lessonToSelect =
-      allLessons.find((lesson) => progress[lesson.id] !== 100) ??
-      allLessons[allLessons.length - 1] // Fallback to last lesson if all complete
-
-    if (lessonToSelect) {
-      setSelectedLesson(lessonToSelect)
-    }
+  // After finishing a lesson: advance to the very next lesson in order.
+  const goToNextLesson = (currentLessonId: number) => {
+    const all = orderedLessons(courses ?? [])
+    const idx = all.findIndex((lesson) => lesson.id === currentLessonId)
+    const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
+    if (next) setSelectedLesson(next)
   }
 
   const handleSelectLesson = (lesson: Lesson) => {
@@ -99,24 +109,30 @@ const CourseContainer = () => {
     }))
   }
 
-  const handleLessonComplete = () => {
-    if (selectedLesson) {
-      setLessonProgress((prev) => {
-        const updatedProgress = {
-          ...prev,
-          [selectedLesson.id]: 100,
-        }
-        return updatedProgress
-      })
+  const handleLessonComplete = async () => {
+    if (!selectedLesson) return
+    const completedId = selectedLesson.id
+    setLessonProgress((prev) => ({ ...prev, [completedId]: 100 }))
 
-      // Select the next lesson after marking the current one as complete
-      if (courses) {
-        selectNextLesson(courses, {
-          ...lessonProgress,
-          [selectedLesson.id]: 100,
-        })
+    // Re-fetch courses so a phase that just got fully completed unlocks the next
+    // phase immediately, then advance to the next lesson using the fresh data.
+    try {
+      const res = await fetch('/api/courses')
+      if (res.ok) {
+        const fresh = await res.json()
+        if (Array.isArray(fresh)) {
+          setCourses(fresh)
+          const all = orderedLessons(fresh)
+          const idx = all.findIndex((l) => l.id === completedId)
+          const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
+          if (next) setSelectedLesson(next)
+          return
+        }
       }
+    } catch {
+      /* fall through to local advance */
     }
+    goToNextLesson(completedId)
   }
 
   if (loadError) {
