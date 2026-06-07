@@ -5,6 +5,7 @@ export interface AnswerOption {
   audioUrl: string
   rhymeCategory: string | null
   rhymingWordId: number | null
+  feedback?: string | null
 }
 
 export interface ExtraOption {

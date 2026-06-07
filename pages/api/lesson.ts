@@ -1,6 +1,8 @@
 // pages/api/lesson/[id].ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
+import { getSession } from '@auth0/nextjs-auth0'
+import { signDeep } from '../../lib/s3'
 
 const prisma = new PrismaClient()
 
@@ -8,6 +10,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const session = await getSession(req, res)
+  if (!session?.user) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
   const { id } = req.query
 
   if (!id || Array.isArray(id)) {
@@ -38,7 +45,7 @@ export default async function handler(
     }
 
     console.log(`Successfully fetched lesson: ${JSON.stringify(lesson)}`)
-    res.status(200).json(lesson)
+    res.status(200).json(await signDeep(lesson))
   } catch (error) {
     console.error('Error fetching lesson:', error)
     res

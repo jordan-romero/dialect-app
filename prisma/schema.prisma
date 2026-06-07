@@ -108,6 +108,7 @@ model AnswerOption {
   rhymeCategory String?
   rhymingWordId Int?
   audioUrl      String?
+  feedback      String?
   questionId    Int
   question      Question  @relation(fields: [questionId], references: [id])
 }

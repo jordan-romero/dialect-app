@@ -315,11 +315,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         requestAnimationFrame(() => {
           if (!editorRef.current) return
           editorRef.current.focus()
-          setSelectionOffsets(
-            editorRef.current,
-            entry.selStart,
-            entry.selEnd,
-          )
+          setSelectionOffsets(editorRef.current, entry.selStart, entry.selEnd)
           isApplyingHistoryRef.current = false
         })
       })
@@ -340,11 +336,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         requestAnimationFrame(() => {
           if (!editorRef.current) return
           editorRef.current.focus()
-          setSelectionOffsets(
-            editorRef.current,
-            entry.selStart,
-            entry.selEnd,
-          )
+          setSelectionOffsets(editorRef.current, entry.selStart, entry.selEnd)
           isApplyingHistoryRef.current = false
         })
       })
@@ -451,7 +443,10 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
     }
 
     /** After execCommand('delete'), insertText failed — do not call deleteContents() again */
-    const insertSymbolAtCaretOnly = (editor: HTMLDivElement, symbol: string) => {
+    const insertSymbolAtCaretOnly = (
+      editor: HTMLDivElement,
+      symbol: string,
+    ) => {
       const selection = window.getSelection()
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0)

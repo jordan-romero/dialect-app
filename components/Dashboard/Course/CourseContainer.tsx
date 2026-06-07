@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainerV2 from '../Lesson/LessonContainerV2'
 import { Course, Lesson } from './courseTypes'
-import { Flex, Box, Spinner } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Flex,
+  Box,
+  Spinner,
+} from '@chakra-ui/react'
 import LessonContainerV3 from '../Lesson/LessonContainerV3'
 
 const CourseContainer = () => {
@@ -12,41 +20,60 @@ const CourseContainer = () => {
     [key: number]: number
   }>({})
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     setIsLoading(true)
-    Promise.all([
-      fetch('/api/courses').then((response) => response.json()),
-      fetch('/api/lessonProgress').then((response) => response.json()),
-    ])
-      .then(
-        ([coursesData, progressData]: [
-          Course[],
-          { [key: number]: number },
-        ]) => {
-          setCourses(coursesData)
-          setLessonProgress(progressData)
+    setLoadError(null)
 
-          selectNextLesson(coursesData, progressData)
-          setIsLoading(false)
-        },
-      )
-      .catch((error) => {
-        console.error('Error fetching data:', error)
+    const fetchCourses = fetch('/api/courses').then(async (response) => {
+      const data: unknown = await response.json()
+      if (!response.ok || !Array.isArray(data)) {
+        const msg =
+          typeof data === 'object' && data !== null && 'message' in data
+            ? String((data as { message: unknown }).message)
+            : `HTTP ${response.status}`
+        throw new Error(`Courses API: ${msg}`)
+      }
+      return data as Course[]
+    })
+
+    const fetchProgress = fetch('/api/lessonProgress')
+      .then(async (response) => {
+        const data: unknown = await response.json()
+        if (!response.ok) return {}
+        return typeof data === 'object' && data !== null && !Array.isArray(data)
+          ? (data as { [key: number]: number })
+          : {}
+      })
+      .catch(() => ({} as { [key: number]: number }))
+
+    Promise.all([fetchCourses, fetchProgress])
+      .then(([coursesData, progress]) => {
+        setCourses(coursesData)
+        setLessonProgress(progress)
+        selectNextLesson(coursesData, progress)
+        setIsLoading(false)
+      })
+      .catch((error: Error) => {
+        console.error('Error fetching course data:', error)
+        setLoadError(error.message)
         setIsLoading(false)
       })
   }, [])
 
   const selectNextLesson = (
-    courses: Course[],
+    coursesArg: Course[],
     progress: { [key: number]: number },
   ) => {
     let lessonToSelect: Lesson | null = null
 
+    const coursesList = Array.isArray(coursesArg) ? coursesArg : []
+
     // Get all lessons across all courses and sort them by displayOrder
-    const allLessons = courses
+    const allLessons = coursesList
       .flatMap((course) =>
-        course.lessons.map((lesson) => ({
+        (course.lessons ?? []).map((lesson) => ({
           ...lesson,
           courseId: course.id, // Keep track of which course the lesson belongs to
         })),
@@ -92,6 +119,20 @@ const CourseContainer = () => {
     }
   }
 
+  if (loadError) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100vh" p={8}>
+        <Alert status="error" borderRadius="md" maxW="600px">
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Failed to load courses</AlertTitle>
+            <AlertDescription>{loadError}</AlertDescription>
+          </Box>
+        </Alert>
+      </Flex>
+    )
+  }
+
   return (
     <Flex w="100%">
       <Box w="300px">
@@ -106,11 +147,11 @@ const CourseContainer = () => {
           </Flex>
         ) : (
           <CourseSideBar
-            courses={courses}
+            courses={Array.isArray(courses) ? courses : null}
             onSelectLesson={handleSelectLesson}
             hasAccessToPaidCourses={false}
             currentLessonId={selectedLesson?.id || null}
-            lessonProgress={lessonProgress} // Pass lesson progress down as a prop
+            lessonProgress={lessonProgress}
           />
         )}
       </Box>

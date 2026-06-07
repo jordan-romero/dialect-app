@@ -49,12 +49,16 @@ interface HangmanIPAExerciseProps {
   lessonId: number
   quizIndex: number
   onComplete: () => void
+  /** Which static dataset to load. Defaults to the Hangman data; the
+   *  "Build-a-Word" exercise reuses this component with its own data. */
+  dataUrl?: string
 }
 
 export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   lessonId,
   quizIndex,
   onComplete,
+  dataUrl = '/hangmanIPAData.json',
 }) => {
   const [quizData, setQuizData] = useState<HangmanQuizData | null>(null)
   const [userAnswers, setUserAnswers] = useState<{
@@ -79,7 +83,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           'quizIndex:',
           quizIndex,
         )
-        const response = await fetch('/hangmanIPAData.json')
+        const response = await fetch(dataUrl)
         const data: HangmanQuizData = await response.json()
         console.log('Loaded hangman quiz data:', data)
         setQuizData(data)

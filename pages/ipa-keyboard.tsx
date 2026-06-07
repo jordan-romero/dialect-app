@@ -117,19 +117,31 @@ const IPAKeyboardPage: React.FC = () => {
                   <Text as="span" fontWeight="semibold">
                     Shift+Alt+O
                   </Text>{' '}
-                  — voiceless (̥), <Text as="span" fontWeight="semibold">Shift+Alt+OO</Text> — voiceless above (̊)
+                  — voiceless (̥),{' '}
+                  <Text as="span" fontWeight="semibold">
+                    Shift+Alt+OO
+                  </Text>{' '}
+                  — voiceless above (̊)
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
                     Shift+Alt+D
                   </Text>{' '}
-                  — dental (̪), <Text as="span" fontWeight="semibold">Alt+F</Text> — tie bar (͡)
+                  — dental (̪),{' '}
+                  <Text as="span" fontWeight="semibold">
+                    Alt+F
+                  </Text>{' '}
+                  — tie bar (͡)
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   <Text as="span" fontWeight="semibold">
                     Alt+.
                   </Text>{' '}
-                  — extra-short (̆), <Text as="span" fontWeight="semibold">Alt+..</Text> — long (ː)
+                  — extra-short (̆),{' '}
+                  <Text as="span" fontWeight="semibold">
+                    Alt+..
+                  </Text>{' '}
+                  — long (ː)
                 </Text>
                 <Text fontSize="sm" color="gray.700" pl={2}>
                   Hover over any symbol to see its specific shortcut

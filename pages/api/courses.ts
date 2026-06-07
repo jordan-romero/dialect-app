@@ -30,6 +30,8 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
+import { getSession } from '@auth0/nextjs-auth0'
+import { signDeep } from '../../lib/s3'
 
 const prisma = new PrismaClient()
 
@@ -38,6 +40,11 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === 'GET') {
+    const session = await getSession(req, res)
+    if (!session?.user) {
+      res.status(401).json({ message: 'Unauthorized' })
+      return
+    }
     try {
       const courses = await prisma.course.findMany({
         include: {
@@ -64,7 +71,7 @@ export default async function handler(
         },
       })
 
-      res.status(200).json(courses)
+      res.status(200).json(await signDeep(courses))
     } catch (error) {
       console.error('Error fetching courses:', error)
       res.status(500).json({ message: 'Error fetching courses', error })

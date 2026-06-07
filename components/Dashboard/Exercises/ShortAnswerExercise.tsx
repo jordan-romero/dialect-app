@@ -194,9 +194,17 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               .filter((option) => !option.audioUrl)
               .map((option) => (
                 <Box key={option.id} width="100%">
-                  <Text>{option.optionText}</Text>
+                  {/* When there's an audio "reveal sentence" option (e.g. the
+                      "My Baby" exercise), the non-audio optionText is a prompt
+                      and should always show. For answer-only reveal quizzes
+                      (no audio option), optionText is the answer — hide it
+                      until the learner clicks "Reveal Answer". */}
+                  {revealSentenceOption && (
+                    <Text mb={1}>{option.optionText}</Text>
+                  )}
                   <Input
                     type="text"
+                    placeholder="Type your answer…"
                     value={answers[currentQuestion.id]?.[option.id] || ''}
                     onChange={(e) =>
                       handleAnswerChange(
@@ -208,9 +216,28 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                     width="100%"
                     marginBottom={2}
                   />
+                  {!revealSentenceOption && showSentence && (
+                    <Text
+                      mt={1}
+                      fontFamily="'Charis SIL', serif"
+                      color="green.700"
+                    >
+                      Answer: {option.optionText}
+                    </Text>
+                  )}
                 </Box>
               ))}
           </VStack>
+          {!revealSentenceOption && (
+            <Button
+              onClick={() => setShowSentence(true)}
+              mt={4}
+              variant="brandWhite"
+              isDisabled={showSentence}
+            >
+              Reveal Answer
+            </Button>
+          )}
           {showSentence && revealSentenceOption && (
             <Box mt={4}>
               <Text>{revealSentenceOption.optionText}</Text>

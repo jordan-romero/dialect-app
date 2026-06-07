@@ -7,6 +7,8 @@ import {
   AnswerOption,
   ExtraOption,
 } from '@prisma/client'
+import { getSession } from '@auth0/nextjs-auth0'
+import { signDeep } from '../../lib/s3'
 
 const prisma = new PrismaClient()
 
@@ -22,6 +24,12 @@ export default async function handler(
   res: NextApiResponse<QuizWithQuestionsAndAnswers[] | { message: string }>,
 ) {
   if (req.method === 'GET') {
+    const session = await getSession(req, res)
+    if (!session?.user) {
+      res.status(401).json({ message: 'Unauthorized' })
+      return
+    }
+
     const { lessonId } = req.query
 
     if (typeof lessonId !== 'string') {
@@ -48,7 +56,7 @@ export default async function handler(
         return
       }
 
-      res.status(200).json(quizzes)
+      res.status(200).json(await signDeep(quizzes))
     } catch (error) {
       console.error('Error fetching quizzes:', error)
       res.status(500).json({ message: 'Internal Server Error' })

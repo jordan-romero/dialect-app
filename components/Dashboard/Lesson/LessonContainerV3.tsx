@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Box, Text, Button, Flex, Alert, AlertIcon } from '@chakra-ui/react'
 import { Lesson } from '../Course/courseTypes'
 import { lessonTypeComponentMap } from './utils'
@@ -10,6 +10,7 @@ import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
 import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
+import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExercise'
 import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
 
@@ -33,15 +34,24 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     Set<number>
   >(new Set())
 
+  const quizIdsKey = useMemo(
+    () => (lesson.quiz?.length ? lesson.quiz.map((q) => q.id).join(',') : ''),
+    [lesson.quiz],
+  )
+
+  const lessonRef = useRef(lesson)
+  lessonRef.current = lesson
+
   // Load quiz completion status from database
   useEffect(() => {
     const loadQuizCompletionStatus = async () => {
-      if (!lesson.quiz || lesson.quiz.length === 0) return
+      const quizzes = lessonRef.current.quiz
+      if (!quizzes || quizzes.length === 0) return
 
       try {
-        const completionPromises = lesson.quiz.map(async (quiz) => {
+        const completionPromises = quizzes.map(async (quiz) => {
           const response = await fetch(
-            `/api/userQuizProgress?quizId=${quiz.id}&lessonId=${lesson.id}`,
+            `/api/userQuizProgress?quizId=${quiz.id}&lessonId=${lessonRef.current.id}`,
           )
           if (response.ok) {
             const data = await response.json()
@@ -59,7 +69,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         setQuizCompletionStatus(completionMap)
 
         // Also update completedQuizzes for backward compatibility
-        const completedOrders = lesson.quiz
+        const completedOrders = quizzes
           .filter((quiz) => completionMap[quiz.id])
           .map((quiz) => quiz.order)
         setCompletedQuizzes(completedOrders)
@@ -69,7 +79,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     }
 
     loadQuizCompletionStatus()
-  }, [lesson.id, lesson.quiz])
+  }, [lesson.id, quizIdsKey])
 
   if (!lesson || !lesson.steps || lesson.steps.length === 0) {
     return (
@@ -251,6 +261,22 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       }}
                     />
                   )
+                case 'consonantRect':
+                  return (
+                    <ConsonantRectangleExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      onAllCorrectChange={(allCorrect) => {
+                        setFileBasedQuizAllCorrect((prev) => {
+                          const next = new Set(prev)
+                          if (allCorrect) next.add(currentQuiz.order)
+                          else next.delete(currentQuiz.order)
+                          return next
+                        })
+                      }}
+                    />
+                  )
                 case 'lexicalChart':
                   return (
                     <LexicalChartExercise
@@ -265,6 +291,17 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'buildAWord':
+                  // Build-a-Word is mechanically identical to Hangman ("hangman
+                  // minus the hanged man") — reuse the component with its own data.
+                  return (
+                    <HangmanIPAExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      dataUrl="/buildAWordData.json"
                     />
                   )
                 default:
