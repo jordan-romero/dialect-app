@@ -1129,7 +1129,14 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   }
 
   return (
-    <Box ref={keyboardRootRef} w="full" maxW="1000px" mx="auto">
+    <Box
+      ref={keyboardRootRef}
+      w="full"
+      maxW="1000px"
+      mx="auto"
+      maxH={showTextArea ? 'calc(100vh - 110px)' : undefined}
+      overflowY={showTextArea ? 'auto' : undefined}
+    >
       <VStack
         spacing={compact ? 1.5 : 2}
         align="stretch"
@@ -1177,10 +1184,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
         {/* IPA Symbol Grid - TypeIt Layout */}
         <Box
-          border="2px solid"
-          borderColor="brand.iris"
-          borderRadius="lg"
-          p={compact ? 1.5 : 2}
+          border="1px solid"
+          borderColor="gray.200"
+          borderRadius="xl"
+          boxShadow="sm"
+          p={compact ? 2 : 3}
           bg="white"
         >
           {/* Compact mode - simple symbol list or categorized */}
@@ -1219,7 +1227,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     minW={buttonSize}
                                     h={buttonSize}
                                     onClick={() => handleSymbolClick(symbol)}
-                                    _hover={{ bg: 'brand.blueLight' }}
+                                    borderRadius="lg"
+                                    fontWeight="semibold"
+                                    _hover={{
+                                      bg: 'purple.50',
+                                      borderColor: 'brand.iris',
+                                      color: 'brand.iris',
+                                    }}
                                     bg={getButtonBg(symbol)}
                                   >
                                     {symbol}
@@ -1261,7 +1275,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     minW={buttonSize}
                                     h={buttonSize}
                                     onClick={() => handleSymbolClick(symbol)}
-                                    _hover={{ bg: 'brand.blueLight' }}
+                                    borderRadius="lg"
+                                    fontWeight="semibold"
+                                    _hover={{
+                                      bg: 'purple.50',
+                                      borderColor: 'brand.iris',
+                                      color: 'brand.iris',
+                                    }}
                                     bg={getButtonBg(symbol)}
                                   >
                                     {symbol}
@@ -1303,7 +1323,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     minW={buttonSize}
                                     h={buttonSize}
                                     onClick={() => handleSymbolClick(symbol)}
-                                    _hover={{ bg: 'brand.blueLight' }}
+                                    borderRadius="lg"
+                                    fontWeight="semibold"
+                                    _hover={{
+                                      bg: 'purple.50',
+                                      borderColor: 'brand.iris',
+                                      color: 'brand.iris',
+                                    }}
                                     bg={getButtonBg(symbol)}
                                   >
                                     {symbol}
@@ -1345,7 +1371,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     minW={buttonSize}
                                     h={buttonSize}
                                     onClick={() => handleSymbolClick(symbol)}
-                                    _hover={{ bg: 'brand.blueLight' }}
+                                    borderRadius="lg"
+                                    fontWeight="semibold"
+                                    _hover={{
+                                      bg: 'purple.50',
+                                      borderColor: 'brand.iris',
+                                      color: 'brand.iris',
+                                    }}
                                     bg={getButtonBg(symbol)}
                                   >
                                     {symbol}
@@ -1387,7 +1419,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     minW={buttonSize}
                                     h={buttonSize}
                                     onClick={() => handleSymbolClick(symbol)}
-                                    _hover={{ bg: 'brand.blueLight' }}
+                                    borderRadius="lg"
+                                    fontWeight="semibold"
+                                    _hover={{
+                                      bg: 'purple.50',
+                                      borderColor: 'brand.iris',
+                                      color: 'brand.iris',
+                                    }}
                                     bg={getButtonBg(symbol)}
                                   >
                                     {symbol}
@@ -1418,7 +1456,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                           minW={buttonSize}
                           h={buttonSize}
                           onClick={() => handleSymbolClick(symbol)}
-                          _hover={{ bg: 'brand.blueLight' }}
+                          borderRadius="lg"
+                          fontWeight="semibold"
+                          _hover={{
+                            bg: 'purple.50',
+                            borderColor: 'brand.iris',
+                            color: 'brand.iris',
+                          }}
                           bg={getButtonBg(symbol)}
                         >
                           {symbol}
@@ -1489,7 +1533,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                 minW={buttonSize}
                                 h={buttonSize}
                                 onClick={() => handleSymbolClick(symbol)}
-                                _hover={{ bg: 'brand.blueLight' }}
+                                borderRadius="lg"
+                                fontWeight="semibold"
+                                _hover={{
+                                  bg: 'purple.50',
+                                  borderColor: 'brand.iris',
+                                  color: 'brand.iris',
+                                }}
                                 bg={getButtonBg(symbol)}
                               >
                                 {symbol}
@@ -1561,7 +1611,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                         onClick={() =>
                                           handleSymbolClick(symbol)
                                         }
-                                        _hover={{ bg: 'brand.blueLight' }}
+                                        borderRadius="lg"
+                                        fontWeight="semibold"
+                                        _hover={{
+                                          bg: 'purple.50',
+                                          borderColor: 'brand.iris',
+                                          color: 'brand.iris',
+                                        }}
                                         bg={getButtonBg(symbol)}
                                       >
                                         {symbol}
@@ -1631,7 +1687,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                         onClick={() =>
                                           handleSymbolClick(symbol)
                                         }
-                                        _hover={{ bg: 'brand.blueLight' }}
+                                        borderRadius="lg"
+                                        fontWeight="semibold"
+                                        _hover={{
+                                          bg: 'purple.50',
+                                          borderColor: 'brand.iris',
+                                          color: 'brand.iris',
+                                        }}
                                         bg={getButtonBg(symbol)}
                                       >
                                         {symbol}
@@ -1654,7 +1716,15 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
         {/* Text Area with inline action buttons or Rich Text Editor */}
         {showTextArea && (
-          <>
+          <Box
+            position="sticky"
+            bottom={0}
+            zIndex={2}
+            bg="white"
+            pt={2}
+            borderTop="1px solid"
+            borderColor="gray.100"
+          >
             {useRichTextEditor ? (
               <RichTextIPAEditor
                 ref={editorRef}
@@ -1666,9 +1736,10 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
               />
             ) : (
               <Box
-                border="2px solid"
-                borderColor="brand.iris"
-                borderRadius="lg"
+                border="1px solid"
+                borderColor="gray.200"
+                borderRadius="xl"
+                boxShadow="sm"
                 p={2}
                 bg="white"
                 position="relative"
@@ -1714,7 +1785,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 </Flex>
               </Box>
             )}
-          </>
+          </Box>
         )}
       </VStack>
     </Box>

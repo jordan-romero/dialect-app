@@ -26,7 +26,10 @@ export default async function handler(
       include: {
         lessons: {
           include: { resources: { orderBy: { order: 'asc' } } },
-          orderBy: { id: 'asc' },
+          orderBy: [
+            { displayOrder: { sort: 'asc', nulls: 'last' } },
+            { id: 'asc' },
+          ],
         },
       },
       orderBy: { id: 'asc' },

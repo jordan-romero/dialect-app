@@ -66,9 +66,10 @@ export default async function handler(
                 },
               },
             },
-            orderBy: {
-              id: 'asc',
-            },
+            orderBy: [
+              { displayOrder: { sort: 'asc', nulls: 'last' } },
+              { id: 'asc' },
+            ],
           },
         },
         orderBy: {
