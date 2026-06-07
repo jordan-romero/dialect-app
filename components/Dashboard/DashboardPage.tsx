@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { UserProfile, useUser } from '@auth0/nextjs-auth0/client'
-import { Box, Flex } from '@chakra-ui/react'
 import CourseContainer from './Course/CourseContainer'
-import DashboardNavigationContainer from './DashNavigation/DashboardNavigationContainer'
+import DashboardLayout from './DashboardLayout'
 import WelcomeHeader from './WelcomeHeader'
 
 const DashboardPage = () => {
@@ -56,13 +55,10 @@ const DashboardPage = () => {
   }, [currentUser])
 
   return (
-    <Flex align="stretch">
-      <DashboardNavigationContainer />
-      <Box flex="1" minW={0}>
-        <WelcomeHeader user={currentUser?.user} />
-        <CourseContainer />
-      </Box>
-    </Flex>
+    <DashboardLayout>
+      <WelcomeHeader user={currentUser?.user} />
+      <CourseContainer />
+    </DashboardLayout>
   )
 }
 

@@ -35,10 +35,10 @@ const NavItem: React.FC<NavItemProps> = ({
 }) => {
   const row = (
     <Flex
-      align="center"
-      gap={4}
+      w="100%"
       h="48px"
-      px="22px"
+      align="center"
+      overflow="hidden"
       borderRadius="xl"
       cursor="pointer"
       color="util.white"
@@ -46,7 +46,11 @@ const NavItem: React.FC<NavItemProps> = ({
       transition="background 0.15s ease"
       _hover={{ bg: 'whiteAlpha.200' }}
     >
-      <Icon as={icon} boxSize={6} flexShrink={0} />
+      {/* Fixed-width slot = collapsed inner width, so the icon is centered in
+          the bar when collapsed and stays put when the rail expands. */}
+      <Flex w="56px" flexShrink={0} align="center" justify="center">
+        <Icon as={icon} boxSize={6} />
+      </Flex>
       <Text
         fontSize="sm"
         fontWeight="medium"
