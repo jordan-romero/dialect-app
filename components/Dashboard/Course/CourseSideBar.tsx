@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { Box, Flex, Text, Icon, VStack, HStack, Button } from '@chakra-ui/react'
+import { Box, Flex, Text, Icon, VStack, HStack } from '@chakra-ui/react'
 import {
   MdCheck,
   MdLockOpen,
@@ -108,44 +108,68 @@ const CourseSideBar = ({
     }))
   }
 
+  const iconColor = (
+    lesson: Lesson,
+    index: number,
+    courseLessons: Lesson[],
+    courseLocked: boolean,
+    isCurrent: boolean,
+  ) => {
+    if (courseLocked || isLessonLocked(lesson, index, courseLessons))
+      return 'gray.400'
+    const progress = lessonProgress[lesson.id] || 0
+    if (progress === 100) return 'green.500'
+    if (isCurrent || progress > 0) return 'brand.iris'
+    return 'gray.400'
+  }
+
   return (
     <Box
-      p={4}
+      p={3}
       width={300}
       height="100vh"
-      bg="gray.100"
-      color="black"
-      borderTopLeftRadius="xl"
-      borderBottomLeftRadius="xl"
+      bg="white"
+      color="gray.800"
+      borderRight="1px solid"
+      borderColor="gray.100"
       overflowY="auto"
     >
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={5} align="stretch">
         {courseList.map((course) => {
           const courseLocked = isCourseLocked(course)
+          const expanded = expandedCourses[course.id]
           return (
             <Box key={course.id}>
-              <Button
-                variant="ghost"
-                justifyContent="space-between"
-                width="100%"
-                opacity={courseLocked ? 0.6 : 1}
+              <Flex
+                as="button"
+                w="100%"
+                align="center"
+                justify="space-between"
+                px={3}
+                py={2}
+                borderRadius="lg"
+                opacity={courseLocked ? 0.55 : 1}
+                _hover={{ bg: 'gray.50' }}
+                transition="background 0.15s ease"
                 onClick={() => toggleCourseExpansion(course.id)}
               >
-                <HStack>
+                <HStack spacing={2}>
                   {courseLocked && (
-                    <Icon as={MdLock} boxSize={4} color="gray.500" />
+                    <Icon as={MdLock} boxSize={4} color="gray.400" />
                   )}
-                  <Text fontWeight="bold" fontSize="lg">
+                  <Text fontWeight="bold" fontSize="md" letterSpacing="-0.01em">
                     {course.title}
                   </Text>
                 </HStack>
                 <Icon
-                  as={expandedCourses[course.id] ? MdExpandLess : MdExpandMore}
-                  boxSize={6}
+                  as={expanded ? MdExpandLess : MdExpandMore}
+                  boxSize={5}
+                  color="gray.400"
                 />
-              </Button>
-              {expandedCourses[course.id] && (
-                <VStack spacing={2} align="stretch" pl={4} mt={2}>
+              </Flex>
+
+              {expanded && (
+                <VStack spacing={1} align="stretch" mt={1}>
                   {(course.lessons ?? []).map((lesson, index) => {
                     const courseLessons = course.lessons ?? []
                     const isLocked =
@@ -153,14 +177,25 @@ const CourseSideBar = ({
                       isLessonLocked(lesson, index, courseLessons)
                     const isCurrent = lesson.id === currentLessonId
                     return (
-                      <HStack
+                      <Flex
                         key={lesson.id}
-                        onClick={() => !isLocked && onSelectLesson(lesson)}
-                        cursor={isLocked ? 'not-allowed' : 'pointer'}
+                        align="center"
+                        gap={3}
+                        px={3}
+                        py={2.5}
+                        borderRadius="lg"
+                        borderLeft="3px solid"
+                        borderLeftColor={
+                          isCurrent ? 'brand.iris' : 'transparent'
+                        }
+                        bg={isCurrent ? 'purple.50' : 'transparent'}
+                        color={isCurrent ? 'brand.iris' : 'gray.700'}
+                        fontWeight={isCurrent ? 'semibold' : 'normal'}
                         opacity={isLocked ? 0.5 : 1}
-                        bg={isCurrent ? 'blue.100' : 'transparent'}
-                        p={2}
-                        borderRadius="md"
+                        cursor={isLocked ? 'not-allowed' : 'pointer'}
+                        transition="background 0.15s ease"
+                        _hover={{ bg: isLocked ? 'transparent' : 'gray.50' }}
+                        onClick={() => !isLocked && onSelectLesson(lesson)}
                       >
                         <Icon
                           as={getLessonIcon(
@@ -169,22 +204,22 @@ const CourseSideBar = ({
                             courseLessons,
                             courseLocked,
                           )}
-                          boxSize={6}
-                          mr={4}
-                          color={
-                            lessonProgress[lesson.id] === 100
-                              ? 'green.500'
-                              : lessonProgress[lesson.id] > 0
-                              ? 'purple.500'
-                              : 'gray.500'
-                          }
+                          boxSize={5}
+                          flexShrink={0}
+                          color={iconColor(
+                            lesson,
+                            index,
+                            courseLessons,
+                            courseLocked,
+                            isCurrent,
+                          )}
                         />
-                        <Text>
+                        <Text fontSize="sm" noOfLines={2}>
                           {lesson.displayOrder
                             ? `${lesson.displayOrder}. ${lesson.title}`
                             : lesson.title}
                         </Text>
-                      </HStack>
+                      </Flex>
                     )
                   })}
                 </VStack>

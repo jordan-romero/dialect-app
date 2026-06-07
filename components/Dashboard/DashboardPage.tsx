@@ -3,6 +3,7 @@ import { UserProfile, useUser } from '@auth0/nextjs-auth0/client'
 import { Box, Flex } from '@chakra-ui/react'
 import CourseContainer from './Course/CourseContainer'
 import DashboardNavigationContainer from './DashNavigation/DashboardNavigationContainer'
+import WelcomeHeader from './WelcomeHeader'
 
 const DashboardPage = () => {
   // TODO clean this up and pull it out into a separate file
@@ -55,14 +56,13 @@ const DashboardPage = () => {
   }, [currentUser])
 
   return (
-    <Box>
-      Welcome {currentUser?.user?.email}!
-      <Flex>
-        <DashboardNavigationContainer />
+    <Flex align="stretch">
+      <DashboardNavigationContainer />
+      <Box flex="1" minW={0}>
+        <WelcomeHeader user={currentUser?.user} />
         <CourseContainer />
-      </Flex>
-      <Flex></Flex>
-    </Box>
+      </Box>
+    </Flex>
   )
 }
 

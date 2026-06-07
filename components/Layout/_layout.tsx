@@ -2,22 +2,25 @@ import React, { ReactNode } from 'react'
 import { Box } from '@chakra-ui/react'
 import Navbar from './Navbar'
 import Footer from './Footer'
-import useMobileCheck from '../hooks/useMobileCheck'
 
 interface Props {
   children?: ReactNode
   // any props that come into the component
 }
 
+// Lock the whole app to a common large-desktop width: fill the screen (with
+// padding) up to 1600px, then cap so it never stretches on huge monitors.
+const MAX_APP_WIDTH = '1600px'
+
 const Layout = ({ children }: Props) => {
-  const isMobile = useMobileCheck()
   return (
     <Box
-      w={isMobile ? '90vw' : '95vw'}
-      maxW="1500px"
+      w="100%"
+      maxW={MAX_APP_WIDTH}
       h="auto"
       mr="auto"
       ml="auto"
+      px={{ base: 4, md: 6, lg: 8 }}
     >
       <Navbar />
       {children}

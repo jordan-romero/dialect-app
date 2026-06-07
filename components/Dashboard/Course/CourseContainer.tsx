@@ -9,9 +9,9 @@ import {
   AlertDescription,
   Flex,
   Box,
-  Spinner,
 } from '@chakra-ui/react'
 import LessonContainerV3 from '../Lesson/LessonContainerV3'
+import { SidebarSkeleton, LessonSkeleton } from './CourseSkeleton'
 
 const CourseContainer = () => {
   const [courses, setCourses] = useState<Course[] | null>(null)
@@ -153,14 +153,7 @@ const CourseContainer = () => {
     <Flex w="100%">
       <Box w="300px">
         {isLoading ? (
-          <Flex justifyContent="center" alignItems="center" height="400px">
-            <Spinner
-              color="brand.purple"
-              size="xl"
-              thickness="4px"
-              speed="0.65s"
-            />
-          </Flex>
+          <SidebarSkeleton />
         ) : (
           <CourseSideBar
             courses={Array.isArray(courses) ? courses : null}
@@ -173,14 +166,7 @@ const CourseContainer = () => {
       </Box>
       <Box flex="2">
         {isLoading ? (
-          <Flex justifyContent="center" alignItems="center" height="100vh">
-            <Spinner
-              color="brand.purple"
-              size="xl"
-              thickness="4px"
-              speed="0.65s"
-            />
-          </Flex>
+          <LessonSkeleton />
         ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100vh">
             {selectedLesson.steps && selectedLesson.steps.length > 0 ? (
