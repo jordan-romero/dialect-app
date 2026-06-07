@@ -11,6 +11,7 @@ import {
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 
 interface ShortAnswerQuizProps {
   lessonId: number
@@ -171,6 +172,8 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     showSentence ||
     (allInputsFilled && !revealSentenceOption)
   )
+
+  if (!currentQuiz) return <QuizSkeleton />
 
   return (
     <Box>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Box, Button, Text, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 
 interface Word {
   ipa: string
@@ -115,7 +116,7 @@ export const CorrectionsExercise: React.FC<Props> = ({
     onComplete()
   }
 
-  if (!data) return <Text>Loading…</Text>
+  if (!data) return <QuizSkeleton />
   if (!item) return <Text>No correction items.</Text>
 
   return (

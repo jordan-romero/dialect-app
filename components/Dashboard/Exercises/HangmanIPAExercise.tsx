@@ -15,6 +15,7 @@ import {
 import { Icon } from '@chakra-ui/react'
 import { MdKeyboard } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface HangmanQuestion {
@@ -304,7 +305,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   const isQuizValid = checkOverallCompletion()
 
   if (!quizData) {
-    return <Text>Loading hangman IPA quiz...</Text>
+    return <QuizSkeleton />
   }
 
   const currentQuestion = quizData.questions_data[currentQuestionIndex]

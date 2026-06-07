@@ -14,6 +14,7 @@ import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -343,6 +344,8 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   // quiz (e.g. word→transcription multiple choice) and we skip the empty
   // first part and its symbol-matching instructions.
   const hasParts = shuffledPart1Questions.length > 0
+
+  if (!multipleChoiceQuiz) return <QuizSkeleton />
 
   return (
     <Box>

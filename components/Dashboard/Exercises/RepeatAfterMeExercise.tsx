@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { MdVolumeUp, MdMic, MdStop } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 
 interface LexicalSet {
   name: string
@@ -170,7 +171,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
     onComplete()
   }
 
-  if (!data) return <Text>Loading exercise…</Text>
+  if (!data) return <QuizSkeleton />
   if (!item) return <Text>No items found.</Text>
 
   return (

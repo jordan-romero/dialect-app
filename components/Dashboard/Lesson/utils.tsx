@@ -4,17 +4,16 @@ import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { Lesson } from '../Course/courseTypes'
 import { VowelQuadrilateral } from '../Exercises/VowelQuadrilateral'
+import IframeWithSkeleton from './IframeWithSkeleton'
 
 export const lessonTypeComponentMap = {
   video: (lesson: Lesson) => (
     <Box mb={10} mr="auto" ml="auto" mt={10}>
-      <iframe
-        width="95%"
-        height="530"
+      <IframeWithSkeleton
         src={lesson.videoUrl}
         title={lesson.videoTitle?.trim() || lesson.title}
-        allowFullScreen
-      ></iframe>
+        height="530px"
+      />
     </Box>
   ),
   resource: (lesson: Lesson) => (

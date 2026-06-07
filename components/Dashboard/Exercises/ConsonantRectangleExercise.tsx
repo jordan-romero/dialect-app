@@ -16,6 +16,7 @@ import {
   Td,
 } from '@chakra-ui/react'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 
 interface Slot {
   id: string
@@ -199,7 +200,7 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
     onComplete()
   }
 
-  if (!data) return <Text>Loading consonant rectangle…</Text>
+  if (!data) return <QuizSkeleton />
 
   return (
     <VStack spacing={5} align="stretch">

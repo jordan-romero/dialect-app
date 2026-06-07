@@ -13,6 +13,7 @@ import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
 import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExercise'
 import { RepeatAfterMeExercise } from '../Exercises/RepeatAfterMeExercise'
 import { QuizCelebration } from '../Exercises/QuizCelebration'
+import IframeWithSkeleton from './IframeWithSkeleton'
 import { CorrectionsExercise } from '../Exercises/CorrectionsExercise'
 import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
@@ -182,6 +183,10 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       // Same celebration for every quiz type across the platform.
       setCelebratingQuizId(quiz.id)
     }
+    // Re-check badges (a completed exercise may have earned one).
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('badges:check'))
+    }
   }
 
   // "Try again": clear the saved answers for this quiz, reset local completion,
@@ -235,15 +240,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                   Open resource ↗
                 </a>
               ) : (
-                <iframe
-                  width="95%"
-                  height="750px"
+                <IframeWithSkeleton
                   src={`https://docs.google.com/viewer?url=${encodeURIComponent(
                     r.url,
                   )}&embedded=true`}
                   title={r.name}
-                  allowFullScreen
-                ></iframe>
+                  height="750px"
+                />
               )}
             </Box>
           </Box>

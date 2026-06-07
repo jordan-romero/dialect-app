@@ -17,6 +17,7 @@ import {
   TabPanel,
 } from '@chakra-ui/react'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface LexicalItem {
@@ -238,7 +239,7 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
   const isQuizValid = checkOverallCompletion()
 
   if (!chartData) {
-    return <Text>Loading lexical chart quiz...</Text>
+    return <QuizSkeleton />
   }
 
   return (

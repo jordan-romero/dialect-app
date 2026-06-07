@@ -145,7 +145,8 @@ const DashboardNavigationContainer = () => {
         direction="column"
         justify="space-between"
         bg="brand.purple"
-        py={6}
+        pt={0}
+        pb={6}
         overflow="hidden"
         zIndex={30}
         borderRightRadius="2xl"
@@ -153,19 +154,28 @@ const DashboardNavigationContainer = () => {
         _hover={{ w: RAIL_EXPANDED, boxShadow: '8px 0 30px rgba(0,0,0,0.25)' }}
       >
         <Box>
-          {/* Logo (mark only) — links back to the public site */}
+          {/* Logo (mark only) — links back to the public site. The 60px band
+              matches the welcome bar height so they line up across the top. */}
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <Flex w="56px" mx={2} justify="center" align="center" mb={5}>
+            <Flex w="56px" h="60px" mx={2} justify="center" align="center">
               <Image
-                src="/actingAccentsLogo.png"
+                src="/actingAccentsMark.png"
                 alt="Acting Accents"
-                boxSize="50px"
+                w="64px"
+                h="auto"
+                maxW="none"
                 objectFit="contain"
               />
             </Flex>
           </Link>
 
-          <VStack spacing={2} align="stretch" px={2}>
+          <VStack spacing={2} align="stretch" px={2} mt={3}>
+            <NavItem
+              icon={FiGrid}
+              label="Dashboard"
+              href="/dashboard/progress"
+              active={path === '/dashboard/progress'}
+            />
             <NavItem
               icon={FiPlayCircle}
               label="Continue"
@@ -183,12 +193,6 @@ const DashboardNavigationContainer = () => {
               label="Keyboard"
               href="/dashboard/keyboard"
               active={path === '/dashboard/keyboard'}
-            />
-            <NavItem
-              icon={FiGrid}
-              label="Dashboard"
-              href="/dashboard/progress"
-              active={path === '/dashboard/progress'}
             />
             <NavItem icon={FiHelpCircle} label="Get Help" onClick={getHelp} />
           </VStack>

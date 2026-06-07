@@ -3,6 +3,7 @@ import { Box, Text, Grid, GridItem, Button, Flex } from '@chakra-ui/react'
 import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface SymbolExerciseProps {
@@ -248,6 +249,8 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     if (!isCompleted) await submitQuiz()
     onComplete()
   }
+
+  if (!quizData) return <QuizSkeleton />
 
   return (
     <Box>

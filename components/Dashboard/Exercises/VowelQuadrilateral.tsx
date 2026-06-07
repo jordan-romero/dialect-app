@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, Flex, Image, VStack, Text } from '@chakra-ui/react'
 import vowelChartImage from '@/public/ipaVowelChart.png'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface VowelPosition {
@@ -232,7 +233,7 @@ export const VowelQuadrilateralExercise: React.FC<
   const isQuizValid = checkQuizCompletion()
 
   if (!quizData) {
-    return <Text>Loading vowel quadrilateral quiz...</Text>
+    return <QuizSkeleton />
   }
 
   return (

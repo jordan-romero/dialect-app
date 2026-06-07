@@ -20,6 +20,7 @@ model User {
   avatar                  String?
   bio                     String?
   interests               String[]  @default([])
+  badges                  String[]  @default([])
   hasAccessToPaidCourses  Boolean   @default(false)
   enrollments             Enrollment[]
   lessonProgress          LessonProgress[]

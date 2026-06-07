@@ -10,6 +10,7 @@ import {
 } from './dragHandlers'
 import { Box, Text } from '@chakra-ui/react'
 import QuizNavigation from '../QuizNavigation'
+import QuizSkeleton from '../QuizSkeleton'
 
 interface DragAndDropExerciseProps {
   lessonId: number
@@ -277,6 +278,8 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
 
     setIsQuestionComplete(finalIsComplete)
   }
+
+  if (!currentQuiz) return <QuizSkeleton />
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>

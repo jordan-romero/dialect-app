@@ -114,6 +114,11 @@ const CourseContainer = () => {
     const completedId = selectedLesson.id
     setLessonProgress((prev) => ({ ...prev, [completedId]: 100 }))
 
+    // A finished lesson/phase may have earned a badge.
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('badges:check'))
+    }
+
     // Re-fetch courses so a phase that just got fully completed unlocks the next
     // phase immediately, then advance to the next lesson using the fresh data.
     try {
