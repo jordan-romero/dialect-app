@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Box } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import Navbar from './Navbar'
 import Footer from './Footer'
 
@@ -8,19 +9,22 @@ interface Props {
   // any props that come into the component
 }
 
-// Lock the whole app to a common large-desktop width: fill the screen (with
-// padding) up to 1600px, then cap so it never stretches on huge monitors.
+// Marketing pages lock to a common large-desktop width (don't stretch on huge
+// monitors). The dashboard is an app shell, so it fills the whole viewport.
 const MAX_APP_WIDTH = '1600px'
 
 const Layout = ({ children }: Props) => {
+  const router = useRouter()
+  const isDashboard = router.pathname.startsWith('/dashboard')
+
   return (
     <Box
       w="100%"
-      maxW={MAX_APP_WIDTH}
+      maxW={isDashboard ? '100%' : MAX_APP_WIDTH}
       h="auto"
       mr="auto"
       ml="auto"
-      px={{ base: 4, md: 6, lg: 8 }}
+      px={isDashboard ? 0 : { base: 4, md: 6, lg: 8 }}
     >
       <Navbar />
       {children}

@@ -8,6 +8,7 @@ export interface EarnedBadge {
   id: string
   label: string
   hint: string
+  count?: number
 }
 
 const pop = keyframes`
@@ -130,7 +131,9 @@ const BadgeCelebration: React.FC<Props> = ({
           textTransform="uppercase"
           opacity={0.9}
         >
-          Badge earned
+          {badge.count && badge.count > 1
+            ? `Earned ×${badge.count}`
+            : 'Badge earned'}
         </Text>
         <Box>
           <Text fontSize="3xl" fontWeight="bold" lineHeight="1.1">

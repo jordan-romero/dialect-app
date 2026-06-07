@@ -31,22 +31,28 @@ export default async function handler(
       session.user.email as string,
     )
 
-    const earnedIds = badges.filter((b) => b.earned).map((b) => b.id)
-    const already = new Set(user.badges || [])
-    const newlyEarned = badges.filter((b) => b.earned && !already.has(b.id))
+    // A repeatable badge's "state" includes its count, so a higher tier
+    // (e.g. checkpoint ×2) counts as newly earned and re-celebrates.
+    const stateKey = (b: { id: string; count?: number }) =>
+      b.count && b.count > 1 ? `${b.id}:${b.count}` : b.id
 
-    if (newlyEarned.length > 0) {
+    const earned = badges.filter((b) => b.earned)
+    const already = new Set(user.badges || [])
+    const newly = earned.filter((b) => !already.has(stateKey(b)))
+
+    if (newly.length > 0) {
       await prisma.user.update({
         where: { id: user.id },
-        data: { badges: earnedIds },
+        data: { badges: earned.map(stateKey) },
       })
     }
 
     return res.status(200).json({
-      newlyEarned: newlyEarned.map((b) => ({
+      newlyEarned: newly.map((b) => ({
         id: b.id,
         label: b.label,
         hint: b.hint,
+        count: b.count,
       })),
     })
   } catch (error) {

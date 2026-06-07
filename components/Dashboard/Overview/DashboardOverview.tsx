@@ -24,7 +24,19 @@ import {
 } from '@chakra-ui/react'
 import { FiLock, FiArrowRight } from 'react-icons/fi'
 import { MdLocalFireDepartment } from 'react-icons/md'
+import { keyframes } from '@emotion/react'
 import { visualFor } from '../badgeVisuals'
+import WelcomeHeader from '../WelcomeHeader'
+
+// Flames lick up from the bottom of the streak card when it ignites.
+const flicker = keyframes`
+  0%, 100% { transform: translateY(0) scaleY(1) rotate(-2deg); opacity: 0.85; }
+  50% { transform: translateY(-8px) scaleY(1.3) rotate(2deg); opacity: 1; }
+`
+const emberGlow = keyframes`
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
+  50% { box-shadow: 0 0 28px 4px rgba(249,115,22,0.55); }
+`
 
 interface Phase {
   id: number
@@ -92,70 +104,111 @@ const BadgeMedallion: React.FC<{ badge: Badge }> = ({ badge }) => {
           transition="transform 0.15s ease"
           _hover={{ transform: 'translateY(-3px)' }}
         >
-        <Flex
-          align="center"
-          justify="center"
-          boxSize="64px"
-          borderRadius="full"
-          position="relative"
-          bgGradient={badge.earned ? visual.grad : undefined}
-          bg={badge.earned ? undefined : lockedDisc}
-          boxShadow={badge.earned ? '0 8px 20px rgba(95,83,207,0.25)' : 'none'}
-        >
-          <Icon
-            as={visual.icon}
-            boxSize={7}
-            color={badge.earned ? 'white' : lockedIcon}
-          />
-          {!badge.earned && (
+          <Flex
+            align="center"
+            justify="center"
+            boxSize="64px"
+            borderRadius="full"
+            position="relative"
+            bgGradient={badge.earned ? visual.grad : undefined}
+            bg={badge.earned ? undefined : lockedDisc}
+            boxShadow={
+              badge.earned ? '0 8px 20px rgba(95,83,207,0.25)' : 'none'
+            }
+          >
+            <Icon
+              as={visual.icon}
+              boxSize={7}
+              color={badge.earned ? 'white' : lockedIcon}
+            />
+            {!badge.earned && (
+              <Flex
+                position="absolute"
+                bottom="-2px"
+                right="-2px"
+                boxSize="22px"
+                borderRadius="full"
+                bg={lockChipBg}
+                align="center"
+                justify="center"
+                boxShadow="sm"
+              >
+                <Icon as={FiLock} boxSize={3} color={lockedIcon} />
+              </Flex>
+            )}
+            {badge.earned && (badge.count ?? 1) > 1 && (
+              <Flex
+                position="absolute"
+                bottom="-3px"
+                right="-3px"
+                minW="22px"
+                h="22px"
+                px="5px"
+                borderRadius="full"
+                bg="gray.900"
+                color="white"
+                align="center"
+                justify="center"
+                fontSize="11px"
+                fontWeight="bold"
+                border="2px solid"
+                borderColor={lockChipBg}
+              >
+                ×{badge.count}
+              </Flex>
+            )}
+          </Flex>
+          <Text
+            fontSize="xs"
+            fontWeight="medium"
+            textAlign="center"
+            noOfLines={2}
+            opacity={badge.earned ? 1 : 0.6}
+            maxW="84px"
+          >
+            {badge.label}
+          </Text>
+        </VStack>
+      </PopoverTrigger>
+      <PopoverContent w="250px">
+        <PopoverArrow />
+        <PopoverBody>
+          <HStack spacing={3} align="flex-start">
             <Flex
-              position="absolute"
-              bottom="-2px"
-              right="-2px"
-              boxSize="22px"
-              borderRadius="full"
-              bg={lockChipBg}
               align="center"
               justify="center"
-              boxShadow="sm"
-            >
-              <Icon as={FiLock} boxSize={3} color={lockedIcon} />
-            </Flex>
-          )}
-          {badge.earned && (badge.count ?? 1) > 1 && (
-            <Flex
-              position="absolute"
-              bottom="-3px"
-              right="-3px"
-              minW="22px"
-              h="22px"
-              px="5px"
+              boxSize="38px"
               borderRadius="full"
-              bg="gray.900"
-              color="white"
-              align="center"
-              justify="center"
-              fontSize="11px"
-              fontWeight="bold"
-              border="2px solid"
-              borderColor={lockChipBg}
+              flexShrink={0}
+              bgGradient={badge.earned ? visual.grad : undefined}
+              bg={badge.earned ? undefined : lockedDisc}
             >
-              ×{badge.count}
+              <Icon
+                as={visual.icon}
+                boxSize={4}
+                color={badge.earned ? 'white' : lockedIcon}
+              />
             </Flex>
-          )}
-        </Flex>
-        <Text
-          fontSize="xs"
-          fontWeight="medium"
-          textAlign="center"
-          noOfLines={2}
-          opacity={badge.earned ? 1 : 0.6}
-          maxW="84px"
-        >
-          {badge.label}
-        </Text>
-      </VStack>
-    </Tooltip>
+            <Box>
+              <Text fontWeight="bold" fontSize="sm">
+                {badge.label}
+              </Text>
+              <Text fontSize="xs" color={subtle} mt={0.5}>
+                {badge.hint}
+              </Text>
+              <HStack spacing={2} mt={2}>
+                <ChakraBadge colorScheme={badge.earned ? 'green' : 'gray'}>
+                  {badge.earned ? 'Earned' : 'Locked'}
+                </ChakraBadge>
+                {badge.earned && (badge.count ?? 1) > 1 && (
+                  <ChakraBadge colorScheme="purple">×{badge.count}</ChakraBadge>
+                )}
+              </HStack>
+            </Box>
+          </HStack>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -254,8 +307,44 @@ const ProgressCard: React.FC<{ data: Overview }> = ({ data }) => {
 const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
   const subtle = useColorModeValue('gray.500', 'gray.400')
   const { current, best } = data.streak
+  const [igniting, setIgniting] = useState(false)
+  const [displayCount, setDisplayCount] = useState(current)
+
+  // Ignite (flames + count-up) only when the streak has gone UP since last seen.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const key = 'aa:lastStreakSeen'
+    const prev = Number(window.localStorage.getItem(key) || '0')
+    window.localStorage.setItem(key, String(current))
+    if (current > prev && current > 0) {
+      setIgniting(true)
+      let n = prev
+      setDisplayCount(prev)
+      const iv = setInterval(() => {
+        n += 1
+        setDisplayCount(n)
+        if (n >= current) clearInterval(iv)
+      }, 180)
+      const t = setTimeout(() => setIgniting(false), 4200)
+      return () => {
+        clearInterval(iv)
+        clearTimeout(t)
+      }
+    }
+    setDisplayCount(current)
+  }, [current])
+
   return (
-    <Card display="flex" flexDirection="column" justifyContent="center">
+    <Card
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      position="relative"
+      overflow="hidden"
+      animation={
+        igniting ? `${emberGlow} 1.2s ease-in-out infinite` : undefined
+      }
+    >
       <Heading size="md" mb={3}>
         Streak
       </Heading>
@@ -268,11 +357,18 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
           bgGradient="linear(to-br, #F97316, #EF4444)"
           boxShadow="0 8px 20px rgba(239,68,68,0.3)"
         >
-          <Icon as={MdLocalFireDepartment} boxSize={7} color="white" />
+          <Icon
+            as={MdLocalFireDepartment}
+            boxSize={7}
+            color="white"
+            animation={
+              igniting ? `${flicker} 0.5s ease-in-out infinite` : undefined
+            }
+          />
         </Flex>
         <Box>
           <Text fontSize="3xl" fontWeight="bold" lineHeight="1">
-            {current}
+            {igniting ? displayCount : current}
           </Text>
           <Text fontSize="sm" color={subtle}>
             day{current === 1 ? '' : 's'} in a row
@@ -284,6 +380,30 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
           ? 'Do a lesson today to start a streak!'
           : `Best: ${best} day${best === 1 ? '' : 's'}`}
       </Text>
+
+      {/* Flames licking up from the bottom edge during ignite */}
+      {igniting && (
+        <Flex
+          position="absolute"
+          bottom="-6px"
+          left={0}
+          right={0}
+          justify="space-around"
+          pointerEvents="none"
+        >
+          {Array.from({ length: 7 }).map((_, i) => (
+            <Icon
+              key={i}
+              as={MdLocalFireDepartment}
+              color={i % 2 === 0 ? 'orange.400' : 'red.500'}
+              boxSize={`${22 + (i % 3) * 6}px`}
+              animation={`${flicker} ${0.45 + (i % 3) * 0.15}s ease-in-out ${
+                i * 0.07
+              }s infinite`}
+            />
+          ))}
+        </Flex>
+      )}
     </Card>
   )
 }
@@ -327,7 +447,6 @@ const DashboardOverview = () => {
   const [data, setData] = useState<Overview | null>(null)
   const pageBg = useColorModeValue('gray.50', 'gray.900')
   const pageColor = useColorModeValue('gray.800', 'gray.100')
-  const subtitle = useColorModeValue('gray.500', 'gray.400')
 
   useEffect(() => {
     fetch('/api/overview')
@@ -345,12 +464,7 @@ const DashboardOverview = () => {
       py={6}
     >
       <Box maxW="1100px" mx="auto">
-        <Heading size="lg" mb={1}>
-          Dashboard
-        </Heading>
-        <Text color={subtitle} mb={8}>
-          Your progress at a glance.
-        </Text>
+        <WelcomeHeader />
 
         {!data ? (
           <OverviewSkeleton />

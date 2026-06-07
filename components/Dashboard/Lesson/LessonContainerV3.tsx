@@ -280,19 +280,24 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               <Text fontSize="lg" fontWeight="bold" color="gray.700">
                 {currentQuiz.title?.trim() || ''}
               </Text>
-              <Button
-                size="sm"
-                variant="ghost"
-                flexShrink={0}
-                onClick={() =>
-                  handleRetryQuiz({
-                    id: currentQuiz.id,
-                    order: currentQuiz.order,
-                  })
-                }
-              >
-                ↻ Try again
-              </Button>
+              {/* Try again only appears once the quiz has been completed. */}
+              {(quizCompletionStatus[currentQuiz.id] ||
+                completedQuizzes.includes(currentQuiz.order) ||
+                fileBasedQuizAllCorrect.has(currentQuiz.order)) && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  flexShrink={0}
+                  onClick={() =>
+                    handleRetryQuiz({
+                      id: currentQuiz.id,
+                      order: currentQuiz.order,
+                    })
+                  }
+                >
+                  ↻ Try again
+                </Button>
+              )}
             </Flex>
             {(() => {
               console.log('🎲 Quiz type switch:', currentQuiz.quizType)

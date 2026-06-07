@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Avatar, Flex, Spacer, Text } from '@chakra-ui/react'
+import { Avatar, Flex, Text } from '@chakra-ui/react'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import type { UserProfile } from '@auth0/nextjs-auth0/client'
 
 const firstNameFrom = (user?: UserProfile | null): string => {
@@ -17,9 +18,9 @@ const firstNameFrom = (user?: UserProfile | null): string => {
   return first ? first.charAt(0).toUpperCase() + first.slice(1) : 'there'
 }
 
-// Slim top bar above the dashboard. Compact so it doesn't crowd the lesson;
-// the right side is left open for quick stats/actions later.
-const WelcomeHeader: React.FC<{ user?: UserProfile | null }> = ({ user }) => {
+// Large greeting shown at the top of the Dashboard overview.
+const WelcomeHeader: React.FC = () => {
+  const { user } = useUser()
   const name = firstNameFrom(user)
   const [avatarSrc, setAvatarSrc] = useState('')
 
@@ -40,26 +41,17 @@ const WelcomeHeader: React.FC<{ user?: UserProfile | null }> = ({ user }) => {
   }, [loadAvatar])
 
   return (
-    <Flex
-      align="center"
-      gap={3}
-      px={{ base: 4, md: 6 }}
-      h="60px"
-      flexShrink={0}
-      borderBottom="1px solid"
-      borderColor="gray.100"
-    >
+    <Flex align="center" gap={4} mb={8}>
       <Avatar
-        size="sm"
+        size="lg"
         name={name}
         src={avatarSrc || user?.picture || undefined}
         bg="brand.iris"
         color="white"
       />
-      <Text fontWeight="semibold" fontSize="md">
+      <Text fontSize="2xl" fontWeight="bold" lineHeight="1.2">
         Welcome back, {name} 👋
       </Text>
-      <Spacer />
     </Flex>
   )
 }
