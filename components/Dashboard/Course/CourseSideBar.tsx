@@ -10,6 +10,9 @@ import {
 } from 'react-icons/md'
 import { Course, Lesson } from './courseTypes'
 
+const isCheckpoint = (lesson: { title?: string }) =>
+  /checkpoint/i.test(lesson.title || '')
+
 type CourseSideBarProps = {
   courses: Course[] | null
   onSelectLesson: (lesson: Lesson) => void
@@ -123,6 +126,15 @@ const CourseSideBar = ({
     return 'gray.400'
   }
 
+  // A checkpoint sits right after its own phase (as a distinct entry, not a
+  // phase lesson). It unlocks once every non-checkpoint lesson in that phase
+  // is done.
+  const checkpointLocked = (course: Course) =>
+    isCourseLocked(course) ||
+    (course.lessons ?? []).some(
+      (l) => !isCheckpoint(l) && (lessonProgress[l.id] || 0) < 100,
+    )
+
   return (
     <Box
       p={3}
@@ -138,93 +150,143 @@ const CourseSideBar = ({
         {courseList.map((course) => {
           const courseLocked = isCourseLocked(course)
           const expanded = expandedCourses[course.id]
+          const courseCheckpoints = (course.lessons ?? []).filter(isCheckpoint)
           return (
-            <Box key={course.id}>
-              <Flex
-                as="button"
-                w="100%"
-                align="center"
-                justify="space-between"
-                px={3}
-                py={2}
-                borderRadius="lg"
-                opacity={courseLocked ? 0.55 : 1}
-                _hover={{ bg: 'gray.50' }}
-                transition="background 0.15s ease"
-                onClick={() => toggleCourseExpansion(course.id)}
-              >
-                <HStack spacing={2}>
-                  {courseLocked && (
-                    <Icon as={MdLock} boxSize={4} color="gray.400" />
-                  )}
-                  <Text fontWeight="bold" fontSize="md" letterSpacing="-0.01em">
-                    {course.title}
-                  </Text>
-                </HStack>
-                <Icon
-                  as={expanded ? MdExpandLess : MdExpandMore}
-                  boxSize={5}
-                  color="gray.400"
-                />
-              </Flex>
+            <React.Fragment key={course.id}>
+              <Box>
+                <Flex
+                  as="button"
+                  w="100%"
+                  align="center"
+                  justify="space-between"
+                  px={3}
+                  py={2}
+                  borderRadius="lg"
+                  opacity={courseLocked ? 0.55 : 1}
+                  _hover={{ bg: 'gray.50' }}
+                  transition="background 0.15s ease"
+                  onClick={() => toggleCourseExpansion(course.id)}
+                >
+                  <HStack spacing={2}>
+                    {courseLocked && (
+                      <Icon as={MdLock} boxSize={4} color="gray.400" />
+                    )}
+                    <Text
+                      fontWeight="bold"
+                      fontSize="md"
+                      letterSpacing="-0.01em"
+                    >
+                      {course.title}
+                    </Text>
+                  </HStack>
+                  <Icon
+                    as={expanded ? MdExpandLess : MdExpandMore}
+                    boxSize={5}
+                    color="gray.400"
+                  />
+                </Flex>
 
-              {expanded && (
-                <VStack spacing={1} align="stretch" mt={1}>
-                  {(course.lessons ?? []).map((lesson, index) => {
-                    const courseLessons = course.lessons ?? []
-                    const isLocked =
-                      courseLocked ||
-                      isLessonLocked(lesson, index, courseLessons)
-                    const isCurrent = lesson.id === currentLessonId
-                    return (
-                      <Flex
-                        key={lesson.id}
-                        align="center"
-                        gap={3}
-                        px={3}
-                        py={2.5}
-                        borderRadius="lg"
-                        borderLeft="3px solid"
-                        borderLeftColor={
-                          isCurrent ? 'brand.iris' : 'transparent'
-                        }
-                        bg={isCurrent ? 'purple.50' : 'transparent'}
-                        color={isCurrent ? 'brand.iris' : 'gray.700'}
-                        fontWeight={isCurrent ? 'semibold' : 'normal'}
-                        opacity={isLocked ? 0.5 : 1}
-                        cursor={isLocked ? 'not-allowed' : 'pointer'}
-                        transition="background 0.15s ease"
-                        _hover={{ bg: isLocked ? 'transparent' : 'gray.50' }}
-                        onClick={() => !isLocked && onSelectLesson(lesson)}
+                {expanded && (
+                  <VStack spacing={1} align="stretch" mt={1}>
+                    {(course.lessons ?? []).map((lesson, index) => {
+                      const courseLessons = course.lessons ?? []
+                      // Checkpoints render as a distinct entry after the phase.
+                      if (isCheckpoint(lesson)) return null
+                      const isLocked =
+                        courseLocked ||
+                        isLessonLocked(lesson, index, courseLessons)
+                      const isCurrent = lesson.id === currentLessonId
+                      return (
+                        <Flex
+                          key={lesson.id}
+                          align="center"
+                          gap={3}
+                          px={3}
+                          py={2.5}
+                          borderRadius="lg"
+                          borderLeft="3px solid"
+                          borderLeftColor={
+                            isCurrent ? 'brand.iris' : 'transparent'
+                          }
+                          bg={isCurrent ? 'purple.50' : 'transparent'}
+                          color={isCurrent ? 'brand.iris' : 'gray.700'}
+                          fontWeight={isCurrent ? 'semibold' : 'normal'}
+                          opacity={isLocked ? 0.5 : 1}
+                          cursor={isLocked ? 'not-allowed' : 'pointer'}
+                          transition="background 0.15s ease"
+                          _hover={{ bg: isLocked ? 'transparent' : 'gray.50' }}
+                          onClick={() => !isLocked && onSelectLesson(lesson)}
+                        >
+                          <Icon
+                            as={getLessonIcon(
+                              lesson,
+                              index,
+                              courseLessons,
+                              courseLocked,
+                            )}
+                            boxSize={5}
+                            flexShrink={0}
+                            color={iconColor(
+                              lesson,
+                              index,
+                              courseLessons,
+                              courseLocked,
+                              isCurrent,
+                            )}
+                          />
+                          <Text fontSize="sm" noOfLines={2}>
+                            {lesson.displayOrder
+                              ? `${lesson.displayOrder}. ${lesson.title}`
+                              : lesson.title}
+                          </Text>
+                        </Flex>
+                      )
+                    })}
+                  </VStack>
+                )}
+              </Box>
+
+              {courseCheckpoints.map((cp) => {
+                const locked = checkpointLocked(course)
+                const isCurrent = cp.id === currentLessonId
+                const done = (lessonProgress[cp.id] || 0) === 100
+                return (
+                  <Flex
+                    key={cp.id}
+                    as="button"
+                    w="100%"
+                    align="center"
+                    justify="space-between"
+                    px={3}
+                    py={2}
+                    borderRadius="lg"
+                    opacity={locked ? 0.55 : 1}
+                    bg={isCurrent ? 'purple.50' : 'transparent'}
+                    cursor={locked ? 'not-allowed' : 'pointer'}
+                    transition="background 0.15s ease"
+                    _hover={{ bg: locked ? 'transparent' : 'gray.50' }}
+                    onClick={() => !locked && onSelectLesson(cp)}
+                  >
+                    <HStack spacing={2}>
+                      {locked && (
+                        <Icon as={MdLock} boxSize={4} color="gray.400" />
+                      )}
+                      <Text
+                        fontWeight="bold"
+                        fontSize="md"
+                        letterSpacing="-0.01em"
+                        color={isCurrent ? 'brand.iris' : 'gray.800'}
                       >
-                        <Icon
-                          as={getLessonIcon(
-                            lesson,
-                            index,
-                            courseLessons,
-                            courseLocked,
-                          )}
-                          boxSize={5}
-                          flexShrink={0}
-                          color={iconColor(
-                            lesson,
-                            index,
-                            courseLessons,
-                            courseLocked,
-                            isCurrent,
-                          )}
-                        />
-                        <Text fontSize="sm" noOfLines={2}>
-                          {lesson.displayOrder
-                            ? `${lesson.displayOrder}. ${lesson.title}`
-                            : lesson.title}
-                        </Text>
-                      </Flex>
-                    )
-                  })}
-                </VStack>
-              )}
-            </Box>
+                        {cp.title}
+                      </Text>
+                    </HStack>
+                    {done && !locked && (
+                      <Icon as={MdCheck} boxSize={5} color="green.500" />
+                    )}
+                  </Flex>
+                )
+              })}
+            </React.Fragment>
           )
         })}
       </VStack>

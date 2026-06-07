@@ -126,3 +126,30 @@ export const buildLessonOutlineLabels = (lesson: Lesson): string[] => {
 
   return labels
 }
+
+export interface OutlineItem {
+  type: 'video' | 'resource' | 'quiz'
+  label: string
+}
+
+/** Typed outline (item kind + label) for the lesson description list. */
+export const buildLessonOutline = (lesson: Lesson): OutlineItem[] => {
+  const resources = orderedResources(lesson)
+  const items: OutlineItem[] = []
+  let quizIdx = 0
+
+  for (const step of expandLessonSteps(lesson)) {
+    if (step.type === 'video') {
+      items.push({ type: 'video', label: lesson.videoTitle?.trim() || 'Video' })
+    } else if (step.type === 'resource') {
+      const r = resources[step.resourceIndex ?? 0]
+      if (r) items.push({ type: 'resource', label: r.name })
+    } else if (step.type === 'quiz') {
+      const quiz = lesson.quiz?.find((q) => q.order === quizIdx)
+      items.push({ type: 'quiz', label: getQuizOutlineLabel(quiz) })
+      quizIdx += 1
+    }
+  }
+
+  return items
+}

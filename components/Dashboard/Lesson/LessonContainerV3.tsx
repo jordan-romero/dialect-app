@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Box, Text, Button, Flex, Alert, AlertIcon } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
 import { Lesson } from '../Course/courseTypes'
+
+// Subtle fade+slide as each lesson step comes in (on Next/Previous).
+const stepIn = keyframes`
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+`
 import { lessonTypeComponentMap } from './utils'
 import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExercise'
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
@@ -501,7 +508,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Box flex="1">{renderStepContent()}</Box>
+        <Box
+          flex="1"
+          key={currentStepIndex}
+          animation={`${stepIn} 0.35s ease-out`}
+        >
+          {renderStepContent()}
+        </Box>
         <Flex justifyContent="space-between" mt={4}>
           <Box>
             {currentStepIndex > 0 && (
