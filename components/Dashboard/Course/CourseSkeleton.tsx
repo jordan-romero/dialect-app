@@ -20,7 +20,7 @@ export const SidebarSkeleton: React.FC = () => (
 )
 
 export const LessonSkeleton: React.FC = () => (
-  <Box w="100%" h="100vh" p={10} pl={0}>
+  <Box w="100%" h="100%" p={10} pl={0}>
     {/* Title bar (mirrors the gradient header) */}
     <Skeleton
       height="100px"

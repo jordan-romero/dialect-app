@@ -434,7 +434,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   // and their content stripped. Show a paywall instead of the lesson.
   if ((lesson as any).locked) {
     return (
-      <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
+      <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
         <Flex
           direction="column"
           align="center"
@@ -467,7 +467,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   }
 
   return (
-    <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
+    <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
         w="100%"

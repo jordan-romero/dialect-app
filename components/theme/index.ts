@@ -1,6 +1,18 @@
 import { extendTheme, theme as base } from '@chakra-ui/react'
 
 const theme = extendTheme({
+  // Light by default. Dark mode is opt-in (the dashboard Profile toggle) and
+  // only restyles components that explicitly use color-mode values — the body
+  // is pinned so the public site and lesson content stay light & readable.
+  config: {
+    initialColorMode: 'light',
+    useSystemColorMode: false,
+  },
+  styles: {
+    global: {
+      body: { bg: 'white', color: 'gray.800' },
+    },
+  },
   colors: {
     brand: {
       purple: '#723FC5',

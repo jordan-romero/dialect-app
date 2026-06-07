@@ -1,5 +1,14 @@
-import { Box, VStack, Icon, Text, Flex } from '@chakra-ui/react'
-import React from 'react'
+import {
+  Box,
+  VStack,
+  Icon,
+  Text,
+  Flex,
+  Avatar,
+  Image,
+  useDisclosure,
+} from '@chakra-ui/react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   FiPlayCircle,
   FiBookOpen,
@@ -8,9 +17,11 @@ import {
   FiUser,
   FiLogOut,
 } from 'react-icons/fi'
+import { MdKeyboard } from 'react-icons/md'
 import { IconType } from 'react-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import ProfileModal from '../Profile/ProfileModal'
 
 const HELP_EMAIL = 'info@actingaccents.com'
 const RAIL_COLLAPSED = '72px'
@@ -22,16 +33,17 @@ interface NavItemProps {
   href?: string
   onClick?: () => void
   active?: boolean
+  /** When set, the avatar image replaces the icon (e.g. the Profile item). */
+  avatarSrc?: string
 }
 
-// A single rail row: icon stays put; the label is revealed when the rail
-// expands on hover (label is clipped while collapsed).
 const NavItem: React.FC<NavItemProps> = ({
   icon,
   label,
   href,
   onClick,
   active,
+  avatarSrc,
 }) => {
   const row = (
     <Flex
@@ -49,7 +61,11 @@ const NavItem: React.FC<NavItemProps> = ({
       {/* Fixed-width slot = collapsed inner width, so the icon is centered in
           the bar when collapsed and stays put when the rail expands. */}
       <Flex w="56px" flexShrink={0} align="center" justify="center">
-        <Icon as={icon} boxSize={6} />
+        {avatarSrc ? (
+          <Avatar size="sm" src={avatarSrc} name={label} />
+        ) : (
+          <Icon as={icon} boxSize={6} />
+        )}
       </Flex>
       <Text
         fontSize="sm"
@@ -81,6 +97,24 @@ const NavItem: React.FC<NavItemProps> = ({
 const DashboardNavigationContainer = () => {
   const router = useRouter()
   const path = router.pathname
+  const profile = useDisclosure()
+  const [avatarSrc, setAvatarSrc] = useState('')
+
+  const loadAvatar = useCallback(() => {
+    fetch('/api/profile')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) setAvatarSrc(d.avatar || d.authPicture || '')
+      })
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    loadAvatar()
+    const handler = () => loadAvatar()
+    window.addEventListener('profile:updated', handler)
+    return () => window.removeEventListener('profile:updated', handler)
+  }, [loadAvatar])
 
   const getHelp = () => {
     const subject = encodeURIComponent('Help with Acting Accents')
@@ -118,38 +152,60 @@ const DashboardNavigationContainer = () => {
         transition="width 0.2s ease, box-shadow 0.2s ease"
         _hover={{ w: RAIL_EXPANDED, boxShadow: '8px 0 30px rgba(0,0,0,0.25)' }}
       >
-        <VStack spacing={2} align="stretch" px={2}>
-          <NavItem
-            icon={FiPlayCircle}
-            label="Continue"
-            href="/dashboard"
-            active={path === '/dashboard'}
-          />
-          <NavItem
-            icon={FiBookOpen}
-            label="Library"
-            href="/dashboard/resources"
-            active={path === '/dashboard/resources'}
-          />
-          <NavItem
-            icon={FiGrid}
-            label="Dashboard"
-            href="/dashboard/progress"
-            active={path === '/dashboard/progress'}
-          />
-          <NavItem icon={FiHelpCircle} label="Get Help" onClick={getHelp} />
-        </VStack>
+        <Box>
+          {/* Logo (mark only) — links back to the public site */}
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <Flex w="56px" mx={2} justify="center" align="center" mb={5}>
+              <Image
+                src="/actingAccentsLogo.png"
+                alt="Acting Accents"
+                boxSize="50px"
+                objectFit="contain"
+              />
+            </Flex>
+          </Link>
+
+          <VStack spacing={2} align="stretch" px={2}>
+            <NavItem
+              icon={FiPlayCircle}
+              label="Continue"
+              href="/dashboard"
+              active={path === '/dashboard'}
+            />
+            <NavItem
+              icon={FiBookOpen}
+              label="Library"
+              href="/dashboard/resources"
+              active={path === '/dashboard/resources'}
+            />
+            <NavItem
+              icon={MdKeyboard}
+              label="Keyboard"
+              href="/dashboard/keyboard"
+              active={path === '/dashboard/keyboard'}
+            />
+            <NavItem
+              icon={FiGrid}
+              label="Dashboard"
+              href="/dashboard/progress"
+              active={path === '/dashboard/progress'}
+            />
+            <NavItem icon={FiHelpCircle} label="Get Help" onClick={getHelp} />
+          </VStack>
+        </Box>
 
         <VStack spacing={2} align="stretch" px={2}>
           <NavItem
             icon={FiUser}
             label="Profile"
-            href="/dashboard/profile"
-            active={path === '/dashboard/profile'}
+            onClick={profile.onOpen}
+            avatarSrc={avatarSrc || undefined}
           />
           <NavItem icon={FiLogOut} label="Log out" href="/api/auth/logout" />
         </VStack>
       </Flex>
+
+      <ProfileModal isOpen={profile.isOpen} onClose={profile.onClose} />
     </Box>
   )
 }

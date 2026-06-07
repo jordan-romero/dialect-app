@@ -137,7 +137,7 @@ const CourseContainer = () => {
 
   if (loadError) {
     return (
-      <Flex justifyContent="center" alignItems="center" height="100vh" p={8}>
+      <Flex justifyContent="center" alignItems="center" height="100%" p={8}>
         <Alert status="error" borderRadius="md" maxW="600px">
           <AlertIcon />
           <Box>
@@ -150,8 +150,8 @@ const CourseContainer = () => {
   }
 
   return (
-    <Flex w="100%">
-      <Box w="300px">
+    <Flex w="100%" h="100%">
+      <Box w="300px" h="100%">
         {isLoading ? (
           <SidebarSkeleton />
         ) : (
@@ -164,11 +164,11 @@ const CourseContainer = () => {
           />
         )}
       </Box>
-      <Box flex="2">
+      <Box flex="2" h="100%">
         {isLoading ? (
           <LessonSkeleton />
         ) : selectedLesson ? (
-          <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Flex justifyContent="center" alignItems="center" height="100%">
             {selectedLesson.steps && selectedLesson.steps.length > 0 ? (
               <LessonContainerV3
                 key={selectedLesson.id}
@@ -180,7 +180,7 @@ const CourseContainer = () => {
             )}
           </Flex>
         ) : (
-          <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Flex justifyContent="center" alignItems="center" height="100%">
             <Box>No lesson selected</Box>
           </Flex>
         )}

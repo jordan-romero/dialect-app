@@ -127,7 +127,7 @@ const CourseSideBar = ({
     <Box
       p={3}
       width={300}
-      height="100vh"
+      height="100%"
       bg="white"
       color="gray.800"
       borderRight="1px solid"

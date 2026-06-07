@@ -11,6 +11,7 @@ import {
   VStack,
   Skeleton,
   Link as ChakraLink,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import {
   FiFileText,
@@ -67,6 +68,10 @@ const ResourceCard: React.FC<{ resource: Resource; locked: boolean }> = ({
 }) => {
   const kind = kindOf(resource)
   const meta = KIND_META[kind]
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const lockedBg = useColorModeValue('gray.50', 'whiteAlpha.100')
+  const cardBorder = useColorModeValue('gray.200', 'whiteAlpha.200')
+  const iconBg = useColorModeValue('purple.50', 'whiteAlpha.200')
 
   return (
     <Flex
@@ -75,8 +80,8 @@ const ResourceCard: React.FC<{ resource: Resource; locked: boolean }> = ({
       p={4}
       borderRadius="xl"
       border="1px solid"
-      borderColor="gray.200"
-      bg={locked ? 'gray.50' : 'white'}
+      borderColor={cardBorder}
+      bg={locked ? lockedBg : cardBg}
       opacity={locked ? 0.7 : 1}
       boxShadow="sm"
       transition="box-shadow 0.15s ease, transform 0.15s ease"
@@ -88,7 +93,7 @@ const ResourceCard: React.FC<{ resource: Resource; locked: boolean }> = ({
           justify="center"
           boxSize={9}
           borderRadius="lg"
-          bg={locked ? 'gray.200' : 'purple.50'}
+          bg={locked ? 'gray.200' : iconBg}
           color={locked ? 'gray.500' : 'brand.iris'}
           flexShrink={0}
         >
@@ -131,10 +136,13 @@ const ResourceCard: React.FC<{ resource: Resource; locked: boolean }> = ({
 }
 
 const PhaseSection: React.FC<{ phase: Phase }> = ({ phase }) => {
+  const headingColor = useColorModeValue('gray.800', 'gray.100')
+  const lockedBg = useColorModeValue('gray.50', 'whiteAlpha.100')
+  const lockedBorder = useColorModeValue('gray.200', 'whiteAlpha.300')
   return (
     <Box>
       <Flex align="center" gap={3} mb={4}>
-        <Heading as="h2" size="md" color="gray.800">
+        <Heading as="h2" size="md" color={headingColor}>
           {phase.title}
         </Heading>
         {!phase.unlocked && (
@@ -158,9 +166,9 @@ const PhaseSection: React.FC<{ phase: Phase }> = ({ phase }) => {
           gap={3}
           p={5}
           borderRadius="xl"
-          bg="gray.50"
+          bg={lockedBg}
           border="1px dashed"
-          borderColor="gray.200"
+          borderColor={lockedBorder}
           color="gray.500"
         >
           <Icon as={FiLock} boxSize={5} />
@@ -218,6 +226,9 @@ const LibrarySkeleton: React.FC = () => (
 
 const ResourcesContainer = () => {
   const [phases, setPhases] = useState<Phase[] | null>(null)
+  const pageBg = useColorModeValue('white', 'gray.900')
+  const pageColor = useColorModeValue('gray.800', 'gray.100')
+  const subtitleColor = useColorModeValue('gray.500', 'gray.400')
 
   useEffect(() => {
     fetch('/api/library')
@@ -230,25 +241,33 @@ const ResourcesContainer = () => {
   }, [])
 
   return (
-    <Box maxW="1200px" mx="auto" px={{ base: 4, md: 6 }} py={6}>
-      <Heading size="lg" mb={1}>
-        Library
-      </Heading>
-      <Text color="gray.500" mb={8}>
-        All your course handouts, audio, and references — organized by phase.
-      </Text>
+    <Box
+      bg={pageBg}
+      color={pageColor}
+      minH="100vh"
+      px={{ base: 4, md: 6 }}
+      py={6}
+    >
+      <Box maxW="1200px" mx="auto">
+        <Heading size="lg" mb={1}>
+          Library
+        </Heading>
+        <Text color={subtitleColor} mb={8}>
+          All your course handouts, audio, and references — organized by phase.
+        </Text>
 
-      {phases === null ? (
-        <LibrarySkeleton />
-      ) : phases.length === 0 ? (
-        <Text color="gray.500">No resources available yet.</Text>
-      ) : (
-        <VStack align="stretch" spacing={10}>
-          {phases.map((phase) => (
-            <PhaseSection key={phase.id} phase={phase} />
-          ))}
-        </VStack>
-      )}
+        {phases === null ? (
+          <LibrarySkeleton />
+        ) : phases.length === 0 ? (
+          <Text color="gray.500">No resources available yet.</Text>
+        ) : (
+          <VStack align="stretch" spacing={10}>
+            {phases.map((phase) => (
+              <PhaseSection key={phase.id} phase={phase} />
+            ))}
+          </VStack>
+        )}
+      </Box>
     </Box>
   )
 }
