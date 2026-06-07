@@ -157,6 +157,8 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   }
 
   const handleAnswerSelect = (questionId: number, answerId: number) => {
+    // Once completed, answers are locked in place until "Try again".
+    if (isCompleted) return
     setSelectedAnswers((prevAnswers) => ({
       ...prevAnswers,
       [questionId]: answerId,
@@ -251,13 +253,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
 
       if (response.ok) {
         setIsCompleted(true)
-        toast({
-          title: 'Quiz Completed!',
-          description: 'Your answers have been saved successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        })
       } else {
         console.error('Failed to submit quiz')
         toast({
@@ -381,13 +376,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         shuffledPart1Questions.map(renderQuestion)}
       {(!hasParts || currentPart === 2) &&
         shuffledPart2Questions.map(renderQuestion)}
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
       <QuizNavigation
         currentQuestion={hasParts ? currentPart : 1}
         totalQuestions={hasParts ? 2 : 1}
@@ -395,10 +383,9 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         onNext={handleNextPart}
         onFinish={handleFinish}
         isNextDisabled={
-          !isPartComplete(hasParts ? currentPart : 2) ||
-          isLoading ||
-          isCompleted
+          !isPartComplete(hasParts ? currentPart : 2) || isLoading
         }
+        isCompleted={isCompleted}
       />
     </Box>
   )

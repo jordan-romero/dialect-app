@@ -128,6 +128,8 @@ export const VowelQuadrilateralExercise: React.FC<
   }, [quizData, lessonId])
 
   const handleVowelClick = (position: string) => {
+    // Once completed, placements are locked until "Try again".
+    if (isCompleted) return
     if (selectedVowel) {
       // Place or replace the vowel
       setVowelPositions((prev) => ({
@@ -313,14 +315,6 @@ export const VowelQuadrilateralExercise: React.FC<
           vowel. Click on an empty position to clear it.
         </Text>
       </Box>
-
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
 
       <QuizNavigation
         currentQuestion={1}

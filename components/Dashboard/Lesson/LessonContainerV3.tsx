@@ -11,9 +11,13 @@ import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
 import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
 import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExercise'
+import { RepeatAfterMeExercise } from '../Exercises/RepeatAfterMeExercise'
+import { QuizCelebration } from '../Exercises/QuizCelebration'
+import { CorrectionsExercise } from '../Exercises/CorrectionsExercise'
 import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
 import UnlockCourseButton from '../../UnlockCourseButton'
+import { expandLessonSteps, orderedResources } from './lessonOutline'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -34,6 +38,12 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const [fileBasedQuizAllCorrect, setFileBasedQuizAllCorrect] = useState<
     Set<number>
   >(new Set())
+  // Bumped per quiz to force a fresh remount on "Try again".
+  const [retryNonce, setRetryNonce] = useState<{ [quizId: number]: number }>({})
+  // Quiz id currently showing the completion celebration (Siri-style pulse).
+  const [celebratingQuizId, setCelebratingQuizId] = useState<number | null>(
+    null,
+  )
 
   const quizIdsKey = useMemo(
     () => (lesson.quiz?.length ? lesson.quiz.map((q) => q.id).join(',') : ''),
@@ -93,16 +103,12 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     )
   }
 
-  const steps = lesson.steps
-  const currentStep = steps[currentStepIndex]
-
-  const getCurrentResourceIndex = () => {
-    const currentResource =
-      steps
-        .slice(0, currentStepIndex + 1)
-        .filter((step) => step.type === 'resource').length - 1
-    return currentResource
-  }
+  // Expand the stored outline into the concrete sequence the learner walks
+  // through — one resource per resource step, in authored order — so Next moves
+  // through each resource, video, and quiz one at a time.
+  const steps = expandLessonSteps(lesson)
+  const resources = orderedResources(lesson)
+  const currentStep = steps[currentStepIndex] ?? steps[0]
 
   console.log(lesson.quiz, 'lesson.quiz')
   console.log(
@@ -173,29 +179,76 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         ...prev,
         [quiz.id]: true,
       }))
+      // Same celebration for every quiz type across the platform.
+      setCelebratingQuizId(quiz.id)
     }
+  }
+
+  // "Try again": clear the saved answers for this quiz, reset local completion,
+  // and force the quiz component to remount fresh.
+  const handleRetryQuiz = async (quiz: { id: number; order: number }) => {
+    try {
+      await fetch('/api/resetQuizProgress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: quiz.id }),
+      })
+    } catch (error) {
+      console.error('Error resetting quiz:', error)
+    }
+    setQuizCompletionStatus((prev) => ({ ...prev, [quiz.id]: false }))
+    setCompletedQuizzes((prev) => prev.filter((o) => o !== quiz.order))
+    setFileBasedQuizAllCorrect((prev) => {
+      const next = new Set(prev)
+      next.delete(quiz.order)
+      return next
+    })
+    setRetryNonce((prev) => ({ ...prev, [quiz.id]: (prev[quiz.id] || 0) + 1 }))
+    setCelebratingQuizId((cur) => (cur === quiz.id ? null : cur))
   }
 
   const renderStepContent = () => {
     switch (currentStep.type) {
       case 'video':
         return lesson.videoUrl ? lessonTypeComponentMap['video'](lesson) : null
-      case 'resource':
-        const resourceIndex = getCurrentResourceIndex()
-        const resource = lesson.resources[resourceIndex]
-        return resource ? (
-          <Box height="100%">
-            <iframe
-              width="95%"
-              height="750px"
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(
-                resource.url,
-              )}&embedded=true`}
-              title={resource.name}
-              allowFullScreen
-            ></iframe>
+      case 'resource': {
+        // Show ONLY the single resource that belongs to this step.
+        const r = resources[currentStep.resourceIndex ?? 0]
+        if (!r) return null
+        const isAudio = r.type === 'mp3' || /\.(mp3|wav)(\?|$)/i.test(r.url)
+        const isLink = r.type === 'link'
+        return (
+          <Box height="100%" overflowY="auto">
+            <Box mb={8}>
+              <Text fontWeight="bold" mb={2}>
+                {r.name}
+              </Text>
+              {isAudio ? (
+                <audio controls style={{ width: '100%' }} src={r.url} />
+              ) : isLink ? (
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#5F53CF', textDecoration: 'underline' }}
+                >
+                  Open resource ↗
+                </a>
+              ) : (
+                <iframe
+                  width="95%"
+                  height="750px"
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(
+                    r.url,
+                  )}&embedded=true`}
+                  title={r.name}
+                  allowFullScreen
+                ></iframe>
+              )}
+            </Box>
           </Box>
-        ) : null
+        )
+      }
       case 'description':
         return <LessonDescription lesson={lesson} />
       case 'outro':
@@ -210,7 +263,34 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
           isQuizNull: currentQuiz === null,
         })
         return currentQuiz ? (
-          <Paper>
+          <Paper
+            key={`${currentQuiz.id}-${retryNonce[currentQuiz.id] || 0}`}
+            position="relative"
+          >
+            {celebratingQuizId === currentQuiz.id && (
+              <QuizCelebration
+                onDone={() => setCelebratingQuizId(null)}
+                subtitle={`${currentQuiz.title?.trim() || 'Quiz'} complete`}
+              />
+            )}
+            <Flex justify="space-between" align="center" mb={2} gap={3}>
+              <Text fontSize="lg" fontWeight="bold" color="gray.700">
+                {currentQuiz.title?.trim() || ''}
+              </Text>
+              <Button
+                size="sm"
+                variant="ghost"
+                flexShrink={0}
+                onClick={() =>
+                  handleRetryQuiz({
+                    id: currentQuiz.id,
+                    order: currentQuiz.order,
+                  })
+                }
+              >
+                ↻ Try again
+              </Button>
+            </Flex>
             {(() => {
               console.log('🎲 Quiz type switch:', currentQuiz.quizType)
               switch (currentQuiz.quizType) {
@@ -260,6 +340,30 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                           return next
                         })
                       }}
+                    />
+                  )
+                case 'corrections':
+                  return (
+                    <CorrectionsExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      onAllCorrectChange={(allCorrect) => {
+                        setFileBasedQuizAllCorrect((prev) => {
+                          const next = new Set(prev)
+                          if (allCorrect) next.add(currentQuiz.order)
+                          else next.delete(currentQuiz.order)
+                          return next
+                        })
+                      }}
+                    />
+                  )
+                case 'repeatAfterMe':
+                  return (
+                    <RepeatAfterMeExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
                     />
                   )
                 case 'consonantRect':

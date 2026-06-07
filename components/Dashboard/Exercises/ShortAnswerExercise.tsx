@@ -58,11 +58,12 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           if (data.answers && data.answers.length > 0) {
             const savedAnswers: Record<number, Record<number, string>> = {}
             data.answers.forEach((answer: any) => {
-              if (!savedAnswers[answer.questionId]) {
+              try {
+                // each question's inputs are stored as a JSON map {optionId: text}
+                savedAnswers[answer.questionId] = JSON.parse(answer.textAnswer)
+              } catch {
                 savedAnswers[answer.questionId] = {}
               }
-              savedAnswers[answer.questionId][answer.questionId] =
-                answer.textAnswer
             })
             setAnswers(savedAnswers)
           }
@@ -85,6 +86,8 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     answerId: number,
     value: string,
   ) => {
+    // Once completed, responses are locked in place until "Try again".
+    if (isCompleted) return
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [questionId]: {
@@ -114,13 +117,14 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
 
     setIsLoading(true)
     try {
-      // Prepare answers in the format expected by the API
-      const answersToSubmit = Object.entries(answers).flatMap(
-        ([questionId, questionAnswers]) =>
-          Object.entries(questionAnswers).map(([answerId, textAnswer]) => ({
-            questionId: parseInt(questionId),
-            textAnswer: textAnswer,
-          })),
+      // Store each question's inputs as ONE row — a JSON map of {optionId: text}
+      // — so every response persists (UserAnswer is unique per question, so the
+      // old one-row-per-input approach collapsed them all into one).
+      const answersToSubmit = Object.entries(answers).map(
+        ([questionId, questionAnswers]) => ({
+          questionId: parseInt(questionId),
+          textAnswer: JSON.stringify(questionAnswers),
+        }),
       )
 
       const response = await fetch('/api/submitQuiz', {
@@ -137,13 +141,6 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
 
       if (response.ok) {
         setIsCompleted(true)
-        toast({
-          title: 'Quiz Completed!',
-          description: 'Your answers have been saved successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        })
       } else {
         console.error('Failed to submit quiz')
         toast({
@@ -268,15 +265,9 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           onPrevious={handlePreviousQuestion}
           onNext={handleNextQuestion}
           onFinish={handleNextQuestion}
-          isNextDisabled={isNextDisabled || isLoading || isCompleted}
+          isNextDisabled={isNextDisabled || isLoading}
+          isCompleted={isCompleted}
         />
-      )}
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
       )}
     </Box>
   )

@@ -1,0 +1,401 @@
+{
+  "id": 31,
+  "lessonId": 25,
+  "quizType": "corrections",
+  "questions": [
+    {
+      "id": 416,
+      "text": "Find and fix the incorrectly transcribed word."
+    }
+  ],
+  "items": [
+    {
+      "sentence": "It’s raining cats and dogs.",
+      "words": [
+        {
+          "ipa": "ɪts",
+          "wrong": false
+        },
+        {
+          "ipa": "ɹeɪ̆nɪŋ",
+          "wrong": false
+        },
+        {
+          "ipa": "kɑts",
+          "wrong": true
+        },
+        {
+          "ipa": "ænd",
+          "wrong": false
+        },
+        {
+          "ipa": "dɑgz",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "kæts",
+          "correct": true
+        },
+        {
+          "text": "kɑts",
+          "correct": false
+        },
+        {
+          "text": "kits",
+          "correct": false
+        },
+        {
+          "text": "kɪts",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "Don’t judge a book by its cover.",
+      "words": [
+        {
+          "ipa": "doʊnt̚",
+          "wrong": false
+        },
+        {
+          "ipa": "jʌd͡ʒ",
+          "wrong": true
+        },
+        {
+          "ipa": "ə",
+          "wrong": false
+        },
+        {
+          "ipa": "bʊk",
+          "wrong": false
+        },
+        {
+          "ipa": "baɪ̆",
+          "wrong": false
+        },
+        {
+          "ipa": "ɪts",
+          "wrong": false
+        },
+        {
+          "ipa": "kʌvɚ",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "d͡ʒʌd͡ʒ",
+          "correct": true
+        },
+        {
+          "text": "jʌd͡ʒ",
+          "correct": false
+        },
+        {
+          "text": "pʌd͡ʒ",
+          "correct": false
+        },
+        {
+          "text": "bʌd͡ʒ",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "They’re blind as a bat.",
+      "words": [
+        {
+          "ipa": "ðɛɚ̆",
+          "wrong": false
+        },
+        {
+          "ipa": "bleɪ̆nd",
+          "wrong": true
+        },
+        {
+          "ipa": "æz",
+          "wrong": false
+        },
+        {
+          "ipa": "ə",
+          "wrong": false
+        },
+        {
+          "ipa": "bæt",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "blaɪ̆nd",
+          "correct": true
+        },
+        {
+          "text": "bleɪ̆nd",
+          "correct": false
+        },
+        {
+          "text": "blind",
+          "correct": false
+        },
+        {
+          "text": "blɪnd",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "No use crying over spilled milk.",
+      "words": [
+        {
+          "ipa": "noʊ̆",
+          "wrong": false
+        },
+        {
+          "ipa": "jus",
+          "wrong": false
+        },
+        {
+          "ipa": "kra.ɪŋ",
+          "wrong": true
+        },
+        {
+          "ipa": "oʊ̆vɚ",
+          "wrong": false
+        },
+        {
+          "ipa": "spɪɫd",
+          "wrong": false
+        },
+        {
+          "ipa": "mɪɫk",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "kɹa.ɪŋ",
+          "correct": true
+        },
+        {
+          "text": "kra.ɪŋ",
+          "correct": false
+        },
+        {
+          "text": "kpa.ɪŋ",
+          "correct": false
+        },
+        {
+          "text": "kba.ɪŋ",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "This is the calm before the storm.",
+      "words": [
+        {
+          "ipa": "ðɪs",
+          "wrong": false
+        },
+        {
+          "ipa": "ɪz",
+          "wrong": false
+        },
+        {
+          "ipa": "ðə",
+          "wrong": false
+        },
+        {
+          "ipa": "kɑm",
+          "wrong": false
+        },
+        {
+          "ipa": "bəfɔɚ̆",
+          "wrong": false
+        },
+        {
+          "ipa": "ðə",
+          "wrong": false
+        },
+        {
+          "ipa": "stoɹm",
+          "wrong": true
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "stɔɚ̆m",
+          "correct": true
+        },
+        {
+          "text": "stoɹm",
+          "correct": false
+        },
+        {
+          "text": "stim",
+          "correct": false
+        },
+        {
+          "text": "stɪm",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "She knocked it out of the park.",
+      "words": [
+        {
+          "ipa": "ʃi",
+          "wrong": false
+        },
+        {
+          "ipa": "nɑkt",
+          "wrong": false
+        },
+        {
+          "ipa": "ɪt",
+          "wrong": false
+        },
+        {
+          "ipa": "aʊ̆t",
+          "wrong": false
+        },
+        {
+          "ipa": "əv",
+          "wrong": false
+        },
+        {
+          "ipa": "θə",
+          "wrong": true
+        },
+        {
+          "ipa": "pɑɚ̆k",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "ðə",
+          "correct": true
+        },
+        {
+          "text": "θə",
+          "correct": false
+        },
+        {
+          "text": "pə",
+          "correct": false
+        },
+        {
+          "text": "bə",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "Slow and steady wins the race.",
+      "words": [
+        {
+          "ipa": "sloʊ̆",
+          "wrong": false
+        },
+        {
+          "ipa": "ænd",
+          "wrong": false
+        },
+        {
+          "ipa": "stʌdĭ",
+          "wrong": true
+        },
+        {
+          "ipa": "wɪnz",
+          "wrong": false
+        },
+        {
+          "ipa": "ðə",
+          "wrong": false
+        },
+        {
+          "ipa": "ɹeɪ̆s",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "stɛdĭ",
+          "correct": true
+        },
+        {
+          "text": "stʌdĭ",
+          "correct": false
+        },
+        {
+          "text": "stidĭ",
+          "correct": false
+        },
+        {
+          "text": "stɪdĭ",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "sentence": "I hate to burst your bubble.",
+      "words": [
+        {
+          "ipa": "aɪ̆",
+          "wrong": false
+        },
+        {
+          "ipa": "heɪ̆t",
+          "wrong": false
+        },
+        {
+          "ipa": "tʊ",
+          "wrong": false
+        },
+        {
+          "ipa": "bɝst",
+          "wrong": false
+        },
+        {
+          "ipa": "yɔɚ̆",
+          "wrong": true
+        },
+        {
+          "ipa": "bʌbɫ̩",
+          "wrong": false
+        }
+      ],
+      "prompt": "Now pick the correct transcription of the word you fixed:",
+      "options": [
+        {
+          "text": "jɔɚ̆",
+          "correct": true
+        },
+        {
+          "text": "yɔɚ̆",
+          "correct": false
+        },
+        {
+          "text": "pɔɚ̆",
+          "correct": false
+        },
+        {
+          "text": "bɔɚ̆",
+          "correct": false
+        }
+      ]
+    }
+  ]
+}

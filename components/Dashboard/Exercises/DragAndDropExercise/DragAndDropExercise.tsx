@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import { AnswerOption, Categories, Question } from '../QuizTypes'
 import useQuiz from '../utils'
@@ -33,12 +33,18 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   const [isQuizComplete, setIsQuizComplete] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  // Per-question solved board, restored from the server (set once on load).
+  const [restored, setRestored] = useState<Record<number, any>>({})
+  // Live capture of the current board per question (ref → no re-render churn).
+  const boardRef = useRef<Record<number, any>>({})
 
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion: Question | undefined =
     currentQuiz?.questions[currentQuestionIndex]
 
-  // Load saved progress when component mounts
+  // Load saved progress when component mounts. A completed drag-and-drop quiz
+  // stores each question's final board so we can show the answers back in
+  // place (locked) until the learner clicks "Try again".
   useEffect(() => {
     const loadProgress = async () => {
       if (!currentQuiz) return
@@ -50,6 +56,20 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
         if (response.ok) {
           const data = await response.json()
           setIsCompleted(data.isCompleted)
+
+          const restoredMap: Record<number, any> = {}
+          ;(data.answers || []).forEach((a: any) => {
+            if (a.textAnswer && a.textAnswer !== 'pending') {
+              try {
+                const parsed = JSON.parse(a.textAnswer)
+                if (parsed) restoredMap[a.questionId] = parsed
+              } catch {
+                /* ignore non-JSON markers */
+              }
+            }
+          })
+          boardRef.current = { ...restoredMap }
+          setRestored(restoredMap)
         }
       } catch (error) {
         console.error('Error loading quiz progress:', error)
@@ -59,28 +79,57 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
     loadProgress()
   }, [currentQuiz, lessonId])
 
+  // Initialize the board for the current question — restored (if completed) or
+  // empty defaults.
   useEffect(() => {
     if (!currentQuestion) {
       return
     }
+    const saved = restored[currentQuestion.id]
 
     if (currentQuestion.questionType === 'rhymingPairs') {
       setAnsweredWords([...(currentQuestion.answerOptions || [])])
       setRhymingWords([])
     } else if (currentQuestion.questionType === 'rhymingCategories') {
-      setWordBank([...(currentQuestion.answerOptions || [])])
-      const initialCategories: Categories = currentQuestion.categories
-        ? Object.keys(currentQuestion.categories).reduce((acc, category) => {
-            acc[category] = []
-            return acc
-          }, {} as Categories)
-        : {}
-      setCategories(initialCategories)
+      if (saved?.categories) {
+        setCategories(saved.categories)
+        setWordBank(saved.wordBank ?? [])
+      } else {
+        setWordBank([...(currentQuestion.answerOptions || [])])
+        const initialCategories: Categories = currentQuestion.categories
+          ? Object.keys(currentQuestion.categories).reduce((acc, category) => {
+              acc[category] = []
+              return acc
+            }, {} as Categories)
+          : {}
+        setCategories(initialCategories)
+      }
     }
     setIsQuestionComplete(false)
-  }, [currentQuestion])
+  }, [currentQuestion, restored])
+
+  // Capture the current rhymingCategories board into boardRef (only while the
+  // quiz is still editable — never overwrite a restored, completed board).
+  useEffect(() => {
+    if (!currentQuestion || isCompleted) return
+    if (currentQuestion.questionType === 'rhymingCategories') {
+      boardRef.current[currentQuestion.id] = {
+        type: 'categories',
+        categories,
+        wordBank,
+      }
+    }
+  }, [categories, wordBank, currentQuestion, isCompleted])
+
+  // Capture rhymingPairs matches reported by the child component.
+  const handlePairsMatchedChange = (matchedIds: number[]) => {
+    if (!currentQuestion || isCompleted) return
+    boardRef.current[currentQuestion.id] = { type: 'pairs', matchedIds }
+  }
 
   const handleDragEnd = (result: DropResult) => {
+    // Locked once completed — answers stay in place until "Try again".
+    if (isCompleted) return
     if (currentQuestion?.questionType === 'rhymingPairs') {
       handleDragEndRhymingPairs(
         result,
@@ -135,11 +184,14 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
 
     setIsLoading(true)
     try {
-      // For drag and drop, we'll save the current state as answers
-      // This is a simplified approach - you might want to save more detailed state
-      const answersToSubmit = currentQuiz.questions.map((question, index) => ({
+      // Persist each question's actual final board so it can be shown back in
+      // place when the learner returns. Falls back to a "completed" marker if a
+      // question's board wasn't captured for some reason.
+      const answersToSubmit = currentQuiz.questions.map((question) => ({
         questionId: question.id,
-        textAnswer: index === currentQuestionIndex ? 'completed' : 'pending',
+        textAnswer: boardRef.current[question.id]
+          ? JSON.stringify(boardRef.current[question.id])
+          : 'completed',
       }))
 
       const response = await fetch('/api/submitQuiz', {
@@ -155,6 +207,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
       })
 
       if (response.ok) {
+        setRestored({ ...boardRef.current })
         setIsCompleted(true)
       } else {
         console.error('Failed to submit quiz')
@@ -235,6 +288,9 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
                 question={currentQuestion}
                 playAudio={playAudio}
                 onQuestionComplete={handleRhymingPairsQuestionComplete}
+                initialMatchedIds={restored[currentQuestion.id]?.matchedIds}
+                locked={isCompleted}
+                onMatchedChange={handlePairsMatchedChange}
               />
             )}
             {currentQuestion.questionType === 'rhymingCategories' && (
@@ -251,13 +307,6 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
           </>
         )}
       </Box>
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
       {currentQuiz && currentQuiz.questions && (
         <QuizNavigation
           currentQuestion={currentQuestionIndex + 1}
@@ -265,7 +314,10 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
           onPrevious={handlePreviousQuestion}
           onNext={handleNextQuestion}
           onFinish={handleFinish}
-          isNextDisabled={!isQuestionComplete || isLoading || isCompleted}
+          // While completed, the quiz is locked but the learner can still page
+          // through to review each restored board.
+          isNextDisabled={!isQuestionComplete || isLoading}
+          isCompleted={isCompleted}
         />
       )}
     </DragDropContext>

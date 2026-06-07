@@ -28,7 +28,7 @@
       "title": "What is the IPA? ",
       "description": "In this module, you’ll learn what this course is about, what the IPA is and how it’s used, and what it looks like.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/1.%20What%20is%20the%20IPA%3F/1%20What%20is%20the%20IPA.mp4",
-      "videoTitle": null,
+      "videoTitle": "What is the IPA",
       "courseId": 1,
       "passScore": null,
       "isCompleted": true,
@@ -54,7 +54,7 @@
       "title": "Why the IPA? ",
       "description": "In this module, you’ll learn why the IPA is a useful tool for learning dialects and accents when compared to the English spelling system, and the difference between a dialect and accent.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/2.%20Why%20the%20IPA%3F/2%20Why%20the%20IPA.mp4",
-      "videoTitle": null,
+      "videoTitle": "Why the IPA",
       "courseId": 1,
       "passScore": null,
       "isCompleted": false,
@@ -83,7 +83,7 @@
       "title": "The Final Pitch",
       "description": " In this module, you’ll learn what to expect from the rest of this instructional video series. ",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/Intro%20to%20the%20IPA/3%20The%20Final%20Pitch.mp4",
-      "videoTitle": null,
+      "videoTitle": "The Final Pitch",
       "courseId": 1,
       "passScore": null,
       "isCompleted": true,
@@ -106,7 +106,7 @@
       "title": "Rethinking Speech",
       "description": "In this module, you’ll learn about the physiology of verbal communication, the difference between a vowel and a consonant, and elements of a dialect other than pronunciation.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/Rethinking%20Speech/4%20Rethinking%20Speech.mp4",
-      "videoTitle": null,
+      "videoTitle": "Rethinking Speech",
       "courseId": 1,
       "passScore": null,
       "isCompleted": false,
@@ -147,7 +147,7 @@
       "title": "Consonants ",
       "description": " In this module, you’ll learn about the formation of consonants within a General American dialect, and their corresponding IPA symbols.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/Consonants/5%20Consonants.mp4",
-      "videoTitle": null,
+      "videoTitle": "Consonants",
       "courseId": 1,
       "passScore": null,
       "isCompleted": false,
@@ -163,13 +163,13 @@
           "type": "resource"
         },
         {
-          "type": "resource"
-        },
-        {
-          "type": "resource"
-        },
-        {
           "type": "quiz"
+        },
+        {
+          "type": "resource"
+        },
+        {
+          "type": "resource"
         },
         {
           "type": "quiz"
@@ -188,7 +188,7 @@
       "title": "Vowels ",
       "description": "In this module, you’ll learn about the formation of one-part vowels (monophthongs) within a General American dialect, and their corresponding IPA symbols.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/Vowels/6%20Vowels%20(Monophthongs).mp4",
-      "videoTitle": null,
+      "videoTitle": "Vowels (Monophthongs)",
       "courseId": 1,
       "passScore": null,
       "isCompleted": true,
@@ -226,7 +226,7 @@
       "title": "Diphthongs & Triphtongs",
       "description": "In this module, you’ll learn about the formation of two and three-part vowels (diphthongs and triphthongs) within a General American dialect, and their corresponding IPA symbols.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/7%20Diphthongs%20%26%20Triphthongs.mp4",
-      "videoTitle": null,
+      "videoTitle": "Diphthongs & Triphthongs",
       "courseId": 1,
       "passScore": null,
       "isCompleted": true,
@@ -258,7 +258,7 @@
       "title": "Transcription Concepts",
       "description": "In this module, you’ll learn about some of the best practices when transcribing in the IPA.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8%20Transcription%20Concepts.mp4",
-      "videoTitle": null,
+      "videoTitle": "Transcription Concepts",
       "courseId": 2,
       "passScore": null,
       "isCompleted": false,
@@ -271,6 +271,9 @@
           "type": "video"
         },
         {
+          "type": "quiz"
+        },
+        {
           "type": "resource"
         },
         {
@@ -280,7 +283,10 @@
           "type": "quiz"
         },
         {
-          "type": "quiz"
+          "type": "resource"
+        },
+        {
+          "type": "resource"
         },
         {
           "type": "outro"
@@ -293,7 +299,7 @@
       "title": "Transcription In Action",
       "description": "In this module, you’ll learn about transcribing phrases and sentences in the context of connected speech, including how to incorporate essential diacritic and suprasegmental markings.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9%20Transcription%20in%20Action.mp4",
-      "videoTitle": null,
+      "videoTitle": "Transcription in Action",
       "courseId": 2,
       "passScore": null,
       "isCompleted": false,
@@ -306,13 +312,13 @@
           "type": "video"
         },
         {
+          "type": "quiz"
+        },
+        {
+          "type": "quiz"
+        },
+        {
           "type": "resource"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
         },
         {
           "type": "quiz"
@@ -328,7 +334,7 @@
       "title": "Stress",
       "description": "In this module, you will learn the difference between lexical and operative stress, and how to indicate stress in your IPA transcription.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/10.%20Stress/10%20Stress.mp4",
-      "videoTitle": null,
+      "videoTitle": "Stress",
       "courseId": 2,
       "passScore": null,
       "isCompleted": false,
@@ -360,7 +366,7 @@
       "title": "Fake Lexical Chart",
       "description": "In this module, you will learn how to utilize a lexical template through the creation of a fake dialect; and in the instructional materials you’ll learn how to analyze your personal idiolect.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/11.%20Fake%20Lexical%20Chart/11%20Fake%20Lexical%20Chart.mp4",
-      "videoTitle": null,
+      "videoTitle": "Fake Lexical Chart",
       "courseId": 2,
       "passScore": null,
       "isCompleted": false,
@@ -386,7 +392,7 @@
       "title": "Gathering Resources",
       "description": "In this module, you’ll learn what makes an example speaker resource high quality, and how to categorize them into primary, secondary, and tertiary resources.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/12.%20Gathering%20Resources/12%20Gathering%20Resources.mp4",
-      "videoTitle": null,
+      "videoTitle": "Gathering Resources",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -402,13 +408,13 @@
           "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
           "type": "outro"
@@ -421,7 +427,7 @@
       "title": "Segmental Features of the Dialect",
       "description": "In this module, you’ll learn about all of the segmental features, or one-to-one sound changes, of a British Received Pronunciation Dialect when compared to a General American Dialect.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/13a.%20Segmental%20Features%20of%20the%20Dialect/13a%20Segmental%20Features%20of%20the%20Dialect.mp4",
-      "videoTitle": null,
+      "videoTitle": "Segmental Features of the Dialect",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -437,13 +443,13 @@
           "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
           "type": "quiz"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
           "type": "outro"
@@ -456,7 +462,7 @@
       "title": "Distinct Features of the Dialect",
       "description": "In this module, you will learn about certain distinct features within the British RP dialect, including the linking and intrusive “R”, the “liquid-U”, and syncope. ",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b%20Distinct%20Features%20of%20the%20Dialect.mp4",
-      "videoTitle": null,
+      "videoTitle": "Distinct Features of the Dialect",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -470,15 +476,6 @@
         },
         {
           "type": "resource"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
         },
         {
           "type": "outro"
@@ -491,7 +488,7 @@
       "title": "Prosody of the Dialect",
       "description": "In this module, you will learn about the prosody, or musical elements, of a British RP dialect.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/13c.%20Prosody%20of%20the%20Dialect/13c%20Prosody%20of%20the%20Dialect.mp4",
-      "videoTitle": null,
+      "videoTitle": "Prosody of the Dialect",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -507,13 +504,16 @@
           "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
+        },
+        {
+          "type": "resource"
         },
         {
           "type": "outro"
@@ -526,7 +526,7 @@
       "title": "Transcription Transformation",
       "description": "In this module, we will begin the process of transcribing “Hamlet’s Advice” into British RP. You’ll be tasked with completing the transcription for homework.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/14b.%20Transcription%20Transformation/14b%20Transcription%20Transformation.mp4",
-      "videoTitle": null,
+      "videoTitle": "Transcription Transformation",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -542,13 +542,7 @@
           "type": "resource"
         },
         {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
+          "type": "resource"
         },
         {
           "type": "outro"
@@ -561,7 +555,7 @@
       "title": "Performance Implementation",
       "description": "In this final module, you’ll learn about the suggested steps to marry your dialect work to your performance choices.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/15.%20Performance%20Implementation/15%20Performance%20Implementation.mp4",
-      "videoTitle": null,
+      "videoTitle": "Performance Implementation",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -577,13 +571,13 @@
           "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
           "type": "outro"
@@ -596,7 +590,7 @@
       "title": "Dialect Transcription in Action",
       "description": "In this module, you will learn about the order of operations to undergo when transcribing your text from one dialect into another, along with some helpful tips and tricks.",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9%20Transcription%20in%20Action.mp4",
-      "videoTitle": null,
+      "videoTitle": "Transcription in Action",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -610,12 +604,6 @@
         },
         {
           "type": "resource"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
         },
         {
           "type": "quiz"
@@ -631,7 +619,7 @@
       "title": "Outro",
       "description": "Congratulations on completing The Actor's Guide to IPA and Accents!",
       "videoUrl": "https://acting-accents.s3.amazonaws.com/16.+Outro/Outro+Option+1.mp4",
-      "videoTitle": null,
+      "videoTitle": "Outro",
       "courseId": 5,
       "passScore": null,
       "isCompleted": false,
@@ -642,18 +630,6 @@
         },
         {
           "type": "video"
-        },
-        {
-          "type": "resource"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
-        },
-        {
-          "type": "quiz"
         },
         {
           "type": "outro"
@@ -674,9 +650,6 @@
       "steps": [
         {
           "type": "description"
-        },
-        {
-          "type": "quiz"
         },
         {
           "type": "quiz"
@@ -866,7 +839,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8D+-+TYPING+IN+THE+IPA.pdf",
       "courseId": null,
       "lessonId": 13,
-      "order": 4
+      "order": 2
     },
     {
       "id": 19,
@@ -902,7 +875,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/12.+Gathering+Resources/12A+-+Character+%26+Dialect+Research.pdf",
       "courseId": null,
       "lessonId": 17,
-      "order": 1
+      "order": 0
     },
     {
       "id": 23,
@@ -911,7 +884,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/12.+Gathering+Resources/12B+-+Character+%26+Dialect+Research+Example.pdf",
       "courseId": null,
       "lessonId": 17,
-      "order": 2
+      "order": 1
     },
     {
       "id": 24,
@@ -920,7 +893,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/12.+Gathering+Resources/12C+-+Dialect+Audio_Video+Collections.pdf",
       "courseId": null,
       "lessonId": 17,
-      "order": 3
+      "order": 2
     },
     {
       "id": 25,
@@ -929,7 +902,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/12.+Gathering+Resources/12D+-+Resource+Quality+Examples.pdf",
       "courseId": null,
       "lessonId": 17,
-      "order": 4
+      "order": 3
     },
     {
       "id": 26,
@@ -965,7 +938,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/13b.+Distinct+Features+of+the+Dialect/13b.C.2+-+Comma+RP+Answer+Key.pdf",
       "courseId": null,
       "lessonId": 19,
-      "order": 4
+      "order": 0
     },
     {
       "id": 30,
@@ -974,7 +947,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/13c.+Prosody+of+the+Dialect/13c.A+-+British+RP+Resource+Links.pdf",
       "courseId": null,
       "lessonId": 20,
-      "order": 1
+      "order": 0
     },
     {
       "id": 31,
@@ -983,7 +956,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/13c.+Prosody+of+the+Dialect/13c.B+-+Prosody+Worksheet.pdf",
       "courseId": null,
       "lessonId": 20,
-      "order": 2
+      "order": 1
     },
     {
       "id": 32,
@@ -992,7 +965,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/13c.+Prosody+of+the+Dialect/13c.B.2+-+Prosody+Worksheet+Example.pdf",
       "courseId": null,
       "lessonId": 20,
-      "order": 3
+      "order": 2
     },
     {
       "id": 33,
@@ -1001,7 +974,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/13c.+Prosody+of+the+Dialect/13c.C+-+Marking+the+Prosody.pdf",
       "courseId": null,
       "lessonId": 20,
-      "order": 4
+      "order": 3
     },
     {
       "id": 34,
@@ -1010,7 +983,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/13c.+Prosody+of+the+Dialect/13c.D+-+Paul+Meier+-+Comma+Gets+a+Cure.mp3",
       "courseId": null,
       "lessonId": 20,
-      "order": 5
+      "order": 4
     },
     {
       "id": 35,
@@ -1019,7 +992,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/14a.+Dialect+Transcription+in+Action/14a.A+-+British+RP+Lexical+Chart.pdf",
       "courseId": null,
       "lessonId": 23,
-      "order": 1
+      "order": 0
     },
     {
       "id": 36,
@@ -1028,7 +1001,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/14b.+Transcription+Transformation/14b.A+-+Transcribing+Hamlet's+Advice+into+RP.pdf",
       "courseId": null,
       "lessonId": 21,
-      "order": 1
+      "order": 0
     },
     {
       "id": 37,
@@ -1037,7 +1010,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/14b.+Transcription+Transformation/14b.B+-+Hamlet's+Advice+RP+Answer+Key.pdf",
       "courseId": null,
       "lessonId": 21,
-      "order": 2
+      "order": 1
     },
     {
       "id": 38,
@@ -1046,7 +1019,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/15.+Performance+Implementation/15A+-+Self-Tape.pdf",
       "courseId": null,
       "lessonId": 22,
-      "order": 1
+      "order": 0
     },
     {
       "id": 39,
@@ -1055,7 +1028,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/15.+Performance+Implementation/15B+-+Deciding+Your+Next+Dialect.pdf",
       "courseId": null,
       "lessonId": 22,
-      "order": 2
+      "order": 1
     },
     {
       "id": 40,
@@ -1064,7 +1037,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/15.+Performance+Implementation/15C+-+Steps+to+Learn+a+New+Dialect+or+Accent.pdf",
       "courseId": null,
       "lessonId": 22,
-      "order": 3
+      "order": 2
     },
     {
       "id": 41,
@@ -1073,7 +1046,7 @@
       "url": "https://acting-accents.s3.amazonaws.com/15.+Performance+Implementation/15D+-+Dialects+and+Accents+Resource+List.pdf",
       "courseId": null,
       "lessonId": 22,
-      "order": 4
+      "order": 3
     },
     {
       "id": 42,
@@ -1119,12 +1092,48 @@
       "courseId": null,
       "lessonId": 26,
       "order": 4
+    },
+    {
+      "id": 47,
+      "name": "Audio: Hamlet’s Advice Phrases (Part 3)",
+      "type": "mp3",
+      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/Checkpoint+2C+pt3+Hamlet+Phrases.mp3",
+      "courseId": null,
+      "lessonId": 26,
+      "order": 5
+    },
+    {
+      "id": 48,
+      "name": "Audio: Transcription Matching Words (8A)",
+      "type": "mp3",
+      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8A+Transcription+Matching+Words.mp3",
+      "courseId": null,
+      "lessonId": 13,
+      "order": 0
+    },
+    {
+      "id": 49,
+      "name": "Audio: Simple Transcription Words (8C)",
+      "type": "mp3",
+      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8C+Simple+Transcription+Words.mp3",
+      "courseId": null,
+      "lessonId": 13,
+      "order": 1
+    },
+    {
+      "id": 50,
+      "name": "Audio: Descriptive Transcription Phrases (9C)",
+      "type": "mp3",
+      "url": "https://acting-accents.s3.amazonaws.com/9.+Transcription+in+Action/9C+Descriptive+Transcription+Phrases.mp3",
+      "courseId": null,
+      "lessonId": 14,
+      "order": 0
     }
   ],
   "Quiz": [
     {
       "id": 1,
-      "title": null,
+      "title": "Rhyming Words",
       "lessonId": 2,
       "score": null,
       "passScore": 75,
@@ -1135,7 +1144,7 @@
     },
     {
       "id": 2,
-      "title": null,
+      "title": "Speaking Without Consonants",
       "lessonId": 4,
       "score": null,
       "passScore": 75,
@@ -1146,7 +1155,7 @@
     },
     {
       "id": 3,
-      "title": null,
+      "title": "Multiple Choice Quiz",
       "lessonId": 6,
       "score": null,
       "passScore": 75,
@@ -1157,18 +1166,18 @@
     },
     {
       "id": 4,
-      "title": null,
+      "title": "Multiple Choice Quiz",
       "lessonId": 8,
       "score": null,
       "passScore": 75,
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
-      "order": 0,
+      "order": 1,
       "isCompleted": false
     },
     {
       "id": 8,
-      "title": null,
+      "title": "Choose the Right Symbol",
       "lessonId": 6,
       "score": null,
       "passScore": 75,
@@ -1179,18 +1188,18 @@
     },
     {
       "id": 9,
-      "title": null,
+      "title": "Choose the Right Symbol",
       "lessonId": 8,
       "score": null,
       "passScore": 75,
       "hasBeenAttempted": false,
       "quizType": "symbolPicker",
-      "order": 1,
+      "order": 2,
       "isCompleted": false
     },
     {
       "id": 10,
-      "title": null,
+      "title": "Multiple Choice Quiz (two ways)",
       "lessonId": 10,
       "score": null,
       "passScore": 75,
@@ -1201,7 +1210,7 @@
     },
     {
       "id": 11,
-      "title": null,
+      "title": "Choose the Right Symbol",
       "lessonId": 10,
       "score": null,
       "passScore": 75,
@@ -1212,18 +1221,18 @@
     },
     {
       "id": 12,
-      "title": null,
+      "title": "Interactive Vowel Quadrilateral",
       "lessonId": 8,
       "score": null,
       "passScore": null,
       "hasBeenAttempted": false,
       "quizType": "vowelQuad",
-      "order": 2,
+      "order": 0,
       "isCompleted": false
     },
     {
       "id": 13,
-      "title": null,
+      "title": "Blank Lexical Chart",
       "lessonId": 25,
       "score": null,
       "passScore": null,
@@ -1233,30 +1242,19 @@
       "isCompleted": false
     },
     {
-      "id": 14,
-      "title": null,
-      "lessonId": 25,
-      "score": null,
-      "passScore": null,
-      "hasBeenAttempted": false,
-      "quizType": "hangman",
-      "order": 4,
-      "isCompleted": false
-    },
-    {
       "id": 15,
-      "title": null,
+      "title": "Repeat After Me Tongue Twisters",
       "lessonId": 18,
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "C",
-      "order": 2,
+      "quizType": "repeatAfterMe",
+      "order": 0,
       "isCompleted": false
     },
     {
       "id": 22,
-      "title": "Multiple Choice Transcription",
+      "title": "Transcription Matching",
       "lessonId": 13,
       "score": null,
       "passScore": 70,
@@ -1360,8 +1358,8 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
-      "order": 5,
+      "quizType": "corrections",
+      "order": 4,
       "isCompleted": false
     },
     {
@@ -1410,7 +1408,7 @@
     },
     {
       "id": 36,
-      "title": "Hamlet's Advice — Part 1",
+      "title": "Hamlet’s Advice pt. 1",
       "lessonId": 26,
       "score": null,
       "passScore": 70,
@@ -1421,7 +1419,7 @@
     },
     {
       "id": 37,
-      "title": "Hamlet's Advice — Part 2",
+      "title": "Hamlet’s Advice pt. 2",
       "lessonId": 26,
       "score": null,
       "passScore": 70,
@@ -1432,7 +1430,7 @@
     },
     {
       "id": 38,
-      "title": "Hamlet's Advice — Part 3",
+      "title": "Hamlet’s Advice pt. 3",
       "lessonId": 26,
       "score": null,
       "passScore": 70,
@@ -1456,7 +1454,9 @@
       "text": "From the word bank below, drag all the words that rhyme with the word “THOUGHT” in a General American dialect to \"Thought\" column.",
       "questionType": "rhymingCategories",
       "quizId": 1,
-      "categories": ["thought"],
+      "categories": [
+        "thought"
+      ],
       "audioUrl": null
     },
     {
@@ -1464,7 +1464,10 @@
       "text": "Drag the words in the word-bank below beneath their rhyming counterparts. ",
       "questionType": "rhymingCategories",
       "quizId": 1,
-      "categories": ["hear", "bear"],
+      "categories": [
+        "hear",
+        "bear"
+      ],
       "audioUrl": null
     },
     {
@@ -1472,7 +1475,12 @@
       "text": "Drag the words in the word-bank below beneath their rhyming counterparts.",
       "questionType": "rhymingCategories",
       "quizId": 1,
-      "categories": ["Bird", "Bored", "Beard", "Bared"],
+      "categories": [
+        "Bird",
+        "Bored",
+        "Beard",
+        "Bared"
+      ],
       "audioUrl": null
     },
     {
@@ -1496,7 +1504,9 @@
       "text": "Match",
       "questionType": "multipleChoice",
       "quizId": 3,
-      "categories": ["Last Three"],
+      "categories": [
+        "Last Three"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Consonants/audio/5D.Match.wav"
     },
     {
@@ -1504,7 +1514,9 @@
       "text": "They",
       "questionType": "multipleChoice",
       "quizId": 3,
-      "categories": ["First Two"],
+      "categories": [
+        "First Two"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Consonants/audio/5D.They.wav"
     },
     {
@@ -1512,7 +1524,9 @@
       "text": "Red",
       "questionType": "multipleChoice",
       "quizId": 3,
-      "categories": ["First"],
+      "categories": [
+        "First"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Consonants/audio/5D.Red.wav"
     },
     {
@@ -1520,7 +1534,9 @@
       "text": "Bring",
       "questionType": "multipleChoice",
       "quizId": 3,
-      "categories": ["Last Two"],
+      "categories": [
+        "Last Two"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Consonants/audio/5D.Bring.wav"
     },
     {
@@ -1528,7 +1544,9 @@
       "text": "Sheep",
       "questionType": "multipleChoice",
       "quizId": 3,
-      "categories": ["First Two"],
+      "categories": [
+        "First Two"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Consonants/audio/5D.Sheep.wav"
     },
     {
@@ -1584,7 +1602,9 @@
       "text": "Reach",
       "questionType": "multipleChoice",
       "quizId": 4,
-      "categories": ["Second and Third"],
+      "categories": [
+        "Second and Third"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/6.%20Vowels/6D.Audio/6D.Reach.mp3"
     },
     {
@@ -1592,7 +1612,9 @@
       "text": "Pick",
       "questionType": "multipleChoice",
       "quizId": 4,
-      "categories": ["Second"],
+      "categories": [
+        "Second"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/6.%20Vowels/6D.Audio/6D.Pick.mp3"
     },
     {
@@ -1600,7 +1622,9 @@
       "text": "Red",
       "questionType": "multipleChoice",
       "quizId": 4,
-      "categories": ["Second"],
+      "categories": [
+        "Second"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/6.%20Vowels/6D.Audio/6D.Red.mp3"
     },
     {
@@ -1608,7 +1632,9 @@
       "text": "Flag",
       "questionType": "multipleChoice",
       "quizId": 4,
-      "categories": ["Third"],
+      "categories": [
+        "Third"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/6.%20Vowels/6D.Audio/6D.Flag.mp3"
     },
     {
@@ -1616,7 +1642,9 @@
       "text": "Shop",
       "questionType": "multipleChoice",
       "quizId": 4,
-      "categories": ["Third"],
+      "categories": [
+        "Third"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/6.%20Vowels/6D.Audio/6D.Shop.mp3"
     },
     {
@@ -1677,11 +1705,11 @@
     },
     {
       "id": 49,
-      "text": "D - Paul Meier - Comma Gets a Cure",
-      "questionType": "audio",
+      "text": "Repeat After Me: Tongue Twisters",
+      "questionType": "marker",
       "quizId": 15,
       "categories": [],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/13c.%20Prosody%20of%20the%20Dialect/13c.D%20-%20Paul%20Meier%20-%20Comma%20Gets%20a%20Cure.mp3"
+      "audioUrl": null
     },
     {
       "id": 109,
@@ -3236,70 +3264,6 @@
       "audioUrl": null
     },
     {
-      "id": 303,
-      "text": "Which word is transcribed incorrectly? “It’s raining cats and dogs.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 304,
-      "text": "Which word is transcribed incorrectly? “Don’t judge a book by its cover.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 305,
-      "text": "Which word is transcribed incorrectly? “They’re blind as a bat.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 306,
-      "text": "Which word is transcribed incorrectly? “No use crying over spilled milk.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 307,
-      "text": "Which word is transcribed incorrectly? “This is the calm before the storm.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 308,
-      "text": "Which word is transcribed incorrectly? “She knocked it out of the park.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 309,
-      "text": "Which word is transcribed incorrectly? “Slow and steady wins the race.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 310,
-      "text": "Which word is transcribed incorrectly? “I hate to burst your bubble.”",
-      "questionType": "multipleChoice",
-      "quizId": 31,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
       "id": 311,
       "text": "Build the word by placing IPA symbols in the blanks.",
       "questionType": "buildAWord",
@@ -4024,7 +3988,9 @@
       "text": "Enjoy",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Last Two"],
+      "categories": [
+        "Last Two"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Enjoy.mp3"
     },
     {
@@ -4032,7 +3998,9 @@
       "text": "Share",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Last Three"],
+      "categories": [
+        "Last Three"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Share.mp3"
     },
     {
@@ -4040,7 +4008,9 @@
       "text": "High",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Last Three"],
+      "categories": [
+        "Last Three"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.High.mp3"
     },
     {
@@ -4048,7 +4018,9 @@
       "text": "Flour",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Last Three"],
+      "categories": [
+        "Last Three"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Flour.mp3"
     },
     {
@@ -4056,7 +4028,10 @@
       "text": "Oboe",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["First", "Last Two"],
+      "categories": [
+        "First",
+        "Last Two"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Oboe.mp3"
     },
     {
@@ -4064,7 +4039,9 @@
       "text": "Corn",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Second"],
+      "categories": [
+        "Second"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Corn.mp3"
     },
     {
@@ -4072,7 +4049,9 @@
       "text": "Stay",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Last Two"],
+      "categories": [
+        "Last Two"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Stay.mp3"
     },
     {
@@ -4080,7 +4059,9 @@
       "text": "Choir",
       "questionType": "multipleChoice",
       "quizId": 10,
-      "categories": ["Last Three"],
+      "categories": [
+        "Last Three"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/7C.Choir.mp3"
     },
     {
@@ -4136,6 +4117,30 @@
       "text": "[ʊɚ̆]",
       "questionType": "multipleChoice",
       "quizId": 10,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 416,
+      "text": "Find and fix the incorrectly transcribed word.",
+      "questionType": "corrections",
+      "quizId": 31,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 417,
+      "text": "Place the correct vowel symbols on the IPA vowel chart",
+      "questionType": "vowelQuad",
+      "quizId": 12,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 418,
+      "text": "Place each IPA symbol in its correct spot on the lexical chart.",
+      "questionType": "lexicalChart",
+      "quizId": 13,
       "categories": [],
       "audioUrl": null
     }
@@ -5710,16 +5715,6 @@
       "audioUrl": "https://acting-accents.s3.amazonaws.com/4.%20Rethinking%20Speech/4B.Audio/4B.6.mp3",
       "feedback": null,
       "questionId": 35
-    },
-    {
-      "id": 222,
-      "optionText": "D - Paul Meier - Comma Gets a Cure",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/13c.%20Prosody%20of%20the%20Dialect/13c.D%20-%20Paul%20Meier%20-%20Comma%20Gets%20a%20Cure.mp3",
-      "feedback": null,
-      "questionId": 49
     },
     {
       "id": 282,
@@ -11990,486 +11985,6 @@
       "audioUrl": null,
       "feedback": null,
       "questionId": 302
-    },
-    {
-      "id": 909,
-      "optionText": "ɪts",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 303
-    },
-    {
-      "id": 910,
-      "optionText": "ɹeɪ̆nɪŋ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 303
-    },
-    {
-      "id": 911,
-      "optionText": "kɑts",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [æ].",
-      "questionId": 303
-    },
-    {
-      "id": 912,
-      "optionText": "ænd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 303
-    },
-    {
-      "id": 913,
-      "optionText": "dɑgz",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 303
-    },
-    {
-      "id": 914,
-      "optionText": "jʌd͡ʒ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [d͡ʒ].",
-      "questionId": 304
-    },
-    {
-      "id": 915,
-      "optionText": "ə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 304
-    },
-    {
-      "id": 916,
-      "optionText": "bʊk",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 304
-    },
-    {
-      "id": 917,
-      "optionText": "baɪ̆",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 304
-    },
-    {
-      "id": 918,
-      "optionText": "ɪts",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 304
-    },
-    {
-      "id": 919,
-      "optionText": "kʌvɚ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 304
-    },
-    {
-      "id": 920,
-      "optionText": "doʊnt̚",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 304
-    },
-    {
-      "id": 921,
-      "optionText": "æz",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 305
-    },
-    {
-      "id": 922,
-      "optionText": "ə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 305
-    },
-    {
-      "id": 923,
-      "optionText": "bæt",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 305
-    },
-    {
-      "id": 924,
-      "optionText": "ðɛɚ̆",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 305
-    },
-    {
-      "id": 925,
-      "optionText": "bleɪ̆nd",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [aɪ̆].",
-      "questionId": 305
-    },
-    {
-      "id": 926,
-      "optionText": "oʊ̆vɚ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 306
-    },
-    {
-      "id": 927,
-      "optionText": "spɪɫd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 306
-    },
-    {
-      "id": 928,
-      "optionText": "mɪɫk",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 306
-    },
-    {
-      "id": 929,
-      "optionText": "noʊ̆",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 306
-    },
-    {
-      "id": 930,
-      "optionText": "jus",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 306
-    },
-    {
-      "id": 931,
-      "optionText": "kra.ɪŋ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [ɹ].",
-      "questionId": 306
-    },
-    {
-      "id": 932,
-      "optionText": "bəfɔɚ̆",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 307
-    },
-    {
-      "id": 933,
-      "optionText": "stoɹm",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [ɔɚ̆].",
-      "questionId": 307
-    },
-    {
-      "id": 934,
-      "optionText": "ðɪs",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 307
-    },
-    {
-      "id": 935,
-      "optionText": "ɪz",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 307
-    },
-    {
-      "id": 936,
-      "optionText": "ðə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 307
-    },
-    {
-      "id": 937,
-      "optionText": "kɑm",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 307
-    },
-    {
-      "id": 938,
-      "optionText": "θə",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [ð].",
-      "questionId": 308
-    },
-    {
-      "id": 939,
-      "optionText": "pɑɚ̆k",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 308
-    },
-    {
-      "id": 940,
-      "optionText": "ʃi",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 308
-    },
-    {
-      "id": 941,
-      "optionText": "nɑkt",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 308
-    },
-    {
-      "id": 942,
-      "optionText": "ɪt",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 308
-    },
-    {
-      "id": 943,
-      "optionText": "aʊ̆t",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 308
-    },
-    {
-      "id": 944,
-      "optionText": "əv",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 308
-    },
-    {
-      "id": 945,
-      "optionText": "sloʊ̆",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 309
-    },
-    {
-      "id": 946,
-      "optionText": "ænd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 309
-    },
-    {
-      "id": 947,
-      "optionText": "stʌdĭ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [ɛ].",
-      "questionId": 309
-    },
-    {
-      "id": 948,
-      "optionText": "wɪnz",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 309
-    },
-    {
-      "id": 949,
-      "optionText": "ðə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 309
-    },
-    {
-      "id": 950,
-      "optionText": "ɹeɪ̆s",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 309
-    },
-    {
-      "id": 951,
-      "optionText": "heɪ̆t",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 310
-    },
-    {
-      "id": 952,
-      "optionText": "tʊ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 310
-    },
-    {
-      "id": 953,
-      "optionText": "bɝst",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 310
-    },
-    {
-      "id": 954,
-      "optionText": "yɔɚ̆",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": "Replace the incorrect symbol with [j].",
-      "questionId": 310
-    },
-    {
-      "id": 955,
-      "optionText": "bʌbɫ̩",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 310
-    },
-    {
-      "id": 956,
-      "optionText": "aɪ̆",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 310
     },
     {
       "id": 957,

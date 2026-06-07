@@ -159,6 +159,8 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
   }, [allCorrect, onAllCorrectChange])
 
   const placeSymbol = (slotId: string) => {
+    // Once completed, placements are locked until "Try again".
+    if (isCompleted) return
     if (selectedSymbol) {
       setPlacements((p) => ({ ...p, [slotId]: selectedSymbol }))
       setSelectedSymbol(null)
@@ -324,14 +326,6 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
           })}
         </VStack>
       </Box>
-
-      {isCompleted && (
-        <Box p={3} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
 
       <QuizNavigation
         currentQuestion={1}

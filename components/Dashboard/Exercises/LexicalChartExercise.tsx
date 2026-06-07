@@ -139,6 +139,8 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
   }
 
   const handlePositionClick = (itemId: string) => {
+    // Once completed, answers are locked until "Try again".
+    if (isCompleted) return
     if (selectedSymbol) {
       setUserAnswers((prev) => ({
         ...prev,
@@ -149,6 +151,7 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
   }
 
   const handleClearPosition = (itemId: string) => {
+    if (isCompleted) return
     setUserAnswers((prev) => ({
       ...prev,
       [itemId]: '',
@@ -445,28 +448,14 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         </Tabs>
       </Box>
 
-      {isCompleted && (
-        <Box
-          mt={2}
-          p={3}
-          bg="green.100"
-          borderRadius="lg"
-          border="1px solid"
-          borderColor="green.300"
-        >
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
-
       <QuizNavigation
         currentQuestion={1}
         totalQuestions={1}
         onPrevious={() => {}}
         onNext={() => {}}
         onFinish={handleFinish}
-        isNextDisabled={!isQuizValid || isLoading || isCompleted}
+        isNextDisabled={!isQuizValid || isLoading}
+        isCompleted={isCompleted}
       />
     </VStack>
   )

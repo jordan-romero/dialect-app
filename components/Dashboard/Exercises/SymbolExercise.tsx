@@ -36,21 +36,67 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   const [shuffledAnswerOptions, setShuffledAnswerOptions] = useState<any[]>([])
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
   const [completedWords, setCompletedWords] = useState<any[]>([])
+  const [isCompleted, setIsCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const quizData = quizzes[quizIndex]
+  // Match by `order` (not array index) so it stays correct if quiz ordering changes.
+  const quizData = quizzes.find((q) => q.order === quizIndex)
+
+  // All options across every question, each tagged with its correct symbol.
+  const flattenOptions = (qd: typeof quizData) =>
+    qd?.questions.flatMap((q) =>
+      q.answerOptions.map((opt) => ({
+        ...opt,
+        correctSymbol: q.text, // The IPA symbol this option should match with
+      })),
+    ) ?? []
 
   useEffect(() => {
     if (quizData?.questions) {
-      // Get all answer options and flatten them with their corresponding question's correct symbol
-      const allOptions = quizData.questions.flatMap((q) =>
-        q.answerOptions.map((opt) => ({
-          ...opt,
-          correctSymbol: q.text, // The IPA symbol this option should match with
-        })),
-      )
-      setShuffledAnswerOptions(shuffleArray(allOptions))
+      setShuffledAnswerOptions(shuffleArray(flattenOptions(quizData)))
     }
   }, [quizData?.questions])
+
+  // Restore saved progress: if this quiz was completed, show every word as
+  // answered (locked) until the learner clicks "Try again".
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (!quizData) return
+      try {
+        const res = await fetch(
+          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
+        )
+        if (!res.ok) return
+        const data = await res.json()
+        setIsCompleted(data.isCompleted)
+        if (data.answers && data.answers.length > 0) {
+          const saved = data.answers.find(
+            (a: any) => a.questionId === quizData.questions[0]?.id,
+          )
+          let restoredAnswers: Record<string, string> = {}
+          if (saved?.textAnswer && saved.textAnswer !== 'pending') {
+            try {
+              restoredAnswers = JSON.parse(saved.textAnswer)
+            } catch {
+              /* keep empty */
+            }
+          }
+          const all = flattenOptions(quizData)
+          // Fill in correct symbols for any answer we didn't store explicitly.
+          const filled: Record<string, string> = { ...restoredAnswers }
+          all.forEach((o) => {
+            if (filled[o.id] === undefined) filled[o.id] = o.correctSymbol
+          })
+          setAnswers(filled)
+          setCompletedWords(all)
+          setCurrentWordIndex(all.length)
+        }
+      } catch (e) {
+        console.error('Error loading symbol quiz progress:', e)
+      }
+    }
+    loadProgress()
+  }, [quizData, lessonId])
 
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffledArray = [...array]
@@ -75,6 +121,8 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   }
 
   const handleAnswerClick = (answerId: number, correctSymbol: string) => {
+    // Once completed, answers are locked until "Try again".
+    if (isCompleted) return
     if (selectedSymbol) {
       const isCorrect = selectedSymbol === correctSymbol
       if (isCorrect) {
@@ -166,6 +214,39 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
 
   const areAllAnswered = () => {
     return currentWordIndex >= shuffledAnswerOptions.length
+  }
+
+  const submitQuiz = async () => {
+    if (!quizData) return
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/submitQuiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          quizId: quizData.id,
+          lessonId,
+          answers: quizData.questions.map((q) => ({
+            questionId: q.id,
+            // Store the full {answerId: symbol} map once on the first question.
+            textAnswer:
+              q.id === quizData.questions[0]?.id
+                ? JSON.stringify(answers)
+                : 'completed',
+          })),
+        }),
+      })
+      if (res.ok) setIsCompleted(true)
+    } catch (e) {
+      console.error('Error submitting symbol quiz:', e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleFinish = async () => {
+    if (!isCompleted) await submitQuiz()
+    onComplete()
   }
 
   return (
@@ -280,9 +361,10 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
         currentQuestion={1}
         totalQuestions={1}
         onPrevious={() => {}}
-        onNext={onComplete}
-        onFinish={onComplete}
-        isNextDisabled={!areAllAnswered()}
+        onNext={handleFinish}
+        onFinish={handleFinish}
+        isNextDisabled={!areAllAnswered() || isLoading}
+        isCompleted={isCompleted}
       />
     </Box>
   )
