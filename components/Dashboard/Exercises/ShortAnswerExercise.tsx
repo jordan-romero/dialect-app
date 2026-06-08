@@ -9,8 +9,11 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import { MdKeyboard } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
+import { useIpaKeyboard } from '../../Community/IpaKeyboardPip'
 
 interface ShortAnswerQuizProps {
   lessonId: number
@@ -33,6 +36,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
+  const ipaKeyboard = useIpaKeyboard()
 
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion = currentQuiz?.questions[currentQuestionIndex]
@@ -58,11 +62,12 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           if (data.answers && data.answers.length > 0) {
             const savedAnswers: Record<number, Record<number, string>> = {}
             data.answers.forEach((answer: any) => {
-              if (!savedAnswers[answer.questionId]) {
+              try {
+                // each question's inputs are stored as a JSON map {optionId: text}
+                savedAnswers[answer.questionId] = JSON.parse(answer.textAnswer)
+              } catch {
                 savedAnswers[answer.questionId] = {}
               }
-              savedAnswers[answer.questionId][answer.questionId] =
-                answer.textAnswer
             })
             setAnswers(savedAnswers)
           }
@@ -80,11 +85,25 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     setShowSentence(false)
   }, [currentQuestion])
 
+  // Auto-focus the first answer input when the question changes so the IPA
+  // keyboard knows where to insert (and stays targeted as you advance).
+  const firstInputRef = React.useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (isCompleted) return
+    const t = setTimeout(
+      () => firstInputRef.current?.focus({ preventScroll: true }),
+      60,
+    )
+    return () => clearTimeout(t)
+  }, [currentQuestionIndex, currentQuiz?.id, isCompleted])
+
   const handleAnswerChange = (
     questionId: number,
     answerId: number,
     value: string,
   ) => {
+    // Once completed, responses are locked in place until "Try again".
+    if (isCompleted) return
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [questionId]: {
@@ -114,13 +133,14 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
 
     setIsLoading(true)
     try {
-      // Prepare answers in the format expected by the API
-      const answersToSubmit = Object.entries(answers).flatMap(
-        ([questionId, questionAnswers]) =>
-          Object.entries(questionAnswers).map(([answerId, textAnswer]) => ({
-            questionId: parseInt(questionId),
-            textAnswer: textAnswer,
-          })),
+      // Store each question's inputs as ONE row — a JSON map of {optionId: text}
+      // — so every response persists (UserAnswer is unique per question, so the
+      // old one-row-per-input approach collapsed them all into one).
+      const answersToSubmit = Object.entries(answers).map(
+        ([questionId, questionAnswers]) => ({
+          questionId: parseInt(questionId),
+          textAnswer: JSON.stringify(questionAnswers),
+        }),
       )
 
       const response = await fetch('/api/submitQuiz', {
@@ -137,13 +157,6 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
 
       if (response.ok) {
         setIsCompleted(true)
-        toast({
-          title: 'Quiz Completed!',
-          description: 'Your answers have been saved successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        })
       } else {
         console.error('Failed to submit quiz')
         toast({
@@ -175,10 +188,22 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     (allInputsFilled && !revealSentenceOption)
   )
 
+  if (!currentQuiz) return <QuizSkeleton />
+
   return (
     <Box>
       {currentQuestion && (
         <Box>
+          <Box display="flex" justifyContent="flex-end" mb={2}>
+            <Button
+              size="sm"
+              variant={ipaKeyboard.isOpen ? 'brandBold' : 'outline'}
+              leftIcon={<Icon as={MdKeyboard} />}
+              onClick={ipaKeyboard.toggle}
+            >
+              {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
+            </Button>
+          </Box>
           <Text fontSize="xl">{currentQuestion.text}</Text>
           {currentQuestion.audioUrl && (
             <Button
@@ -192,11 +217,22 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           <VStack spacing={4} mt={4} align="start">
             {currentQuestion.answerOptions
               .filter((option) => !option.audioUrl)
-              .map((option) => (
+              .map((option, idx) => (
                 <Box key={option.id} width="100%">
-                  <Text>{option.optionText}</Text>
+                  {/* When there's an audio "reveal sentence" option (e.g. the
+                      "My Baby" exercise), the non-audio optionText is a prompt
+                      and should always show. For answer-only reveal quizzes
+                      (no audio option), optionText is the answer — hide it
+                      until the learner clicks "Reveal Answer". */}
+                  {revealSentenceOption && (
+                    <Text mb={1}>{option.optionText}</Text>
+                  )}
                   <Input
+                    ref={idx === 0 ? firstInputRef : undefined}
                     type="text"
+                    data-ipa-field
+                    className="ipa-text"
+                    placeholder="Type your answer…"
                     value={answers[currentQuestion.id]?.[option.id] || ''}
                     onChange={(e) =>
                       handleAnswerChange(
@@ -205,12 +241,32 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                         e.target.value,
                       )
                     }
+                    isReadOnly={isCompleted}
                     width="100%"
                     marginBottom={2}
                   />
+                  {!revealSentenceOption && showSentence && (
+                    <Text
+                      mt={1}
+                      fontFamily="'Charis SIL', serif"
+                      color="green.700"
+                    >
+                      Answer: {option.optionText}
+                    </Text>
+                  )}
                 </Box>
               ))}
           </VStack>
+          {!revealSentenceOption && (
+            <Button
+              onClick={() => setShowSentence(true)}
+              mt={4}
+              variant="brandWhite"
+              isDisabled={showSentence}
+            >
+              Reveal Answer
+            </Button>
+          )}
           {showSentence && revealSentenceOption && (
             <Box mt={4}>
               <Text>{revealSentenceOption.optionText}</Text>
@@ -241,15 +297,9 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           onPrevious={handlePreviousQuestion}
           onNext={handleNextQuestion}
           onFinish={handleNextQuestion}
-          isNextDisabled={isNextDisabled || isLoading || isCompleted}
+          isNextDisabled={isNextDisabled || isLoading}
+          isCompleted={isCompleted}
         />
-      )}
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
       )}
     </Box>
   )

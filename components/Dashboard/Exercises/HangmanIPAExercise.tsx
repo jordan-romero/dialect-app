@@ -15,6 +15,7 @@ import {
 import { Icon } from '@chakra-ui/react'
 import { MdKeyboard } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface HangmanQuestion {
@@ -49,12 +50,16 @@ interface HangmanIPAExerciseProps {
   lessonId: number
   quizIndex: number
   onComplete: () => void
+  /** Which static dataset to load. Defaults to the Hangman data; the
+   *  "Build-a-Word" exercise reuses this component with its own data. */
+  dataUrl?: string
 }
 
 export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   lessonId,
   quizIndex,
   onComplete,
+  dataUrl = '/hangmanIPAData.json',
 }) => {
   const [quizData, setQuizData] = useState<HangmanQuizData | null>(null)
   const [userAnswers, setUserAnswers] = useState<{
@@ -79,7 +84,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           'quizIndex:',
           quizIndex,
         )
-        const response = await fetch('/hangmanIPAData.json')
+        const response = await fetch(dataUrl)
         const data: HangmanQuizData = await response.json()
         console.log('Loaded hangman quiz data:', data)
         setQuizData(data)
@@ -185,6 +190,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   }
 
   const handleBlankClick = (questionId: number, blankIndex: number) => {
+    // Once completed, answers are locked until "Try again".
+    if (isCompleted) return
     if (selectedSymbol) {
       // If a symbol is selected from the bank, place it
       setUserAnswers((prev) => {
@@ -206,6 +213,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
   // Handle symbol input from IPA keyboard (for button clicks)
   const handleKeyboardSymbolClick = (symbol: string) => {
+    if (isCompleted) return
     if (!quizData || activeBlankIndex === null) return
 
     const currentQuestion = quizData.questions_data[currentQuestionIndex]
@@ -238,6 +246,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   }
 
   const handleClearBlank = (questionId: number, blankIndex: number) => {
+    if (isCompleted) return
     setUserAnswers((prev) => {
       const newAnswers = { ...prev }
       if (!newAnswers[questionId]) {
@@ -296,7 +305,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   const isQuizValid = checkOverallCompletion()
 
   if (!quizData) {
-    return <Text>Loading hangman IPA quiz...</Text>
+    return <QuizSkeleton />
   }
 
   const currentQuestion = quizData.questions_data[currentQuestionIndex]
@@ -376,6 +385,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           showTextArea={false}
           compact={true}
           hideInstructions={true}
+          persistClickedSymbols={false}
           showCategoriesInCompact={!!quizData.symbolBankCategories}
         />
         {selectedSymbol && (
@@ -403,6 +413,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             showTextArea={false}
             compact={false}
             hideInstructions={true}
+            persistClickedSymbols={false}
             title="Full IPA Keyboard"
           />
           {activeBlankIndex !== null && (
@@ -544,56 +555,19 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         </Box>
       )}
 
-      {/* Completion message */}
-      {isCurrentQuestionComplete && (
+      {/* Brief per-question feedback while mid-quiz (the lesson-level
+          celebration handles the final completion across all quiz types). */}
+      {isCurrentQuestionComplete && remainingQuestions.length > 0 && (
         <Box
-          border="2px solid"
-          borderColor="green.500"
-          borderRadius="lg"
-          p={6}
-          bg="green.50"
-          textAlign="center"
-        >
-          <Text fontSize="lg" fontWeight="bold" color="green.800" mb={2}>
-            ✓ Correct! Moving to next question...
-          </Text>
-          <Text fontSize="sm" color="green.700">
-            Question {currentQuestionIndex + 1} completed successfully
-          </Text>
-        </Box>
-      )}
-
-      {/* Quiz completion */}
-      {remainingQuestions.length === 0 && (
-        <Box
-          border="2px solid"
-          borderColor="green.500"
-          borderRadius="lg"
-          p={6}
-          bg="green.50"
-          textAlign="center"
-        >
-          <Text fontSize="xl" fontWeight="bold" color="green.800" mb={2}>
-            🎉 Congratulations!
-          </Text>
-          <Text fontSize="lg" color="green.700">
-            You&apos;ve completed all {quizData.questions_data.length}{' '}
-            questions!
-          </Text>
-        </Box>
-      )}
-
-      {isCompleted && (
-        <Box
-          mt={2}
-          p={3}
-          bg="green.100"
-          borderRadius="lg"
           border="1px solid"
           borderColor="green.300"
+          borderRadius="lg"
+          p={3}
+          bg="green.50"
+          textAlign="center"
         >
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
+          <Text fontSize="sm" fontWeight="bold" color="green.800">
+            ✓ Correct! Moving to next question…
           </Text>
         </Box>
       )}
@@ -604,7 +578,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         onPrevious={() => {}}
         onNext={() => {}}
         onFinish={handleFinish}
-        isNextDisabled={!isQuizValid || isLoading || isCompleted}
+        isNextDisabled={!isQuizValid || isLoading}
+        isCompleted={isCompleted}
       />
     </VStack>
   )

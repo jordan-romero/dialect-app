@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, Flex, Image, VStack, Text } from '@chakra-ui/react'
 import vowelChartImage from '@/public/ipaVowelChart.png'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface VowelPosition {
@@ -128,6 +129,8 @@ export const VowelQuadrilateralExercise: React.FC<
   }, [quizData, lessonId])
 
   const handleVowelClick = (position: string) => {
+    // Once completed, placements are locked until "Try again".
+    if (isCompleted) return
     if (selectedVowel) {
       // Place or replace the vowel
       setVowelPositions((prev) => ({
@@ -230,7 +233,7 @@ export const VowelQuadrilateralExercise: React.FC<
   const isQuizValid = checkQuizCompletion()
 
   if (!quizData) {
-    return <Text>Loading vowel quadrilateral quiz...</Text>
+    return <QuizSkeleton />
   }
 
   return (
@@ -293,6 +296,7 @@ export const VowelQuadrilateralExercise: React.FC<
         showTextArea={false}
         compact={true}
         hideInstructions={false}
+        persistClickedSymbols={false}
         title="Vowel Bank"
       />
 
@@ -313,14 +317,6 @@ export const VowelQuadrilateralExercise: React.FC<
           vowel. Click on an empty position to clear it.
         </Text>
       </Box>
-
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
 
       <QuizNavigation
         currentQuestion={1}

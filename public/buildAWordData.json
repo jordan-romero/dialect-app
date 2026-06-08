@@ -1,0 +1,185 @@
+{
+  "id": 32,
+  "lessonId": 25,
+  "quizType": "buildAWord",
+  "questions": [
+    {
+      "id": 311,
+      "text": "Build-a-Word: place the correct IPA symbols in the blanks to transcribe each word.",
+      "questionType": "buildAWord",
+      "quizId": 32
+    }
+  ],
+  "symbolBank": [
+    "aɪ̆",
+    "aɪ̆ə̆",
+    "aɪ̆ɚ̆",
+    "aʊ̆",
+    "aʊ̆ɚ̆",
+    "b",
+    "d",
+    "d͡ʒ",
+    "eɪ̆",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "n̩",
+    "oʊ̆",
+    "oʊ̆ɚ̆",
+    "p",
+    "s",
+    "t",
+    "t͡ʃ",
+    "u",
+    "v",
+    "w",
+    "z",
+    "æ",
+    "ç",
+    "ð",
+    "ĭ",
+    "ŋ",
+    "ɑ",
+    "ɑɚ̆",
+    "ɔɚ̆",
+    "ɔɪ̆",
+    "ɔɪ̆ɚ̆",
+    "ə",
+    "ɚ",
+    "ɛ",
+    "ɛɚ̆",
+    "ɛɪ̆ɚ̆",
+    "ɝ",
+    "ɪ",
+    "ɪɚ̆",
+    "ɪ̆u",
+    "ɪ̆ʊɚ̆",
+    "ɫ",
+    "ɫ̩",
+    "ɹ",
+    "ɾ",
+    "ʃ",
+    "ʊ",
+    "ʊɚ̆",
+    "ʌ",
+    "ʒ",
+    "ʔ",
+    "θ"
+  ],
+  "symbolBankCategories": {
+    "consonants": [
+      "p",
+      "b",
+      "m",
+      "f",
+      "v",
+      "t",
+      "d",
+      "n",
+      "ɾ",
+      "θ",
+      "ð",
+      "s",
+      "z",
+      "ʃ",
+      "ʒ",
+      "ɹ",
+      "l",
+      "j",
+      "k",
+      "g",
+      "ŋ",
+      "ʔ",
+      "h",
+      "ç",
+      "w",
+      "t͡ʃ",
+      "d͡ʒ",
+      "ɫ"
+    ],
+    "monophthongs": ["i", "ɪ", "ɛ", "æ", "ɑ", "ʌ", "ʊ", "u", "ə", "ɚ", "ɝ"],
+    "diphthongs": [
+      "aɪ̆",
+      "eɪ̆",
+      "oʊ̆",
+      "aʊ̆",
+      "ɪ̆u",
+      "ɔɪ̆",
+      "ɑɚ̆",
+      "ɔɚ̆",
+      "ɛɚ̆",
+      "ɪɚ̆",
+      "ʊɚ̆"
+    ],
+    "triphthongs": ["aɪ̆ɚ̆", "aɪ̆ə̆", "aʊ̆ɚ̆", "ɔɪ̆ɚ̆", "ɪ̆ʊɚ̆", "ɛɪ̆ɚ̆", "oʊ̆ɚ̆"],
+    "diacritics": ["n̩", "ɫ̩", "ĭ"]
+  },
+  "questions_data": [
+    {
+      "id": 1,
+      "word": "Cord",
+      "blanks": 3,
+      "correctAnswer": ["k", "ɔɚ̆", "d"]
+    },
+    {
+      "id": 2,
+      "word": "Merge",
+      "blanks": 3,
+      "correctAnswer": ["m", "ɝ", "d͡ʒ"]
+    },
+    {
+      "id": 3,
+      "word": "Facts",
+      "blanks": 5,
+      "correctAnswer": ["f", "æ", "k", "t", "s"]
+    },
+    {
+      "id": 4,
+      "word": "Music",
+      "blanks": 5,
+      "correctAnswer": ["m", "ɪ̆u", "z", "ɪ", "k"]
+    },
+    {
+      "id": 5,
+      "word": "Pacific Ocean",
+      "blanks": 10,
+      "correctAnswer": ["p", "ə", "s", "ɪ", "f", "ɪ", "k", "oʊ̆", "ʃ", "n̩"]
+    },
+    {
+      "id": 6,
+      "word": "Worrying",
+      "blanks": 5,
+      "correctAnswer": ["w", "ɝ", "ĭ", "ɪ", "ŋ"]
+    },
+    {
+      "id": 7,
+      "word": "Conveyor",
+      "blanks": 6,
+      "correctAnswer": ["k", "ə", "n", "v", "eɪ̆", "ɚ"]
+    },
+    {
+      "id": 8,
+      "word": "Automatic",
+      "blanks": 8,
+      "correctAnswer": ["ɑ", "ɾ", "ə", "m", "æ", "ɾ", "ɪ", "k"]
+    },
+    {
+      "id": 9,
+      "word": "Theoretical",
+      "blanks": 9,
+      "correctAnswer": ["θ", "i", "ə", "ɹ", "ɛ", "ɾ", "ɪ", "k", "ɫ̩"]
+    },
+    {
+      "id": 10,
+      "word": "Janitorial",
+      "blanks": 9,
+      "correctAnswer": ["d͡ʒ", "æ", "n", "ə", "t", "ɔɚ̆", "ĭ", "ə", "ɫ"]
+    }
+  ]
+}

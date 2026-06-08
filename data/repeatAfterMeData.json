@@ -1,0 +1,143 @@
+{
+  "id": 15,
+  "lessonId": 18,
+  "quizType": "repeatAfterMe",
+  "instructions": "Listen to each clip while following the transcription, then repeat the sentence with the indicated RP sound change. As you go, fill out the blank RP Lexical Chart with the presented changes. You can record yourself and play it back to compare.",
+  "questions": [
+    {
+      "id": 49,
+      "text": "Repeat After Me: Tongue Twisters"
+    }
+  ],
+  "items": [
+    {
+      "n": 1,
+      "lexicalSets": [{ "name": "BATH", "ga": "[æ]", "rp": "[ɑ]" }],
+      "note": "Refer to the “Ask List” to confirm if this change takes place on a given word.",
+      "sentence": "She can’t have danced holding the half-empty glass.",
+      "ipa": "/ʃi kɑnt hæv dɑnst həʊ̆ɫdɪŋ ðə hɑf ɛmptĭ glɑs/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.1.mp3"
+    },
+    {
+      "n": 2,
+      "lexicalSets": [{ "name": "LOT / CLOTH", "ga": "[ɑ]", "rp": "[ɒ]" }],
+      "sentence": "At college, John washed often using soap and water.",
+      "ipa": "/æt kɒlɪdʒ | dʒɒn wɒʃt ɒfn̩ juzɪŋ səʊ̆p ænd wɒtə/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.2.mp3"
+    },
+    {
+      "n": 3,
+      "lexicalSets": [{ "name": "THOUGHT", "ga": "[ɒ]", "rp": "[ɔ]" }],
+      "sentence": "Laura always thought Paul was awfully awkward.",
+      "ipa": "/lɔɹə ɔɫweɪ̆z θɔt pɔɫ wəz ɔflĭ ɔkwəd/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.3.mp3"
+    },
+    {
+      "n": 4,
+      "lexicalSets": [{ "name": "LETTER", "ga": "[ɚ]", "rp": "[ə]" }],
+      "sentence": "My perturbed father rode over the Ryder River.",
+      "ipa": "/maɪ̆ pətɜbd fɑðə ɹəʊ̆d əʊ̆və ðə ɹaɪ̆də ɹɪvə/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.4.mp3"
+    },
+    {
+      "n": 5,
+      "lexicalSets": [{ "name": "NURSE", "ga": "[ɝ]", "rp": "[ɜ]" }],
+      "note": "This mid-central vowel may feel awkward for U.S. speakers – think [ɛ], but retract the tongue towards the center of the mouth.",
+      "sentence": "The stern surfer learned early that murder never worked.",
+      "ipa": "/ðə stɜn sɜfə lɜnd ɜlĭ ðæt mɜdə nɛvə wɜkt/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.5.mp3"
+    },
+    {
+      "n": 6,
+      "lexicalSets": [{ "name": "HAPPY", "ga": "[ĭ]", "rp": "[ɪ]" }],
+      "note": "This sound change is not particularly modern and may be more appropriate for period pieces, such as an Oscar Wilde play.",
+      "sentence": "Melanie happily and frequently said everything was easy.",
+      "ipa": "/mɛlənɪ hæpɪlɪ ænd fɹikwəntlɪ sɛd ɛvɹɪθɪŋ wəz izɪ/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.6.mp3"
+    },
+    {
+      "n": 7,
+      "lexicalSets": [{ "name": "GOAT", "ga": "[oʊ̆]", "rp": "[əʊ̆]" }],
+      "sentence": "It’s only a stone’s throw to Rio so don’t go roaming all over the globe.",
+      "ipa": "/ɪts əʊ̆nlĭ ə stəʊ̆nz θɹəʊ̆ tʊ ɹi.əʊ̆ səʊ̆ dəʊ̆nt gəʊ̆ ɹəʊ̆mɪŋ ɔɫ əʊ̆və ðə gləʊ̆b/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.7.mp3"
+    },
+    {
+      "n": 8,
+      "lexicalSets": [{ "name": "NEAR", "ga": "[ɪɚ̆]", "rp": "[ɪə̆]" }],
+      "sentence": "The fearful deer stood here near the pier.",
+      "ipa": "/ðə fɪə̆fɫ̩ dɪə̆ stʊd hɪə̆ nɪə̆ ðə pɪə̆/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.8.mp3"
+    },
+    {
+      "n": 9,
+      "lexicalSets": [{ "name": "SQUARE", "ga": "[ɛɚ̆]", "rp": "[ɛː]" }],
+      "note": "The monophthong is lengthened (indicated by [ː]) to make up for the absence of the rhotic offglide. Some RP speakers may maintain the diphthong while still losing rhoticity: [ɛə̆].",
+      "sentence": "Take care, beware the chairs at the foot of the stairs.",
+      "ipa": "/teɪ̆k kɛː | biwɛː ðə t͡ʃɛːz æt ðə fʊt əv ðə stɛːz/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.9.mp3"
+    },
+    {
+      "n": 10,
+      "lexicalSets": [{ "name": "START", "ga": "[ɑɚ̆]", "rp": "[ɑ]" }],
+      "sentence": "Carly, are you parked by the star bar?",
+      "ipa": "/kɑlĭ | ɑ ju pɑkt baɪ̆ ðə stɑ bɑ/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.10.mp3"
+    },
+    {
+      "n": 11,
+      "lexicalSets": [{ "name": "NORTH / FORCE", "ga": "[ɔɚ̆]", "rp": "[ɔ]" }],
+      "sentence": "We should order more corn to hoard for warm storms.",
+      "ipa": "/wi ʃʊd ɔdə mɔ kɔn tʊ hɔd fɔ wɔm stɔmz/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.11.mp3"
+    },
+    {
+      "n": 12,
+      "lexicalSets": [{ "name": "CURE", "ga": "[ʊɚ̆]", "rp": "[ʊə̆]" }],
+      "sentence": "I’m sure the pure cure will lure them.",
+      "ipa": "/aɪ̆m ʃʊə̆ ðə pjʊə̆ kçʊə̆ wɪl͜ lʊə̆ ðɛm/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.12.mp3"
+    },
+    {
+      "n": 13,
+      "note": "These are all shown together: the rhotic offglide [ɚ̆] becomes [ə̆] across triphthongs.",
+      "lexicalSets": [
+        { "name": "PLAYER", "ga": "[ɛɪ̆ɚ̆]", "rp": "[ɛɪ̆ə̆]" },
+        { "name": "FIRE", "ga": "[aɪ̆ɚ̆]", "rp": "[aɪ̆ə̆]" },
+        { "name": "LAWYER", "ga": "[ɔɪ̆ɚ̆]", "rp": "[ɔɪ̆ə̆]" },
+        { "name": "POWER", "ga": "[aʊ̆ɚ̆]", "rp": "[aʊ̆ə̆]" },
+        { "name": "LOWER", "ga": "[oʊ̆ɚ̆]", "rp": "[əʊ̆ə̆]" },
+        { "name": "DEMURE", "ga": "[ɪ̆ʊɚ̆]", "rp": "[ɪ̆ʊə̆]" }
+      ],
+      "sentence": "The mayor sent fewer flowers to the choir than to the rower’s employers.",
+      "ipa": "/ðə mɛɪ̆ə̆ sɛnt fɪ̆ʊə̆ flaʊ̆ə̆z tʊ ðə kwaɪ̆ə̆ ðən tʊ ðə ɹəʊ̆ə̆z ɛmplɔɪ̆ə̆z/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.13.mp3"
+    },
+    {
+      "n": 14,
+      "lexicalSets": [
+        { "name": "TART (unreleased → released)", "ga": "[t̚]", "rp": "[t]" }
+      ],
+      "sentence": "Pete might sit out of the fight and shout at the first to get hit.",
+      "ipa": "/pit maɪ̆t sɪt aʊ̆t əv ðə faɪ̆t ænd ʃaʊ̆t æt ðə fɜst̚ tʊ gɛt hɪt/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.14.mp3"
+    },
+    {
+      "n": 15,
+      "lexicalSets": [
+        { "name": "CITY", "ga": "[ɾ]", "rp": "[t]" },
+        { "name": "WEDDING", "ga": "[ɾ]", "rp": "[d]" }
+      ],
+      "sentence": "Freddy and Betty had a short wedding party in the city.",
+      "ipa": "/fɹɛdĭ ænd bɛtĭ hæd ə ʃɔt wɛdɪŋ pɑtĭ ɪn ðə sɪtĭ/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.15.mp3"
+    },
+    {
+      "n": 16,
+      "lexicalSets": [{ "name": "BUTTON", "ga": "[ʔ]", "rp": "[t]" }],
+      "sentence": "I’ve written to my cousin Sutton in Britain, who feeds their kitten only mutton.",
+      "ipa": "/aɪ̆v ɹɪtn̩ tʊ maɪ̆ kʌzn̩ sʌtn̩ ɪn bɹɪtn̩ hu fidz ðɛː kɪtn̩ əʊ̆nlĭ mʌtn̩/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13a.+Segmental+Features+of+the+Dialect/13a.C.Audio/13aC.16.mp3"
+    }
+  ]
+}

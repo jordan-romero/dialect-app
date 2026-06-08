@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Box, Text, Button, Flex, Alert, AlertIcon } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
 import { Lesson } from '../Course/courseTypes'
+
+// Subtle fade+slide as each lesson step comes in (on Next/Previous).
+const stepIn = keyframes`
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+`
 import { lessonTypeComponentMap } from './utils'
 import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExercise'
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
@@ -10,8 +17,15 @@ import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
 import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
+import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExercise'
+import { RepeatAfterMeExercise } from '../Exercises/RepeatAfterMeExercise'
+import { QuizCelebration } from '../Exercises/QuizCelebration'
+import IframeWithSkeleton from './IframeWithSkeleton'
+import { CorrectionsExercise } from '../Exercises/CorrectionsExercise'
 import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
+import UnlockCourseButton from '../../UnlockCourseButton'
+import { expandLessonSteps, orderedResources } from './lessonOutline'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -32,16 +46,31 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const [fileBasedQuizAllCorrect, setFileBasedQuizAllCorrect] = useState<
     Set<number>
   >(new Set())
+  // Bumped per quiz to force a fresh remount on "Try again".
+  const [retryNonce, setRetryNonce] = useState<{ [quizId: number]: number }>({})
+  // Quiz id currently showing the completion celebration (Siri-style pulse).
+  const [celebratingQuizId, setCelebratingQuizId] = useState<number | null>(
+    null,
+  )
+
+  const quizIdsKey = useMemo(
+    () => (lesson.quiz?.length ? lesson.quiz.map((q) => q.id).join(',') : ''),
+    [lesson.quiz],
+  )
+
+  const lessonRef = useRef(lesson)
+  lessonRef.current = lesson
 
   // Load quiz completion status from database
   useEffect(() => {
     const loadQuizCompletionStatus = async () => {
-      if (!lesson.quiz || lesson.quiz.length === 0) return
+      const quizzes = lessonRef.current.quiz
+      if (!quizzes || quizzes.length === 0) return
 
       try {
-        const completionPromises = lesson.quiz.map(async (quiz) => {
+        const completionPromises = quizzes.map(async (quiz) => {
           const response = await fetch(
-            `/api/userQuizProgress?quizId=${quiz.id}&lessonId=${lesson.id}`,
+            `/api/userQuizProgress?quizId=${quiz.id}&lessonId=${lessonRef.current.id}`,
           )
           if (response.ok) {
             const data = await response.json()
@@ -59,7 +88,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         setQuizCompletionStatus(completionMap)
 
         // Also update completedQuizzes for backward compatibility
-        const completedOrders = lesson.quiz
+        const completedOrders = quizzes
           .filter((quiz) => completionMap[quiz.id])
           .map((quiz) => quiz.order)
         setCompletedQuizzes(completedOrders)
@@ -69,7 +98,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     }
 
     loadQuizCompletionStatus()
-  }, [lesson.id, lesson.quiz])
+  }, [lesson.id, quizIdsKey])
 
   if (!lesson || !lesson.steps || lesson.steps.length === 0) {
     return (
@@ -82,16 +111,12 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     )
   }
 
-  const steps = lesson.steps
-  const currentStep = steps[currentStepIndex]
-
-  const getCurrentResourceIndex = () => {
-    const currentResource =
-      steps
-        .slice(0, currentStepIndex + 1)
-        .filter((step) => step.type === 'resource').length - 1
-    return currentResource
-  }
+  // Expand the stored outline into the concrete sequence the learner walks
+  // through — one resource per resource step, in authored order — so Next moves
+  // through each resource, video, and quiz one at a time.
+  const steps = expandLessonSteps(lesson)
+  const resources = orderedResources(lesson)
+  const currentStep = steps[currentStepIndex] ?? steps[0]
 
   console.log(lesson.quiz, 'lesson.quiz')
   console.log(
@@ -162,29 +187,78 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         ...prev,
         [quiz.id]: true,
       }))
+      // Same celebration for every quiz type across the platform.
+      setCelebratingQuizId(quiz.id)
     }
+    // Re-check badges (a completed exercise may have earned one).
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('badges:check'))
+    }
+  }
+
+  // "Try again": clear the saved answers for this quiz, reset local completion,
+  // and force the quiz component to remount fresh.
+  const handleRetryQuiz = async (quiz: { id: number; order: number }) => {
+    try {
+      await fetch('/api/resetQuizProgress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: quiz.id }),
+      })
+    } catch (error) {
+      console.error('Error resetting quiz:', error)
+    }
+    setQuizCompletionStatus((prev) => ({ ...prev, [quiz.id]: false }))
+    setCompletedQuizzes((prev) => prev.filter((o) => o !== quiz.order))
+    setFileBasedQuizAllCorrect((prev) => {
+      const next = new Set(prev)
+      next.delete(quiz.order)
+      return next
+    })
+    setRetryNonce((prev) => ({ ...prev, [quiz.id]: (prev[quiz.id] || 0) + 1 }))
+    setCelebratingQuizId((cur) => (cur === quiz.id ? null : cur))
   }
 
   const renderStepContent = () => {
     switch (currentStep.type) {
       case 'video':
         return lesson.videoUrl ? lessonTypeComponentMap['video'](lesson) : null
-      case 'resource':
-        const resourceIndex = getCurrentResourceIndex()
-        const resource = lesson.resources[resourceIndex]
-        return resource ? (
-          <Box height="100%">
-            <iframe
-              width="95%"
-              height="750px"
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(
-                resource.url,
-              )}&embedded=true`}
-              title={resource.name}
-              allowFullScreen
-            ></iframe>
+      case 'resource': {
+        // Show ONLY the single resource that belongs to this step.
+        const r = resources[currentStep.resourceIndex ?? 0]
+        if (!r) return null
+        const isAudio = r.type === 'mp3' || /\.(mp3|wav)(\?|$)/i.test(r.url)
+        const isLink = r.type === 'link'
+        return (
+          <Box height="100%" overflowY="auto">
+            <Box mb={8}>
+              <Text fontWeight="bold" mb={2}>
+                {r.name}
+              </Text>
+              {isAudio ? (
+                <audio controls style={{ width: '100%' }} src={r.url} />
+              ) : isLink ? (
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#5F53CF', textDecoration: 'underline' }}
+                >
+                  Open resource ↗
+                </a>
+              ) : (
+                <IframeWithSkeleton
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(
+                    r.url,
+                  )}&embedded=true`}
+                  title={r.name}
+                  height="750px"
+                />
+              )}
+            </Box>
           </Box>
-        ) : null
+        )
+      }
       case 'description':
         return <LessonDescription lesson={lesson} />
       case 'outro':
@@ -199,7 +273,39 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
           isQuizNull: currentQuiz === null,
         })
         return currentQuiz ? (
-          <Paper>
+          <Paper
+            key={`${currentQuiz.id}-${retryNonce[currentQuiz.id] || 0}`}
+            position="relative"
+          >
+            {celebratingQuizId === currentQuiz.id && (
+              <QuizCelebration
+                onDone={() => setCelebratingQuizId(null)}
+                subtitle={`${currentQuiz.title?.trim() || 'Quiz'} complete`}
+              />
+            )}
+            <Flex justify="space-between" align="center" mb={2} gap={3}>
+              <Text fontSize="lg" fontWeight="bold" color="gray.700">
+                {currentQuiz.title?.trim() || ''}
+              </Text>
+              {/* Try again only appears once the quiz has been completed. */}
+              {(quizCompletionStatus[currentQuiz.id] ||
+                completedQuizzes.includes(currentQuiz.order) ||
+                fileBasedQuizAllCorrect.has(currentQuiz.order)) && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  flexShrink={0}
+                  onClick={() =>
+                    handleRetryQuiz({
+                      id: currentQuiz.id,
+                      order: currentQuiz.order,
+                    })
+                  }
+                >
+                  ↻ Try again
+                </Button>
+              )}
+            </Flex>
             {(() => {
               console.log('🎲 Quiz type switch:', currentQuiz.quizType)
               switch (currentQuiz.quizType) {
@@ -251,6 +357,46 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       }}
                     />
                   )
+                case 'corrections':
+                  return (
+                    <CorrectionsExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      onAllCorrectChange={(allCorrect) => {
+                        setFileBasedQuizAllCorrect((prev) => {
+                          const next = new Set(prev)
+                          if (allCorrect) next.add(currentQuiz.order)
+                          else next.delete(currentQuiz.order)
+                          return next
+                        })
+                      }}
+                    />
+                  )
+                case 'repeatAfterMe':
+                  return (
+                    <RepeatAfterMeExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'consonantRect':
+                  return (
+                    <ConsonantRectangleExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      onAllCorrectChange={(allCorrect) => {
+                        setFileBasedQuizAllCorrect((prev) => {
+                          const next = new Set(prev)
+                          if (allCorrect) next.add(currentQuiz.order)
+                          else next.delete(currentQuiz.order)
+                          return next
+                        })
+                      }}
+                    />
+                  )
                 case 'lexicalChart':
                   return (
                     <LexicalChartExercise
@@ -265,6 +411,17 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'buildAWord':
+                  // Build-a-Word is mechanically identical to Hangman ("hangman
+                  // minus the hanged man") — reuse the component with its own data.
+                  return (
+                    <HangmanIPAExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                      dataUrl="/buildAWordData.json"
                     />
                   )
                 default:
@@ -288,8 +445,44 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const isFinishButtonDisabled =
     isLastStep && currentStep.type === 'quiz' ? !isCurrentQuizCompleted : false
 
+  // Paid-content gate: gated lessons come back from the API with `locked: true`
+  // and their content stripped. Show a paywall instead of the lesson.
+  if ((lesson as any).locked) {
+    return (
+      <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          h="100%"
+          textAlign="center"
+          gap={5}
+        >
+          <Text fontSize="2xl" fontWeight="bold">
+            🔒 {lesson.title?.trim()}
+          </Text>
+          {(lesson as any).lockReason === 'phase' ? (
+            <Text maxW="480px" color="gray.600">
+              This phase is locked. Finish <b>every</b> lesson in the previous
+              phase to unlock it.
+            </Text>
+          ) : (
+            <>
+              <Text maxW="480px" color="gray.600">
+                This lesson is part of the full course. The first three lessons
+                are free — unlock the rest to access all videos, handouts, and
+                exercises.
+              </Text>
+              <UnlockCourseButton />
+            </>
+          )}
+        </Flex>
+      </Box>
+    )
+  }
+
   return (
-    <Box w="100%" h="100vh" p={10} pl={0} overflowY="auto">
+    <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
         w="100%"
@@ -315,7 +508,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Box flex="1">{renderStepContent()}</Box>
+        <Box
+          flex="1"
+          key={currentStepIndex}
+          animation={`${stepIn} 0.35s ease-out`}
+        >
+          {renderStepContent()}
+        </Box>
         <Flex justifyContent="space-between" mt={4}>
           <Box>
             {currentStepIndex > 0 && (

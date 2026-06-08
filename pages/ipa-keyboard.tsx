@@ -86,107 +86,14 @@ const IPAKeyboardPage: React.FC = () => {
                 </Text>
               </VStack>
 
-              <Text fontSize="md" fontWeight="semibold" mb={2} color="gray.800">
-                Keyboard Shortcuts:
+              <Text fontSize="sm" color="gray.600" mb={4}>
+                Need the full shortcut reference (symbol cycling, diacritics,
+                formatting, and history)? Click{' '}
+                <Text as="span" fontWeight="semibold" color="brand.iris">
+                  Instructions
+                </Text>{' '}
+                on the keyboard above to open the side panel any time.
               </Text>
-              <VStack align="start" spacing={1} pl={4} mb={4}>
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={1}
-                >
-                  IPA symbols:
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+[Letter]
-                  </Text>{' '}
-                  — press again within a second to cycle (e.g. a, ɑ, æ for A)
-                </Text>
-
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={2}
-                >
-                  Diacritics (direct access):
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Shift+Alt+O
-                  </Text>{' '}
-                  — voiceless (̥), <Text as="span" fontWeight="semibold">Shift+Alt+OO</Text> — voiceless above (̊)
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Shift+Alt+D
-                  </Text>{' '}
-                  — dental (̪), <Text as="span" fontWeight="semibold">Alt+F</Text> — tie bar (͡)
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Alt+.
-                  </Text>{' '}
-                  — extra-short (̆), <Text as="span" fontWeight="semibold">Alt+..</Text> — long (ː)
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  Hover over any symbol to see its specific shortcut
-                </Text>
-
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={2}
-                >
-                  Text Formatting:
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+B
-                  </Text>{' '}
-                  (Cmd+B on Mac) - Bold
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+I
-                  </Text>{' '}
-                  (Cmd+I on Mac) - Italic
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+U
-                  </Text>{' '}
-                  (Cmd+U on Mac) - Underline
-                </Text>
-
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={2}
-                >
-                  History:
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+Z
-                  </Text>{' '}
-                  (Cmd+Z on Mac) - Undo
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+Y
-                  </Text>{' '}
-                  (Windows) or{' '}
-                  <Text as="span" fontWeight="semibold">
-                    Cmd+Shift+Z
-                  </Text>{' '}
-                  (Mac) — Redo
-                </Text>
-              </VStack>
 
               <Text fontSize="md" color="gray.700" mb={4}>
                 Want to learn more about dialect training and accent coaching?{' '}
