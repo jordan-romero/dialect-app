@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Box, Text, Grid, GridItem, Button, Flex } from '@chakra-ui/react'
 import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
@@ -26,6 +26,16 @@ const AudioButton: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
   )
 }
 
+// All options across every question, each tagged with its correct symbol.
+// Pure (module-level) so it isn't a changing hook dependency.
+const flattenOptions = (qd: any): any[] =>
+  qd?.questions?.flatMap((q: any) =>
+    q.answerOptions.map((opt: any) => ({
+      ...opt,
+      correctSymbol: q.text, // The IPA symbol this option should match with
+    })),
+  ) ?? []
+
 const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   lessonId,
   quizIndex,
@@ -40,23 +50,19 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Match by `order` (not array index) so it stays correct if quiz ordering changes.
-  const quizData = quizzes.find((q) => q.order === quizIndex)
-
-  // All options across every question, each tagged with its correct symbol.
-  const flattenOptions = (qd: typeof quizData) =>
-    qd?.questions.flatMap((q) =>
-      q.answerOptions.map((opt) => ({
-        ...opt,
-        correctSymbol: q.text, // The IPA symbol this option should match with
-      })),
-    ) ?? []
+  // Match by `order` (not array index) so it stays correct if quiz ordering
+  // changes. Memoized so its identity is stable across renders (safe to use as
+  // an effect dependency without re-running every render).
+  const quizData = useMemo(
+    () => quizzes.find((q) => q.order === quizIndex),
+    [quizzes, quizIndex],
+  )
 
   useEffect(() => {
     if (quizData?.questions) {
       setShuffledAnswerOptions(shuffleArray(flattenOptions(quizData)))
     }
-  }, [quizData?.questions])
+  }, [quizData])
 
   // Restore saved progress: if this quiz was completed, show every word as
   // answered (locked) until the learner clicks "Try again".

@@ -94,7 +94,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
     }
 
     loadQuizData()
-  }, [lessonId, quizIndex])
+  }, [lessonId, quizIndex, dataUrl])
 
   // Load saved progress
   useEffect(() => {

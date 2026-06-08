@@ -59,6 +59,8 @@ const CourseContainer = () => {
         setLoadError(error.message)
         setIsLoading(false)
       })
+    // Mount-only: fetch courses + progress once and pick the resume lesson.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // All lessons across courses in true course order: by course, then by

@@ -109,25 +109,15 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     loadQuizCompletionStatus()
   }, [lesson.id, quizIdsKey])
 
-  if (!lesson || !lesson.steps || lesson.steps.length === 0) {
-    return (
-      <Flex justifyContent="center" alignItems="center" height="100vh">
-        <Alert status="error">
-          <AlertIcon />
-          No lesson data available
-        </Alert>
-      </Flex>
-    )
-  }
-
   // Expand the stored outline into the concrete sequence the learner walks
   // through — one resource per resource step, in authored order — so Next moves
-  // through each resource, video, and quiz one at a time.
+  // through each resource, video, and quiz one at a time. Pure call; safe to run
+  // before the guard below (returns [] when the lesson has no steps).
   const steps = expandLessonSteps(lesson)
-  const resources = orderedResources(lesson)
 
   // If a saved step is now out of range (e.g. the lesson's steps changed),
-  // clamp it back into bounds.
+  // clamp it back into bounds. (Kept above the early return so hook order is
+  // stable on every render — react-hooks/rules-of-hooks.)
   useEffect(() => {
     if (currentStepIndex > steps.length - 1) {
       setCurrentStepIndex(Math.max(0, steps.length - 1))
@@ -143,6 +133,18 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     )
   }, [lesson.id, currentStepIndex])
 
+  if (!lesson || !lesson.steps || lesson.steps.length === 0) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100vh">
+        <Alert status="error">
+          <AlertIcon />
+          No lesson data available
+        </Alert>
+      </Flex>
+    )
+  }
+
+  const resources = orderedResources(lesson)
   const currentStep = steps[currentStepIndex] ?? steps[0]
 
   const getCurrentQuiz = () => {
@@ -447,7 +449,15 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   // and their content stripped. Show a paywall instead of the lesson.
   if ((lesson as any).locked) {
     return (
-      <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
+      <Box
+        w="100%"
+        maxW="1200px"
+        mx="auto"
+        h="100%"
+        p={{ base: 4, md: 8 }}
+        pl={{ base: 4, md: 0 }}
+        overflowY="auto"
+      >
         <Flex
           direction="column"
           align="center"
