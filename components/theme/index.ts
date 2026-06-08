@@ -30,6 +30,15 @@ const theme = extendTheme({
       'text.primary': { default: 'gray.800', _dark: 'gray.100' },
       'text.muted': { default: 'gray.500', _dark: 'gray.400' },
       'border.subtle': { default: 'gray.200', _dark: 'whiteAlpha.300' },
+      // IPA keyboard key highlights — bright in light mode, gently tinted in dark.
+      'symbol.used': {
+        default: 'brand.blue',
+        _dark: 'rgba(126,172,226,0.22)',
+      }, // previously-clicked
+      'symbol.selected': {
+        default: 'brand.blueLight',
+        _dark: 'rgba(149,128,255,0.34)',
+      }, // currently cycling
     },
   },
   colors: {
