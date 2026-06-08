@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
-import LessonContainerV2 from '../Lesson/LessonContainerV2'
 import { Course, Lesson } from './courseTypes'
 import {
   Alert,
@@ -174,15 +173,11 @@ const CourseContainer = () => {
           <LessonSkeleton />
         ) : selectedLesson ? (
           <Flex justifyContent="center" alignItems="center" height="100%">
-            {selectedLesson.steps && selectedLesson.steps.length > 0 ? (
-              <LessonContainerV3
-                key={selectedLesson.id}
-                lesson={selectedLesson}
-                onLessonComplete={handleLessonComplete}
-              />
-            ) : (
-              <LessonContainerV2 lesson={selectedLesson} />
-            )}
+            <LessonContainerV3
+              key={selectedLesson.id}
+              lesson={selectedLesson}
+              onLessonComplete={handleLessonComplete}
+            />
           </Flex>
         ) : (
           <Flex justifyContent="center" alignItems="center" height="100%">

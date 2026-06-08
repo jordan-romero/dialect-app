@@ -29,10 +29,6 @@ import { visualFor } from '../badgeVisuals'
 import WelcomeHeader from '../WelcomeHeader'
 
 // Flames lick up from the bottom of the streak card when it ignites.
-const flicker = keyframes`
-  0%, 100% { transform: translateY(0) scaleY(1) rotate(-2deg); opacity: 0.85; }
-  50% { transform: translateY(-8px) scaleY(1.3) rotate(2deg); opacity: 1; }
-`
 const emberGlow = keyframes`
   0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0), 0 0 0 0 rgba(249,115,22,0); }
   50% { box-shadow: 0 0 0 3px rgba(249,115,22,0.35), 0 0 30px 6px rgba(249,115,22,0.5); }
@@ -325,7 +321,7 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
         setDisplayCount(n)
         if (n >= current) clearInterval(iv)
       }, 180)
-      const t = setTimeout(() => setIgniting(false), 4200)
+      const t = setTimeout(() => setIgniting(false), 5000)
       return () => {
         clearInterval(iv)
         clearTimeout(t)
@@ -357,14 +353,7 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
           bgGradient="linear(to-br, #F97316, #EF4444)"
           boxShadow="0 8px 20px rgba(239,68,68,0.3)"
         >
-          <Icon
-            as={MdLocalFireDepartment}
-            boxSize={7}
-            color="white"
-            animation={
-              igniting ? `${flicker} 0.5s ease-in-out infinite` : undefined
-            }
-          />
+          <Icon as={MdLocalFireDepartment} boxSize={7} color="white" />
         </Flex>
         <Box>
           <Text fontSize="3xl" fontWeight="bold" lineHeight="1">
