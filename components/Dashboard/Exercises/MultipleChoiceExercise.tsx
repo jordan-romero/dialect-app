@@ -57,29 +57,10 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   const toast = useToast()
 
   const quizData = useMemo(() => {
-    console.log('🎲 Quiz Selection:', {
-      foundQuizzes: quizzes?.length,
-      targetIndex: quizIndex,
-      quizzes: quizzes?.map((q) => ({
-        id: q.id,
-        order: q.order,
-        type: q.quizType,
-      })),
-    })
     return quizzes?.find((quiz) => quiz.order === quizIndex)
   }, [quizzes, quizIndex])
 
   useEffect(() => {
-    console.log('🎯 Questions Data:', {
-      hasQuizData: !!quizData,
-      questionsCount: quizData?.questions?.length,
-      questions: quizData?.questions?.map((q) => ({
-        id: q.id,
-        text: q.text,
-        answerOptionsCount: q.answerOptions?.length,
-      })),
-    })
-
     if (quizData?.questions) {
       const part1 = quizData.questions.filter(
         (question) => question.categories?.[0] !== undefined,
@@ -88,32 +69,16 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         (question) => question.categories?.[0] === undefined,
       )
 
-      console.log('📝 Parts Debug:', {
-        part1Count: part1.length,
-        part2Count: part2.length,
-        shuffledPart1: shuffledPart1Questions.length,
-        shuffledPart2: shuffledPart2Questions.length,
-      })
-
       setShuffledPart1Questions(part1)
       setShuffledPart2Questions(part2)
     }
   }, [quizData?.questions])
-
-  // Log render state
-  console.log('🎨 Render State:', {
-    hasQuizzes: quizzes?.length > 0,
-    hasQuizData: !!quizData,
-    part1Questions: shuffledPart1Questions.length,
-    part2Questions: shuffledPart2Questions.length,
-  })
 
   // Use the order-matched quiz for progress/submission. A lesson can have
   // more than one multipleChoice quiz (e.g. "Multiple Choice Transcription"
   // and "Regional Options"); keying off quizType alone would always resolve
   // to the first one and conflate their progress/answers.
   const multipleChoiceQuiz = quizData
-  console.log('🎯 Multiple choice quiz:', multipleChoiceQuiz)
 
   // Load saved progress when component mounts
   useEffect(() => {

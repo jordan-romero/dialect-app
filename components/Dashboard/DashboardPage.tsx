@@ -19,14 +19,7 @@ const DashboardPage = () => {
         })
 
         if (response.ok) {
-          const data = await response.json()
-          // Handle both new user creation (201) and existing user (200)
-          if (response.status === 200) {
-            console.log('User already exists:', data.message)
-          } else if (response.status === 201) {
-            console.log('New user created:', data.message)
-          }
-          return data
+          return await response.json()
         } else {
           const errorData = await response.json()
           console.error('Failed to create/update user:', errorData)
@@ -40,17 +33,9 @@ const DashboardPage = () => {
     }
 
     if (currentUser && currentUser.user && currentUser.user.email) {
-      createUserInDatabase(currentUser.user)
-        .then((response) => {
-          if (response) {
-            console.log(
-              `User with email ${currentUser?.user?.email} is logged in.`,
-            )
-          }
-        })
-        .catch((error) => {
-          console.error('Error creating user:', error)
-        })
+      createUserInDatabase(currentUser.user).catch((error) => {
+        console.error('Error creating user:', error)
+      })
     }
   }, [currentUser])
 

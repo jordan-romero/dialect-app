@@ -118,13 +118,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const resources = orderedResources(lesson)
   const currentStep = steps[currentStepIndex] ?? steps[0]
 
-  console.log(lesson.quiz, 'lesson.quiz')
-  console.log(
-    'Quiz types:',
-    lesson.quiz?.map((q) => ({ id: q.id, type: q.quizType, order: q.order })),
-  )
-  console.log('Lesson steps:', lesson.steps)
-
   const getCurrentQuiz = () => {
     if (currentStep.type !== 'quiz' || !lesson.quiz) return null
 
@@ -135,20 +128,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
 
     const currentOrder = quizStepsCount - 1 // This will be 0 for the first quiz
     const quiz = lesson.quiz.find((quiz) => quiz.order === currentOrder)
-
-    console.log('🎲 getCurrentQuiz Debug:', {
-      currentStepIndex,
-      currentStepType: currentStep.type,
-      quizStepsCount,
-      currentOrder,
-      foundQuiz: quiz,
-      allQuizzes: lesson.quiz.map((q) => ({
-        id: q.id,
-        type: q.quizType?.trim(),
-        order: q.order,
-      })),
-      stepsSlice: steps.slice(0, currentStepIndex + 1),
-    })
 
     return quiz
   }
@@ -265,13 +244,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         return <LessonOutro resources={lesson.resources} />
       case 'quiz':
         const currentQuiz = getCurrentQuiz()
-        console.log('🎯 Quiz rendering debug:', {
-          currentQuiz,
-          quizType: currentQuiz?.quizType,
-          lessonId: lesson.id,
-          quizOrder: currentQuiz?.order,
-          isQuizNull: currentQuiz === null,
-        })
         return currentQuiz ? (
           <Paper
             key={`${currentQuiz.id}-${retryNonce[currentQuiz.id] || 0}`}
@@ -307,7 +279,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               )}
             </Flex>
             {(() => {
-              console.log('🎲 Quiz type switch:', currentQuiz.quizType)
               switch (currentQuiz.quizType) {
                 case 'dragAndDrop':
                   return (

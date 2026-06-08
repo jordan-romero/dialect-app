@@ -177,7 +177,7 @@ const ProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
       <ModalOverlay />
-      <ModalContent bg={bg} borderRadius="2xl">
+      <ModalContent bg={bg} color="text.primary" borderRadius="2xl">
         <ModalHeader>Your profile</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

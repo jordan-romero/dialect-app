@@ -262,6 +262,7 @@ export const IpaKeyboardProvider = ({
             display="flex"
             flexDirection="column"
             bg="surface.card"
+            color="text.primary"
             borderRadius="2xl"
             boxShadow="0 24px 60px rgba(15, 23, 42, 0.28)"
             border="1px solid"

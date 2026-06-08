@@ -29,12 +29,6 @@ export default async function handler(
   const userId = session.user.sub
   const { quizId, lessonId, answers } = req.body
 
-  console.log('🔍 Debug - Session user:', {
-    sub: session.user.sub,
-    email: session.user.email,
-    userId: userId,
-  })
-
   if (!quizId || !lessonId || !Array.isArray(answers)) {
     return res.status(400).json({ error: 'Missing required fields' })
   }
@@ -42,16 +36,7 @@ export default async function handler(
   try {
     // Get the internal user id
     const user = await prisma.user.findUnique({ where: { auth0Id: userId } })
-    console.log('🔍 Debug - User lookup result:', {
-      user: user ? { id: user.id, email: user.email } : null,
-    })
-
     if (!user) {
-      console.log('❌ User not found in database. Available users:')
-      const allUsers = await prisma.user.findMany({
-        select: { id: true, auth0Id: true, email: true },
-      })
-      console.log(allUsers)
       return res.status(404).json({ error: 'User not found' })
     }
 

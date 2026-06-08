@@ -66,7 +66,7 @@ export default async function subscribeHandler(
     }
     return res.status(201).json({ message: 'success' })
   } catch (error) {
-    console.log(error)
+    console.error('Subscribe error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
