@@ -6,6 +6,12 @@ import {
   Flex,
   Avatar,
   Image,
+  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  DrawerCloseButton,
   useDisclosure,
 } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -16,6 +22,7 @@ import {
   FiHelpCircle,
   FiUser,
   FiLogOut,
+  FiMenu,
 } from 'react-icons/fi'
 import { MdKeyboard } from 'react-icons/md'
 import { IconType } from 'react-icons'
@@ -35,6 +42,10 @@ interface NavItemProps {
   active?: boolean
   /** When set, the avatar image replaces the icon (e.g. the Profile item). */
   avatarSrc?: string
+  /** Always show the label (drawer mode) instead of revealing it on hover. */
+  showLabel?: boolean
+  /** Called after any activation — used to close the mobile drawer. */
+  onNavigate?: () => void
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -44,7 +55,14 @@ const NavItem: React.FC<NavItemProps> = ({
   onClick,
   active,
   avatarSrc,
+  showLabel,
+  onNavigate,
 }) => {
+  const handleClick = () => {
+    onClick?.()
+    onNavigate?.()
+  }
+
   const row = (
     <Flex
       w="100%"
@@ -71,7 +89,7 @@ const NavItem: React.FC<NavItemProps> = ({
         fontSize="sm"
         fontWeight="medium"
         whiteSpace="nowrap"
-        opacity={0}
+        opacity={showLabel ? 1 : 0}
         transition="opacity 0.15s ease"
         _groupHover={{ opacity: 1 }}
       >
@@ -82,13 +100,17 @@ const NavItem: React.FC<NavItemProps> = ({
 
   if (href) {
     return (
-      <Link href={href} style={{ textDecoration: 'none', width: '100%' }}>
+      <Link
+        href={href}
+        onClick={handleClick}
+        style={{ textDecoration: 'none', width: '100%' }}
+      >
         {row}
       </Link>
     )
   }
   return (
-    <Box as="button" onClick={onClick} aria-label={label} w="100%">
+    <Box as="button" onClick={handleClick} aria-label={label} w="100%">
       {row}
     </Box>
   )
@@ -98,6 +120,7 @@ const DashboardNavigationContainer = () => {
   const router = useRouter()
   const path = router.pathname
   const profile = useDisclosure()
+  const menu = useDisclosure() // mobile nav drawer
   const [avatarSrc, setAvatarSrc] = useState('')
 
   const loadAvatar = useCallback(() => {
@@ -124,94 +147,164 @@ const DashboardNavigationContainer = () => {
     window.open(`mailto:${HELP_EMAIL}?subject=${subject}&body=${body}`)
   }
 
-  return (
-    // Outer box reserves the collapsed width so content never shifts; the rail
-    // itself overlays the content when it expands on hover. It stretches to the
-    // full dashboard height (at least the viewport).
-    <Box
-      w={RAIL_COLLAPSED}
-      flexShrink={0}
-      alignSelf="stretch"
-      minH="100vh"
-      position="relative"
-      bg="surface.canvas"
-    >
-      <Flex
-        role="group"
-        position="absolute"
-        top={0}
-        bottom={0}
-        left={0}
-        w={RAIL_COLLAPSED}
-        direction="column"
-        justify="space-between"
-        bg="surface.rail"
-        pt={0}
-        pb={6}
-        overflow="hidden"
-        zIndex={30}
-        borderRightRadius="2xl"
-        transition="width 0.2s ease, box-shadow 0.2s ease"
-        _hover={{ w: RAIL_EXPANDED, boxShadow: '8px 0 30px rgba(0,0,0,0.25)' }}
-      >
-        <Box>
-          {/* Logo (mark only) — links back to the public site. The 60px band
-              matches the welcome bar height so they line up across the top. */}
-          <Link href="/" style={{ textDecoration: 'none' }}>
-            <Flex w="56px" h="60px" mx={2} justify="center" align="center">
-              <Image
-                src="/actingAccentsMark.png"
-                alt="Acting Accents"
-                w="64px"
-                h="auto"
-                maxW="none"
-                objectFit="contain"
-              />
-            </Flex>
-          </Link>
+  // Nav items shared by the desktop rail (labels reveal on hover) and the mobile
+  // drawer (labels always shown; selecting an item closes the drawer).
+  type NavOpts = { showLabel?: boolean; onNavigate?: () => void }
+  const mainNav = (opts?: NavOpts) => (
+    <VStack spacing={2} align="stretch" px={2} mt={3}>
+      <NavItem
+        icon={FiGrid}
+        label="Dashboard"
+        href="/dashboard/progress"
+        active={path === '/dashboard/progress'}
+        {...opts}
+      />
+      <NavItem
+        icon={FiPlayCircle}
+        label="Continue"
+        href="/dashboard"
+        active={path === '/dashboard'}
+        {...opts}
+      />
+      <NavItem
+        icon={FiBookOpen}
+        label="Library"
+        href="/dashboard/resources"
+        active={path === '/dashboard/resources'}
+        {...opts}
+      />
+      <NavItem
+        icon={MdKeyboard}
+        label="Keyboard"
+        href="/dashboard/keyboard"
+        active={path === '/dashboard/keyboard'}
+        {...opts}
+      />
+      <NavItem
+        icon={FiHelpCircle}
+        label="Get Help"
+        onClick={getHelp}
+        {...opts}
+      />
+    </VStack>
+  )
+  const bottomNav = (opts?: NavOpts) => (
+    <VStack spacing={2} align="stretch" px={2}>
+      <NavItem
+        icon={FiUser}
+        label="Profile"
+        onClick={profile.onOpen}
+        avatarSrc={avatarSrc || undefined}
+        {...opts}
+      />
+      <NavItem
+        icon={FiLogOut}
+        label="Log out"
+        href="/api/auth/logout"
+        {...opts}
+      />
+    </VStack>
+  )
 
-          <VStack spacing={2} align="stretch" px={2} mt={3}>
-            <NavItem
-              icon={FiGrid}
-              label="Dashboard"
-              href="/dashboard/progress"
-              active={path === '/dashboard/progress'}
-            />
-            <NavItem
-              icon={FiPlayCircle}
-              label="Continue"
-              href="/dashboard"
-              active={path === '/dashboard'}
-            />
-            <NavItem
-              icon={FiBookOpen}
-              label="Library"
-              href="/dashboard/resources"
-              active={path === '/dashboard/resources'}
-            />
-            <NavItem
-              icon={MdKeyboard}
-              label="Keyboard"
-              href="/dashboard/keyboard"
-              active={path === '/dashboard/keyboard'}
-            />
-            <NavItem icon={FiHelpCircle} label="Get Help" onClick={getHelp} />
-          </VStack>
-        </Box>
-
-        <VStack spacing={2} align="stretch" px={2}>
-          <NavItem
-            icon={FiUser}
-            label="Profile"
-            onClick={profile.onOpen}
-            avatarSrc={avatarSrc || undefined}
-          />
-          <NavItem icon={FiLogOut} label="Log out" href="/api/auth/logout" />
-        </VStack>
+  const brandMark = (
+    <Link href="/" style={{ textDecoration: 'none' }}>
+      <Flex w="56px" h="60px" mx={2} justify="center" align="center">
+        <Image
+          src="/actingAccentsMark.png"
+          alt="Acting Accents"
+          w="64px"
+          h="auto"
+          maxW="none"
+          objectFit="contain"
+        />
       </Flex>
+    </Link>
+  )
+
+  return (
+    <>
+      {/* Desktop rail (lg+). Reserves the collapsed width so content never
+          shifts; the rail overlays content when it expands on hover. */}
+      <Box
+        display={{ base: 'none', lg: 'block' }}
+        w={RAIL_COLLAPSED}
+        flexShrink={0}
+        alignSelf="stretch"
+        minH="100vh"
+        position="relative"
+        bg="surface.canvas"
+      >
+        <Flex
+          role="group"
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={0}
+          w={RAIL_COLLAPSED}
+          direction="column"
+          justify="space-between"
+          bg="surface.rail"
+          pt={0}
+          pb={6}
+          overflow="hidden"
+          zIndex={30}
+          borderRightRadius="2xl"
+          transition="width 0.2s ease, box-shadow 0.2s ease"
+          _hover={{
+            w: RAIL_EXPANDED,
+            boxShadow: '8px 0 30px rgba(0,0,0,0.25)',
+          }}
+        >
+          <Box>
+            {brandMark}
+            {mainNav()}
+          </Box>
+          {bottomNav()}
+        </Flex>
+      </Box>
+
+      {/* Mobile/tablet: floating hamburger that opens the nav as a drawer. */}
+      <IconButton
+        aria-label="Open menu"
+        icon={<FiMenu />}
+        onClick={menu.onOpen}
+        display={{ base: 'flex', lg: 'none' }}
+        position="fixed"
+        top={3}
+        left={3}
+        zIndex={1100}
+        size="md"
+        borderRadius="full"
+        bg="surface.rail"
+        color="white"
+        boxShadow="md"
+        _hover={{ bg: 'surface.rail', opacity: 0.9 }}
+        _active={{ bg: 'surface.rail' }}
+      />
+
+      <Drawer
+        isOpen={menu.isOpen}
+        placement="left"
+        onClose={menu.onClose}
+        size="xs"
+      >
+        <DrawerOverlay />
+        <DrawerContent bg="surface.rail">
+          <DrawerCloseButton color="white" />
+          <DrawerBody px={0} py={4}>
+            <Flex direction="column" h="100%" justify="space-between">
+              <Box>
+                {brandMark}
+                {mainNav({ showLabel: true, onNavigate: menu.onClose })}
+              </Box>
+              {bottomNav({ showLabel: true, onNavigate: menu.onClose })}
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
 
       <ProfileModal isOpen={profile.isOpen} onClose={profile.onClose} />
-    </Box>
+    </>
   )
 }
 

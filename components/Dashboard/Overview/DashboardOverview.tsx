@@ -426,7 +426,8 @@ const DashboardOverview = () => {
       color={pageColor}
       minH="100%"
       px={{ base: 4, md: 6 }}
-      py={6}
+      pt={{ base: 16, md: 6 }}
+      pb={6}
     >
       <Box maxW="1100px" mx="auto">
         <WelcomeHeader />

@@ -490,18 +490,33 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   }
 
   return (
-    <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
+    <Box
+      w="100%"
+      maxW="1200px"
+      mx="auto"
+      h="100%"
+      p={{ base: 4, md: 8 }}
+      pl={{ base: 4, md: 0 }}
+      overflowY="auto"
+    >
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
         w="100%"
-        h="100px"
+        h={{ base: '56px', md: '72px' }}
         borderTopEndRadius="full"
         borderBottomEndRadius="full"
         display="flex"
         justifyContent="center"
         alignItems="center"
+        px={4}
       >
-        <Text fontSize="5xl" fontWeight="bold" color="util.white">
+        <Text
+          fontSize={{ base: 'lg', md: 'xl', lg: '2xl' }}
+          fontWeight="bold"
+          color="util.white"
+          noOfLines={1}
+          textAlign="center"
+        >
           {lesson.title}
         </Text>
       </Box>

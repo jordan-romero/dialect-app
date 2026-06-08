@@ -8,7 +8,16 @@ import {
   AlertDescription,
   Flex,
   Box,
+  Button,
+  Icon,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  DrawerCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react'
+import { FiList } from 'react-icons/fi'
 import LessonContainerV3 from '../Lesson/LessonContainerV3'
 import { SidebarSkeleton, LessonSkeleton } from './CourseSkeleton'
 
@@ -20,6 +29,8 @@ const CourseContainer = () => {
   }>({})
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
+  // Mobile/tablet: the lesson list opens as a drawer instead of a fixed sidebar.
+  const lessons = useDisclosure()
 
   useEffect(() => {
     setIsLoading(true)
@@ -155,39 +166,92 @@ const CourseContainer = () => {
     )
   }
 
+  // The lesson list — selecting a lesson also closes the mobile drawer (a no-op
+  // on desktop, where the drawer is never open).
+  const sidebar = isLoading ? (
+    <SidebarSkeleton />
+  ) : (
+    <CourseSideBar
+      courses={Array.isArray(courses) ? courses : null}
+      onSelectLesson={(lesson) => {
+        handleSelectLesson(lesson)
+        lessons.onClose()
+      }}
+      hasAccessToPaidCourses={false}
+      currentLessonId={selectedLesson?.id || null}
+      lessonProgress={lessonProgress}
+    />
+  )
+
   return (
-    <Flex w="100%" h="100%">
-      <Box w="300px" h="100%">
-        {isLoading ? (
-          <SidebarSkeleton />
-        ) : (
-          <CourseSideBar
-            courses={Array.isArray(courses) ? courses : null}
-            onSelectLesson={handleSelectLesson}
-            hasAccessToPaidCourses={false}
-            currentLessonId={selectedLesson?.id || null}
-            lessonProgress={lessonProgress}
-          />
-        )}
-      </Box>
-      <Box flex="2" h="100%">
-        {isLoading ? (
-          <LessonSkeleton />
-        ) : selectedLesson ? (
-          <Flex justifyContent="center" alignItems="center" height="100%">
-            <LessonContainerV3
-              key={selectedLesson.id}
-              lesson={selectedLesson}
-              onLessonComplete={handleLessonComplete}
-            />
+    <>
+      <Flex w="100%" h="100%">
+        {/* Desktop: fixed lesson sidebar. Hidden on mobile/tablet. */}
+        <Box
+          display={{ base: 'none', lg: 'block' }}
+          w="300px"
+          h="100%"
+          flexShrink={0}
+        >
+          {sidebar}
+        </Box>
+
+        <Flex direction="column" flex="1" minW={0} h="100%">
+          {/* Mobile/tablet: a "Lessons" button (padded past the floating menu
+              button) opens the lesson list as a drawer. */}
+          <Flex
+            display={{ base: 'flex', lg: 'none' }}
+            align="center"
+            pl="60px"
+            pr={3}
+            py={2}
+            flexShrink={0}
+            borderBottom="1px solid"
+            borderColor="border.subtle"
+          >
+            <Button
+              size="sm"
+              variant="outline"
+              leftIcon={<Icon as={FiList} />}
+              onClick={lessons.onOpen}
+            >
+              Lessons
+            </Button>
           </Flex>
-        ) : (
-          <Flex justifyContent="center" alignItems="center" height="100%">
-            <Box>No lesson selected</Box>
-          </Flex>
-        )}
-      </Box>
-    </Flex>
+
+          <Box flex="1" minH={0}>
+            {isLoading ? (
+              <LessonSkeleton />
+            ) : selectedLesson ? (
+              <Flex justifyContent="center" alignItems="center" height="100%">
+                <LessonContainerV3
+                  key={selectedLesson.id}
+                  lesson={selectedLesson}
+                  onLessonComplete={handleLessonComplete}
+                />
+              </Flex>
+            ) : (
+              <Flex justifyContent="center" alignItems="center" height="100%">
+                <Box>No lesson selected</Box>
+              </Flex>
+            )}
+          </Box>
+        </Flex>
+      </Flex>
+
+      <Drawer
+        isOpen={lessons.isOpen}
+        placement="left"
+        onClose={lessons.onClose}
+        size="xs"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton zIndex={1} />
+          <DrawerBody p={0}>{sidebar}</DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   )
 }
 
