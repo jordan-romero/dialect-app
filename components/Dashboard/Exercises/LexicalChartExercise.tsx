@@ -275,6 +275,7 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         showTextArea={false}
         compact={true}
         hideInstructions={true}
+        persistClickedSymbols={false}
         title="Symbol Bank"
       />
       {selectedSymbol && (

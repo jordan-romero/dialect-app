@@ -296,6 +296,7 @@ export const VowelQuadrilateralExercise: React.FC<
         showTextArea={false}
         compact={true}
         hideInstructions={false}
+        persistClickedSymbols={false}
         title="Vowel Bank"
       />
 

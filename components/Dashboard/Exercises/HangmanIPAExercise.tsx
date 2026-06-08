@@ -385,6 +385,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           showTextArea={false}
           compact={true}
           hideInstructions={true}
+          persistClickedSymbols={false}
           showCategoriesInCompact={!!quizData.symbolBankCategories}
         />
         {selectedSymbol && (
@@ -412,6 +413,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             showTextArea={false}
             compact={false}
             hideInstructions={true}
+            persistClickedSymbols={false}
             title="Full IPA Keyboard"
           />
           {activeBlankIndex !== null && (

@@ -277,6 +277,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
           showTextArea={false}
           compact={true}
           hideInstructions={true}
+          persistClickedSymbols={false}
           title="Symbol Bank"
         />
       </Box>

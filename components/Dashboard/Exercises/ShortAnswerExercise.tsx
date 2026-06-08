@@ -9,9 +9,11 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import { MdKeyboard } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { useIpaKeyboard } from '../../Community/IpaKeyboardPip'
 
 interface ShortAnswerQuizProps {
   lessonId: number
@@ -34,6 +36,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
+  const ipaKeyboard = useIpaKeyboard()
 
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion = currentQuiz?.questions[currentQuestionIndex]
@@ -81,6 +84,18 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     setIsQuestionComplete(false)
     setShowSentence(false)
   }, [currentQuestion])
+
+  // Auto-focus the first answer input when the question changes so the IPA
+  // keyboard knows where to insert (and stays targeted as you advance).
+  const firstInputRef = React.useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (isCompleted) return
+    const t = setTimeout(
+      () => firstInputRef.current?.focus({ preventScroll: true }),
+      60,
+    )
+    return () => clearTimeout(t)
+  }, [currentQuestionIndex, currentQuiz?.id, isCompleted])
 
   const handleAnswerChange = (
     questionId: number,
@@ -179,6 +194,16 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     <Box>
       {currentQuestion && (
         <Box>
+          <Box display="flex" justifyContent="flex-end" mb={2}>
+            <Button
+              size="sm"
+              variant={ipaKeyboard.isOpen ? 'brandBold' : 'outline'}
+              leftIcon={<Icon as={MdKeyboard} />}
+              onClick={ipaKeyboard.toggle}
+            >
+              {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
+            </Button>
+          </Box>
           <Text fontSize="xl">{currentQuestion.text}</Text>
           {currentQuestion.audioUrl && (
             <Button
@@ -192,7 +217,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           <VStack spacing={4} mt={4} align="start">
             {currentQuestion.answerOptions
               .filter((option) => !option.audioUrl)
-              .map((option) => (
+              .map((option, idx) => (
                 <Box key={option.id} width="100%">
                   {/* When there's an audio "reveal sentence" option (e.g. the
                       "My Baby" exercise), the non-audio optionText is a prompt
@@ -203,7 +228,10 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                     <Text mb={1}>{option.optionText}</Text>
                   )}
                   <Input
+                    ref={idx === 0 ? firstInputRef : undefined}
                     type="text"
+                    data-ipa-field
+                    className="ipa-text"
                     placeholder="Type your answer…"
                     value={answers[currentQuestion.id]?.[option.id] || ''}
                     onChange={(e) =>
@@ -213,6 +241,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                         e.target.value,
                       )
                     }
+                    isReadOnly={isCompleted}
                     width="100%"
                     marginBottom={2}
                   />
