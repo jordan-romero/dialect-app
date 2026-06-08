@@ -261,11 +261,11 @@ export const IpaKeyboardProvider = ({
             maxH="calc(100vh - 24px)"
             display="flex"
             flexDirection="column"
-            bg="white"
+            bg="surface.card"
             borderRadius="2xl"
             boxShadow="0 24px 60px rgba(15, 23, 42, 0.28)"
             border="1px solid"
-            borderColor="gray.200"
+            borderColor="border.subtle"
             overflow="hidden"
             animation={`${popIn} 0.2s cubic-bezier(0.22,1,0.36,1)`}
           >

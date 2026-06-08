@@ -352,10 +352,10 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       <Box
         position="sticky"
         top="0"
-        bg="white"
+        bg="surface.card"
         zIndex="1"
         py={4}
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontStyle="italic" mb={4}>
           {!hasParts

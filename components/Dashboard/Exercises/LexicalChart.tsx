@@ -59,7 +59,7 @@ export const LexicalChart: React.FC = () => {
         templateColumns="repeat(4, 1fr)"
         gap={4}
         border="1px solid"
-        borderColor="gray.300"
+        borderColor="border.subtle"
         p={4}
       >
         {lexicalItems.map((item, index) => (

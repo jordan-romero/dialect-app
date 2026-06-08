@@ -134,6 +134,7 @@ const DashboardNavigationContainer = () => {
       alignSelf="stretch"
       minH="100vh"
       position="relative"
+      bg="surface.canvas"
     >
       <Flex
         role="group"
@@ -144,7 +145,7 @@ const DashboardNavigationContainer = () => {
         w={RAIL_COLLAPSED}
         direction="column"
         justify="space-between"
-        bg="brand.purple"
+        bg="surface.rail"
         pt={0}
         pb={6}
         overflow="hidden"

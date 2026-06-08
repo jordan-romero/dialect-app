@@ -302,13 +302,13 @@ export const VowelQuadrilateralExercise: React.FC<
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold">
             Instructions:
           </Text>{' '}

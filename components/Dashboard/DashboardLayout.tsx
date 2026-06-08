@@ -9,7 +9,12 @@ import { IpaKeyboardProvider } from '../Community/IpaKeyboardPip'
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
     <IpaKeyboardProvider>
-      <Flex align="stretch">
+      <Flex
+        align="stretch"
+        bg="surface.canvas"
+        color="text.primary"
+        minH="100vh"
+      >
         <DashboardNavigationContainer />
         <Box flex="1" minW={0}>
           {children}

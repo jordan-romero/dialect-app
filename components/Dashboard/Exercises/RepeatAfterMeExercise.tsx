@@ -177,18 +177,18 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
   return (
     <VStack spacing={5} align="stretch">
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontSize="sm">
           <b>Instructions:</b> {data.instructions}
         </Text>
       </Box>
 
-      <Text fontSize="sm" color="gray.600">
+      <Text fontSize="sm" color="text.muted">
         {index + 1} of {data.items.length}
       </Text>
 
@@ -226,7 +226,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       </Table>
 
       {item.note && (
-        <Text fontSize="sm" fontStyle="italic" color="gray.600">
+        <Text fontSize="sm" fontStyle="italic" color="text.muted">
           Note: {item.note}
         </Text>
       )}
@@ -236,7 +236,11 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Text fontSize="lg" mb={2}>
           “{item.sentence}”
         </Text>
-        <Text fontFamily="'Charis SIL', serif" fontSize="lg" color="gray.700">
+        <Text
+          fontFamily="'Charis SIL', serif"
+          fontSize="lg"
+          color="text.primary"
+        >
           {item.ipa}
         </Text>
       </Box>

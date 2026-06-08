@@ -257,10 +257,10 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
       <Box
         position="sticky"
         top="0"
-        bg="white"
+        bg="surface.card"
         zIndex="1"
         py={4}
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontStyle="italic" mb={4}>
           Select the IPA consonant symbol that corresponds with the underlined
@@ -287,7 +287,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
         {currentWordIndex < shuffledAnswerOptions.length && (
           <Box
             borderWidth={1}
-            borderColor="gray.200"
+            borderColor="border.subtle"
             borderRadius="md"
             p={4}
             backgroundColor={
@@ -345,7 +345,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
             <Box
               key={index}
               borderWidth={1}
-              borderColor="gray.200"
+              borderColor="border.subtle"
               borderRadius="md"
               p={2}
               backgroundColor="green.100"

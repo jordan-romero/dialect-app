@@ -284,7 +284,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               />
             )}
             <Flex justify="space-between" align="center" mb={2} gap={3}>
-              <Text fontSize="lg" fontWeight="bold" color="gray.700">
+              <Text fontSize="lg" fontWeight="bold" color="text.primary">
                 {currentQuiz.title?.trim() || ''}
               </Text>
               {/* Try again only appears once the quiz has been completed. */}
@@ -462,13 +462,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
             🔒 {lesson.title?.trim()}
           </Text>
           {(lesson as any).lockReason === 'phase' ? (
-            <Text maxW="480px" color="gray.600">
+            <Text maxW="480px" color="text.muted">
               This phase is locked. Finish <b>every</b> lesson in the previous
               phase to unlock it.
             </Text>
           ) : (
             <>
-              <Text maxW="480px" color="gray.600">
+              <Text maxW="480px" color="text.muted">
                 This lesson is part of the full course. The first three lessons
                 are free — unlock the rest to access all videos, handouts, and
                 exercises.

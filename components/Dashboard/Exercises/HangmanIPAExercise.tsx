@@ -324,7 +324,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Progress indicator */}
       <Box textAlign="center">
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="text.muted">
           Question {currentQuestionIndex + 1} of{' '}
           {quizData.questions_data.length}({completedQuestions.length}{' '}
           completed)
@@ -333,13 +333,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold" color="green.600">
             Instructions:
           </Text>{' '}
@@ -440,13 +440,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold">
             Instructions:
           </Text>{' '}
@@ -469,7 +469,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           borderColor="brand.iris"
           borderRadius="lg"
           p={6}
-          bg="white"
+          bg="surface.card"
         >
           <Text fontSize="lg" fontWeight="bold" mb={3}>
             QUESTION {currentQuestionIndex + 1}:

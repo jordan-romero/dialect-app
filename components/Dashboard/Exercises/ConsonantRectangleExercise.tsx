@@ -57,7 +57,7 @@ const Cell: React.FC<{
   selectedSymbol: string | null
   onPlace: (slotId: string) => void
 }> = ({ slots, placements, selectedSymbol, onPlace }) => {
-  if (slots.length === 0) return <Td bg="gray.100" />
+  if (slots.length === 0) return <Td bg="surface.subtle" />
   return (
     <Td p={1}>
       <Flex gap={1} justify="center">
@@ -208,11 +208,11 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
         {data.questions[0]?.text}
       </Text>
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontSize="sm">
           <b>Instructions:</b> Click a symbol from the bank, then click the
