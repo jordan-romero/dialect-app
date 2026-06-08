@@ -5,6 +5,10 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+// Avatar data URLs can be a couple hundred KB; cap the body so a client can't
+// push a huge payload (the handler also rejects avatars over 1.5 MB).
+export const config = { api: { bodyParser: { sizeLimit: '2mb' } } }
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,

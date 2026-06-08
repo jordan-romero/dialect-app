@@ -10,14 +10,25 @@ interface SubscribeData {
   lastName?: string
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default async function subscribeHandler(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<void> {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST'])
+    return res
+      .status(405)
+      .json({ error: 'Method not allowed' } as ErrorResponse)
+  }
+
   const { email, firstName, lastName } = req.body as SubscribeData
 
-  if (!email || !email.length) {
-    return res.status(400).json({ error: 'Email is required' } as ErrorResponse)
+  if (!email || !EMAIL_RE.test(email)) {
+    return res
+      .status(400)
+      .json({ error: 'A valid email is required' } as ErrorResponse)
   }
 
   const API_KEY = process.env.MAILCHIMP_API_KEY
@@ -28,7 +39,9 @@ export default async function subscribeHandler(
 
   const data = {
     email_address: email,
-    status: 'subscribed',
+    // Double opt-in: Mailchimp emails a confirmation link, so an attacker can't
+    // silently subscribe someone else's address — they must confirm.
+    status: 'pending',
     merge_fields: {
       FNAME: firstName,
       LNAME: lastName,

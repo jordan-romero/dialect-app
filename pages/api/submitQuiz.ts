@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
+import { hasPaidAccess, getUnlockedCourseIds } from '../../lib/access'
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
@@ -54,8 +55,46 @@ export default async function handler(
       return res.status(404).json({ error: 'User not found' })
     }
 
+    // Validate the quiz exists and actually belongs to the claimed lesson,
+    // and load its real question ids for answer validation.
+    const quiz = await prisma.quiz.findUnique({
+      where: { id: Number(quizId) },
+      select: { id: true, lessonId: true, questions: { select: { id: true } } },
+    })
+    if (!quiz || quiz.lessonId !== Number(lessonId)) {
+      return res.status(400).json({ error: 'Quiz does not match lesson' })
+    }
+
+    // Enforce access server-side (the DB has no RLS, so this is the real gate):
+    // the lesson's phase must be unlocked, and gated lessons require purchase.
+    const lesson = await prisma.lesson.findUnique({
+      where: { id: Number(lessonId) },
+      select: { courseId: true, isGatedLesson: true },
+    })
+    if (!lesson) {
+      return res.status(404).json({ error: 'Lesson not found' })
+    }
+    const email = session.user.email
+    const [paid, unlocked] = await Promise.all([
+      hasPaidAccess(prisma, email),
+      getUnlockedCourseIds(prisma, email),
+    ])
+    if (!unlocked.has(lesson.courseId) || (lesson.isGatedLesson && !paid)) {
+      return res.status(403).json({ error: 'Access denied' })
+    }
+
+    // Only accept answers that reference a real question in THIS quiz.
+    const validQuestionIds = new Set(quiz.questions.map((q) => q.id))
+    const cleanAnswers = (answers as any[]).filter(
+      (a) =>
+        a &&
+        typeof a.questionId === 'number' &&
+        validQuestionIds.has(a.questionId) &&
+        typeof a.textAnswer === 'string',
+    )
+
     // Save each answer
-    for (const answer of answers) {
+    for (const answer of cleanAnswers) {
       const existingAnswer = await prisma.userAnswer.findFirst({
         where: {
           userId: user.id,

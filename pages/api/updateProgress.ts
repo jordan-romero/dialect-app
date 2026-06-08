@@ -2,6 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 import { getSession } from '@auth0/nextjs-auth0'
+import { hasPaidAccess, getUnlockedCourseIds } from '../../lib/access'
 
 const prisma = new PrismaClient()
 
@@ -38,6 +39,17 @@ export default async function handler(
 
     if (!lesson) {
       return res.status(404).json({ message: 'Lesson not found' })
+    }
+
+    // Enforce access server-side (no RLS): the lesson's phase must be unlocked,
+    // and gated lessons require purchase. Prevents marking paid/locked lessons
+    // complete by POSTing an arbitrary lessonId.
+    const [paid, unlocked] = await Promise.all([
+      hasPaidAccess(prisma, userEmail),
+      getUnlockedCourseIds(prisma, userEmail),
+    ])
+    if (!unlocked.has(lesson.courseId) || (lesson.isGatedLesson && !paid)) {
+      return res.status(403).json({ message: 'Access denied' })
     }
 
     // Check if a lesson progress record already exists for the user and lesson

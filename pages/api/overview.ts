@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 import { getSession } from '@auth0/nextjs-auth0'
 import { computeOverview } from '../../lib/overview'
+import { getOrCreateUser } from '../../lib/user'
 
 const prisma = new PrismaClient()
 
@@ -19,10 +20,8 @@ export default async function handler(
   if (!session?.user) return res.status(401).json({ error: 'Unauthorized' })
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { auth0Id: session.user.sub as string },
-    })
-    if (!user) return res.status(404).json({ error: 'User not found' })
+    const user = await getOrCreateUser(prisma, session.user)
+    if (!user) return res.status(401).json({ error: 'Unauthorized' })
 
     const overview = await computeOverview(
       prisma,
