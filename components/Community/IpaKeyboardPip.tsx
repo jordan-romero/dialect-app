@@ -254,7 +254,7 @@ export const IpaKeyboardProvider = ({
             position="fixed"
             top={`${pos.y}px`}
             left={`${pos.x}px`}
-            zIndex={3000}
+            zIndex={1300}
             w={`${size.w}px`}
             h={`${size.h}px`}
             maxW="calc(100vw - 24px)"
@@ -311,9 +311,9 @@ export const IpaKeyboardProvider = ({
               <IPAKeyboard
                 onSymbolClick={handleSymbol}
                 showTextArea={false}
-                hideInstructions
+                hideInstructions={false}
                 persistClickedSymbols={false}
-                title="IPA Keyboard"
+                title=""
               />
             </Box>
 

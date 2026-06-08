@@ -34,8 +34,8 @@ const flicker = keyframes`
   50% { transform: translateY(-8px) scaleY(1.3) rotate(2deg); opacity: 1; }
 `
 const emberGlow = keyframes`
-  0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
-  50% { box-shadow: 0 0 28px 4px rgba(249,115,22,0.55); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0), 0 0 0 0 rgba(249,115,22,0); }
+  50% { box-shadow: 0 0 0 3px rgba(249,115,22,0.35), 0 0 30px 6px rgba(249,115,22,0.5); }
 `
 
 interface Phase {
@@ -380,30 +380,6 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
           ? 'Do a lesson today to start a streak!'
           : `Best: ${best} day${best === 1 ? '' : 's'}`}
       </Text>
-
-      {/* Flames licking up from the bottom edge during ignite */}
-      {igniting && (
-        <Flex
-          position="absolute"
-          bottom="-6px"
-          left={0}
-          right={0}
-          justify="space-around"
-          pointerEvents="none"
-        >
-          {Array.from({ length: 7 }).map((_, i) => (
-            <Icon
-              key={i}
-              as={MdLocalFireDepartment}
-              color={i % 2 === 0 ? 'orange.400' : 'red.500'}
-              boxSize={`${22 + (i % 3) * 6}px`}
-              animation={`${flicker} ${0.45 + (i % 3) * 0.15}s ease-in-out ${
-                i * 0.07
-              }s infinite`}
-            />
-          ))}
-        </Flex>
-      )}
     </Card>
   )
 }

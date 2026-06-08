@@ -18,8 +18,14 @@ import {
   IconButton,
   InputGroup,
   InputRightElement,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerCloseButton,
 } from '@chakra-ui/react'
-import { CopyIcon, CloseIcon } from '@chakra-ui/icons'
+import { CopyIcon, CloseIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import RichTextIPAEditor from './RichTextIPAEditor'
 import {
   ipaShortcutKey,
@@ -677,6 +683,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   })
 
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
+  const [showInstructions, setShowInstructions] = useState(false)
   const toast = useToast()
   const internalEditorRef = useRef<any>(null)
   const editorRef = externalEditorRef || internalEditorRef
@@ -1143,44 +1150,125 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
         w="full"
         p={compact ? 1.5 : 2}
       >
+        {/* Header: optional title + an always-available Instructions side panel.
+            The title only renders when an explicit (non-empty) one is passed,
+            so pages with their own heading don't get a duplicate. */}
         {!hideInstructions && (
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            textAlign="center"
-            color="brand.iris"
-          >
-            {title || 'Acting Accents IPA Keyboard'}
-          </Text>
+          <Flex align="center" justify="space-between" gap={2}>
+            {title ? (
+              <Text fontSize="lg" fontWeight="bold" color="brand.iris">
+                {title}
+              </Text>
+            ) : (
+              <Box />
+            )}
+            <Button
+              size="sm"
+              variant="ghost"
+              colorScheme="purple"
+              leftIcon={<InfoOutlineIcon />}
+              onClick={() => setShowInstructions(true)}
+            >
+              Instructions
+            </Button>
+          </Flex>
         )}
 
-        {/* Instructions moved to top */}
-        {!hideInstructions && (
-          <Box
-            bg="gray.50"
-            p={1.5}
-            borderRadius="md"
-            border="1px solid"
-            borderColor="gray.200"
-          >
-            <Text fontSize="xs" color="black">
-              <Text as="span" fontWeight="bold">
-                Instructions:
-              </Text>{' '}
-              Click a symbol to insert it.{' '}
-              {!compact && (
-                <>
-                  Shortcuts: {ipaShortcutKey('A')}, repeat within 1s to cycle
-                  symbols. Diacritics: ⇧⌥+key (e.g., ⇧⌥O for ̥) —{' '}
-                  <Text as="span" fontWeight="semibold">
-                    Shift still types capitals
+        {/* Instructions side panel — accessible any time from the button above. */}
+        <Drawer
+          isOpen={showInstructions}
+          placement="right"
+          onClose={() => setShowInstructions(false)}
+          size="sm"
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader color="brand.iris">
+              How to use the keyboard
+            </DrawerHeader>
+            <DrawerBody>
+              <VStack
+                align="stretch"
+                spacing={4}
+                fontSize="sm"
+                color="gray.700"
+              >
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Insert symbols
                   </Text>
-                  .
-                </>
-              )}
-            </Text>
-          </Box>
-        )}
+                  <Text>
+                    Click any symbol to insert it into your transcription.
+                  </Text>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Keyboard shortcuts
+                  </Text>
+                  <Text>
+                    Press {ipaShortcutKey('A')} and repeat within 1 second to
+                    cycle through related symbols.
+                  </Text>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Diacritics (direct access)
+                  </Text>
+                  <VStack align="stretch" spacing={0.5}>
+                    <Text>
+                      ⇧⌥O — voiceless ( ̥ ), ⇧⌥OO — voiceless above ( ̊ )
+                    </Text>
+                    <Text>⇧⌥D — dental ( ̪ ), ⌥F — tie bar ( ͡ )</Text>
+                    <Text>⌥. — extra-short ( ̆ ), ⌥.. — long ( ː )</Text>
+                    <Text mt={1} fontStyle="italic" color="gray.500">
+                      Shift still types capitals. Hover any symbol to see its
+                      shortcut.
+                    </Text>
+                  </VStack>
+                </Box>
+                {useRichTextEditor && (
+                  <>
+                    <Box>
+                      <Text fontWeight="bold" mb={1}>
+                        Text formatting
+                      </Text>
+                      <Text>
+                        ⌘/Ctrl + B (bold), I (italic), U (underline).
+                        Superscript and subscript from the toolbar.
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text fontWeight="bold" mb={1}>
+                        History
+                      </Text>
+                      <Text>⌘/Ctrl + Z to undo, ⌘⇧Z / Ctrl + Y to redo.</Text>
+                    </Box>
+                    <Box>
+                      <Text fontWeight="bold" mb={1}>
+                        Copy
+                      </Text>
+                      <Text>
+                        Use the copy button to put your transcription on the
+                        clipboard.
+                      </Text>
+                    </Box>
+                  </>
+                )}
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Sections
+                  </Text>
+                  <Text>
+                    Expand or collapse the categories below to find vowels,
+                    consonants, diphthongs, diacritics, tones, and
+                    suprasegmentals.
+                  </Text>
+                </Box>
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
 
         {/* IPA Symbol Grid - TypeIt Layout */}
         <Box

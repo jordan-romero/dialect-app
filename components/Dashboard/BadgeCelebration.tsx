@@ -24,11 +24,6 @@ const fall = keyframes`
   0% { top: -8%; transform: rotate(0deg); opacity: 1; }
   100% { top: 108%; transform: rotate(540deg); opacity: 0.85; }
 `
-const shine = keyframes`
-  0%, 100% { transform: scale(1); opacity: 0.85; }
-  50% { transform: scale(1.08); opacity: 1; }
-`
-
 interface Props {
   badge: EarnedBadge
   onClose: () => void
@@ -38,7 +33,7 @@ interface Props {
 const BadgeCelebration: React.FC<Props> = ({
   badge,
   onClose,
-  durationMs = 8000,
+  durationMs = 10000,
 }) => {
   const visual = visualFor(badge.id)
 
@@ -120,7 +115,6 @@ const BadgeCelebration: React.FC<Props> = ({
           border="3px solid"
           borderColor="whiteAlpha.800"
           boxShadow="0 16px 50px rgba(0,0,0,0.3)"
-          animation={`${shine} 2.2s ease-in-out infinite`}
         >
           <Icon as={visual.icon} boxSize={16} color="white" />
         </Flex>
