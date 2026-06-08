@@ -70,15 +70,8 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
   useEffect(() => {
     const loadChartData = async () => {
       try {
-        console.log(
-          'Loading lexical chart data for lessonId:',
-          lessonId,
-          'quizIndex:',
-          quizIndex,
-        )
         const response = await fetch('/lexicalChartData.json')
         const data: LexicalChartData = await response.json()
-        console.log('Loaded lexical chart data:', data)
         setChartData(data)
 
         // Initialize empty answers
@@ -192,13 +185,6 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         textAnswer: JSON.stringify(userAnswers),
       }))
 
-      console.log('Submitting lexical chart quiz:', {
-        quizId: chartData.id,
-        lessonId: lessonId,
-        answers: answersToSubmit,
-        userAnswers,
-      })
-
       const response = await fetch('/api/submitQuiz', {
         method: 'POST',
         headers: {
@@ -213,7 +199,6 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
 
       if (response.ok) {
         setIsCompleted(true)
-        console.log('Lexical chart quiz submitted successfully')
       } else {
         console.error('Failed to submit quiz')
       }

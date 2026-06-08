@@ -32,11 +32,20 @@ type LessonContainerProps = {
   onLessonComplete: () => void
 }
 
+const stepStorageKey = (lessonId: number) => `aa:lesson:${lessonId}:step`
+
 const LessonContainerV3: React.FC<LessonContainerProps> = ({
   lesson,
   onLessonComplete,
 }) => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  // Resume where the learner left off: read the saved step for this lesson.
+  // (CourseContainer keys this component by lesson id, so this initializer
+  // re-runs whenever a different lesson is opened.)
+  const [currentStepIndex, setCurrentStepIndex] = useState(() => {
+    if (typeof window === 'undefined') return 0
+    const saved = Number(window.localStorage.getItem(stepStorageKey(lesson.id)))
+    return Number.isInteger(saved) && saved > 0 ? saved : 0
+  })
   const [isMarkingComplete, setIsMarkingComplete] = useState(false)
   const [completedQuizzes, setCompletedQuizzes] = useState<number[]>([])
   const [quizCompletionStatus, setQuizCompletionStatus] = useState<{
@@ -116,6 +125,24 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   // through each resource, video, and quiz one at a time.
   const steps = expandLessonSteps(lesson)
   const resources = orderedResources(lesson)
+
+  // If a saved step is now out of range (e.g. the lesson's steps changed),
+  // clamp it back into bounds.
+  useEffect(() => {
+    if (currentStepIndex > steps.length - 1) {
+      setCurrentStepIndex(Math.max(0, steps.length - 1))
+    }
+  }, [steps.length, currentStepIndex])
+
+  // Remember where the learner is so they resume here next time.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(
+      stepStorageKey(lesson.id),
+      String(currentStepIndex),
+    )
+  }, [lesson.id, currentStepIndex])
+
   const currentStep = steps[currentStepIndex] ?? steps[0]
 
   const getCurrentQuiz = () => {

@@ -78,15 +78,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        console.log(
-          'Loading hangman IPA quiz data for lessonId:',
-          lessonId,
-          'quizIndex:',
-          quizIndex,
-        )
         const response = await fetch(dataUrl)
         const data: HangmanQuizData = await response.json()
-        console.log('Loaded hangman quiz data:', data)
         setQuizData(data)
 
         // Initialize empty answers

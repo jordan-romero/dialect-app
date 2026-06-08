@@ -60,10 +60,8 @@ export const VowelQuadrilateralExercise: React.FC<
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        console.log('Loading vowel quadrilateral data...')
         const response = await fetch('/vowelQuadrilateralData.json')
         const data: VowelQuadrilateralData = await response.json()
-        console.log('Loaded vowel quadrilateral data:', data)
         setQuizData(data)
         setAvailableVowels(data.availableVowels)
 
@@ -78,7 +76,6 @@ export const VowelQuadrilateralExercise: React.FC<
           }
         })
         setVowelPositions(initialPositions)
-        console.log('Initialized vowel positions:', initialPositions)
       } catch (error) {
         console.error('Error loading vowel quadrilateral data:', error)
       }
@@ -197,13 +194,6 @@ export const VowelQuadrilateralExercise: React.FC<
         textAnswer: JSON.stringify(vowelPositions), // Save the current vowel positions as JSON
       }))
 
-      console.log('Submitting vowel quadrilateral quiz:', {
-        quizId: quizData.id,
-        lessonId: lessonId,
-        answers: answersToSubmit,
-        vowelPositions,
-      })
-
       const response = await fetch('/api/submitQuiz', {
         method: 'POST',
         headers: {
@@ -219,7 +209,6 @@ export const VowelQuadrilateralExercise: React.FC<
       if (response.ok) {
         setIsCompleted(true)
         setIsQuizComplete(true)
-        console.log('Vowel quadrilateral quiz submitted successfully')
       } else {
         console.error('Failed to submit quiz')
       }
