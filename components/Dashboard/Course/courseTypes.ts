@@ -14,12 +14,14 @@ export type Resource = {
   name: string
   type: string
   url: string
-  courseId: number | null // Assuming courseId can be nullable
+  courseId: number | null
   lessonId: number
+  order: number
 }
 
 export type Quiz = {
   id: number
+  title?: string | null
   lessonId: number
   score: number | null
   passScore: number
@@ -39,6 +41,7 @@ export type Lesson = {
   title: string
   description: string
   videoUrl: string
+  videoTitle?: string | null
   courseId: number
   isGatedLesson: boolean
   isCompleted: boolean
@@ -46,5 +49,5 @@ export type Lesson = {
   resources: Resource[]
   quiz: Quiz[]
   steps?: LessonStep[]
-  displayOrder: number
+  displayOrder: number | null
 }

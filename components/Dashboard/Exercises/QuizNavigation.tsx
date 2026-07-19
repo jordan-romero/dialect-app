@@ -1,6 +1,7 @@
 import React from 'react'
-import { Flex, IconButton, Text } from '@chakra-ui/react'
+import { Flex, IconButton, Text, Icon } from '@chakra-ui/react'
 import { ArrowRightIcon, ArrowLeftIcon, CheckIcon } from '@chakra-ui/icons'
+import { MdCheckCircle } from 'react-icons/md'
 
 interface QuizNavigationProps {
   currentQuestion: number
@@ -9,6 +10,13 @@ interface QuizNavigationProps {
   onNext: () => void
   onFinish: () => void
   isNextDisabled: boolean
+  /**
+   * When the quiz is completed, navigation is unlocked so the learner can page
+   * back and forth to review their answers. While it's NOT completed, forward
+   * navigation stays gated by `isNextDisabled` (they must finish the current
+   * step before moving on).
+   */
+  isCompleted?: boolean
 }
 
 const QuizNavigation: React.FC<QuizNavigationProps> = ({
@@ -18,9 +26,12 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   onNext,
   onFinish,
   isNextDisabled,
+  isCompleted = false,
 }) => {
   const isFirstQuestion = currentQuestion === 1
   const isLastQuestion = currentQuestion === totalQuestions
+  // Completed → free review navigation; otherwise honor the gate.
+  const nextDisabled = isCompleted ? false : isNextDisabled
 
   return (
     <Flex
@@ -41,12 +52,27 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
         {currentQuestion} / {totalQuestions}
       </Text>
 
-      {isLastQuestion ? (
+      {isLastQuestion && isCompleted ? (
+        <Flex
+          align="center"
+          gap={2}
+          bg="green.500"
+          color="white"
+          px={4}
+          py={2}
+          borderRadius="full"
+          fontWeight="bold"
+          fontSize="sm"
+        >
+          <Icon as={MdCheckCircle} boxSize={5} />
+          Completed
+        </Flex>
+      ) : isLastQuestion ? (
         <IconButton
           aria-label="Finish quiz"
           icon={<CheckIcon />}
           onClick={onFinish}
-          isDisabled={isNextDisabled}
+          isDisabled={nextDisabled}
           variant="brandBold"
         />
       ) : (
@@ -54,7 +80,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
           aria-label="Next question"
           icon={<ArrowRightIcon />}
           onClick={onNext}
-          isDisabled={isNextDisabled}
+          isDisabled={nextDisabled}
           variant="brandBold"
         />
       )}

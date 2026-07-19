@@ -5,7 +5,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // Handle the login process using handleLogin
     await handleLogin(req, res, {
-      returnTo: '/dashboard',
+      // Land on the Dashboard overview after sign-in.
+      returnTo: '/dashboard/progress',
     })
   } catch (error: any) {
     // Handle errors

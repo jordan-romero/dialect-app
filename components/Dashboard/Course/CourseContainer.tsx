@@ -2,8 +2,16 @@ import React, { useEffect, useState } from 'react'
 import CourseSideBar from './CourseSideBar'
 import LessonContainerV2 from '../Lesson/LessonContainerV2'
 import { Course, Lesson } from './courseTypes'
-import { Flex, Box, Spinner } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Flex,
+  Box,
+} from '@chakra-ui/react'
 import LessonContainerV3 from '../Lesson/LessonContainerV3'
+import { SidebarSkeleton, LessonSkeleton } from './CourseSkeleton'
 
 const CourseContainer = () => {
   const [courses, setCourses] = useState<Course[] | null>(null)
@@ -12,55 +20,84 @@ const CourseContainer = () => {
     [key: number]: number
   }>({})
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     setIsLoading(true)
-    Promise.all([
-      fetch('/api/courses').then((response) => response.json()),
-      fetch('/api/lessonProgress').then((response) => response.json()),
-    ])
-      .then(
-        ([coursesData, progressData]: [
-          Course[],
-          { [key: number]: number },
-        ]) => {
-          setCourses(coursesData)
-          setLessonProgress(progressData)
+    setLoadError(null)
 
-          selectNextLesson(coursesData, progressData)
-          setIsLoading(false)
-        },
-      )
-      .catch((error) => {
-        console.error('Error fetching data:', error)
+    const fetchCourses = fetch('/api/courses').then(async (response) => {
+      const data: unknown = await response.json()
+      if (!response.ok || !Array.isArray(data)) {
+        const msg =
+          typeof data === 'object' && data !== null && 'message' in data
+            ? String((data as { message: unknown }).message)
+            : `HTTP ${response.status}`
+        throw new Error(`Courses API: ${msg}`)
+      }
+      return data as Course[]
+    })
+
+    const fetchProgress = fetch('/api/lessonProgress')
+      .then(async (response) => {
+        const data: unknown = await response.json()
+        if (!response.ok) return {}
+        return typeof data === 'object' && data !== null && !Array.isArray(data)
+          ? (data as { [key: number]: number })
+          : {}
+      })
+      .catch(() => ({} as { [key: number]: number }))
+
+    Promise.all([fetchCourses, fetchProgress])
+      .then(([coursesData, progress]) => {
+        setCourses(coursesData)
+        setLessonProgress(progress)
+        selectNextLesson(coursesData, progress)
+        setIsLoading(false)
+      })
+      .catch((error: Error) => {
+        console.error('Error fetching course data:', error)
+        setLoadError(error.message)
         setIsLoading(false)
       })
   }, [])
 
-  const selectNextLesson = (
-    courses: Course[],
-    progress: { [key: number]: number },
-  ) => {
-    let lessonToSelect: Lesson | null = null
-
-    // Get all lessons across all courses and sort them by displayOrder
-    const allLessons = courses
+  // All lessons across courses in true course order: by course, then by
+  // displayOrder. Checkpoints have a null displayOrder, so place them last
+  // within their course (not first, which `?? 0` used to do).
+  const orderedLessons = (coursesArg: Course[]) =>
+    (Array.isArray(coursesArg) ? coursesArg : [])
       .flatMap((course) =>
-        course.lessons.map((lesson) => ({
+        (course.lessons ?? []).map((lesson) => ({
           ...lesson,
-          courseId: course.id, // Keep track of which course the lesson belongs to
+          courseId: course.id,
         })),
       )
-      .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+      .sort((a, b) =>
+        a.courseId !== b.courseId
+          ? a.courseId - b.courseId
+          : (a.displayOrder ?? Number.POSITIVE_INFINITY) -
+            (b.displayOrder ?? Number.POSITIVE_INFINITY),
+      )
 
-    // Find the first incomplete lesson
-    lessonToSelect =
-      allLessons.find((lesson) => progress[lesson.id] !== 100) ??
-      allLessons[allLessons.length - 1] // Fallback to last lesson if all complete
+  // On initial load: resume at the first incomplete lesson (fall back to the
+  // first lesson if everything is already complete).
+  const selectNextLesson = (
+    coursesArg: Course[],
+    progress: { [key: number]: number },
+  ) => {
+    const all = orderedLessons(coursesArg)
+    const lessonToSelect =
+      all.find((lesson) => progress[lesson.id] !== 100) ?? all[0]
+    if (lessonToSelect) setSelectedLesson(lessonToSelect)
+  }
 
-    if (lessonToSelect) {
-      setSelectedLesson(lessonToSelect)
-    }
+  // After finishing a lesson: advance to the very next lesson in order.
+  const goToNextLesson = (currentLessonId: number) => {
+    const all = orderedLessons(courses ?? [])
+    const idx = all.findIndex((lesson) => lesson.id === currentLessonId)
+    const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
+    if (next) setSelectedLesson(next)
   }
 
   const handleSelectLesson = (lesson: Lesson) => {
@@ -72,60 +109,71 @@ const CourseContainer = () => {
     }))
   }
 
-  const handleLessonComplete = () => {
-    if (selectedLesson) {
-      setLessonProgress((prev) => {
-        const updatedProgress = {
-          ...prev,
-          [selectedLesson.id]: 100,
-        }
-        return updatedProgress
-      })
+  const handleLessonComplete = async () => {
+    if (!selectedLesson) return
+    const completedId = selectedLesson.id
+    setLessonProgress((prev) => ({ ...prev, [completedId]: 100 }))
 
-      // Select the next lesson after marking the current one as complete
-      if (courses) {
-        selectNextLesson(courses, {
-          ...lessonProgress,
-          [selectedLesson.id]: 100,
-        })
-      }
+    // A finished lesson/phase may have earned a badge.
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('badges:check'))
     }
+
+    // Re-fetch courses so a phase that just got fully completed unlocks the next
+    // phase immediately, then advance to the next lesson using the fresh data.
+    try {
+      const res = await fetch('/api/courses')
+      if (res.ok) {
+        const fresh = await res.json()
+        if (Array.isArray(fresh)) {
+          setCourses(fresh)
+          const all = orderedLessons(fresh)
+          const idx = all.findIndex((l) => l.id === completedId)
+          const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
+          if (next) setSelectedLesson(next)
+          return
+        }
+      }
+    } catch {
+      /* fall through to local advance */
+    }
+    goToNextLesson(completedId)
+  }
+
+  if (loadError) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100%" p={8}>
+        <Alert status="error" borderRadius="md" maxW="600px">
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Failed to load courses</AlertTitle>
+            <AlertDescription>{loadError}</AlertDescription>
+          </Box>
+        </Alert>
+      </Flex>
+    )
   }
 
   return (
-    <Flex w="100%">
-      <Box w="300px">
+    <Flex w="100%" h="100%">
+      <Box w="300px" h="100%">
         {isLoading ? (
-          <Flex justifyContent="center" alignItems="center" height="400px">
-            <Spinner
-              color="brand.purple"
-              size="xl"
-              thickness="4px"
-              speed="0.65s"
-            />
-          </Flex>
+          <SidebarSkeleton />
         ) : (
           <CourseSideBar
-            courses={courses}
+            courses={Array.isArray(courses) ? courses : null}
             onSelectLesson={handleSelectLesson}
             hasAccessToPaidCourses={false}
             currentLessonId={selectedLesson?.id || null}
-            lessonProgress={lessonProgress} // Pass lesson progress down as a prop
+            lessonProgress={lessonProgress}
           />
         )}
       </Box>
-      <Box flex="2">
+      <Box flex="2" h="100%">
         {isLoading ? (
-          <Flex justifyContent="center" alignItems="center" height="100vh">
-            <Spinner
-              color="brand.purple"
-              size="xl"
-              thickness="4px"
-              speed="0.65s"
-            />
-          </Flex>
+          <LessonSkeleton />
         ) : selectedLesson ? (
-          <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Flex justifyContent="center" alignItems="center" height="100%">
             {selectedLesson.steps && selectedLesson.steps.length > 0 ? (
               <LessonContainerV3
                 key={selectedLesson.id}
@@ -137,7 +185,7 @@ const CourseContainer = () => {
             )}
           </Flex>
         ) : (
-          <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Flex justifyContent="center" alignItems="center" height="100%">
             <Box>No lesson selected</Box>
           </Flex>
         )}

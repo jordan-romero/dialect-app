@@ -6,16 +6,39 @@ interface RhymingPairsQuestionProps {
   question: Question
   playAudio: (audioUrl: string) => void
   onQuestionComplete: () => void
+  /** Restore previously matched word ids (e.g. a completed quiz). */
+  initialMatchedIds?: number[]
+  /** When true, the board is read-only (answers locked until "Try again"). */
+  locked?: boolean
+  /** Report the current matched word ids so the parent can persist them. */
+  onMatchedChange?: (matchedIds: number[]) => void
 }
 
 const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
   question,
   playAudio,
   onQuestionComplete,
+  initialMatchedIds,
+  locked = false,
+  onMatchedChange,
 }) => {
   const [selectedWords, setSelectedWords] = useState<AnswerOption[]>([])
   const [matchedWords, setMatchedWords] = useState<AnswerOption[]>([])
   const [incorrectPair, setIncorrectPair] = useState<AnswerOption[]>([])
+
+  // Restore matched words from saved ids (keeps a completed board in place).
+  useEffect(() => {
+    if (!initialMatchedIds || initialMatchedIds.length === 0) return
+    const restored = initialMatchedIds
+      .map((id) => question.answerOptions.find((o) => o.id === id))
+      .filter((o): o is AnswerOption => Boolean(o))
+    setMatchedWords(restored)
+  }, [initialMatchedIds, question.answerOptions])
+
+  // Report matches up so the parent can persist them.
+  useEffect(() => {
+    onMatchedChange?.(matchedWords.map((w) => w.id))
+  }, [matchedWords, onMatchedChange])
 
   const isQuizComplete = useCallback(() => {
     const wordsWithoutMatch = question.answerOptions.filter(
@@ -34,6 +57,7 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
   }, [isQuizComplete, matchedWords, onQuestionComplete])
 
   const handleWordClick = (word: AnswerOption) => {
+    if (locked) return
     if (selectedWords.length === 0) {
       setSelectedWords([word])
       setIncorrectPair([])

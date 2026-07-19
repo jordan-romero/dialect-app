@@ -10,7 +10,7 @@ import { IPAKeyboard } from './IPAKeyboard'
  */
 export const IPAKeyboardWithRichText: React.FC = () => {
   return (
-    <VStack spacing={6} align="stretch" maxW="1200px" mx="auto" p={4}>
+    <VStack spacing={3} align="stretch" maxW="1000px" mx="auto" p={2}>
       <IPAKeyboard
         useRichTextEditor={true}
         showTextArea={true}

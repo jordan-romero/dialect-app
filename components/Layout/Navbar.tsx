@@ -30,7 +30,7 @@ const Navbar = () => {
     'signUpAndLoginVisible',
     false,
   )
-  const user = useUser()
+  const { user: authUser, isLoading: authLoading } = useUser()
   const router = useRouter()
 
   if (isMobile && !router.pathname.includes('dashboard')) {
@@ -86,11 +86,15 @@ const Navbar = () => {
             </MenuList>
           </Menu>
 
-          {signUpAndLoginVisible && user.user === undefined ? <Login /> : null}
-          {signUpAndLoginVisible && user.user !== undefined ? (
-            <NavComponent navText="Dashboard" />
+          {signUpAndLoginVisible && !authLoading && authUser === undefined ? (
+            <Login />
           ) : null}
-          {signUpAndLoginVisible && user ? <Logout /> : null}
+          {signUpAndLoginVisible && !authLoading && authUser !== undefined ? (
+            <>
+              <NavComponent navText="Dashboard" />
+              <Logout />
+            </>
+          ) : null}
         </HStack>
       </HStack>
     </Flex>

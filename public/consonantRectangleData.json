@@ -1,0 +1,271 @@
+{
+  "id": 33,
+  "lessonId": 6,
+  "quizType": "consonantRect",
+  "questions": [
+    {
+      "id": 312,
+      "text": "Drag the GenAm consonant symbols onto the correct spot of the Consonant Rectangle.",
+      "questionType": "consonantRect",
+      "quizId": 33
+    }
+  ],
+  "places": [
+    "Bilabial",
+    "Labiodental",
+    "Dental",
+    "Alveolar",
+    "Postalveolar",
+    "Palatal",
+    "Velar",
+    "Glottal"
+  ],
+  "manners": [
+    "Plosive",
+    "Nasal",
+    "Tap/Flap",
+    "Fricative",
+    "Approximant",
+    "Lateral approximant"
+  ],
+  "slots": [
+    {
+      "id": "Plosive|Bilabial|voiceless",
+      "manner": "Plosive",
+      "place": "Bilabial",
+      "voicing": "voiceless",
+      "symbol": "p"
+    },
+    {
+      "id": "Plosive|Bilabial|voiced",
+      "manner": "Plosive",
+      "place": "Bilabial",
+      "voicing": "voiced",
+      "symbol": "b"
+    },
+    {
+      "id": "Plosive|Alveolar|voiceless",
+      "manner": "Plosive",
+      "place": "Alveolar",
+      "voicing": "voiceless",
+      "symbol": "t"
+    },
+    {
+      "id": "Plosive|Alveolar|voiced",
+      "manner": "Plosive",
+      "place": "Alveolar",
+      "voicing": "voiced",
+      "symbol": "d"
+    },
+    {
+      "id": "Plosive|Velar|voiceless",
+      "manner": "Plosive",
+      "place": "Velar",
+      "voicing": "voiceless",
+      "symbol": "k"
+    },
+    {
+      "id": "Plosive|Velar|voiced",
+      "manner": "Plosive",
+      "place": "Velar",
+      "voicing": "voiced",
+      "symbol": "g"
+    },
+    {
+      "id": "Plosive|Glottal|voiceless",
+      "manner": "Plosive",
+      "place": "Glottal",
+      "voicing": "voiceless",
+      "symbol": "ʔ"
+    },
+    {
+      "id": "Nasal|Bilabial|voiced",
+      "manner": "Nasal",
+      "place": "Bilabial",
+      "voicing": "voiced",
+      "symbol": "m"
+    },
+    {
+      "id": "Nasal|Alveolar|voiced",
+      "manner": "Nasal",
+      "place": "Alveolar",
+      "voicing": "voiced",
+      "symbol": "n"
+    },
+    {
+      "id": "Nasal|Velar|voiced",
+      "manner": "Nasal",
+      "place": "Velar",
+      "voicing": "voiced",
+      "symbol": "ŋ"
+    },
+    {
+      "id": "Tap/Flap|Alveolar|voiced",
+      "manner": "Tap/Flap",
+      "place": "Alveolar",
+      "voicing": "voiced",
+      "symbol": "ɾ"
+    },
+    {
+      "id": "Fricative|Labiodental|voiceless",
+      "manner": "Fricative",
+      "place": "Labiodental",
+      "voicing": "voiceless",
+      "symbol": "f"
+    },
+    {
+      "id": "Fricative|Labiodental|voiced",
+      "manner": "Fricative",
+      "place": "Labiodental",
+      "voicing": "voiced",
+      "symbol": "v"
+    },
+    {
+      "id": "Fricative|Dental|voiceless",
+      "manner": "Fricative",
+      "place": "Dental",
+      "voicing": "voiceless",
+      "symbol": "θ"
+    },
+    {
+      "id": "Fricative|Dental|voiced",
+      "manner": "Fricative",
+      "place": "Dental",
+      "voicing": "voiced",
+      "symbol": "ð"
+    },
+    {
+      "id": "Fricative|Alveolar|voiceless",
+      "manner": "Fricative",
+      "place": "Alveolar",
+      "voicing": "voiceless",
+      "symbol": "s"
+    },
+    {
+      "id": "Fricative|Alveolar|voiced",
+      "manner": "Fricative",
+      "place": "Alveolar",
+      "voicing": "voiced",
+      "symbol": "z"
+    },
+    {
+      "id": "Fricative|Postalveolar|voiceless",
+      "manner": "Fricative",
+      "place": "Postalveolar",
+      "voicing": "voiceless",
+      "symbol": "ʃ"
+    },
+    {
+      "id": "Fricative|Postalveolar|voiced",
+      "manner": "Fricative",
+      "place": "Postalveolar",
+      "voicing": "voiced",
+      "symbol": "ʒ"
+    },
+    {
+      "id": "Fricative|Palatal|voiceless",
+      "manner": "Fricative",
+      "place": "Palatal",
+      "voicing": "voiceless",
+      "symbol": "ç"
+    },
+    {
+      "id": "Fricative|Glottal|voiceless",
+      "manner": "Fricative",
+      "place": "Glottal",
+      "voicing": "voiceless",
+      "symbol": "h"
+    },
+    {
+      "id": "Approximant|Postalveolar|voiced",
+      "manner": "Approximant",
+      "place": "Postalveolar",
+      "voicing": "voiced",
+      "symbol": "ɹ"
+    },
+    {
+      "id": "Approximant|Palatal|voiced",
+      "manner": "Approximant",
+      "place": "Palatal",
+      "voicing": "voiced",
+      "symbol": "j"
+    },
+    {
+      "id": "Lateral approximant|Alveolar|voiced",
+      "manner": "Lateral approximant",
+      "place": "Alveolar",
+      "voicing": "voiced",
+      "symbol": "l"
+    }
+  ],
+  "specialSlots": [
+    {
+      "id": "special|Voiced Labial-Velar Approximant",
+      "label": "Voiced Labial-Velar Approximant",
+      "symbol": "w"
+    },
+    {
+      "id": "special|Voiceless Affricate",
+      "label": "Voiceless Affricate",
+      "symbol": "t͡ʃ"
+    },
+    {
+      "id": "special|Voiced Affricate",
+      "label": "Voiced Affricate",
+      "symbol": "d͡ʒ"
+    },
+    {
+      "id": "special|Velarized (“Dark”) Lateral Approximant",
+      "label": "Velarized (“Dark”) Lateral Approximant",
+      "symbol": "ɫ"
+    }
+  ],
+  "symbolBank": [
+    "p",
+    "b",
+    "t",
+    "d",
+    "k",
+    "g",
+    "ʔ",
+    "m",
+    "n",
+    "ŋ",
+    "ɾ",
+    "f",
+    "v",
+    "θ",
+    "ð",
+    "s",
+    "z",
+    "ʃ",
+    "ʒ",
+    "ç",
+    "h",
+    "ɹ",
+    "j",
+    "l",
+    "w",
+    "t͡ʃ",
+    "d͡ʒ",
+    "ɫ"
+  ],
+  "mannerDefinitions": {
+    "Plosive": "A consonant produced by articulators stopping the airflow from the lungs, followed by a sudden release of the pressurized air.",
+    "Nasal": "Sounds produced when the soft palate lowers to divert vibrated airflow into the nasal cavity.",
+    "Tap/Flap": "A quick tongue tap off of an articulation surface.",
+    "Fricative": "Produced when the airflow is constricted by the articulators at any point in the vocal tract to create turbulence.",
+    "Approximant": "When the articulators approximate an articulation, but release before contact.",
+    "Lateral approximant": "Where airflow is released sideways across the tongue."
+  },
+  "placeDefinitions": {
+    "Bilabial": "Sounds articulated by both lips.",
+    "Labiodental": "Consonants which use one lip and one set of teeth.",
+    "Dental": "Sounds where the tongue articulates off the teeth.",
+    "Alveolar": "The alveolar ridge right behind the gumline of the top front teeth.",
+    "Postalveolar": "Consonants produced behind the alveolar ridge.",
+    "Palatal": "Sounds expressed off the hard palate.",
+    "Velar": "The soft palate near the back of the mouth.",
+    "Glottal": "Sounds which emanate from the space between the vocal folds (the glottis)."
+  }
+}

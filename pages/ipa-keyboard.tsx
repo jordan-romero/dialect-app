@@ -72,8 +72,8 @@ const IPAKeyboardPage: React.FC = () => {
                   Subscript)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
-                  ✓ T9-style keyboard shortcuts (Shift+A cycles through A
-                  symbols)
+                  ✓ T9-style shortcuts: Ctrl+letter (press repeatedly within 1s
+                  to cycle symbols for that letter)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
                   ✓ Copy to clipboard functionality
@@ -86,73 +86,14 @@ const IPAKeyboardPage: React.FC = () => {
                 </Text>
               </VStack>
 
-              <Text fontSize="md" fontWeight="semibold" mb={2} color="gray.800">
-                Keyboard Shortcuts:
+              <Text fontSize="sm" color="gray.600" mb={4}>
+                Need the full shortcut reference (symbol cycling, diacritics,
+                formatting, and history)? Click{' '}
+                <Text as="span" fontWeight="semibold" color="brand.iris">
+                  Instructions
+                </Text>{' '}
+                on the keyboard above to open the side panel any time.
               </Text>
-              <VStack align="start" spacing={1} pl={4} mb={4}>
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={1}
-                >
-                  IPA Symbols (Shift):
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Shift+[Letter]
-                  </Text>{' '}
-                  - Cycle through symbols (e.g., Shift+A for a, ɑ, æ, etc.)
-                </Text>
-
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={2}
-                >
-                  Text Formatting:
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+B
-                  </Text>{' '}
-                  (Cmd+B on Mac) - Bold
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+I
-                  </Text>{' '}
-                  (Cmd+I on Mac) - Italic
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+U
-                  </Text>{' '}
-                  (Cmd+U on Mac) - Underline
-                </Text>
-
-                <Text
-                  fontSize="sm"
-                  color="gray.700"
-                  fontWeight="semibold"
-                  mt={2}
-                >
-                  History:
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+Z
-                  </Text>{' '}
-                  (Cmd+Z on Mac) - Undo
-                </Text>
-                <Text fontSize="sm" color="gray.700" pl={2}>
-                  <Text as="span" fontWeight="semibold">
-                    Ctrl+Y
-                  </Text>{' '}
-                  (Cmd+Y on Mac) - Redo
-                </Text>
-              </VStack>
 
               <Text fontSize="md" color="gray.700" mb={4}>
                 Want to learn more about dialect training and accent coaching?{' '}
