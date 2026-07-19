@@ -14,6 +14,7 @@ import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
+import QuizSkeleton from './QuizSkeleton'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -107,11 +108,11 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     part2Questions: shuffledPart2Questions.length,
   })
 
-  const getMultipleChoiceQuiz = () => {
-    return quizzes.find((quiz) => quiz.quizType === 'multipleChoice')
-  }
-
-  const multipleChoiceQuiz = getMultipleChoiceQuiz()
+  // Use the order-matched quiz for progress/submission. A lesson can have
+  // more than one multipleChoice quiz (e.g. "Multiple Choice Transcription"
+  // and "Regional Options"); keying off quizType alone would always resolve
+  // to the first one and conflate their progress/answers.
+  const multipleChoiceQuiz = quizData
   console.log('🎯 Multiple choice quiz:', multipleChoiceQuiz)
 
   // Load saved progress when component mounts
@@ -157,6 +158,8 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   }
 
   const handleAnswerSelect = (questionId: number, answerId: number) => {
+    // Once completed, answers are locked in place until "Try again".
+    if (isCompleted) return
     setSelectedAnswers((prevAnswers) => ({
       ...prevAnswers,
       [questionId]: answerId,
@@ -251,13 +254,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
 
       if (response.ok) {
         setIsCompleted(true)
-        toast({
-          title: 'Quiz Completed!',
-          description: 'Your answers have been saved successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        })
       } else {
         console.error('Failed to submit quiz')
         toast({
@@ -328,8 +324,28 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
           </Button>
         ))}
       </SimpleGrid>
+      {(() => {
+        const selectedId = selectedAnswers[question.id]
+        if (!selectedId || isQuestionCorrect(question.id)) return null
+        const selected = question.answerOptions.find(
+          (o: AnswerOption) => o.id === selectedId,
+        )
+        return selected?.feedback ? (
+          <Text mt={3} fontSize="sm" fontStyle="italic" color="orange.600">
+            {selected.feedback}
+          </Text>
+        ) : null
+      })()}
     </Box>
   )
+
+  // A quiz is "two-part" only when some questions carry a category (the
+  // Consonants/Vowels symbol⇄word exercise). Otherwise it's a single-page
+  // quiz (e.g. word→transcription multiple choice) and we skip the empty
+  // first part and its symbol-matching instructions.
+  const hasParts = shuffledPart1Questions.length > 0
+
+  if (!multipleChoiceQuiz) return <QuizSkeleton />
 
   return (
     <Box>
@@ -342,11 +358,13 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         borderColor="gray.200"
       >
         <Text fontStyle="italic" mb={4}>
-          {currentPart === 1
+          {!hasParts
+            ? 'Instructions: Choose the correct transcription for the presented word in a General American Dialect.'
+            : currentPart === 1
             ? 'Instructions: Choose the correct symbol that matches the sound in the underlined part of the word. Click the "Play Audio" button to hear the word.'
             : 'Instructions: Choose the correct word that contains the sound of the presented symbol. Click the "Play Audio" button to hear the symbol.'}
         </Text>
-        {currentPart === 1 && (
+        {(!hasParts || currentPart === 1) && (
           <Text fontFamily="'Charis SIL', serif" mb={8}>
             Note, when doing these exercises you may be tempted to check a
             dictionary to "help" you with these answers – we caution you that
@@ -356,24 +374,21 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
           </Text>
         )}
       </Box>
-      {currentPart === 1 && shuffledPart1Questions.map(renderQuestion)}
-      {currentPart === 2 && shuffledPart2Questions.map(renderQuestion)}
-      {isCompleted && (
-        <Box mt={4} p={4} bg="green.100" borderRadius="md">
-          <Text color="green.800" fontWeight="bold">
-            ✓ Quiz completed! Your answers have been saved.
-          </Text>
-        </Box>
-      )}
+      {hasParts &&
+        currentPart === 1 &&
+        shuffledPart1Questions.map(renderQuestion)}
+      {(!hasParts || currentPart === 2) &&
+        shuffledPart2Questions.map(renderQuestion)}
       <QuizNavigation
-        currentQuestion={currentPart}
-        totalQuestions={2}
+        currentQuestion={hasParts ? currentPart : 1}
+        totalQuestions={hasParts ? 2 : 1}
         onPrevious={handlePreviousPart}
         onNext={handleNextPart}
         onFinish={handleFinish}
         isNextDisabled={
-          !isPartComplete(currentPart) || isLoading || isCompleted
+          !isPartComplete(hasParts ? currentPart : 2) || isLoading
         }
+        isCompleted={isCompleted}
       />
     </Box>
   )

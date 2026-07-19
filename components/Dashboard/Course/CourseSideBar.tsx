@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Flex, Text, Icon, VStack, HStack, Button } from '@chakra-ui/react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
+import { Box, Flex, Text, Icon, VStack, HStack } from '@chakra-ui/react'
 import {
   MdCheck,
   MdLockOpen,
@@ -9,6 +9,9 @@ import {
   MdExpandLess,
 } from 'react-icons/md'
 import { Course, Lesson } from './courseTypes'
+
+const isCheckpoint = (lesson: { title?: string }) =>
+  /checkpoint/i.test(lesson.title || '')
 
 type CourseSideBarProps = {
   courses: Course[] | null
@@ -29,17 +32,37 @@ const CourseSideBar = ({
     [key: number]: boolean
   }>({})
 
+  const courseList = useMemo(
+    (): Course[] => (Array.isArray(courses) ? courses : []),
+    [courses],
+  )
+
+  // Primitives only — avoids re-running the effect when the `courses` array is a new
+  // reference each render with the same contents (would loop with setExpandedCourses).
+  const coursesStableKey = useMemo(() => {
+    if (!Array.isArray(courses) || courses.length === 0) return ''
+    return courses.map((c) => c.id).join(',')
+  }, [courses])
+
+  const coursesRef = useRef(courses)
+  coursesRef.current = courses
+
   useEffect(() => {
-    // Automatically expand the course containing the current lesson
-    if (currentLessonId && courses) {
-      const currentCourse = courses.find((course) =>
-        course.lessons.some((lesson) => lesson.id === currentLessonId),
-      )
-      if (currentCourse) {
-        setExpandedCourses((prev) => ({ ...prev, [currentCourse.id]: true }))
-      }
-    }
-  }, [currentLessonId, courses])
+    if (!currentLessonId) return
+
+    const list = Array.isArray(coursesRef.current) ? coursesRef.current : []
+    if (list.length === 0) return
+
+    const currentCourse = list.find((course) =>
+      course.lessons?.some((lesson) => lesson.id === currentLessonId),
+    )
+    if (!currentCourse) return
+
+    setExpandedCourses((prev) => {
+      if (prev[currentCourse.id]) return prev
+      return { ...prev, [currentCourse.id]: true }
+    })
+  }, [currentLessonId, coursesStableKey])
 
   const isLessonLocked = (
     lesson: Lesson,
@@ -58,14 +81,19 @@ const CourseSideBar = ({
     return false
   }
 
+  // A whole phase (course) is locked until the previous phase is complete.
+  // The courses API sets `unlocked` per course.
+  const isCourseLocked = (course: Course) => (course as any).unlocked === false
+
   const getLessonIcon = (
     lesson: Lesson,
     index: number,
     courseLessons: Lesson[],
+    courseLocked = false,
   ) => {
     const progress = lessonProgress[lesson.id] || 0
 
-    if (isLessonLocked(lesson, index, courseLessons)) {
+    if (courseLocked || isLessonLocked(lesson, index, courseLessons)) {
       return MdLock
     } else if (progress === 100) {
       return MdCheck
@@ -83,74 +111,184 @@ const CourseSideBar = ({
     }))
   }
 
+  const iconColor = (
+    lesson: Lesson,
+    index: number,
+    courseLessons: Lesson[],
+    courseLocked: boolean,
+    isCurrent: boolean,
+  ) => {
+    if (courseLocked || isLessonLocked(lesson, index, courseLessons))
+      return 'gray.400'
+    const progress = lessonProgress[lesson.id] || 0
+    if (progress === 100) return 'green.500'
+    if (isCurrent || progress > 0) return 'brand.iris'
+    return 'gray.400'
+  }
+
+  // A checkpoint sits right after its own phase (as a distinct entry, not a
+  // phase lesson). It unlocks once every non-checkpoint lesson in that phase
+  // is done.
+  const checkpointLocked = (course: Course) =>
+    isCourseLocked(course) ||
+    (course.lessons ?? []).some(
+      (l) => !isCheckpoint(l) && (lessonProgress[l.id] || 0) < 100,
+    )
+
   return (
     <Box
-      p={4}
+      p={3}
       width={300}
-      height="100vh"
-      bg="gray.100"
-      color="black"
-      borderTopLeftRadius="xl"
-      borderBottomLeftRadius="xl"
+      height="100%"
+      bg="white"
+      color="gray.800"
+      borderRight="1px solid"
+      borderColor="gray.100"
       overflowY="auto"
     >
-      <VStack spacing={4} align="stretch">
-        {courses &&
-          courses.map((course) => (
-            <Box key={course.id}>
-              <Button
-                variant="ghost"
-                justifyContent="space-between"
-                width="100%"
-                onClick={() => toggleCourseExpansion(course.id)}
-              >
-                <Text fontWeight="bold" fontSize="lg">
-                  {course.title}
-                </Text>
-                <Icon
-                  as={expandedCourses[course.id] ? MdExpandLess : MdExpandMore}
-                  boxSize={6}
-                />
-              </Button>
-              {expandedCourses[course.id] && (
-                <VStack spacing={2} align="stretch" pl={4} mt={2}>
-                  {course.lessons.map((lesson, index) => {
-                    const isLocked = isLessonLocked(
-                      lesson,
-                      index,
-                      course.lessons,
-                    )
-                    const isCurrent = lesson.id === currentLessonId
-                    return (
-                      <HStack
-                        key={lesson.id}
-                        onClick={() => !isLocked && onSelectLesson(lesson)}
-                        cursor={isLocked ? 'not-allowed' : 'pointer'}
-                        opacity={isLocked ? 0.5 : 1}
-                        bg={isCurrent ? 'blue.100' : 'transparent'}
-                        p={2}
-                        borderRadius="md"
-                      >
-                        <Icon
-                          as={getLessonIcon(lesson, index, course.lessons)}
-                          boxSize={6}
-                          mr={4}
-                          color={
-                            lessonProgress[lesson.id] === 100
-                              ? 'green.500'
-                              : lessonProgress[lesson.id] > 0
-                              ? 'purple.500'
-                              : 'gray.500'
+      <VStack spacing={5} align="stretch">
+        {courseList.map((course) => {
+          const courseLocked = isCourseLocked(course)
+          const expanded = expandedCourses[course.id]
+          const courseCheckpoints = (course.lessons ?? []).filter(isCheckpoint)
+          return (
+            <React.Fragment key={course.id}>
+              <Box>
+                <Flex
+                  as="button"
+                  w="100%"
+                  align="center"
+                  justify="space-between"
+                  px={3}
+                  py={2}
+                  borderRadius="lg"
+                  opacity={courseLocked ? 0.55 : 1}
+                  _hover={{ bg: 'gray.50' }}
+                  transition="background 0.15s ease"
+                  onClick={() => toggleCourseExpansion(course.id)}
+                >
+                  <HStack spacing={2}>
+                    {courseLocked && (
+                      <Icon as={MdLock} boxSize={4} color="gray.400" />
+                    )}
+                    <Text
+                      fontWeight="bold"
+                      fontSize="md"
+                      letterSpacing="-0.01em"
+                    >
+                      {course.title}
+                    </Text>
+                  </HStack>
+                  <Icon
+                    as={expanded ? MdExpandLess : MdExpandMore}
+                    boxSize={5}
+                    color="gray.400"
+                  />
+                </Flex>
+
+                {expanded && (
+                  <VStack spacing={1} align="stretch" mt={1}>
+                    {(course.lessons ?? []).map((lesson, index) => {
+                      const courseLessons = course.lessons ?? []
+                      // Checkpoints render as a distinct entry after the phase.
+                      if (isCheckpoint(lesson)) return null
+                      const isLocked =
+                        courseLocked ||
+                        isLessonLocked(lesson, index, courseLessons)
+                      const isCurrent = lesson.id === currentLessonId
+                      return (
+                        <Flex
+                          key={lesson.id}
+                          align="center"
+                          gap={3}
+                          px={3}
+                          py={2.5}
+                          borderRadius="lg"
+                          borderLeft="3px solid"
+                          borderLeftColor={
+                            isCurrent ? 'brand.iris' : 'transparent'
                           }
-                        />
-                        <Text>{`${index + 1}. ${lesson.title}`}</Text>
-                      </HStack>
-                    )
-                  })}
-                </VStack>
-              )}
-            </Box>
-          ))}
+                          bg={isCurrent ? 'purple.50' : 'transparent'}
+                          color={isCurrent ? 'brand.iris' : 'gray.700'}
+                          fontWeight={isCurrent ? 'semibold' : 'normal'}
+                          opacity={isLocked ? 0.5 : 1}
+                          cursor={isLocked ? 'not-allowed' : 'pointer'}
+                          transition="background 0.15s ease"
+                          _hover={{ bg: isLocked ? 'transparent' : 'gray.50' }}
+                          onClick={() => !isLocked && onSelectLesson(lesson)}
+                        >
+                          <Icon
+                            as={getLessonIcon(
+                              lesson,
+                              index,
+                              courseLessons,
+                              courseLocked,
+                            )}
+                            boxSize={5}
+                            flexShrink={0}
+                            color={iconColor(
+                              lesson,
+                              index,
+                              courseLessons,
+                              courseLocked,
+                              isCurrent,
+                            )}
+                          />
+                          <Text fontSize="sm" noOfLines={2}>
+                            {lesson.displayOrder
+                              ? `${lesson.displayOrder}. ${lesson.title}`
+                              : lesson.title}
+                          </Text>
+                        </Flex>
+                      )
+                    })}
+                  </VStack>
+                )}
+              </Box>
+
+              {courseCheckpoints.map((cp) => {
+                const locked = checkpointLocked(course)
+                const isCurrent = cp.id === currentLessonId
+                const done = (lessonProgress[cp.id] || 0) === 100
+                return (
+                  <Flex
+                    key={cp.id}
+                    as="button"
+                    w="100%"
+                    align="center"
+                    justify="space-between"
+                    px={3}
+                    py={2}
+                    borderRadius="lg"
+                    opacity={locked ? 0.55 : 1}
+                    bg={isCurrent ? 'purple.50' : 'transparent'}
+                    cursor={locked ? 'not-allowed' : 'pointer'}
+                    transition="background 0.15s ease"
+                    _hover={{ bg: locked ? 'transparent' : 'gray.50' }}
+                    onClick={() => !locked && onSelectLesson(cp)}
+                  >
+                    <HStack spacing={2}>
+                      {locked && (
+                        <Icon as={MdLock} boxSize={4} color="gray.400" />
+                      )}
+                      <Text
+                        fontWeight="bold"
+                        fontSize="md"
+                        letterSpacing="-0.01em"
+                        color={isCurrent ? 'brand.iris' : 'gray.800'}
+                      >
+                        {cp.title}
+                      </Text>
+                    </HStack>
+                    {done && !locked && (
+                      <Icon as={MdCheck} boxSize={5} color="green.500" />
+                    )}
+                  </Flex>
+                )
+              })}
+            </React.Fragment>
+          )
+        })}
       </VStack>
     </Box>
   )

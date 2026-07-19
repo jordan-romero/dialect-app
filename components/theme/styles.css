@@ -2,8 +2,8 @@
 
 /* Enhanced IPA font rendering */
 .ipa-text {
-  font-family: 'Charis SIL', 'Noto Sans', 'Doulos SIL', 'Arial Unicode MS',
-    sans-serif !important;
+  font-family: 'Arimo', 'Charis SIL', 'Noto Sans', 'Doulos SIL',
+    'Arial Unicode MS', sans-serif !important;
   font-feature-settings: 'ccmp' 1, 'mark' 1, 'mkmk' 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

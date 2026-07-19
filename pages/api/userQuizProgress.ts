@@ -29,16 +29,7 @@ export default async function handler(
     const user = await prisma.user.findUnique({ where: { auth0Id: userId } })
     if (!user) return res.status(404).json({ error: 'User not found' })
 
-    // Get completion status
-    const progress = await prisma.lessonProgress.findFirst({
-      where: {
-        userId: user.id,
-        lessonId: Number(lessonId),
-      },
-    })
-    const isCompleted = progress?.hasQuizBeenCompleted || false
-
-    // Get answers
+    // Answers for THIS quiz (per-quiz, keyed by quizId).
     const answers = await prisma.userAnswer.findMany({
       where: {
         userId: user.id,
@@ -49,6 +40,11 @@ export default async function handler(
         textAnswer: true,
       },
     })
+
+    // Completion is per-quiz: a quiz is done when the user has saved answers
+    // for it. (Previously this read the per-LESSON hasQuizBeenCompleted flag,
+    // which made finishing one quiz mark every quiz in the lesson as complete.)
+    const isCompleted = answers.length > 0
 
     return res.status(200).json({ isCompleted, answers })
   } catch (error) {

@@ -7,14 +7,19 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 const Footer = () => {
+  const router = useRouter()
   const handleEmailClick = () => {
     window.open('mailto:info@actingaccents.com')
   }
 
   const isMobile = useBreakpointValue({ base: true, md: false })
+
+  // The dashboard is a full-height app shell — no marketing footer there.
+  if (router.pathname.startsWith('/dashboard')) return null
 
   return (
     <Box h="fit-content" w="100%" bg="gray.100">
