@@ -26,6 +26,11 @@ import {
   RiSuperscript,
   RiDeleteBin6Line,
 } from 'react-icons/ri'
+import {
+  isIpaAltLetterSuppressionActive,
+  isMacOptionDeadKeyArtifactChar,
+  shouldSuppressMacOptionDeadKeyBeforeInput,
+} from './ipaKeyboardPlatform'
 
 interface RichTextIPAEditorProps {
   onSymbolInsert?: (symbol: string) => void
@@ -161,6 +166,8 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
   ) => {
     const STORAGE_KEY = 'ipa-richtext-content'
     const editorRef = useRef<HTMLDivElement>(null)
+    /** True while our own execCommand insert runs — dead-key suppression must never eat it */
+    const ownInsertRef = useRef(false)
     /** Skip history snapshots from synthetic input while we batch delete+insert (T9) */
     const suppressHistoryUntilRef = useRef(0)
     /** Undo/redo/load/clear set innerHTML — that fires `input`; must not append history (causes runaway updates). */
@@ -469,16 +476,32 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
 
         editor.focus()
 
+        // If the selection isn't inside the editor (never focused, or the
+        // browser dropped it on blur), the insert would land at the start of
+        // the content — put the caret at the end instead.
+        const sel = window.getSelection()
+        if (
+          !sel ||
+          sel.rangeCount === 0 ||
+          !editor.contains(sel.getRangeAt(0).commonAncestorContainer)
+        ) {
+          const len = getTotalStringMetricLength(editor)
+          setSelectionOffsets(editor, len, len)
+        }
+
         if (shouldReplace) {
           suppressHistoryUntilRef.current = Date.now() + 120
           document.execCommand('delete', false, undefined)
         }
 
         let ok = false
+        ownInsertRef.current = true
         try {
           ok = document.execCommand('insertText', false, symbol)
         } catch {
           ok = false
+        } finally {
+          ownInsertRef.current = false
         }
 
         if (!ok) {
@@ -602,6 +625,118 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         editor.removeEventListener('beforeinput', onBeforeInput, true)
       }
     }, [handleRedo, handleUndo])
+
+    // Mac Option+letter dead keys (E/U/I/N) can leak their accent (¨ ´ ˆ ˜)
+    // into the editor even though the IPA shortcut already handled the key —
+    // the browser commits the pending composition right after, and keydown
+    // preventDefault can't stop it. Drop those stray commits while the
+    // platform-level suppression window is armed.
+    useEffect(() => {
+      const editor = editorRef.current
+      if (!editor) return
+
+      const onBeforeInputSuppress = (e: Event) => {
+        if (ownInsertRef.current) return // our execCommand insert — keep it
+        const ie = e as InputEvent
+        if (
+          shouldSuppressMacOptionDeadKeyBeforeInput(
+            ie.inputType,
+            ie.data ?? null,
+          )
+        ) {
+          e.preventDefault()
+          e.stopPropagation()
+        }
+      }
+
+      // Backstop: strip any artifact chars sitting immediately before the caret
+      // (a committed dead-key accent). Only called inside the suppression window.
+      const removeArtifactsBeforeCaret = () => {
+        const sel = window.getSelection()
+        if (!sel || sel.rangeCount === 0) return
+        const r = sel.getRangeAt(0)
+        if (
+          !editor.contains(r.startContainer) ||
+          r.startContainer.nodeType !== Node.TEXT_NODE
+        ) {
+          return
+        }
+        const node = r.startContainer as Text
+        const txt = node.textContent ?? ''
+        const end = r.startOffset
+        let start = end
+        while (
+          start > 0 &&
+          end - start < 3 &&
+          isMacOptionDeadKeyArtifactChar(txt[start - 1])
+        ) {
+          start--
+        }
+        if (start < end) {
+          const del = document.createRange()
+          del.setStart(node, start)
+          del.setEnd(node, end)
+          del.deleteContents()
+          requestAnimationFrame(() => saveToHistory())
+        }
+      }
+
+      // The dead-key composition stays OPEN after the shortcut fires (visible
+      // as a highlighted ¨/´ and it eats the following keypresses — breaking
+      // T9 cycling). Abort it as soon as it starts: toggling contentEditable
+      // forces the IME to drop the pending accent.
+      const onCompositionStart = () => {
+        if (!isIpaAltLetterSuppressionActive()) return
+        setTimeout(() => {
+          const ed = editorRef.current
+          if (!ed) return
+          const { selStart, selEnd } = getSelectionOffsets(ed)
+          isApplyingHistoryRef.current = true
+          ed.contentEditable = 'false'
+          ed.contentEditable = 'true'
+          ed.focus()
+          setSelectionOffsets(ed, selStart, selEnd)
+          isApplyingHistoryRef.current = false
+          // If the abort committed the accent instead of dropping it, strip it
+          removeArtifactsBeforeCaret()
+        }, 0)
+      }
+
+      // insertCompositionText isn't cancelable, so the accent can still land —
+      // remove it right after the composition commits.
+      const onCompositionEnd = (e: CompositionEvent) => {
+        const data = e.data
+        if (!data) return
+        if (!shouldSuppressMacOptionDeadKeyBeforeInput('insertText', data)) {
+          return
+        }
+        const sel = window.getSelection()
+        if (!sel || sel.rangeCount === 0) return
+        const r = sel.getRangeAt(0)
+        if (!editor.contains(r.startContainer)) return
+        if (
+          r.startContainer.nodeType === Node.TEXT_NODE &&
+          r.startOffset >= data.length
+        ) {
+          const del = document.createRange()
+          del.setStart(r.startContainer, r.startOffset - data.length)
+          del.setEnd(r.startContainer, r.startOffset)
+          if (del.toString() === data) {
+            del.deleteContents()
+            requestAnimationFrame(() => saveToHistory())
+          }
+        }
+      }
+
+      editor.addEventListener('beforeinput', onBeforeInputSuppress, true)
+      editor.addEventListener('compositionstart', onCompositionStart)
+      editor.addEventListener('compositionend', onCompositionEnd)
+      return () => {
+        editor.removeEventListener('beforeinput', onBeforeInputSuppress, true)
+        editor.removeEventListener('compositionstart', onCompositionStart)
+        editor.removeEventListener('compositionend', onCompositionEnd)
+      }
+    }, [saveToHistory])
 
     // Expose insertSymbol method via ref
     useImperativeHandle(

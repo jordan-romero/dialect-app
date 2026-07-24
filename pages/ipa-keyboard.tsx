@@ -72,8 +72,8 @@ const IPAKeyboardPage: React.FC = () => {
                   Subscript)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
-                  ✓ T9-style shortcuts: Ctrl+letter (press repeatedly within 1s
-                  to cycle symbols for that letter)
+                  ✓ T9-style shortcuts: Option (Mac) / Alt (Windows) + letter
+                  (press repeatedly to cycle symbols for that letter)
                 </Text>
                 <Text fontSize="sm" color="gray.700">
                   ✓ Copy to clipboard functionality

@@ -28,7 +28,10 @@ import {
 import { CopyIcon, CloseIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import RichTextIPAEditor from './RichTextIPAEditor'
 import {
+  isApplePlatform,
   ipaShortcutKey,
+  ipaShortcutKeyRepeated,
+  notifyIpaAltLetterShortcutHandled,
   shouldSuppressMacOptionDeadKeyBeforeInput,
 } from './ipaKeyboardPlatform'
 
@@ -267,6 +270,11 @@ const getSymbolName = (symbol: string): string => {
   return SYMBOL_NAMES[symbol] || symbol
 }
 
+// Combining double inverted breve (tie bar) — zero advance width and drawn to the
+// left of the pen, so on its own it hangs off the left edge of the key. We nudge
+// just this glyph to the right so it renders inside the button.
+const TIE_BAR = '͡' // ͡
+
 // Helper to get keyboard shortcut for a symbol
 const getSymbolShortcut = (symbol: string): string | null => {
   // First check direct shortcuts
@@ -286,7 +294,7 @@ const getSymbolShortcut = (symbol: string): string | null => {
   for (const group of LETTER_GROUPS) {
     const symbolIndex = group.symbols.indexOf(symbol)
     if (symbolIndex !== -1) {
-      return `${ipaShortcutKey(group.letter)} (${symbolIndex + 1}×)`
+      return ipaShortcutKeyRepeated(group.letter, symbolIndex + 1)
     }
   }
   return null
@@ -657,30 +665,18 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   const STORAGE_KEY = 'ipa-keyboard-text'
   const HISTORY_KEY = 'ipa-keyboard-history'
 
-  // Load saved text from localStorage on mount
-  const [text, setText] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      return saved || ''
-    }
-    return ''
-  })
+  // SSR-safe: start empty on the server and the first client render, then load
+  // persisted values from localStorage after mount (see hydration effect below).
+  // Reading localStorage in the useState initializer would mismatch the server
+  // render and cause a hydration warning + a visible flash.
+  const [text, setText] = useState('')
 
   // Track clicked symbols for blue highlighting (only when persistClickedSymbols)
-  const [clickedSymbols, setClickedSymbols] = useState<Set<string>>(() => {
-    if (!persistClickedSymbols) return new Set()
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(HISTORY_KEY)
-      if (saved) {
-        try {
-          return new Set(JSON.parse(saved))
-        } catch (e) {
-          return new Set()
-        }
-      }
-    }
-    return new Set()
-  })
+  const [clickedSymbols, setClickedSymbols] = useState<Set<string>>(new Set())
+
+  // Flips true once localStorage has been read; save effects wait for it so the
+  // initial empty state can't overwrite stored data before it loads.
+  const [hydrated, setHydrated] = useState(false)
 
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
   const [showInstructions, setShowInstructions] = useState(false)
@@ -722,22 +718,47 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
   const [currentSymbol, setCurrentSymbol] = useState<string | null>(null)
 
+  // Load persisted state once, after mount (keeps SSR and first client render
+  // identical, then hydrates from localStorage). Rich-editor content is handled
+  // separately by RichTextIPAEditor, so text is only restored for the plain textarea.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!useRichTextEditor) {
+      const savedText = localStorage.getItem(STORAGE_KEY)
+      if (savedText) setText(savedText)
+    }
+    if (persistClickedSymbols) {
+      const savedHistory = localStorage.getItem(HISTORY_KEY)
+      if (savedHistory) {
+        try {
+          setClickedSymbols(new Set(JSON.parse(savedHistory)))
+        } catch (e) {
+          // ignore malformed history
+        }
+      }
+    }
+    setHydrated(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Save text to localStorage whenever it changes
   useEffect(() => {
+    if (!hydrated) return
     if (typeof window !== 'undefined' && !useRichTextEditor) {
       localStorage.setItem(STORAGE_KEY, text)
     }
-  }, [text, useRichTextEditor])
+  }, [text, useRichTextEditor, hydrated])
 
   // Save clicked symbols to localStorage (only when persistClickedSymbols)
   useEffect(() => {
+    if (!hydrated) return
     if (persistClickedSymbols && typeof window !== 'undefined') {
       localStorage.setItem(
         HISTORY_KEY,
         JSON.stringify(Array.from(clickedSymbols)),
       )
     }
-  }, [clickedSymbols, persistClickedSymbols])
+  }, [clickedSymbols, persistClickedSymbols, hydrated])
 
   const filteredGroups = useMemo(() => {
     if (customSymbols && customSymbols.length > 0) {
@@ -777,10 +798,16 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   filteredGroupsRef.current = filteredGroups
   const buttonSize = compact ? '28px' : '32px'
   const buttonFontSize = compact ? 'sm' : 'lg'
+  // Shortcut display labels — Mac glyphs vs Windows/Linux text. Only rendered
+  // inside the Drawer (mounts client-side on open), so navigator sniffing is
+  // hydration-safe here.
+  const shiftAltLabel = isApplePlatform() ? '⇧⌥' : 'Shift+Alt+'
+  const altLabel = isApplePlatform() ? '⌥' : 'Alt+'
   const spacing = compact ? 0.5 : 1
   const hideKeyboardShortcuts = false // Always show shortcuts in tooltips
 
-  // T9-style keyboard shortcut handling (Ctrl on all platforms — avoids dead keys)
+  // IPA shortcut handling — direct Option/Alt diacritic combos first, then
+  // T9-style Option/Alt+letter cycling (Option on Mac, Alt on Windows/Linux)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Don't interfere with Cmd shortcuts on Mac (copy/paste)
@@ -824,94 +851,111 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
         }, 200)
       }
 
-      // Check for direct shortcuts (Shift+Alt or Alt combinations)
-      if (
-        (event.shiftKey && event.altKey) ||
-        (event.altKey && !event.shiftKey && !event.ctrlKey)
-      ) {
-        if (event.repeat) {
-          return
+      // Normal typing (no Option/Alt) breaks any in-progress T9 cycle so the
+      // next shortcut press starts a fresh cycle instead of replacing the
+      // character the user just typed. Bare modifier presses don't count.
+      if (!event.altKey || event.ctrlKey) {
+        const k = event.key
+        if (
+          k.length === 1 ||
+          k === 'Backspace' ||
+          k === 'Delete' ||
+          k === 'Enter'
+        ) {
+          keyPressCountRef.current = {}
+          lastKeyTimeRef.current = {}
         }
+        return
+      }
 
-        const key = event.key
+      // Option/Alt shortcuts — direct diacritic combos first, then T9 cycling.
+      // AltGr (Ctrl+Alt on Windows intl layouts) is excluded above so it still
+      // types its normal characters.
+      if (event.altKey && !event.ctrlKey) {
+        const eventKey = event.key
         const code = event.code
 
+        // Pure modifier presses / navigation keys — leave alone
         if (
-          key === 'Dead' ||
-          key === 'Process' ||
-          key === 'Alt' ||
-          key === 'Shift' ||
-          key === 'Control' ||
-          key === 'Meta' ||
-          key === 'Tab' ||
-          key === 'Escape'
+          eventKey === 'Alt' ||
+          eventKey === 'Shift' ||
+          eventKey === 'Control' ||
+          eventKey === 'Meta' ||
+          eventKey === 'Tab' ||
+          eventKey === 'Escape'
         ) {
           return
         }
 
-        // Build shortcut key string
-        let shortcutKey = ''
-        if (event.shiftKey && event.altKey) {
-          shortcutKey = 'shift+alt+'
-        } else if (event.altKey) {
-          shortcutKey = 'alt+'
+        if (event.repeat) {
+          // T9 counts discrete presses; swallow auto-repeat so held Option
+          // doesn't spray special characters into the editor
+          event.preventDefault()
+          event.stopPropagation()
+          return
         }
 
-        // Handle arrow keys
-        if (code === 'ArrowUp' || code === 'ArrowDown') {
-          shortcutKey += code
-          const symbol = DIRECT_SHORTCUTS[shortcutKey]
-          if (symbol) {
-            insertDirectSymbol(symbol)
+        // Mac Option+E/U/I/N report key 'Dead' — skip direct-shortcut matching
+        // (it needs the produced character) but fall through to T9, which uses
+        // the physical event.code instead.
+        const isDeadKey = eventKey === 'Dead' || eventKey === 'Process'
+
+        if (!isDeadKey) {
+          // Build shortcut key string
+          const shortcutPrefix = event.shiftKey ? 'shift+alt+' : 'alt+'
+
+          // Handle arrow keys
+          if (code === 'ArrowUp' || code === 'ArrowDown') {
+            const symbol = DIRECT_SHORTCUTS[shortcutPrefix + code]
+            if (symbol) {
+              insertDirectSymbol(symbol)
+              return
+            }
+          }
+
+          // Handle single key shortcuts
+          const singleKey = shortcutPrefix + eventKey.toLowerCase()
+
+          // Clear pending keys timeout
+          if (pendingKeysTimeoutRef.current) {
+            clearTimeout(pendingKeysTimeoutRef.current)
+            pendingKeysTimeoutRef.current = null
+          }
+
+          // Add this key to pending sequence
+          const newPending = pendingKeysRef.current + eventKey.toLowerCase()
+          pendingKeysRef.current = newPending
+
+          // Try to match multi-key sequences first (e.g., "oo", "dd", "11", etc.)
+          const multiKey = shortcutPrefix + newPending
+          if (DIRECT_SHORTCUTS[multiKey]) {
+            insertDirectSymbol(DIRECT_SHORTCUTS[multiKey])
+            pendingKeysRef.current = ''
             return
           }
+
+          // Try single key match
+          if (DIRECT_SHORTCUTS[singleKey]) {
+            insertDirectSymbol(DIRECT_SHORTCUTS[singleKey])
+            pendingKeysRef.current = ''
+            return
+          }
+
+          // Set timeout to reset pending keys after 500ms
+          pendingKeysTimeoutRef.current = setTimeout(() => {
+            pendingKeysRef.current = ''
+          }, 500)
         }
 
-        // Handle single key shortcuts
-        const singleKey = shortcutKey + key.toLowerCase()
-
-        // Clear pending keys timeout
-        if (pendingKeysTimeoutRef.current) {
-          clearTimeout(pendingKeysTimeoutRef.current)
-          pendingKeysTimeoutRef.current = null
-        }
-
-        // Add this key to pending sequence
-        const newPending = pendingKeysRef.current + key.toLowerCase()
-        pendingKeysRef.current = newPending
-
-        // Try to match multi-key sequences first (e.g., "oo", "dd", "11", etc.)
-        const multiKey = shortcutKey + newPending
-        if (DIRECT_SHORTCUTS[multiKey]) {
-          insertDirectSymbol(DIRECT_SHORTCUTS[multiKey])
-          pendingKeysRef.current = ''
+        // T9 cycling: plain Option/Alt + letter (Shift+Option stays direct-only,
+        // and Shift+letter keeps typing capitals)
+        if (event.shiftKey) {
           return
         }
 
-        // Try single key match
-        if (DIRECT_SHORTCUTS[singleKey]) {
-          insertDirectSymbol(DIRECT_SHORTCUTS[singleKey])
-          pendingKeysRef.current = ''
-          return
-        }
-
-        // Set timeout to reset pending keys after 500ms
-        pendingKeysTimeoutRef.current = setTimeout(() => {
-          pendingKeysRef.current = ''
-        }, 500)
-
-        // Don't prevent default if we didn't match any shortcut
-        // This allows normal Alt+key behavior for non-IPA shortcuts
-        return
-      }
-
-      // Ctrl + letter (no Alt/Option/Shift) — Ctrl doesn't trigger dead keys
-      if (event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey) {
         // Use event.code to get the physical key, not the character it produces
-        // event.code format is like "KeyA", "KeyB", "Digit1", etc.
-        const code = event.code
+        // (Option+A yields "å" on Mac; code is "KeyA", "Digit2", etc.)
         let key = ''
-
         if (code.startsWith('Key')) {
           // Extract the letter from "KeyA" -> "A"
           key = code.substring(3).toLowerCase()
@@ -920,7 +964,8 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           key = code.substring(5)
         }
 
-        // Skip if no key was extracted
+        // Skip if no key was extracted — allows normal Alt+key behavior for
+        // anything we don't handle
         if (!key) {
           return
         }
@@ -939,6 +984,10 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           // Capture phase + stop propagation
           event.preventDefault()
           event.stopPropagation()
+
+          // Mac: Option+letter can start a dead-key composition even after
+          // preventDefault — arm suppression so the stray ¨/´ etc. gets dropped
+          notifyIpaAltLetterShortcutHandled()
 
           const now = Date.now()
           const lastTime = lastKeyTimeRef.current[key] ?? 0
@@ -1062,6 +1111,10 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   }, [useRichTextEditor, showTextArea])
 
   const handleSymbolClick = (symbol: string) => {
+    // Clicking a symbol breaks any in-progress T9 shortcut cycle
+    keyPressCountRef.current = {}
+    lastKeyTimeRef.current = {}
+
     // Track that this symbol was clicked (immediately printed)
     if (persistClickedSymbols) {
       setClickedSymbols((prev) => {
@@ -1196,19 +1249,16 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
               >
                 <Box>
                   <Text fontWeight="bold" mb={1}>
-                    Insert symbols
+                    General instructions
                   </Text>
                   <Text>
-                    Click any symbol to insert it into your transcription.
-                  </Text>
-                </Box>
-                <Box>
-                  <Text fontWeight="bold" mb={1}>
-                    Keyboard shortcuts
-                  </Text>
-                  <Text>
-                    Press {ipaShortcutKey('A')} and repeat within 1 second to
-                    cycle through related symbols.
+                    Click on any symbol to add it to the text box. You can also
+                    use shortcuts, i.e. {ipaShortcutKeyRepeated('A', 1)} (a),{' '}
+                    {ipaShortcutKeyRepeated('A', 2)} (æ),{' '}
+                    {ipaShortcutKeyRepeated('A', 3)} (ɑ), etc. Hovering over a
+                    symbol will reveal its shortcut. Symbols cycle directly in
+                    the text area until you stop pressing or press a different
+                    key.
                   </Text>
                 </Box>
                 <Box>
@@ -1217,10 +1267,16 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                   </Text>
                   <VStack align="stretch" spacing={0.5}>
                     <Text>
-                      ⇧⌥O — voiceless ( ̥ ), ⇧⌥OO — voiceless above ( ̊ )
+                      {shiftAltLabel}O — voiceless ( ̥ ), {shiftAltLabel}OO —
+                      voiceless above ( ̊ )
                     </Text>
-                    <Text>⇧⌥D — dental ( ̪ ), ⌥F — tie bar ( ͡ )</Text>
-                    <Text>⌥. — extra-short ( ̆ ), ⌥.. — long ( ː )</Text>
+                    <Text>
+                      {shiftAltLabel}D — dental ( ̪ ), {altLabel}F — tie bar (
+                      ͡ )
+                    </Text>
+                    <Text>
+                      {altLabel}. — extra-short ( ̆ ), {altLabel}.. — long ( ː )
+                    </Text>
                     <Text mt={1} fontStyle="italic" color="gray.500">
                       Shift still types capitals. Hover any symbol to see its
                       shortcut.
@@ -1270,7 +1326,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           </DrawerContent>
         </Drawer>
 
-        {/* IPA Symbol Grid - TypeIt Layout */}
+        {/* IPA Symbol Grid - TypeIt Layout.
+            Prevent mousedown default so clicking keys never steals focus from
+            the text area / rich editor — inserts land at the live caret. */}
         <Box
           border="1px solid"
           borderColor="gray.200"
@@ -1278,6 +1336,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           boxShadow="sm"
           p={compact ? 2 : 3}
           bg="white"
+          onMouseDownCapture={(e) => e.preventDefault()}
         >
           {/* Compact mode - simple symbol list or categorized */}
           {compact && (customSymbols || symbolBankCategories) ? (
@@ -1589,10 +1648,15 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                             )} — press repeatedly (within 1s) to cycle`}
                           >
                             <Badge
-                              colorScheme="purple"
-                              fontSize="sm"
+                              bg="brand.purple"
+                              color="white"
+                              fontSize="md"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              minW="28px"
+                              h="28px"
                               px={1.5}
-                              py={0.5}
                               borderRadius="full"
                             >
                               {group.letter}
@@ -1608,9 +1672,10 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                   ? `${symbol} - ${getSymbolName(symbol)}`
                                   : `${symbol} - ${getSymbolName(
                                       symbol,
-                                    )} (${ipaShortcutKey(group.letter)} ${
-                                      idx + 1
-                                    }×)`
+                                    )} (${ipaShortcutKeyRepeated(
+                                      group.letter,
+                                      idx + 1,
+                                    )})`
                               }
                             >
                               <Button
@@ -1656,7 +1721,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>
-                    <AccordionPanel pb={3} pt={2}>
+                    <AccordionPanel pb={3} pt={2} px={0}>
                       <Flex wrap="wrap" gap={2}>
                         {['Diacritics', 'Suprasegmentals'].map((letter) => {
                           const group = filteredGroups.find(
@@ -1666,22 +1731,23 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                           return (
                             <Box
                               key={letter}
-                              bg="blue.50"
+                              bg="gray.50"
                               p={1.5}
                               borderRadius="md"
                               minW="fit-content"
                             >
                               <Flex align="center" gap={1.5}>
                                 <Badge
-                                  colorScheme="purple"
+                                  bg="brand.purple"
+                                  color="white"
                                   fontSize="xs"
-                                  px={1.5}
+                                  px={2}
                                   py={0.5}
-                                  borderRadius="md"
+                                  borderRadius="full"
                                 >
                                   {letter}
                                 </Badge>
-                                <HStack spacing={1} flexWrap="wrap">
+                                <Flex wrap="wrap" gap={2}>
                                   {group.symbols.map((symbol, idx) => (
                                     <Tooltip
                                       key={idx}
@@ -1708,11 +1774,21 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                         }}
                                         bg={getButtonBg(symbol)}
                                       >
-                                        {symbol}
+                                        {symbol === TIE_BAR ? (
+                                          <Box
+                                            as="span"
+                                            display="inline-block"
+                                            transform="translateX(0.5em)"
+                                          >
+                                            {symbol}
+                                          </Box>
+                                        ) : (
+                                          symbol
+                                        )}
                                       </Button>
                                     </Tooltip>
                                   ))}
-                                </HStack>
+                                </Flex>
                               </Flex>
                             </Box>
                           )
@@ -1733,7 +1809,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>
-                    <AccordionPanel pb={3} pt={2}>
+                    <AccordionPanel pb={3} pt={2} px={0}>
                       <Flex wrap="wrap" gap={2}>
                         {(() => {
                           const group = filteredGroups.find(
@@ -1742,22 +1818,23 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                           if (!group || group.symbols.length === 0) return null
                           return (
                             <Box
-                              bg="blue.50"
+                              bg="gray.50"
                               p={2}
                               borderRadius="md"
                               minW="fit-content"
                             >
                               <Flex align="center" gap={2}>
                                 <Badge
-                                  colorScheme="purple"
+                                  bg="brand.purple"
+                                  color="white"
                                   fontSize="sm"
                                   px={2}
                                   py={1}
-                                  borderRadius="md"
+                                  borderRadius="full"
                                 >
                                   Tones
                                 </Badge>
-                                <HStack spacing={1} flexWrap="wrap">
+                                <Flex wrap="wrap" gap={2}>
                                   {group.symbols.map((symbol, idx) => (
                                     <Tooltip
                                       key={idx}
@@ -1788,7 +1865,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                       </Button>
                                     </Tooltip>
                                   ))}
-                                </HStack>
+                                </Flex>
                               </Flex>
                             </Box>
                           )
