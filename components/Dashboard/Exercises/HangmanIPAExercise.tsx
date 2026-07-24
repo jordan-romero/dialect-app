@@ -430,8 +430,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   Active Blank:
                 </Text>{' '}
                 Position {activeBlankIndex + 1} - Click a symbol above or use
-                Ctrl+letter shortcuts. The symbol will cycle in the blank space
-                and be committed after 1 second.
+                Option (Mac) / Alt (Windows) + letter shortcuts. The symbol
+                will cycle in the blank space and be committed after 1 second.
               </Text>
             </Box>
           )}
