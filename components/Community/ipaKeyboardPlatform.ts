@@ -49,6 +49,11 @@ export const clearIpaAltLetterSuppression = (): void => {
 const isIpaAltLetterSuppressActive = (): boolean =>
   Date.now() < ipaAltLetterSuppressUntil
 
+/** True while an IPA Option+letter shortcut was just handled on a Mac — editors
+ * should abort/clean any dead-key composition the OS starts in that window. */
+export const isIpaAltLetterSuppressionActive = (): boolean =>
+  isApplePlatform() && isIpaAltLetterSuppressActive()
+
 /**
  * Code points WebKit often inserts after Option+letter dead keys (E/U/I/N/` etc.).
  * Includes spacing modifiers (¨ ´) and combining forms (̂ ̃) used for Option+I / Option+N.
@@ -76,6 +81,12 @@ const MAC_OPTION_DEAD_KEY_CODE_POINTS = new Set<number>([
   0x02c7, // ˇ caron (some layouts)
   0x02c9, // ˉ modifier macron
 ])
+
+/** True if ch is one of the Mac Option dead-key artifact characters (¨ ´ ˆ ˜ …) */
+export const isMacOptionDeadKeyArtifactChar = (ch: string): boolean => {
+  const cp = ch.codePointAt(0)
+  return cp !== undefined && MAC_OPTION_DEAD_KEY_CODE_POINTS.has(cp)
+}
 
 const collectCodePoints = (s: string): number[] => {
   const out: number[] = []

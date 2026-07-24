@@ -26,7 +26,11 @@ import {
   RiSuperscript,
   RiDeleteBin6Line,
 } from 'react-icons/ri'
-import { shouldSuppressMacOptionDeadKeyBeforeInput } from './ipaKeyboardPlatform'
+import {
+  isIpaAltLetterSuppressionActive,
+  isMacOptionDeadKeyArtifactChar,
+  shouldSuppressMacOptionDeadKeyBeforeInput,
+} from './ipaKeyboardPlatform'
 
 interface RichTextIPAEditorProps {
   onSymbolInsert?: (symbol: string) => void
@@ -645,6 +649,59 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         }
       }
 
+      // Backstop: strip any artifact chars sitting immediately before the caret
+      // (a committed dead-key accent). Only called inside the suppression window.
+      const removeArtifactsBeforeCaret = () => {
+        const sel = window.getSelection()
+        if (!sel || sel.rangeCount === 0) return
+        const r = sel.getRangeAt(0)
+        if (
+          !editor.contains(r.startContainer) ||
+          r.startContainer.nodeType !== Node.TEXT_NODE
+        ) {
+          return
+        }
+        const node = r.startContainer as Text
+        const txt = node.textContent ?? ''
+        const end = r.startOffset
+        let start = end
+        while (
+          start > 0 &&
+          end - start < 3 &&
+          isMacOptionDeadKeyArtifactChar(txt[start - 1])
+        ) {
+          start--
+        }
+        if (start < end) {
+          const del = document.createRange()
+          del.setStart(node, start)
+          del.setEnd(node, end)
+          del.deleteContents()
+          requestAnimationFrame(() => saveToHistory())
+        }
+      }
+
+      // The dead-key composition stays OPEN after the shortcut fires (visible
+      // as a highlighted ¨/´ and it eats the following keypresses — breaking
+      // T9 cycling). Abort it as soon as it starts: toggling contentEditable
+      // forces the IME to drop the pending accent.
+      const onCompositionStart = () => {
+        if (!isIpaAltLetterSuppressionActive()) return
+        setTimeout(() => {
+          const ed = editorRef.current
+          if (!ed) return
+          const { selStart, selEnd } = getSelectionOffsets(ed)
+          isApplyingHistoryRef.current = true
+          ed.contentEditable = 'false'
+          ed.contentEditable = 'true'
+          ed.focus()
+          setSelectionOffsets(ed, selStart, selEnd)
+          isApplyingHistoryRef.current = false
+          // If the abort committed the accent instead of dropping it, strip it
+          removeArtifactsBeforeCaret()
+        }, 0)
+      }
+
       // insertCompositionText isn't cancelable, so the accent can still land —
       // remove it right after the composition commits.
       const onCompositionEnd = (e: CompositionEvent) => {
@@ -672,9 +729,11 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
       }
 
       editor.addEventListener('beforeinput', onBeforeInputSuppress, true)
+      editor.addEventListener('compositionstart', onCompositionStart)
       editor.addEventListener('compositionend', onCompositionEnd)
       return () => {
         editor.removeEventListener('beforeinput', onBeforeInputSuppress, true)
+        editor.removeEventListener('compositionstart', onCompositionStart)
         editor.removeEventListener('compositionend', onCompositionEnd)
       }
     }, [saveToHistory])
