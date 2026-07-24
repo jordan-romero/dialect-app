@@ -3,12 +3,32 @@ export const isApplePlatform = (): boolean =>
   typeof navigator !== 'undefined' &&
   /Mac|iPhone|iPod|iPad/i.test(navigator.platform ?? '')
 
-/** Modifier name for IPA T9-style shortcuts (Ctrl on all platforms). */
-export const ipaModifierLabel = (): string => 'Ctrl'
+/** Modifier name for IPA T9-style shortcuts (Option on Mac, Alt on Windows/Linux). */
+export const ipaModifierLabel = (): string =>
+  isApplePlatform() ? 'Option' : 'Alt'
 
-/** e.g. "Ctrl+a" */
+/** e.g. "Option+A" on Mac, "Alt+A" elsewhere */
 export const ipaShortcutKey = (letter: string): string =>
-  `Ctrl+${letter.toLowerCase()}`
+  `${ipaModifierLabel()}+${
+    letter.length === 1 ? letter.toUpperCase() : letter
+  }`
+
+/**
+ * T9 cycle shortcut shown as the repeated key, e.g. the 1st/2nd/3rd symbol in
+ * group "A" → "Option+A" / "Option+AA" / "Option+AAA" (Alt on Windows).
+ * Multi-character group labels (e.g. "Diacritics") can't be repeated
+ * meaningfully, so those fall back to a count.
+ */
+export const ipaShortcutKeyRepeated = (
+  letter: string,
+  count: number,
+): string => {
+  const mod = ipaModifierLabel()
+  const key = letter.toLowerCase()
+  const n = Math.max(1, count)
+  if (key.length !== 1) return `${mod}+${letter}${n > 1 ? ` (${n}×)` : ''}`
+  return `${mod}+${key.toUpperCase().repeat(n)}`
+}
 
 /**
  * macOS Option+letter is often a dead key (e.g. Option+U → ¨). We cancel keydown in capture,
@@ -28,6 +48,11 @@ export const clearIpaAltLetterSuppression = (): void => {
 
 const isIpaAltLetterSuppressActive = (): boolean =>
   Date.now() < ipaAltLetterSuppressUntil
+
+/** True while an IPA Option+letter shortcut was just handled on a Mac — editors
+ * should abort/clean any dead-key composition the OS starts in that window. */
+export const isIpaAltLetterSuppressionActive = (): boolean =>
+  isApplePlatform() && isIpaAltLetterSuppressActive()
 
 /**
  * Code points WebKit often inserts after Option+letter dead keys (E/U/I/N/` etc.).
@@ -56,6 +81,12 @@ const MAC_OPTION_DEAD_KEY_CODE_POINTS = new Set<number>([
   0x02c7, // ˇ caron (some layouts)
   0x02c9, // ˉ modifier macron
 ])
+
+/** True if ch is one of the Mac Option dead-key artifact characters (¨ ´ ˆ ˜ …) */
+export const isMacOptionDeadKeyArtifactChar = (ch: string): boolean => {
+  const cp = ch.codePointAt(0)
+  return cp !== undefined && MAC_OPTION_DEAD_KEY_CODE_POINTS.has(cp)
+}
 
 const collectCodePoints = (s: string): number[] => {
   const out: number[] = []
