@@ -223,13 +223,13 @@ const CourseContainer = () => {
             {isLoading ? (
               <LessonSkeleton />
             ) : selectedLesson ? (
-              <Flex justifyContent="center" alignItems="center" height="100%">
+              <Box height="100%">
                 <LessonContainerV3
                   key={selectedLesson.id}
                   lesson={selectedLesson}
                   onLessonComplete={handleLessonComplete}
                 />
-              </Flex>
+              </Box>
             ) : (
               <Flex justifyContent="center" alignItems="center" height="100%">
                 <Box>No lesson selected</Box>

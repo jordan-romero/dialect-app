@@ -47,7 +47,6 @@ const SUGGESTED = [
   'New York',
   'Southern US',
   'Boston',
-  'Indian English',
   'French',
   'German',
   'Italian',

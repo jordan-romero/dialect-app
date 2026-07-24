@@ -13,6 +13,7 @@ import { MdKeyboard } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { useIpaKeyboard } from '../../Community/IpaKeyboardPip'
 
 interface ShortAnswerQuizProps {
@@ -51,17 +52,14 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
       if (!currentQuiz) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${currentQuiz.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(currentQuiz.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
 
           // Restore saved answers
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswers: Record<number, Record<number, string>> = {}
-            data.answers.forEach((answer: any) => {
+            data.answers.forEach((answer) => {
               try {
                 // each question's inputs are stored as a JSON map {optionId: text}
                 savedAnswers[answer.questionId] = JSON.parse(answer.textAnswer)
@@ -143,19 +141,13 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
         }),
       )
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: currentQuiz.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: currentQuiz.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
       } else {
         console.error('Failed to submit quiz')

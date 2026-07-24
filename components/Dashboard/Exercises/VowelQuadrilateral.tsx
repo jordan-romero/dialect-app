@@ -3,6 +3,7 @@ import { Box, Button, Flex, Image, VStack, Text } from '@chakra-ui/react'
 import vowelChartImage from '@/public/ipaVowelChart.png'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface VowelPosition {
@@ -90,17 +91,14 @@ export const VowelQuadrilateralExercise: React.FC<
       if (!quizData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
 
           // Restore saved vowel positions if available
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === quizData.questions[0]?.id,
+              (answer) => answer.questionId === quizData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -194,19 +192,13 @@ export const VowelQuadrilateralExercise: React.FC<
         textAnswer: JSON.stringify(vowelPositions), // Save the current vowel positions as JSON
       }))
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: quizData.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
         setIsQuizComplete(true)
       } else {

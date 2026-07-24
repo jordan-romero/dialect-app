@@ -15,6 +15,7 @@ import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -86,17 +87,14 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       if (!multipleChoiceQuiz) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${multipleChoiceQuiz.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(multipleChoiceQuiz.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
 
           // Restore saved answers
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswers: Record<number, number> = {}
-            data.answers.forEach((answer: any) => {
+            data.answers.forEach((answer) => {
               savedAnswers[answer.questionId] = parseInt(answer.textAnswer)
             })
             setSelectedAnswers(savedAnswers)
@@ -205,19 +203,13 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         }),
       )
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: multipleChoiceQuiz.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: multipleChoiceQuiz.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
       } else {
         console.error('Failed to submit quiz')

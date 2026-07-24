@@ -16,6 +16,7 @@ import { Icon } from '@chakra-ui/react'
 import { MdKeyboard } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface HangmanQuestion {
@@ -102,15 +103,12 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
       if (!quizData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === quizData.questions[0]?.id,
+              (answer) => answer.questionId === quizData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -268,19 +266,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         textAnswer: JSON.stringify(userAnswers), // Save all answers as JSON
       }))
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: quizData.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
         onComplete()
       }

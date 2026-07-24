@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
+import { getUserByAuth0Id } from '../../lib/user'
 
 const prisma = new PrismaClient()
 
@@ -21,7 +22,7 @@ export default async function handler(
 
   try {
     if (req.method === 'GET') {
-      const user = await prisma.user.findUnique({ where: { auth0Id } })
+      const user = await getUserByAuth0Id(prisma, auth0Id)
       return res.status(200).json({
         firstName: user?.firstName ?? '',
         lastName: user?.lastName ?? '',
@@ -29,6 +30,9 @@ export default async function handler(
         bio: user?.bio ?? '',
         interests: user?.interests ?? [],
         email,
+        // Stamped on the session at login (Auth0 callback) — stable for the
+        // whole session, resets on next login.
+        firstTime: !!(session.user as Record<string, unknown>).firstTime,
         // Fall back to the Auth0 picture if no custom avatar is set.
         authPicture: (session.user.picture as string) ?? '',
       })

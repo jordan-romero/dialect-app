@@ -1,5 +1,15 @@
 import type { PrismaClient, User } from '@prisma/client'
 
+// Look up the DB user for an Auth0 id (the session `sub`). Returns null when the
+// row doesn't exist yet — callers decide how to handle that (401/404).
+export async function getUserByAuth0Id(
+  prisma: PrismaClient,
+  auth0Id?: string | null,
+): Promise<User | null> {
+  if (!auth0Id) return null
+  return prisma.user.findUnique({ where: { auth0Id } })
+}
+
 // Resolve the DB user for a VERIFIED Auth0 session, provisioning the row on
 // first sight. Identity comes only from the session (never client input), so
 // this is safe to call from any authenticated route. It's also race-safe: if a

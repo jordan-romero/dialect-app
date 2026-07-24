@@ -492,13 +492,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   return (
     <Box
       w="100%"
-      maxW="1200px"
-      mx="auto"
       h="100%"
       p={{ base: 4, md: 8 }}
       pl={{ base: 4, md: 0 }}
       overflowY="auto"
     >
+      {/* Full-bleed title bar: extends from the course nav to the right edge at
+          any screen size (rounded right end). */}
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
         w="100%"
@@ -522,6 +522,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       </Box>
       <Box
         w="96%"
+        maxW="1100px"
         mr="auto"
         ml="auto"
         mt="8"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import NextLink from 'next/link'
 import {
   Box,
@@ -60,6 +60,7 @@ interface Overview {
   phases: Phase[]
   streak: { current: number; best: number }
   badges: Badge[]
+  firstTime?: boolean
 }
 
 const Card: React.FC<{ children: React.ReactNode } & Record<string, any>> = ({
@@ -212,6 +213,19 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
   const c = data.continue
   const allDone =
     data.overall.total > 0 && data.overall.completed === data.overall.total
+  const firstTime = !!data.firstTime && !allDone
+
+  const eyebrow = allDone
+    ? 'All caught up'
+    : firstTime
+    ? 'Your journey starts here'
+    : 'Pick up where you left off'
+  const heading = allDone
+    ? "You've completed the course"
+    : firstTime
+    ? `Start with ${c?.title || 'your first lesson'}`
+    : c?.title || 'Get started'
+
   return (
     <Box
       bgGradient="linear(to-r, #5F53CF, #7EACE2)"
@@ -221,10 +235,10 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
       boxShadow="0 12px 40px rgba(95,83,207,0.35)"
     >
       <Text fontSize="sm" opacity={0.9} mb={1}>
-        {allDone ? 'All caught up' : 'Pick up where you left off'}
+        {eyebrow}
       </Text>
       <Heading size="lg" mb={1}>
-        {allDone ? "You've completed the course" : c?.title || 'Get started'}
+        {heading}
       </Heading>
       {c?.phase && !allDone && (
         <Text opacity={0.9} mb={5}>
@@ -238,7 +252,7 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
         rightIcon={<FiArrowRight />}
         mt={allDone ? 4 : 0}
       >
-        {allDone ? 'Review lessons' : 'Continue'}
+        {allDone ? 'Review lessons' : firstTime ? 'Start' : 'Continue'}
       </Button>
     </Box>
   )
@@ -305,13 +319,20 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
   const { current, best } = data.streak
   const [igniting, setIgniting] = useState(false)
   const [displayCount, setDisplayCount] = useState(current)
+  // Run-once guard so React StrictMode's double-invoke can't re-trigger (or leave
+  // the pulse stuck on).
+  const ignitedRef = useRef(false)
 
-  // Ignite (flames + count-up) only when the streak has gone UP since last seen.
+  // Ignite (pulse + count-up) only when the streak has gone UP since last seen,
+  // then stop after ~5s.
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || ignitedRef.current) return
+    ignitedRef.current = true
+
     const key = 'aa:lastStreakSeen'
     const prev = Number(window.localStorage.getItem(key) || '0')
     window.localStorage.setItem(key, String(current))
+
     if (current > prev && current > 0) {
       setIgniting(true)
       let n = prev
@@ -321,13 +342,12 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
         setDisplayCount(n)
         if (n >= current) clearInterval(iv)
       }, 180)
-      const t = setTimeout(() => setIgniting(false), 5000)
-      return () => {
-        clearInterval(iv)
-        clearTimeout(t)
-      }
+      // Intentionally NOT cleared on cleanup: a StrictMode unmount/remount must
+      // not cancel the stop, or the pulse would never turn off.
+      setTimeout(() => setIgniting(false), 5000)
+    } else {
+      setDisplayCount(current)
     }
-    setDisplayCount(current)
   }, [current])
 
   return (
@@ -337,9 +357,7 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
       justifyContent="center"
       position="relative"
       overflow="hidden"
-      animation={
-        igniting ? `${emberGlow} 1.2s ease-in-out infinite` : undefined
-      }
+      animation={igniting ? `${emberGlow} 1.2s ease-in-out 4 both` : undefined}
     >
       <Heading size="md" mb={3}>
         Streak
@@ -430,7 +448,7 @@ const DashboardOverview = () => {
       pb={6}
     >
       <Box maxW="1100px" mx="auto">
-        <WelcomeHeader />
+        <WelcomeHeader firstTime={data?.firstTime} />
 
         {!data ? (
           <OverviewSkeleton />

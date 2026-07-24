@@ -4,6 +4,7 @@ import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface SymbolExerciseProps {
@@ -70,15 +71,12 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     const loadProgress = async () => {
       if (!quizData) return
       try {
-        const res = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (!res.ok) return
-        const data = await res.json()
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (!data) return
         setIsCompleted(data.isCompleted)
-        if (data.answers && data.answers.length > 0) {
+        if (data.answers.length > 0) {
           const saved = data.answers.find(
-            (a: any) => a.questionId === quizData.questions[0]?.id,
+            (a) => a.questionId === quizData.questions[0]?.id,
           )
           let restoredAnswers: Record<string, string> = {}
           if (saved?.textAnswer && saved.textAnswer !== 'pending') {
@@ -227,23 +225,19 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     if (!quizData) return
     setIsLoading(true)
     try {
-      const res = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId,
-          answers: quizData.questions.map((q) => ({
-            questionId: q.id,
-            // Store the full {answerId: symbol} map once on the first question.
-            textAnswer:
-              q.id === quizData.questions[0]?.id
-                ? JSON.stringify(answers)
-                : 'completed',
-          })),
-        }),
+      const ok = await postQuizAnswers({
+        quizId: quizData.id,
+        lessonId,
+        answers: quizData.questions.map((q) => ({
+          questionId: q.id,
+          // Store the full {answerId: symbol} map once on the first question.
+          textAnswer:
+            q.id === quizData.questions[0]?.id
+              ? JSON.stringify(answers)
+              : 'completed',
+        })),
       })
-      if (res.ok) setIsCompleted(true)
+      if (ok) setIsCompleted(true)
     } catch (e) {
       console.error('Error submitting symbol quiz:', e)
     } finally {

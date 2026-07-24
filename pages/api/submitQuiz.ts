@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
 import { hasPaidAccess, getUnlockedCourseIds } from '../../lib/access'
+import { getUserByAuth0Id } from '../../lib/user'
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
@@ -35,7 +36,7 @@ export default async function handler(
 
   try {
     // Get the internal user id
-    const user = await prisma.user.findUnique({ where: { auth0Id: userId } })
+    const user = await getUserByAuth0Id(prisma, userId)
     if (!user) {
       return res.status(404).json({ error: 'User not found' })
     }

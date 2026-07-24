@@ -29,6 +29,7 @@ import { IconType } from 'react-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import ProfileModal from '../Profile/ProfileModal'
+import { clearAppLocalState } from '../../../lib/clientState'
 
 const HELP_EMAIL = 'info@actingaccents.com'
 const RAIL_COLLAPSED = '72px'
@@ -122,12 +123,17 @@ const DashboardNavigationContainer = () => {
   const profile = useDisclosure()
   const menu = useDisclosure() // mobile nav drawer
   const [avatarSrc, setAvatarSrc] = useState('')
+  // First-time learners see "Start" instead of "Continue".
+  const [firstTime, setFirstTime] = useState(false)
 
   const loadAvatar = useCallback(() => {
     fetch('/api/profile')
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d) setAvatarSrc(d.avatar || d.authPicture || '')
+        if (d) {
+          setAvatarSrc(d.avatar || d.authPicture || '')
+          setFirstTime(!!d.firstTime)
+        }
       })
       .catch(() => {})
   }, [])
@@ -161,7 +167,7 @@ const DashboardNavigationContainer = () => {
       />
       <NavItem
         icon={FiPlayCircle}
-        label="Continue"
+        label={firstTime ? 'Start' : 'Continue'}
         href="/dashboard"
         active={path === '/dashboard'}
         {...opts}
@@ -201,6 +207,7 @@ const DashboardNavigationContainer = () => {
         icon={FiLogOut}
         label="Log out"
         href="/api/auth/logout"
+        onClick={clearAppLocalState}
         {...opts}
       />
     </VStack>

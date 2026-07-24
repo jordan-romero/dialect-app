@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface LexicalItem {
@@ -94,17 +95,14 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
       if (!chartData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${chartData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(chartData.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
 
           // Restore saved answers
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === chartData.questions[0]?.id,
+              (answer) => answer.questionId === chartData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -185,19 +183,13 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         textAnswer: JSON.stringify(userAnswers),
       }))
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: chartData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: chartData.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
       } else {
         console.error('Failed to submit quiz')

@@ -3,6 +3,7 @@ import { Box, Flex } from '@chakra-ui/react'
 import DashboardNavigationContainer from './DashNavigation/DashboardNavigationContainer'
 import BadgeCelebrationManager from './BadgeCelebrationManager'
 import MobileExperienceBanner from './MobileExperienceBanner'
+import UserScopeGuard from './UserScopeGuard'
 import { IpaKeyboardProvider } from '../Community/IpaKeyboardPip'
 
 // Shared shell for every /dashboard/* page: keeps the side rail persistent so
@@ -10,6 +11,7 @@ import { IpaKeyboardProvider } from '../Community/IpaKeyboardPip'
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
     <IpaKeyboardProvider>
+      <UserScopeGuard />
       <Flex
         align="stretch"
         bg="surface.canvas"
