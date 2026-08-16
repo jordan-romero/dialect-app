@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { DragDropContext, DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, DropResult } from '@hello-pangea/dnd'
 import { AnswerOption, Categories, Question } from '../QuizTypes'
 import useQuiz from '../utils'
 import RhymingPairsQuestion from './RhymingPairsQuestion'
@@ -39,7 +39,10 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   // Live capture of the current board per question (ref → no re-render churn).
   const boardRef = useRef<Record<number, any>>({})
 
-  const currentQuiz = quizzes[quizIndex]
+  // LessonContainer passes the quiz's persisted `order`, which is not
+  // necessarily its zero-based position in this response array.
+  const currentQuiz =
+    quizzes.find((quiz) => quiz.order === quizIndex) ?? quizzes[quizIndex]
   const currentQuestion: Question | undefined =
     currentQuiz?.questions[currentQuestionIndex]
 
