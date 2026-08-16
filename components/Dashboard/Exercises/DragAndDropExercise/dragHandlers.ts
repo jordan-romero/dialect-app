@@ -155,7 +155,7 @@
 //     }
 //   }
 // }
-import { DropResult } from 'react-beautiful-dnd'
+import { DropResult } from '@hello-pangea/dnd'
 import { AnswerOption } from '../QuizTypes'
 
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>
