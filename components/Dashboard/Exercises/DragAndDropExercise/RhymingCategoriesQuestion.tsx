@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Box, Text, Flex } from '@chakra-ui/react'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { Question, AnswerOption } from '../QuizTypes'
 import { useToast } from '@chakra-ui/react'
 import { Divider } from '@chakra-ui/react'
@@ -85,7 +85,10 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
                         m={1}
                         boxShadow="md"
                         borderRadius="md"
-                        onMouseDown={() => playAudio(word.audioUrl)}
+                        // Drag-and-drop begins on mouse/touch down. Audio is
+                        // deliberately click-only so it cannot compete with
+                        // the drag sensor that lifts a Word Bank item.
+                        onClick={() => playAudio(word.audioUrl)}
                       >
                         {word.optionText}
                       </Box>
