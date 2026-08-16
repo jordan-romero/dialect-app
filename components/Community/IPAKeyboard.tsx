@@ -294,7 +294,7 @@ const getSymbolShortcut = (symbol: string): string | null => {
 
   // Then check T9-style cycling shortcuts
   for (const group of LETTER_GROUPS) {
-    const symbolIndex = group.symbols.indexOf(symbol)
+    const symbolIndex = getShortcutSymbols(group).indexOf(symbol)
     if (symbolIndex !== -1) {
       return ipaShortcutKeyRepeated(group.letter, symbolIndex + 1)
     }
@@ -529,7 +529,7 @@ const LETTER_GROUPS = [
   { letter: 'N', symbols: ['n', 'ŋ', 'ɲ', 'ɳ', 'ɴ'] },
   { letter: 'O', symbols: ['o', 'ɔ', 'ɒ', 'œ', 'ɵ', 'ø'] },
   { letter: 'P', symbols: ['p', 'ɸ'] },
-  { letter: 'Q', symbols: ['q', 'ˈ', 'ˌ'] },
+  { letter: 'Q', symbols: ['q'] },
   { letter: 'R', symbols: ['r', 'ɹ', 'ɾ', 'ɻ', 'ʀ', 'ʁ', 'ɽ'] },
   { letter: 'S', symbols: ['s', 'ʃ', 'ʂ'] },
   { letter: 'T', symbols: ['t', 'θ'] },
@@ -578,7 +578,7 @@ const LETTER_GROUPS = [
   },
   {
     letter: 'Suprasegmentals',
-    symbols: ['̆', 'ː', 'ˑ', '‿', '͡', '|', '||'],
+    symbols: ['ˈ', 'ˌ', '̆', 'ː', 'ˑ', '‿', '͡', '|', '||'],
   },
   {
     letter: 'Tones',
@@ -604,6 +604,20 @@ const LETTER_GROUPS = [
     ],
   },
 ]
+
+type LetterGroup = (typeof LETTER_GROUPS)[number]
+
+/**
+ * A plain letter (for example, A → a) is entered directly from the keyboard,
+ * so it intentionally has no IPA Alt/Option shortcut. The remaining symbols
+ * in that group begin the Alt/Option cycle at one press.
+ */
+const getShortcutSymbols = (group: LetterGroup): string[] => {
+  if (group.letter.length !== 1) return []
+  return group.symbols[0] === group.letter.toLowerCase()
+    ? group.symbols.slice(1)
+    : group.symbols
+}
 
 // Direct keyboard shortcuts for diacritics and suprasegmentals. Repeated keys
 // are deliberately kept as sequences (rather than T9 cycles) to mirror the
@@ -1033,6 +1047,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
         )
 
         if (letterGroup) {
+          const shortcutSymbols = getShortcutSymbols(letterGroup)
+          if (shortcutSymbols.length === 0) {
+            return
+          }
+
           if (event.repeat) {
             event.preventDefault()
             event.stopPropagation()
@@ -1061,7 +1080,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           if (timeDiff > 1000) {
             newCount = 0
           } else {
-            newCount = (currentCount + 1) % letterGroup.symbols.length
+            newCount = (currentCount + 1) % shortcutSymbols.length
           }
 
           keyPressCountRef.current = {
@@ -1072,11 +1091,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           setKeyPressCount({ ...keyPressCountRef.current })
           setLastKeyTime({ ...lastKeyTimeRef.current })
 
-          const symbol = letterGroup.symbols[newCount]
+          const symbol = shortcutSymbols[newCount]
           const previousSymbol =
             newCount > 0
-              ? letterGroup.symbols[newCount - 1]
-              : letterGroup.symbols[letterGroup.symbols.length - 1]
+              ? shortcutSymbols[newCount - 1]
+              : shortcutSymbols[shortcutSymbols.length - 1]
 
           setSelectedSymbol(symbol)
           setCurrentSymbol(symbol)
@@ -1319,10 +1338,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     General instructions
                   </Text>
                   <Text>
-                    Click on any symbol to add it to the text box. You can also
-                    use shortcuts, i.e. {ipaShortcutKeyRepeated('A', 1)} (a),{' '}
-                    {ipaShortcutKeyRepeated('A', 2)} (æ),{' '}
-                    {ipaShortcutKeyRepeated('A', 3)} (ɑ), etc. Hovering over a
+                    Click on any symbol to add it to the text box. Plain
+                    letters, such as a, are typed normally and have no IPA
+                    shortcut. The alternate symbols use shortcuts, i.e.{' '}
+                    {ipaShortcutKeyRepeated('A', 1)} (æ),{' '}
+                    {ipaShortcutKeyRepeated('A', 2)} (ɑ), etc. Hovering over a
                     symbol will reveal its shortcut. Symbols cycle directly in
                     the text area until you stop pressing or press a different
                     key.
@@ -1699,77 +1719,98 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                         group.letter,
                       ),
                   )
-                  .map((group) => (
-                    <Box
-                      key={group.letter}
-                      bg="gray.50"
-                      p={1.5}
-                      borderRadius="md"
-                      minW="fit-content"
-                    >
-                      <Flex align="center" gap={1.5}>
-                        {!hideKeyboardShortcuts && (
-                          <Tooltip
-                            label={`${ipaShortcutKey(
-                              group.letter,
-                            )} — press repeatedly (within 1s) to cycle`}
-                          >
-                            <Badge
-                              bg="brand.purple"
-                              color="white"
-                              fontSize="md"
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              minW="28px"
-                              h="28px"
-                              px={1.5}
-                              borderRadius="full"
-                            >
-                              {group.letter}
-                            </Badge>
-                          </Tooltip>
-                        )}
-                        <HStack spacing={0.5}>
-                          {group.symbols.map((symbol, idx) => (
-                            <Tooltip
-                              key={idx}
-                              label={
-                                hideKeyboardShortcuts
-                                  ? `${symbol} - ${getSymbolName(symbol)}`
-                                  : `${symbol} - ${getSymbolName(
-                                      symbol,
-                                    )} (${ipaShortcutKeyRepeated(
-                                      group.letter,
-                                      idx + 1,
-                                    )})`
-                              }
-                            >
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="ipa-text"
-                                fontSize={buttonFontSize}
-                                minW={buttonSize}
-                                h={buttonSize}
-                                onClick={() => handleSymbolClick(symbol)}
-                                borderRadius="lg"
-                                fontWeight="semibold"
-                                _hover={{
-                                  bg: 'purple.50',
-                                  borderColor: 'brand.iris',
-                                  color: 'brand.iris',
-                                }}
-                                bg={getButtonBg(symbol)}
+                  .map((group) => {
+                    const shortcutSymbols = getShortcutSymbols(group)
+                    const groupLabel = (
+                      <Badge
+                        bg="brand.purple"
+                        color="white"
+                        fontSize="md"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        minW="28px"
+                        h="28px"
+                        px={1.5}
+                        borderRadius="full"
+                      >
+                        {group.letter}
+                      </Badge>
+                    )
+
+                    return (
+                      <Box
+                        key={group.letter}
+                        bg="gray.50"
+                        p={1.5}
+                        borderRadius="md"
+                        minW="fit-content"
+                      >
+                        <Flex align="center" gap={1.5}>
+                          {!hideKeyboardShortcuts &&
+                            (shortcutSymbols.length > 0 ? (
+                              <Tooltip
+                                label={`${ipaShortcutKey(
+                                  group.letter,
+                                )} — press repeatedly (within 1s) to cycle alternate symbols`}
                               >
-                                {symbol}
-                              </Button>
-                            </Tooltip>
-                          ))}
-                        </HStack>
-                      </Flex>
-                    </Box>
-                  ))}
+                                {groupLabel}
+                              </Tooltip>
+                            ) : (
+                              groupLabel
+                            ))}
+                          <HStack spacing={0.5}>
+                            {group.symbols.map((symbol, idx) => {
+                              const shortcutIndex =
+                                shortcutSymbols.indexOf(symbol)
+                              const shortcut =
+                                shortcutIndex === -1
+                                  ? null
+                                  : ipaShortcutKeyRepeated(
+                                      group.letter,
+                                      shortcutIndex + 1,
+                                    )
+
+                              return (
+                                <Tooltip
+                                  key={idx}
+                                  label={
+                                    hideKeyboardShortcuts
+                                      ? `${symbol} - ${getSymbolName(symbol)}`
+                                      : shortcut
+                                      ? `${symbol} - ${getSymbolName(
+                                          symbol,
+                                        )} (${shortcut})`
+                                      : `${symbol} - ${getSymbolName(symbol)}`
+                                  }
+                                >
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="ipa-text"
+                                    fontSize={buttonFontSize}
+                                    minW={buttonSize}
+                                    h={buttonSize}
+                                    onClick={() => handleSymbolClick(symbol)}
+                                    borderRadius="lg"
+                                    fontWeight="semibold"
+                                    _hover={{
+                                      bg: 'purple.50',
+                                      borderColor: 'brand.iris',
+                                      color: 'brand.iris',
+                                    }}
+                                    bg={getButtonBg(symbol)}
+                                  >
+                                    {symbol}
+                                  </Button>
+                                </Tooltip>
+                              )
+                            })}
+                          </HStack>
+                        </Flex>
+                      </Box>
+                    )
+                  })}
               </Flex>
 
               {/* Advanced rows — collapsed by default to reduce scrolling */}
@@ -1815,46 +1856,50 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                   {letter}
                                 </Badge>
                                 <Flex wrap="wrap" gap={2}>
-                                  {group.symbols.map((symbol, idx) => (
-                                    <Tooltip
-                                      key={idx}
-                                      label={`${symbol} - ${getSymbolName(
-                                        symbol,
-                                      )} (${letter})`}
-                                    >
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="ipa-text"
-                                        fontSize={buttonFontSize}
-                                        minW={buttonSize}
-                                        h={buttonSize}
-                                        onClick={() =>
-                                          handleSymbolClick(symbol)
-                                        }
-                                        borderRadius="lg"
-                                        fontWeight="semibold"
-                                        _hover={{
-                                          bg: 'purple.50',
-                                          borderColor: 'brand.iris',
-                                          color: 'brand.iris',
-                                        }}
-                                        bg={getButtonBg(symbol)}
-                                      >
-                                        {symbol === TIE_BAR ? (
-                                          <Box
-                                            as="span"
-                                            display="inline-block"
-                                            transform="translateX(0.5em)"
-                                          >
-                                            {symbol}
-                                          </Box>
-                                        ) : (
-                                          symbol
-                                        )}
-                                      </Button>
-                                    </Tooltip>
-                                  ))}
+                                  {group.symbols.map((symbol, idx) => {
+                                    const shortcut = getSymbolShortcut(symbol)
+                                    const label = shortcut
+                                      ? `${symbol} - ${getSymbolName(
+                                          symbol,
+                                        )} (${shortcut})`
+                                      : `${symbol} - ${getSymbolName(symbol)}`
+
+                                    return (
+                                      <Tooltip key={idx} label={label}>
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          className="ipa-text"
+                                          fontSize={buttonFontSize}
+                                          minW={buttonSize}
+                                          h={buttonSize}
+                                          onClick={() =>
+                                            handleSymbolClick(symbol)
+                                          }
+                                          borderRadius="lg"
+                                          fontWeight="semibold"
+                                          _hover={{
+                                            bg: 'purple.50',
+                                            borderColor: 'brand.iris',
+                                            color: 'brand.iris',
+                                          }}
+                                          bg={getButtonBg(symbol)}
+                                        >
+                                          {symbol === TIE_BAR ? (
+                                            <Box
+                                              as="span"
+                                              display="inline-block"
+                                              transform="translateX(0.5em)"
+                                            >
+                                              {symbol}
+                                            </Box>
+                                          ) : (
+                                            symbol
+                                          )}
+                                        </Button>
+                                      </Tooltip>
+                                    )
+                                  })}
                                 </Flex>
                               </Flex>
                             </Box>
