@@ -183,6 +183,7 @@ export async function computeOverview(
       ? {
           lessonId: continueLesson.id,
           title: continueLesson.title,
+          moduleNumber: continueLesson.displayOrder ?? null,
           phase: continuePhase?.title || '',
           done: isDone(continueLesson.id),
         }

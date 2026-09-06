@@ -66,9 +66,13 @@ export default async function handler(
         orderBy: { order: 'asc' },
         include: {
           questions: {
+            orderBy: { id: 'asc' },
             include: {
-              answerOptions: true,
-              extraOptions: true,
+              // Without an explicit order Postgres returns rows in whatever
+              // order it likes (edited rows drift), which shuffled the prompts
+              // within a question. Options are authored in id order.
+              answerOptions: { orderBy: { id: 'asc' } },
+              extraOptions: { orderBy: { id: 'asc' } },
             },
           },
         },

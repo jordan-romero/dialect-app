@@ -207,14 +207,14 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
               <Td fontWeight="bold">{s.name}</Td>
               <Td
                 textAlign="center"
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
               >
                 {s.ga}
               </Td>
               <Td
                 textAlign="center"
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
                 color="brand.purple"
               >
@@ -236,7 +236,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Text fontSize="lg" mb={2}>
           “{item.sentence}”
         </Text>
-        <Text fontFamily="'Charis SIL', serif" fontSize="lg" color="gray.700">
+        <Text fontFamily="ipa" fontSize="lg" color="gray.700">
           {item.ipa}
         </Text>
       </Box>

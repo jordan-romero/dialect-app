@@ -150,7 +150,7 @@ export const CorrectionsExercise: React.FC<Props> = ({
           {item.words.map((w, i) => (
             <WrapItem key={i}>
               <Button
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
                 variant="outline"
                 colorScheme={wrongPick === w.ipa ? 'red' : 'gray'}
@@ -166,7 +166,7 @@ export const CorrectionsExercise: React.FC<Props> = ({
           {options.map((o, i) => (
             <Button
               key={i}
-              fontFamily="'Charis SIL', serif"
+              fontFamily="ipa"
               fontSize="lg"
               variant="outline"
               colorScheme={wrongPick === o.text ? 'red' : 'gray'}

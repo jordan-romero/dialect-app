@@ -57,6 +57,7 @@ interface Overview {
   continue: {
     lessonId: number
     title: string
+    moduleNumber: number | null
     phase: string
     done: boolean
   } | null
@@ -95,7 +96,13 @@ const BadgeMedallion: React.FC<{ badge: Badge }> = ({ badge }) => {
   const subtle = useColorModeValue('gray.500', 'gray.400')
 
   return (
-    <Popover trigger="click" placement="top" isLazy>
+    <Popover
+      trigger="hover"
+      placement="top"
+      openDelay={100}
+      closeDelay={80}
+      isLazy
+    >
       <PopoverTrigger>
         <VStack
           as="button"
@@ -224,23 +231,23 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
       p={{ base: 6, md: 8 }}
       boxShadow="0 12px 40px rgba(95,83,207,0.35)"
     >
-      <Text fontSize="sm" opacity={0.9} mb={1}>
-        {allDone ? 'All caught up' : 'Pick up where you left off'}
-      </Text>
-      <Heading size="lg" mb={1}>
-        {allDone ? "You've completed the course" : c?.title || 'Get started'}
+      <Heading size={{ base: 'lg', md: 'xl' }} mb={2}>
+        {allDone ? 'All caught up' : "Let's pick up where you left off"}
       </Heading>
-      {c?.phase && !allDone && (
-        <Text opacity={0.9} mb={5}>
-          {c.phase}
-        </Text>
-      )}
+      <Text fontSize="md" opacity={0.9} mb={5}>
+        {allDone
+          ? "You've completed the course"
+          : c?.title
+          ? c.moduleNumber
+            ? `Module ${c.moduleNumber}: ${c.title}`
+            : c.title
+          : 'Start your first lesson'}
+      </Text>
       <Button
         as={NextLink}
         href="/dashboard"
         variant="brandWhite"
         rightIcon={<FiArrowRight />}
-        mt={allDone ? 4 : 0}
       >
         {allDone ? 'Review lessons' : 'Continue'}
       </Button>
@@ -341,6 +348,8 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
       justifyContent="center"
       position="relative"
       overflow="hidden"
+      h={{ base: 'auto', lg: '85%' }}
+      minH="fit-content"
       animation={
         igniting ? `${emberGlow} 1.2s ease-in-out infinite` : undefined
       }

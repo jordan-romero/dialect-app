@@ -38,7 +38,7 @@ const theme = extendTheme({
     heading: `Arimo, ${base.fonts?.heading}`,
     body: `Arimo, ${base.fonts?.body}`,
     longBody: `Charis SIL, serif`,
-    ipa: `'Noto Sans', 'Charis SIL', 'Doulos SIL', 'DejaVu Sans', serif`,
+    ipa: `'Charis SIL', 'Doulos SIL', 'Noto Sans', 'DejaVu Sans', serif`,
   },
   components: {
     Button: {

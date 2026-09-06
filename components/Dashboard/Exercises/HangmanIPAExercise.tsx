@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
+import { useShuffledBank } from './shuffle'
 import {
   Box,
   Button,
@@ -62,6 +63,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   dataUrl = '/hangmanIPAData.json',
 }) => {
   const [quizData, setQuizData] = useState<HangmanQuizData | null>(null)
+  // Authored in chart order, which gives the answers away.
+  const shuffledHangmanBank = useShuffledBank(quizData?.symbolBank)
   const [userAnswers, setUserAnswers] = useState<{
     [questionId: number]: string[]
   }>({})
@@ -380,7 +383,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         </Flex>
         <IPAKeyboard
           symbolBankCategories={quizData.symbolBankCategories}
-          customSymbols={quizData.symbolBank}
+          customSymbols={shuffledHangmanBank}
           onSymbolClick={handleSymbolSelect}
           showTextArea={false}
           compact={true}
@@ -393,8 +396,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             Selected:{' '}
             <Text
               as="span"
-              fontFamily="'Charis SIL', serif"
-              fontWeight="bold"
+              fontFamily="ipa"
+              fontWeight="semibold"
               fontSize="lg"
             >
               {selectedSymbol}
@@ -535,8 +538,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   {displaySymbol ? (
                     <Text
                       fontSize="lg"
-                      fontWeight="bold"
-                      fontFamily="'Charis SIL', serif"
+                      fontWeight="semibold"
+                      fontFamily="ipa"
                       color={
                         isActiveBlank && pendingSymbol ? 'blue.600' : 'black'
                       }

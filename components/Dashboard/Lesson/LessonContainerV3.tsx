@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { Box, Text, Button, Flex, Alert, AlertIcon } from '@chakra-ui/react'
+import {
+  Box,
+  Text,
+  Button,
+  Flex,
+  Alert,
+  AlertIcon,
+  Image,
+} from '@chakra-ui/react'
 import { keyframes } from '@emotion/react'
 import { Lesson } from '../Course/courseTypes'
 
@@ -21,22 +29,32 @@ import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExerc
 import { RepeatAfterMeExercise } from '../Exercises/RepeatAfterMeExercise'
 import { QuizCelebration } from '../Exercises/QuizCelebration'
 import IframeWithSkeleton from './IframeWithSkeleton'
+import { useIpaAutoOpen } from '../../Community/IpaKeyboardPip'
 import { CorrectionsExercise } from '../Exercises/CorrectionsExercise'
 import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
-import UnlockCourseButton from '../../UnlockCourseButton'
+import LockedLessonPaywall from './LockedLessonPaywall'
 import { expandLessonSteps, orderedResources } from './lessonOutline'
 
 type LessonContainerProps = {
   lesson: Lesson
   onLessonComplete: () => void
+  initialStepIndex?: number
+  onStepChange?: (stepIndex: number) => void
 }
 
 const LessonContainerV3: React.FC<LessonContainerProps> = ({
   lesson,
   onLessonComplete,
+  initialStepIndex = 0,
+  onStepChange,
 }) => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  // Lessons can opt out of the IPA keyboard popping open the moment a field
+  // is focused (autoOpenIpaKeyboard = false); it stays available on the
+  // exercise's own "IPA Keyboard" button. Defaults to on.
+  useIpaAutoOpen(lesson.autoOpenIpaKeyboard !== false)
+
+  const [currentStepIndex, setCurrentStepIndex] = useState(initialStepIndex)
   const [isMarkingComplete, setIsMarkingComplete] = useState(false)
   const [completedQuizzes, setCompletedQuizzes] = useState<number[]>([])
   const [quizCompletionStatus, setQuizCompletionStatus] = useState<{
@@ -46,6 +64,15 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const [fileBasedQuizAllCorrect, setFileBasedQuizAllCorrect] = useState<
     Set<number>
   >(new Set())
+  /**
+   * Quizzes the learner has cleared at least once — either earlier (loaded from
+   * the server) or during this visit. "Try again" resets the exercise itself but
+   * deliberately does NOT clear this, so redoing a quiz you've already passed
+   * never re-locks forward navigation.
+   */
+  const [everCompletedQuizIds, setEverCompletedQuizIds] = useState<Set<number>>(
+    new Set(),
+  )
   // Bumped per quiz to force a fresh remount on "Try again".
   const [retryNonce, setRetryNonce] = useState<{ [quizId: number]: number }>({})
   // Quiz id currently showing the completion celebration (Siri-style pulse).
@@ -86,6 +113,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         }, {} as { [quizId: number]: boolean })
 
         setQuizCompletionStatus(completionMap)
+        setEverCompletedQuizIds((prev) => {
+          const next = new Set(prev)
+          Object.entries(completionMap).forEach(([quizId, done]) => {
+            if (done) next.add(Number(quizId))
+          })
+          return next
+        })
 
         // Also update completedQuizzes for backward compatibility
         const completedOrders = quizzes
@@ -187,6 +221,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         ...prev,
         [quiz.id]: true,
       }))
+      setEverCompletedQuizIds((prev) => new Set(prev).add(quiz.id))
       // Same celebration for every quiz type across the platform.
       setCelebratingQuizId(quiz.id)
     }
@@ -238,14 +273,63 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               {isAudio ? (
                 <audio controls style={{ width: '100%' }} src={r.url} />
               ) : isLink ? (
-                <a
-                  href={r.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: '#5F53CF', textDecoration: 'underline' }}
+                <Box
+                  border="1px solid"
+                  borderColor="purple.100"
+                  borderRadius="xl"
+                  bg="purple.50"
+                  maxW="440px"
+                  p={4}
                 >
-                  Open resource ↗
-                </a>
+                  <Text
+                    color="purple.900"
+                    fontSize="md"
+                    fontWeight="semibold"
+                    mb={2}
+                  >
+                    Explore the interactive IPA chart
+                  </Text>
+                  <Text color="gray.700" fontSize="sm" lineHeight="tall" mb={4}>
+                    This link will take you to the official International
+                    Phonetic Association’s interactive IPA chart. You can use
+                    this site to investigate unfamiliar symbols. Selecting a
+                    symbol will give you a description of the phoneme, as well
+                    as four different examples of the sound voiced by renowned
+                    linguists.
+                  </Text>
+                  <Box
+                    as="a"
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    display="block"
+                    overflow="hidden"
+                    maxW="360px"
+                    border="1px solid"
+                    borderColor="purple.200"
+                    borderRadius="lg"
+                    boxShadow="sm"
+                    mb={4}
+                    transition="transform 0.15s ease, box-shadow 0.15s ease"
+                    _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
+                  >
+                    <Image
+                      src="/interactiveIpaChartPreview.png"
+                      alt="Preview of the interactive IPA chart"
+                      w="100%"
+                    />
+                  </Box>
+                  <Button
+                    as="a"
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    variant="brandBold"
+                    size="sm"
+                  >
+                    Open the IPA chart ↗
+                  </Button>
+                </Box>
               ) : (
                 <IframeWithSkeleton
                   src={`https://docs.google.com/viewer?url=${encodeURIComponent(
@@ -438,45 +522,25 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   const isLastStep = currentStepIndex === steps.length - 1
   const currentQuiz = currentStep.type === 'quiz' ? getCurrentQuiz() : null
   const isCurrentQuizCompleted = currentQuiz
-    ? quizCompletionStatus[currentQuiz.id] ||
+    ? everCompletedQuizIds.has(currentQuiz.id) ||
+      quizCompletionStatus[currentQuiz.id] ||
       completedQuizzes.includes(currentQuiz.order) ||
       fileBasedQuizAllCorrect.has(currentQuiz.order)
     : true
   const isFinishButtonDisabled =
     isLastStep && currentStep.type === 'quiz' ? !isCurrentQuizCompleted : false
 
+  const changeStep = (stepIndex: number) => {
+    setCurrentStepIndex(stepIndex)
+    onStepChange?.(stepIndex)
+  }
+
   // Paid-content gate: gated lessons come back from the API with `locked: true`
   // and their content stripped. Show a paywall instead of the lesson.
   if ((lesson as any).locked) {
     return (
-      <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
-        <Flex
-          direction="column"
-          align="center"
-          justify="center"
-          h="100%"
-          textAlign="center"
-          gap={5}
-        >
-          <Text fontSize="2xl" fontWeight="bold">
-            🔒 {lesson.title?.trim()}
-          </Text>
-          {(lesson as any).lockReason === 'phase' ? (
-            <Text maxW="480px" color="gray.600">
-              This phase is locked. Finish <b>every</b> lesson in the previous
-              phase to unlock it.
-            </Text>
-          ) : (
-            <>
-              <Text maxW="480px" color="gray.600">
-                This lesson is part of the full course. The first three lessons
-                are free — unlock the rest to access all videos, handouts, and
-                exercises.
-              </Text>
-              <UnlockCourseButton />
-            </>
-          )}
-        </Flex>
+      <Box w="100%" h="100%" overflowY="auto">
+        <LockedLessonPaywall lockReason={(lesson as any).lockReason} />
       </Box>
     )
   }
@@ -519,7 +583,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
           <Box>
             {currentStepIndex > 0 && (
               <Button
-                onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+                onClick={() => changeStep(currentStepIndex - 1)}
                 isDisabled={currentStepIndex === 0}
               >
                 Previous
@@ -529,7 +593,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
           <Box>
             {!isLastStep ? (
               <Button
-                onClick={() => setCurrentStepIndex(currentStepIndex + 1)}
+                onClick={() => changeStep(currentStepIndex + 1)}
                 isDisabled={
                   currentStep.type === 'quiz' && !isCurrentQuizCompleted
                 }

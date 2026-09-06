@@ -959,6 +959,7 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         <Box
           ref={editorRef}
           contentEditable
+          spellCheck={false}
           suppressContentEditableWarning
           onInput={handleInput}
           onMouseUp={updateActiveFormats}

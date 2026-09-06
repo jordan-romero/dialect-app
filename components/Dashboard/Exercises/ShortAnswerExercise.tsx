@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { renderUnderlined } from './UnderlineMarkup'
 import {
   Button,
   Box,
@@ -6,6 +7,7 @@ import {
   VStack,
   Input,
   Icon,
+  Tooltip,
   useToast,
 } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
@@ -188,6 +190,17 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     (allInputsFilled && !revealSentenceOption)
   )
 
+  // Spell out what's still blocking the Next/Finish button. The gate is a
+  // two-step chain on reveal questions (fill everything in, then reveal), and
+  // a dead arrow with no explanation reads like a bug.
+  const nextBlockedReason = !isNextDisabled
+    ? undefined
+    : !allInputsFilled
+    ? 'Answer every prompt above to continue'
+    : revealSentenceOption && !showSentence
+    ? 'Reveal the sentence to continue'
+    : undefined
+
   if (!currentQuiz) return <QuizSkeleton />
 
   return (
@@ -225,7 +238,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                       (no audio option), optionText is the answer — hide it
                       until the learner clicks "Reveal Answer". */}
                   {revealSentenceOption && (
-                    <Text mb={1}>{option.optionText}</Text>
+                    <Text mb={1}>{renderUnderlined(option.optionText)}</Text>
                   )}
                   <Input
                     ref={idx === 0 ? firstInputRef : undefined}
@@ -248,7 +261,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                   {!revealSentenceOption && showSentence && (
                     <Text
                       mt={1}
-                      fontFamily="'Charis SIL', serif"
+                      fontFamily="ipa"
                       color="green.700"
                     >
                       Answer: {option.optionText}
@@ -269,7 +282,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           )}
           {showSentence && revealSentenceOption && (
             <Box mt={4}>
-              <Text>{revealSentenceOption.optionText}</Text>
+              <Text>{renderUnderlined(revealSentenceOption.optionText)}</Text>
               <Button
                 onClick={() => playAudio(revealSentenceOption.audioUrl)}
                 mt={2}
@@ -279,14 +292,21 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
             </Box>
           )}
           {!showSentence && revealSentenceOption && (
-            <Button
-              onClick={() => setShowSentence(true)}
-              mt={4}
-              variant="brandWhite"
-              isDisabled={!allInputsFilled}
+            <Tooltip
+              label="Answer every prompt above to reveal the sentence"
+              isDisabled={allInputsFilled}
+              shouldWrapChildren
+              hasArrow
             >
-              Reveal Sentence
-            </Button>
+              <Button
+                onClick={() => setShowSentence(true)}
+                mt={4}
+                variant="brandWhite"
+                isDisabled={!allInputsFilled}
+              >
+                Reveal Sentence
+              </Button>
+            </Tooltip>
           )}
         </Box>
       )}
@@ -299,6 +319,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           onFinish={handleNextQuestion}
           isNextDisabled={isNextDisabled || isLoading}
           isCompleted={isCompleted}
+          disabledReason={nextBlockedReason}
         />
       )}
     </Box>

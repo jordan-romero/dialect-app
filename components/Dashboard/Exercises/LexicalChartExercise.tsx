@@ -1,20 +1,15 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, useMemo, Fragment } from 'react'
+import { renderUnderlined } from './UnderlineMarkup'
+import { useShuffledBank } from './shuffle'
 import {
   Box,
-  Button,
   Text,
   VStack,
-  HStack,
   Grid,
   GridItem,
   Flex,
   Badge,
   Tooltip,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
 } from '@chakra-ui/react'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
@@ -25,7 +20,9 @@ interface LexicalItem {
   exampleWord: string
   ipaSymbol: string
   wordBank: string[]
-  category: 'monophthongs' | 'diphthongs' | 'triphthongs'
+  category: 'monophthongs' | 'diphthongs' | 'triphthongs' | 'consonants'
+  /** Which column of the printed chart this row sits in (1-4). */
+  column: number
 }
 
 interface LexicalChartData {
@@ -46,6 +43,33 @@ interface LexicalChartData {
   availableSymbols: string[]
 }
 
+/** Chart sections, in the order the printed chart lists them. */
+const CATEGORIES = [
+  'monophthongs',
+  'diphthongs',
+  'triphthongs',
+  'consonants',
+] as const
+type Category = (typeof CATEGORIES)[number]
+
+const CATEGORY_LABELS: Record<Category, string> = {
+  monophthongs: 'Monophthongs',
+  diphthongs: 'Diphthongs',
+  triphthongs: 'Triphthongs',
+  consonants: 'Consonants',
+}
+
+/** Block fills taken from the printed General American chart. */
+const CATEGORY_FILLS: Record<Category, string> = {
+  monophthongs: '#E6B8AF',
+  diphthongs: '#FCE5CD',
+  triphthongs: '#D9EAD3',
+  consonants: '#CFE2F3',
+}
+
+/** The chart's rules: a heavy navy frame with hairline dividers inside. */
+const CHART_BORDER = '#1F3864'
+
 interface LexicalChartExerciseProps {
   lessonId: number
   quizIndex: number
@@ -62,9 +86,6 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({})
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [currentCategory, setCurrentCategory] = useState<
-    'monophthongs' | 'diphthongs' | 'triphthongs'
-  >('monophthongs')
 
   // Load lexical chart data
   useEffect(() => {
@@ -224,26 +245,152 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
     }
   }
 
-  const getCategoryItems = () => {
-    if (!chartData) return []
-    return chartData.lexicalItems.filter(
-      (item) => item.category === currentCategory,
-    )
-  }
+  // The printed chart is four columns — monophthongs, diphthongs over
+  // triphthongs, then consonants across two — so mirror that instead of
+  // hiding sections behind tabs. Rows carry their column; consecutive rows
+  // sharing a category become one headed section.
+  const itemsByCategory = useMemo(() => {
+    const grouped: Record<Category, LexicalItem[]> = {
+      monophthongs: [],
+      diphthongs: [],
+      triphthongs: [],
+      consonants: [],
+    }
+    for (const item of chartData?.lexicalItems ?? [])
+      grouped[item.category].push(item)
+    return grouped
+  }, [chartData])
 
-  const getAvailableSymbols = () => {
-    if (!chartData) return []
-    return chartData.availableSymbols
-  }
+  // Consonants run as two word/symbol pairs under one label on the chart, so
+  // keep the authored column split rather than reflowing them.
+  const consonantColumns = useMemo(() => {
+    const byColumn = new Map<number, LexicalItem[]>()
+    for (const item of itemsByCategory.consonants) {
+      const bucket = byColumn.get(item.column)
+      if (bucket) bucket.push(item)
+      else byColumn.set(item.column, [item])
+    }
+    return Array.from(byColumn.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([, items]) => items)
+  }, [itemsByCategory])
+
+  // Every section is on screen at once now, so the bank holds the whole
+  // symbol set. Authored in chart order, which gives the answers away.
+  const shuffledSymbols = useShuffledBank(chartData?.availableSymbols)
+  const getAvailableSymbols = () => shuffledSymbols
 
   const isQuizValid = checkOverallCompletion()
+
+  /**
+   * One coloured block of the chart: the rotated category label down the left
+   * edge, then one or more word/symbol grids beside it (consonants use two).
+   */
+  const renderBlock = (category: Category, rowColumns: LexicalItem[][]) => {
+    const fill = CATEGORY_FILLS[category]
+    return (
+      <Flex bg={fill} align="stretch">
+        <Flex
+          align="center"
+          justify="center"
+          px={1}
+          borderRight="1px solid white"
+        >
+          <Text
+            fontSize="xs"
+            fontWeight="bold"
+            letterSpacing="2px"
+            sx={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+          >
+            {CATEGORY_LABELS[category]}
+          </Text>
+          {checkCategoryCompletion(category) && (
+            <Badge colorScheme="green" borderRadius="full" ml={1}>
+              ✓
+            </Badge>
+          )}
+        </Flex>
+
+        {rowColumns.map((items, columnIndex) => (
+          <Grid
+            key={columnIndex}
+            templateColumns="minmax(96px, max-content) 46px"
+            borderRight={
+              columnIndex < rowColumns.length - 1
+                ? '1px solid white'
+                : undefined
+            }
+          >
+            {items.map((item) => {
+              const userAnswer = userAnswers[item.id]
+              const isCorrect = userAnswer === item.ipaSymbol
+              const hasAnswer = !!userAnswer
+
+              return (
+                <Fragment key={item.id}>
+                  <GridItem
+                    px={2}
+                    py={1}
+                    borderBottom="1px solid white"
+                    borderRight="1px solid white"
+                  >
+                    <Tooltip
+                      label={item.wordBank.join(', ')}
+                      isDisabled={item.wordBank.length === 0}
+                      placement="top"
+                      hasArrow
+                      bg="brand.purple"
+                      color="white"
+                      fontSize="sm"
+                      maxW="300px"
+                      borderRadius="md"
+                    >
+                      {/* Only the nucleus is underlined (the {...} span in the
+                          data), the same as the printed chart. */}
+                      <Text
+                        fontSize="sm"
+                        whiteSpace="nowrap"
+                        cursor={item.wordBank.length ? 'help' : 'default'}
+                      >
+                        {renderUnderlined(item.exampleWord)}
+                      </Text>
+                    </Tooltip>
+                  </GridItem>
+                  <GridItem
+                    borderBottom="1px solid white"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    cursor="pointer"
+                    bg={
+                      isCorrect ? 'green.100' : hasAnswer ? 'red.100' : 'white'
+                    }
+                    border="2px solid"
+                    borderColor="black"
+                    onClick={() => handlePositionClick(item.id)}
+                    onDoubleClick={() => handleClearPosition(item.id)}
+                    _hover={{ bg: 'whiteAlpha.800' }}
+                    transition="background 0.15s"
+                  >
+                    <Text fontSize="md" fontFamily="ipa">
+                      {userAnswer}
+                    </Text>
+                  </GridItem>
+                </Fragment>
+              )
+            })}
+          </Grid>
+        ))}
+      </Flex>
+    )
+  }
 
   if (!chartData) {
     return <QuizSkeleton />
   }
 
   return (
-    <VStack spacing={4} align="stretch" maxW="1000px" mx="auto" p={4}>
+    <VStack spacing={4} align="stretch" w="full" mx="auto" p={4}>
       <Text fontSize="xl" fontWeight="bold" textAlign="center">
         {chartData.questions[0]?.text ||
           'Instructions: Click on IPA symbols from the bank below and place them in their correct corresponding spots for a General American dialect.'}
@@ -277,177 +424,37 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         hideInstructions={true}
         persistClickedSymbols={false}
         title="Symbol Bank"
+        symbolSize="lg"
       />
-      {selectedSymbol && (
-        <Text fontSize="sm" fontWeight="medium" textAlign="center">
-          Selected:{' '}
-          <Text
-            as="span"
-            fontFamily="'Charis SIL', serif"
-            fontWeight="bold"
-            fontSize="lg"
-          >
-            {selectedSymbol}
-          </Text>{' '}
-          - Click on a position to place it
-        </Text>
-      )}
-
-      {/* Lexical Chart with Tabs */}
+      {/* The chart, matching the printed General American sheet: coloured
+          blocks with a rotated section label down the left edge, each block a
+          word/symbol grid inside a navy frame. Consonants carry two pairs. */}
       <Box
-        border="2px solid"
-        borderColor="brand.iris"
-        borderRadius="lg"
-        p={4}
+        border="3px solid"
+        borderColor={CHART_BORDER}
+        borderRadius="sm"
         bg="white"
-        boxShadow="sm"
+        overflowX="auto"
       >
-        <Tabs
-          index={
-            currentCategory === 'monophthongs'
-              ? 0
-              : currentCategory === 'diphthongs'
-              ? 1
-              : 2
-          }
-          onChange={(index) => {
-            const categories = [
-              'monophthongs',
-              'diphthongs',
-              'triphthongs',
-            ] as const
-            setCurrentCategory(categories[index])
-          }}
+        <Text
+          fontSize="xl"
+          fontWeight="bold"
+          fontStyle="italic"
+          textAlign="center"
+          py={2}
+          borderBottom="3px solid"
+          borderColor={CHART_BORDER}
         >
-          <TabList>
-            <Tab>
-              Monophthongs
-              {checkCategoryCompletion('monophthongs') && (
-                <Badge ml={2} colorScheme="green" borderRadius="full">
-                  ✓
-                </Badge>
-              )}
-            </Tab>
-            <Tab>
-              Diphthongs
-              {checkCategoryCompletion('diphthongs') && (
-                <Badge ml={2} colorScheme="green" borderRadius="full">
-                  ✓
-                </Badge>
-              )}
-            </Tab>
-            <Tab>
-              Triphthongs
-              {checkCategoryCompletion('triphthongs') && (
-                <Badge ml={2} colorScheme="green" borderRadius="full">
-                  ✓
-                </Badge>
-              )}
-            </Tab>
-          </TabList>
-
-          <TabPanels>
-            {(['monophthongs', 'diphthongs', 'triphthongs'] as const).map(
-              (category) => (
-                <TabPanel
-                  key={category}
-                  p={4}
-                  minH="400px"
-                  maxH="500px"
-                  overflowY="auto"
-                >
-                  <Grid templateColumns="1fr 1fr" gap={3}>
-                    <GridItem>
-                      <Text fontWeight="bold" mb={2}>
-                        Example Word
-                      </Text>
-                    </GridItem>
-                    <GridItem>
-                      <Text fontWeight="bold" mb={2}>
-                        IPA Symbol
-                      </Text>
-                    </GridItem>
-
-                    {getCategoryItems().map((item) => {
-                      const userAnswer = userAnswers[item.id]
-                      const isCorrect = userAnswer === item.ipaSymbol
-                      const hasAnswer = userAnswer !== ''
-
-                      return (
-                        <Fragment key={item.id}>
-                          <GridItem>
-                            <Tooltip
-                              label={item.wordBank.join(', ')}
-                              placement="top"
-                              hasArrow
-                              bg="brand.purple"
-                              color="white"
-                              fontSize="sm"
-                              maxW="300px"
-                              borderRadius="md"
-                            >
-                              <Text
-                                fontWeight="bold"
-                                textDecoration="underline"
-                                cursor="help"
-                                _hover={{ color: 'brand.iris' }}
-                                fontSize="md"
-                              >
-                                {item.exampleWord}
-                              </Text>
-                            </Tooltip>
-                          </GridItem>
-                          <GridItem>
-                            <Box
-                              minH="35px"
-                              border="2px solid"
-                              borderColor={
-                                isCorrect
-                                  ? 'green.500'
-                                  : hasAnswer
-                                  ? 'red.500'
-                                  : selectedSymbol
-                                  ? 'brand.iris'
-                                  : 'brand.blue'
-                              }
-                              borderRadius="md"
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              cursor="pointer"
-                              bg={hasAnswer ? 'gray.50' : 'white'}
-                              onClick={() => handlePositionClick(item.id)}
-                              onDoubleClick={() => handleClearPosition(item.id)}
-                              _hover={{
-                                bg: 'gray.100',
-                                borderColor: 'brand.iris',
-                              }}
-                              transition="all 0.2s"
-                            >
-                              {hasAnswer ? (
-                                <Text
-                                  fontSize="lg"
-                                  fontWeight="bold"
-                                  fontFamily="'Charis SIL', serif"
-                                >
-                                  {userAnswer}
-                                </Text>
-                              ) : (
-                                <Text color="gray.400" fontSize="xs">
-                                  Click to place
-                                </Text>
-                              )}
-                            </Box>
-                          </GridItem>
-                        </Fragment>
-                      )
-                    })}
-                  </Grid>
-                </TabPanel>
-              ),
-            )}
-          </TabPanels>
-        </Tabs>
+          General American English
+        </Text>
+        <Flex align="flex-start" wrap="wrap">
+          {renderBlock('monophthongs', [itemsByCategory.monophthongs])}
+          <Box>
+            {renderBlock('diphthongs', [itemsByCategory.diphthongs])}
+            {renderBlock('triphthongs', [itemsByCategory.triphthongs])}
+          </Box>
+          {renderBlock('consonants', consonantColumns)}
+        </Flex>
       </Box>
 
       <QuizNavigation
