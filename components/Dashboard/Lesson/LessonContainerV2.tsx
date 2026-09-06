@@ -19,12 +19,16 @@ import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExe
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
+import { useIpaAutoOpen } from '../../Community/IpaKeyboardPip'
 
 type LessonContainerProps = {
   lesson: Lesson
 }
 
 const LessonContainerV2: React.FC<LessonContainerProps> = ({ lesson }) => {
+  // Same per-lesson opt-out the stepped container honours (see V3).
+  useIpaAutoOpen(lesson?.autoOpenIpaKeyboard !== false)
+
   const [selectedTab, setSelectedTab] = useState(0)
 
   if (!lesson) {

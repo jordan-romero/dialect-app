@@ -50,4 +50,5 @@ export type Lesson = {
   quiz: Quiz[]
   steps?: LessonStep[]
   displayOrder: number | null
+  autoOpenIpaKeyboard?: boolean
 }

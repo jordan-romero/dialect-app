@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { renderUnderlined } from '../UnderlineMarkup'
 import { Box, Text, Flex } from '@chakra-ui/react'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { Question, AnswerOption } from '../QuizTypes'
@@ -45,7 +46,7 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
         <b>Instructions:</b>
         English spelling is incredibly inconsistent, as you will discover in
         this exercise.
-        <b>{question.text}</b>
+        <b>{renderUnderlined(question.text)}</b>
       </Text>
       <Flex flexDirection="column">
         <Box
@@ -85,12 +86,8 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
                         m={1}
                         boxShadow="md"
                         borderRadius="md"
-                        // Drag-and-drop begins on mouse/touch down. Audio is
-                        // deliberately click-only so it cannot compete with
-                        // the drag sensor that lifts a Word Bank item.
-                        onClick={() => playAudio(word.audioUrl)}
                       >
-                        {word.optionText}
+                        {renderUnderlined(word.optionText)}
                       </Box>
                     )}
                   </Draggable>
@@ -145,7 +142,7 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
                                 boxShadow="md"
                                 borderRadius="md"
                               >
-                                {word.optionText}
+                                {renderUnderlined(word.optionText)}
                               </Box>
                             )}
                           </Draggable>

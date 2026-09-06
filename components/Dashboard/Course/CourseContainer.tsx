@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import CourseSideBar from './CourseSideBar'
 import LessonContainerV2 from '../Lesson/LessonContainerV2'
 import { Course, Lesson } from './courseTypes'
@@ -14,8 +15,10 @@ import LessonContainerV3 from '../Lesson/LessonContainerV3'
 import { SidebarSkeleton, LessonSkeleton } from './CourseSkeleton'
 
 const CourseContainer = () => {
+  const router = useRouter()
   const [courses, setCourses] = useState<Course[] | null>(null)
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
+  const [selectedStepIndex, setSelectedStepIndex] = useState(0)
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
   }>({})
@@ -23,6 +26,8 @@ const CourseContainer = () => {
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!router.isReady) return
+
     setIsLoading(true)
     setLoadError(null)
 
@@ -60,7 +65,7 @@ const CourseContainer = () => {
         setLoadError(error.message)
         setIsLoading(false)
       })
-  }, [])
+  }, [router.isReady])
 
   // All lessons across courses in true course order: by course, then by
   // displayOrder. Checkpoints have a null displayOrder, so place them last
@@ -87,21 +92,64 @@ const CourseContainer = () => {
     progress: { [key: number]: number },
   ) => {
     const all = orderedLessons(coursesArg)
+    const requestedLessonId = Number(router.query.lesson)
+    const requestedStepIndex = Number(router.query.step)
+    const requestedLesson = Number.isInteger(requestedLessonId)
+      ? all.find((lesson) => lesson.id === requestedLessonId)
+      : undefined
+
+    if (requestedLesson) {
+      setSelectedLesson(requestedLesson)
+      setSelectedStepIndex(
+        Number.isInteger(requestedStepIndex) && requestedStepIndex >= 0
+          ? requestedStepIndex
+          : 0,
+      )
+      return
+    }
+
     const lessonToSelect =
       all.find((lesson) => progress[lesson.id] !== 100) ?? all[0]
-    if (lessonToSelect) setSelectedLesson(lessonToSelect)
+    if (lessonToSelect) {
+      setSelectedLesson(lessonToSelect)
+      setSelectedStepIndex(0)
+    }
   }
+
+  // Keep the learner's exact location in the current history entry. Going to
+  // Library pushes a new route, so Back returns here with this lesson and step
+  // instead of falling back to the next incomplete lesson.
+  useEffect(() => {
+    if (!router.isReady || !selectedLesson) return
+
+    const lesson = String(selectedLesson.id)
+    const step = String(selectedStepIndex)
+    if (router.query.lesson === lesson && router.query.step === step) return
+
+    void router.replace(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, lesson, step },
+      },
+      undefined,
+      { shallow: true },
+    )
+  }, [router, selectedLesson, selectedStepIndex])
 
   // After finishing a lesson: advance to the very next lesson in order.
   const goToNextLesson = (currentLessonId: number) => {
     const all = orderedLessons(courses ?? [])
     const idx = all.findIndex((lesson) => lesson.id === currentLessonId)
     const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
-    if (next) setSelectedLesson(next)
+    if (next) {
+      setSelectedLesson(next)
+      setSelectedStepIndex(0)
+    }
   }
 
   const handleSelectLesson = (lesson: Lesson) => {
     setSelectedLesson(lesson)
+    setSelectedStepIndex(0)
     // Set the lesson as in progress when selected, if not already completed
     setLessonProgress((prev) => ({
       ...prev,
@@ -130,7 +178,10 @@ const CourseContainer = () => {
           const all = orderedLessons(fresh)
           const idx = all.findIndex((l) => l.id === completedId)
           const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
-          if (next) setSelectedLesson(next)
+          if (next) {
+            setSelectedLesson(next)
+            setSelectedStepIndex(0)
+          }
           return
         }
       }
@@ -179,6 +230,8 @@ const CourseContainer = () => {
                 key={selectedLesson.id}
                 lesson={selectedLesson}
                 onLessonComplete={handleLessonComplete}
+                initialStepIndex={selectedStepIndex}
+                onStepChange={setSelectedStepIndex}
               />
             ) : (
               <LessonContainerV2 lesson={selectedLesson} />

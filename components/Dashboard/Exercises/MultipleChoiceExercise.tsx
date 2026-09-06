@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect, useMemo } from 'react'
+import { renderUnderlined } from './UnderlineMarkup'
 import {
   Button,
   Box,
@@ -9,12 +10,12 @@ import {
   Flex,
   useToast,
 } from '@chakra-ui/react'
-import { CheckCircleIcon } from '@chakra-ui/icons'
-import { MdVolumeUp } from 'react-icons/md'
+import { MdAutoAwesome, MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { shuffleArray } from './shuffle'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -68,6 +69,28 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     })
     return quizzes?.find((quiz) => quiz.order === quizIndex)
   }, [quizzes, quizIndex])
+
+  // Answer options are authored with the correct choice in a predictable slot,
+  // so shuffle them per question. Memoised on the option ids so the order holds
+  // steady while a learner works through a question and only re-rolls when a
+  // different quiz actually loads.
+  const optionsSignature = (quizData?.questions ?? [])
+    .map(
+      (question: any) =>
+        `${question.id}:${(question.answerOptions ?? [])
+          .map((option: AnswerOption) => option.id)
+          .join(',')}`,
+    )
+    .join('|')
+
+  const shuffledOptionsByQuestion = useMemo(() => {
+    const byQuestion: Record<number, AnswerOption[]> = {}
+    ;(quizData?.questions ?? []).forEach((question: any) => {
+      byQuestion[question.id] = shuffleArray(question.answerOptions ?? [])
+    })
+    return byQuestion
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optionsSignature])
 
   useEffect(() => {
     console.log('🎯 Questions Data:', {
@@ -144,18 +167,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
 
     loadProgress()
   }, [multipleChoiceQuiz, lessonId])
-
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    const shuffledArray = [...array]
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[shuffledArray[i], shuffledArray[j]] = [
-        shuffledArray[j],
-        shuffledArray[i],
-      ]
-    }
-    return shuffledArray
-  }
 
   const handleAnswerSelect = (questionId: number, answerId: number) => {
     // Once completed, answers are locked in place until "Try again".
@@ -285,21 +296,46 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   }
 
   const renderQuestion = (question: any) => (
-    <Box key={question.id} mb={8} width="100%">
+    <Box
+      key={question.id}
+      width="100%"
+      bg="white"
+      border="1px solid"
+      borderColor="gray.200"
+      borderRadius="lg"
+      p={{ base: 4, md: 5 }}
+    >
       <Flex alignItems="center" mb={4}>
-        <Text fontWeight="bold" mr={4} fontSize="2xl">
-          {question.categories && question.categories.length > 0
+        {/* Symbol prompts carry combining diacritics (e.g. the breve in
+            [aɪ̆ə̆]); the body font mispositions them, so render the
+            prompt in the IPA stack like the answer buttons already do. */}
+        <Text fontFamily="ipa" fontWeight="bold" mr={4} fontSize="2xl">
+          {question.text?.includes('{')
+            ? renderUnderlined(question.text)
+            : question.categories && question.categories.length > 0
             ? underlineText(question.text, question.categories[0])
             : question.text}
         </Text>
         {question.audioUrl && <AudioButton audioUrl={question.audioUrl} />}
       </Flex>
-      <SimpleGrid columns={2} spacing={4} width="100%">
-        {question.answerOptions.map((option: AnswerOption) => (
+      {/* Options size to their content instead of stretching across a grid:
+          most are a single IPA symbol, but some are whole words. Wrapping
+          keeps them tight on desktop and reflows them on tablet/phone. */}
+      <Flex wrap="wrap" gap={{ base: 2, md: 3 }} width="100%">
+        {(
+          shuffledOptionsByQuestion[question.id] ?? question.answerOptions
+        ).map((option: AnswerOption) => (
           <Button
             key={option.id}
             onClick={() => handleAnswerSelect(question.id, option.id)}
-            fontFamily="'Charis SIL', serif"
+            fontFamily="ipa"
+            fontSize={{ base: 'md', md: 'lg' }}
+            minW={{ base: '60px', md: '68px' }}
+            maxW="100%"
+            h="auto"
+            px={{ base: 3, md: 4 }}
+            py={{ base: 2, md: 2.5 }}
+            whiteSpace="normal"
             variant={
               selectedAnswers[question.id] === option.id ? 'solid' : 'outline'
             }
@@ -311,19 +347,10 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
                 : 'gray'
             }
           >
-            {option.optionText}
-            {selectedAnswers[question.id] === option.id &&
-              isQuestionCorrect(question.id) && (
-                <Icon
-                  as={CheckCircleIcon}
-                  color="green.500"
-                  ml={2}
-                  boxSize={4}
-                />
-              )}
+            {renderUnderlined(option.optionText)}
           </Button>
         ))}
-      </SimpleGrid>
+      </Flex>
       {(() => {
         const selectedId = selectedAnswers[question.id]
         if (!selectedId || isQuestionCorrect(question.id)) return null
@@ -365,20 +392,54 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
             : 'Instructions: Choose the correct word that contains the sound of the presented symbol. Click the "Play Audio" button to hear the symbol.'}
         </Text>
         {(!hasParts || currentPart === 1) && (
-          <Text fontFamily="'Charis SIL', serif" mb={8}>
-            Note, when doing these exercises you may be tempted to check a
-            dictionary to "help" you with these answers – we caution you that
-            the transcription might be more "broad" than what we are teaching
-            you, therefore not as helpful. When in doubt, check the "Expanded
-            Lexical Sets" worksheet from section 2.
-          </Text>
+          <Flex
+            mb={8}
+            gap={3}
+            align="flex-start"
+            bg="purple.50"
+            borderLeft="4px solid"
+            borderColor="brand.iris"
+            borderRadius="md"
+            p={4}
+          >
+            <Icon
+              as={MdAutoAwesome}
+              color="brand.iris"
+              boxSize={5}
+              mt="2px"
+              flexShrink={0}
+              aria-hidden
+            />
+            <Text fontFamily="body" fontSize="sm" color="purple.900">
+              Note: when doing these exercises you may be tempted to check a
+              dictionary to help you with these answers – we caution you that
+              the dictionary&apos;s transcription may be more broad than what we
+              are teaching you, therefore not as helpful. When in doubt, check
+              the "Expanded Lexical Sets" worksheet from module 2.
+            </Text>
+          </Flex>
         )}
       </Box>
-      {hasParts &&
-        currentPart === 1 &&
-        shuffledPart1Questions.map(renderQuestion)}
-      {(!hasParts || currentPart === 2) &&
-        shuffledPart2Questions.map(renderQuestion)}
+      {/* Question cards pair up on wide screens so the options don't trail
+          off into empty space, and fall back to one column on iPad/mobile. */}
+      {hasParts && currentPart === 1 && (
+        <SimpleGrid
+          columns={{ base: 1, lg: 2 }}
+          spacing={{ base: 4, md: 5 }}
+          alignItems="start"
+        >
+          {shuffledPart1Questions.map(renderQuestion)}
+        </SimpleGrid>
+      )}
+      {(!hasParts || currentPart === 2) && (
+        <SimpleGrid
+          columns={{ base: 1, lg: 2 }}
+          spacing={{ base: 4, md: 5 }}
+          alignItems="start"
+        >
+          {shuffledPart2Questions.map(renderQuestion)}
+        </SimpleGrid>
+      )}
       <QuizNavigation
         currentQuestion={hasParts ? currentPart : 1}
         totalQuestions={hasParts ? 2 : 1}

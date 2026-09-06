@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Text, Grid, GridItem, Button, Flex } from '@chakra-ui/react'
-import { MdVolumeUp } from 'react-icons/md'
+import React, { useState, useEffect, useRef } from 'react'
+import { renderUnderlined } from './UnderlineMarkup'
+import { Box, Text, Grid, Flex, Progress } from '@chakra-ui/react'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
@@ -12,19 +12,10 @@ interface SymbolExerciseProps {
   onComplete: () => void
 }
 
-const AudioButton: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
-  const [audio] = useState(new Audio(audioUrl))
-
-  const playAudio = () => {
-    audio.play()
-  }
-
-  return (
-    <Button onClick={playAudio} size="sm" leftIcon={<MdVolumeUp />}>
-      Play Audio
-    </Button>
-  )
-}
+/** How long a correct answer stays green before the next word becomes active.
+ *  Short enough to read as a flash rather than a wait — the previous three
+ *  seconds made a 56-word exercise feel like it had stalled. */
+const FLASH_MS = 550
 
 const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   lessonId,
@@ -32,13 +23,20 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   onComplete,
 }) => {
   const { quizzes } = useQuiz(lessonId)
-  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [shuffledAnswerOptions, setShuffledAnswerOptions] = useState<any[]>([])
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
-  const [completedWords, setCompletedWords] = useState<any[]>([])
+  /** null = awaiting an answer; set once the learner picks a symbol. */
+  const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  /** Saved progress has resolved — until then we render nothing, or the first
+   *  word flashes before restore jumps the index to where the learner was. */
+  const [progressLoaded, setProgressLoaded] = useState(false)
+  /** Quiz the current word order was shuffled for, so it's shuffled once and
+   *  never re-rolled mid-exercise by an incidental re-render. */
+  const shuffledForQuizId = useRef<number | null>(null)
 
   // Match by `order` (not array index) so it stays correct if quiz ordering changes.
   const quizData = quizzes.find((q) => q.order === quizIndex)
@@ -53,22 +51,29 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     ) ?? []
 
   useEffect(() => {
-    if (quizData?.questions) {
-      setShuffledAnswerOptions(shuffleArray(flattenOptions(quizData)))
-    }
-  }, [quizData?.questions])
+    if (!quizData?.id) return
+    // `quizData` is recomputed by .find() on every render, so keying off the
+    // object (or its questions array) re-ran this and reshuffled the deck
+    // underneath the learner — the word would visibly flip.
+    if (shuffledForQuizId.current === quizData.id) return
+    shuffledForQuizId.current = quizData.id
+    setShuffledAnswerOptions(shuffleArray(flattenOptions(quizData)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizData?.id])
 
   // Restore saved progress: if this quiz was completed, show every word as
   // answered (locked) until the learner clicks "Try again".
   useEffect(() => {
+    let cancelled = false
     const loadProgress = async () => {
-      if (!quizData) return
+      if (!quizData?.id) return
       try {
         const res = await fetch(
           `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
         )
-        if (!res.ok) return
+        if (!res.ok || cancelled) return
         const data = await res.json()
+        if (cancelled) return
         setIsCompleted(data.isCompleted)
         if (data.answers && data.answers.length > 0) {
           const saved = data.answers.find(
@@ -89,15 +94,20 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
             if (filled[o.id] === undefined) filled[o.id] = o.correctSymbol
           })
           setAnswers(filled)
-          setCompletedWords(all)
           setCurrentWordIndex(all.length)
         }
       } catch (e) {
-        console.error('Error loading symbol quiz progress:', e)
+        if (!cancelled) console.error('Error loading symbol quiz progress:', e)
+      } finally {
+        if (!cancelled) setProgressLoaded(true)
       }
     }
     loadProgress()
-  }, [quizData, lessonId])
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizData?.id, lessonId])
 
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffledArray = [...array]
@@ -117,105 +127,42 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     return Array.from(new Set(quizData.questions.map((q) => q.text)))
   }
 
+  /**
+   * Picking a symbol answers the current word outright. Correct answers flash
+   * green and advance; wrong answers mark the blank red and stay put so the
+   * learner can try again on the same word.
+   */
   const handleSymbolSelect = (symbol: string) => {
-    setSelectedSymbol(selectedSymbol === symbol ? null : symbol)
-  }
-
-  const handleAnswerClick = (answerId: number, correctSymbol: string) => {
-    // Once completed, answers are locked until "Try again".
     if (isCompleted) return
-    if (selectedSymbol) {
-      const isCorrect = selectedSymbol === correctSymbol
-      if (isCorrect) {
-        // Add current word to completed words
-        setCompletedWords((prev) => [
-          ...prev,
-          shuffledAnswerOptions[currentWordIndex],
-        ])
-        // Move to next word
+    // Ignore clicks during the post-correct flash.
+    if (advanceTimer.current) return
+    const current = shuffledAnswerOptions[currentWordIndex]
+    if (!current) return
+
+    setAnswers((prev) => ({ ...prev, [current.id]: symbol }))
+
+    if (symbol === current.correctSymbol) {
+      setFeedback('correct')
+      advanceTimer.current = setTimeout(() => {
+        advanceTimer.current = null
         setCurrentWordIndex((prev) => prev + 1)
-      }
-      setAnswers((prev) => ({
-        ...prev,
-        [answerId]: selectedSymbol,
-      }))
-      setSelectedSymbol(null)
+        setFeedback(null)
+      }, FLASH_MS)
+    } else {
+      setFeedback('wrong')
     }
   }
 
-  const underlineWord = (word: string, rhymeCategories: string | string[]) => {
-    if (!rhymeCategories) {
-      return (
-        <Text as="span" fontFamily="'Charis SIL', serif">
-          {word}
-        </Text>
-      )
+  // Don't let a pending advance fire after unmount / "Try again".
+  useEffect(() => {
+    return () => {
+      if (advanceTimer.current) clearTimeout(advanceTimer.current)
+      advanceTimer.current = null
     }
+  }, [])
 
-    // Parse the rhymeCategories if it's a string
-    const categories =
-      typeof rhymeCategories === 'string'
-        ? JSON.parse(rhymeCategories)
-        : rhymeCategories
-
-    let result = word.split('')
-    const underlineIndices = new Set<number>()
-
-    categories.forEach((category: string) => {
-      switch (category) {
-        case 'First':
-          underlineIndices.add(0)
-          break
-        case 'First Two':
-          underlineIndices.add(0)
-          underlineIndices.add(1)
-          break
-        case 'Last':
-          underlineIndices.add(word.length - 1)
-          break
-        case 'Last Two':
-          underlineIndices.add(word.length - 2)
-          underlineIndices.add(word.length - 1)
-          break
-        case 'Last Three':
-          underlineIndices.add(word.length - 3)
-          underlineIndices.add(word.length - 2)
-          underlineIndices.add(word.length - 1)
-          break
-        case 'Second To Last':
-          underlineIndices.add(word.length - 2)
-          break
-      }
-    })
-
-    return (
-      <Text as="span" fontFamily="'Charis SIL', serif">
-        {result.map((char, index) =>
-          underlineIndices.has(index) ? (
-            <Text as="u" display="inline" key={index}>
-              {char}
-            </Text>
-          ) : (
-            <Text as="span" display="inline" key={index}>
-              {char}
-            </Text>
-          ),
-        )}
-      </Text>
-    )
-  }
-  const isAnswerCorrect = (answerId: number, correctSymbol: string) => {
-    return answers[answerId] === correctSymbol
-  }
-
-  const getBackgroundColor = (answerId: number, correctSymbol: string) => {
-    if (!answers[answerId]) return 'white'
-    return isAnswerCorrect(answerId, correctSymbol) ? 'green.100' : 'red.100'
-  }
-
-  const areAllAnswered = () => {
-    return currentWordIndex >= shuffledAnswerOptions.length
-  }
+  const total = shuffledAnswerOptions.length
+  const areAllAnswered = () => currentWordIndex >= total
 
   const submitQuiz = async () => {
     if (!quizData) return
@@ -250,26 +197,110 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     onComplete()
   }
 
-  if (!quizData) return <QuizSkeleton />
+  // Wait for the shuffled deck AND restored progress before painting a word,
+  // otherwise word #1 shows for a frame and then jumps to the resume point.
+  if (!quizData || !progressLoaded || shuffledAnswerOptions.length === 0)
+    return <QuizSkeleton />
+
+  const answeredCount = Math.min(currentWordIndex, total)
+
+  /** One word in the grid: the word itself and the blank its symbol goes in.
+   *  A plain render function rather than a nested component — a component
+   *  declared here is a new type on every render, so React would unmount and
+   *  remount all 56 cells each time, throwing away the flash transition. */
+  const renderWordCell = (option: any, index: number) => {
+    const isAnswered = index < currentWordIndex || isCompleted
+    const isActive = !isCompleted && index === currentWordIndex
+    const picked = answers[option.id]
+    const showWrong = isActive && feedback === 'wrong'
+    const showCorrect = isActive && feedback === 'correct'
+
+    const borderColor = showCorrect
+      ? 'green.500'
+      : showWrong
+      ? 'red.500'
+      : isAnswered
+      ? 'green.200'
+      : isActive
+      ? 'purple.400'
+      : 'gray.200'
+
+    return (
+      <Flex
+        key={option.id}
+        align="center"
+        justify="space-between"
+        gap={3}
+        px={4}
+        py={3}
+        borderWidth={isActive ? 2 : 1}
+        borderColor={borderColor}
+        borderRadius="lg"
+        bg={
+          showCorrect
+            ? 'green.50'
+            : showWrong
+            ? 'red.50'
+            : isAnswered
+            ? 'green.50'
+            : 'white'
+        }
+        opacity={!isAnswered && !isActive ? 0.45 : 1}
+        transition="background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease"
+        boxShadow={isActive ? 'sm' : 'none'}
+      >
+        <Box
+          fontFamily="ipa"
+          className="ipa-text"
+          fontSize="lg"
+          fontWeight={isActive ? 'semibold' : 'normal'}
+        >
+          {renderUnderlined(option.optionText)}
+        </Box>
+
+        {/* The blank. Filled once answered; outlined and empty until then. */}
+        <Flex
+          align="center"
+          justify="center"
+          minW="52px"
+          h="40px"
+          px={2}
+          borderWidth={isAnswered ? 0 : 2}
+          borderStyle="dashed"
+          borderColor={showWrong ? 'red.300' : 'gray.300'}
+          borderRadius="md"
+          bg={isAnswered ? 'transparent' : 'gray.50'}
+        >
+          <Text
+            fontFamily="ipa"
+            className="ipa-text"
+            fontSize="2xl"
+            lineHeight="1"
+            fontWeight="semibold"
+            color={
+              showWrong
+                ? 'red.600'
+                : isAnswered || showCorrect
+                ? 'green.600'
+                : 'gray.400'
+            }
+          >
+            {isAnswered ? option.correctSymbol : picked ?? ''}
+          </Text>
+        </Flex>
+      </Flex>
+    )
+  }
 
   return (
     <Box>
-      <Box
-        position="sticky"
-        top="0"
-        bg="white"
-        zIndex="1"
-        py={4}
-        borderColor="gray.200"
-      >
-        <Text fontStyle="italic" mb={4}>
-          Select the IPA consonant symbol that corresponds with the underlined
-          part of the word when spoken in a General American dialect.
+      <Box position="sticky" top="0" bg="white" zIndex="1" pt={4} pb={3}>
+        <Text fontStyle="italic" mb={3}>
+          Select the IPA symbol that corresponds with the underlined part of the
+          word when spoken in a General American dialect.
         </Text>
-      </Box>
 
-      {/* Symbol Bank */}
-      <Box mb={8}>
+        {/* Symbol Bank */}
         <IPAKeyboard
           customSymbols={getSymbolBank()}
           autoDetectCategory={true}
@@ -282,84 +313,26 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
         />
       </Box>
 
-      {/* Current Word */}
-      <Box mb={8}>
-        {currentWordIndex < shuffledAnswerOptions.length && (
-          <Box
-            borderWidth={1}
-            borderColor="gray.200"
-            borderRadius="md"
-            p={4}
-            backgroundColor={
-              answers[shuffledAnswerOptions[currentWordIndex].id]
-                ? getBackgroundColor(
-                    shuffledAnswerOptions[currentWordIndex].id,
-                    shuffledAnswerOptions[currentWordIndex].correctSymbol,
-                  )
-                : 'white'
-            }
-            onClick={() =>
-              handleAnswerClick(
-                shuffledAnswerOptions[currentWordIndex].id,
-                shuffledAnswerOptions[currentWordIndex].correctSymbol,
-              )
-            }
-            cursor="pointer"
-            _hover={{ borderColor: 'gray.300' }}
-          >
-            <Flex alignItems="center" justify="space-between">
-              <Flex alignItems="center" gap={2}>
-                <Box>
-                  {underlineWord(
-                    shuffledAnswerOptions[currentWordIndex].optionText,
-                    shuffledAnswerOptions[currentWordIndex].rhymeCategory,
-                  )}
-                </Box>
-                {shuffledAnswerOptions[currentWordIndex].audioUrl && (
-                  <AudioButton
-                    audioUrl={shuffledAnswerOptions[currentWordIndex].audioUrl}
-                  />
-                )}
-              </Flex>
-              {answers[shuffledAnswerOptions[currentWordIndex].id] && (
-                <Text
-                  fontFamily="'Charis SIL', serif"
-                  fontWeight="bold"
-                  fontSize="lg"
-                >
-                  {answers[shuffledAnswerOptions[currentWordIndex].id]}
-                </Text>
-              )}
-            </Flex>
-          </Box>
-        )}
-      </Box>
-
-      {/* Completed Words */}
-      <Box mb={8}>
-        <Text fontWeight="bold" mb={2}>
-          Completed Words:
+      {/* Progress — a 56-word exercise needs to show how far along it is. */}
+      <Flex align="center" gap={3} mt={5} mb={3}>
+        <Progress
+          value={total ? (answeredCount / total) * 100 : 0}
+          size="sm"
+          borderRadius="full"
+          colorScheme="green"
+          flex="1"
+        />
+        <Text fontSize="sm" color="gray.600" whiteSpace="nowrap">
+          {answeredCount} / {total}
         </Text>
-        <Flex flexWrap="wrap" gap={2}>
-          {completedWords.map((word, index) => (
-            <Box
-              key={index}
-              borderWidth={1}
-              borderColor="gray.200"
-              borderRadius="md"
-              p={2}
-              backgroundColor="green.100"
-            >
-              <Flex alignItems="center" gap={2}>
-                <Text>{word.optionText}</Text>
-                <Text fontFamily="'Charis SIL', serif">
-                  ({word.correctSymbol})
-                </Text>
-              </Flex>
-            </Box>
-          ))}
-        </Flex>
-      </Box>
+      </Flex>
+
+      {/* Two words per row, filled in order. */}
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={3}>
+        {shuffledAnswerOptions.map((option, index) =>
+          renderWordCell(option, index),
+        )}
+      </Grid>
 
       <QuizNavigation
         currentQuestion={1}
@@ -369,6 +342,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
         onFinish={handleFinish}
         isNextDisabled={!areAllAnswered() || isLoading}
         isCompleted={isCompleted}
+        disabledReason={`Answer all ${total} words to finish (${answeredCount} done).`}
       />
     </Box>
   )

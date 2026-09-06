@@ -66,6 +66,8 @@ interface IPAKeyboardProps {
   editorRef?: React.RefObject<any>
   /** When false, symbol bank does not remember or highlight previously clicked symbols (e.g. for quizzes). Default true. */
   persistClickedSymbols?: boolean
+  /** Overrides symbol button sizing independently of `compact` layout. */
+  symbolSize?: 'sm' | 'md' | 'lg'
 }
 
 // Symbol names for tooltips
@@ -707,6 +709,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   useRichTextEditor = false,
   editorRef: externalEditorRef,
   persistClickedSymbols = true,
+  symbolSize,
 }) => {
   const STORAGE_KEY = 'ipa-keyboard-text'
   const HISTORY_KEY = 'ipa-keyboard-history'
@@ -845,8 +848,16 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
   const filteredGroupsRef = useRef(filteredGroups)
   filteredGroupsRef.current = filteredGroups
-  const buttonSize = compact ? '28px' : '32px'
-  const buttonFontSize = compact ? 'sm' : 'lg'
+  const buttonSize = symbolSize
+    ? { sm: '28px', md: '36px', lg: '46px' }[symbolSize]
+    : compact
+    ? '28px'
+    : '32px'
+  const buttonFontSize = symbolSize
+    ? { sm: 'sm', md: 'lg', lg: '2xl' }[symbolSize]
+    : compact
+    ? 'sm'
+    : 'lg'
   // Shortcut display labels — Mac glyphs vs Windows/Linux text. Only rendered
   // inside the Drawer (mounts client-side on open), so navigator sniffing is
   // hydration-safe here.
@@ -2026,6 +2037,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Type or click symbols to create IPA transcription..."
+                  spellCheck={false}
                   className="ipa-text"
                   fontSize="lg"
                   minH="80px"

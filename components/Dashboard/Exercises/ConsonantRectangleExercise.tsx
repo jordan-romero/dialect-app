@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { useShuffledBank } from './shuffle'
 import {
   Box,
   Button,
@@ -51,15 +52,25 @@ interface Props {
   onAllCorrectChange?: (allCorrect: boolean) => void
 }
 
+/** The dashed grid rule, applied to every body cell so the lines are continuous. */
+const gridCell = {
+  borderWidth: '1px',
+  borderStyle: 'dashed',
+  borderColor: 'purple.200',
+} as const
+
 const Cell: React.FC<{
   slots: Slot[]
   placements: Record<string, string>
   selectedSymbol: string | null
   onPlace: (slotId: string) => void
 }> = ({ slots, placements, selectedSymbol, onPlace }) => {
-  if (slots.length === 0) return <Td bg="gray.100" />
+  // Cells with no possible articulation. Same dashed rule as every other cell
+  // so the grid reads as one continuous table rather than only appearing
+  // around the shaded regions.
+  if (slots.length === 0) return <Td bg="purple.50" {...gridCell} />
   return (
-    <Td p={1}>
+    <Td p={1} {...gridCell}>
       <Flex gap={1} justify="center">
         {slots
           .sort((a, b) => (a.voicing === 'voiceless' ? -1 : 1))
@@ -75,9 +86,9 @@ const Cell: React.FC<{
                 h="38px"
                 borderWidth="2px"
                 borderRadius="md"
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
-                fontWeight="bold"
+                fontWeight="semibold"
                 title={slot.voicing}
                 borderColor={
                   isCorrect
@@ -107,6 +118,8 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
 }) => {
   const [data, setData] = useState<ConsonantRectData | null>(null)
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
+  // The bank is authored in grid order, which telegraphs the answers.
+  const shuffledBank = useShuffledBank(data?.symbolBank)
   const [placements, setPlacements] = useState<Record<string, string>>({})
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -224,13 +237,13 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
 
       {/* Symbol bank */}
       <Wrap spacing={2}>
-        {data.symbolBank.map((sym) => {
+        {shuffledBank.map((sym) => {
           const used = Object.values(placements).includes(sym)
           return (
             <WrapItem key={sym}>
               <Button
                 size="sm"
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
                 variant={selectedSymbol === sym ? 'solid' : 'outline'}
                 colorScheme={selectedSymbol === sym ? 'teal' : 'gray'}
@@ -264,7 +277,7 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
           <Tbody>
             {data.manners.map((manner) => (
               <Tr key={manner}>
-                <Th whiteSpace="nowrap">
+                <Th whiteSpace="nowrap" {...gridCell}>
                   <Tooltip label={data.mannerDefinitions[manner]} hasArrow>
                     <Text as="span" cursor="help">
                       {manner}
@@ -291,37 +304,59 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
         <Text fontWeight="bold" mb={2}>
           Special Articulations
         </Text>
-        <VStack align="stretch" spacing={2}>
-          {data.specialSlots.map((slot) => {
+        {/* Laid out on the same dashed grid as the rectangle above, capped in
+            width so the box sits beside its label rather than at the page edge.
+            The -1px pulls each row onto the previous row's border so the
+            horizontal rules don't double up. */}
+        <VStack align="stretch" spacing={0} maxW="440px">
+          {data.specialSlots.map((slot, i) => {
             const placed = placements[slot.id]
             const isCorrect = placed === slot.symbol
             const isWrong = placed && placed !== slot.symbol
             return (
-              <Flex key={slot.id} align="center" gap={3}>
-                <Text flex="1">{slot.label}:</Text>
-                <Box
-                  as="button"
-                  w="38px"
-                  h="38px"
-                  borderWidth="2px"
-                  borderRadius="md"
-                  fontFamily="'Charis SIL', serif"
-                  fontSize="lg"
-                  fontWeight="bold"
-                  borderColor={
-                    isCorrect
-                      ? 'green.500'
-                      : isWrong
-                      ? 'red.500'
-                      : selectedSymbol
-                      ? 'teal.400'
-                      : 'gray.300'
-                  }
-                  bg={isCorrect ? 'green.50' : isWrong ? 'red.50' : 'white'}
-                  onClick={() => placeSymbol(slot.id)}
+              <Flex
+                key={slot.id}
+                align="center"
+                {...gridCell}
+                mt={i === 0 ? 0 : '-1px'}
+              >
+                <Text flex="1" px={3} py={2}>
+                  {slot.label}:
+                </Text>
+                <Flex
+                  align="center"
+                  justify="center"
+                  px={2}
+                  py={1}
+                  alignSelf="stretch"
+                  borderLeftWidth="1px"
+                  borderLeftStyle="dashed"
+                  borderLeftColor="purple.200"
                 >
-                  {placed || ''}
-                </Box>
+                  <Box
+                    as="button"
+                    w="38px"
+                    h="38px"
+                    borderWidth="2px"
+                    borderRadius="md"
+                    fontFamily="ipa"
+                    fontSize="lg"
+                    fontWeight="semibold"
+                    borderColor={
+                      isCorrect
+                        ? 'green.500'
+                        : isWrong
+                        ? 'red.500'
+                        : selectedSymbol
+                        ? 'teal.400'
+                        : 'gray.300'
+                    }
+                    bg={isCorrect ? 'green.50' : isWrong ? 'red.50' : 'white'}
+                    onClick={() => placeSymbol(slot.id)}
+                  >
+                    {placed || ''}
+                  </Box>
+                </Flex>
               </Flex>
             )
           })}

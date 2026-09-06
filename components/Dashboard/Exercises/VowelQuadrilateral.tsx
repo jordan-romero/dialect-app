@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useShuffledBank } from './shuffle'
 import { Box, Button, Flex, Image, VStack, Text } from '@chakra-ui/react'
 import vowelChartImage from '@/public/ipaVowelChart.png'
 import QuizNavigation from './QuizNavigation'
@@ -51,6 +52,8 @@ export const VowelQuadrilateralExercise: React.FC<
     [key: string]: VowelPosition
   }>({})
   const [availableVowels, setAvailableVowels] = useState<string[]>([])
+  // Authored in quadrilateral order, which gives the answers away.
+  const shuffledVowels = useShuffledBank(availableVowels)
   const [quizData, setQuizData] = useState<VowelQuadrilateralData | null>(null)
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -238,10 +241,34 @@ export const VowelQuadrilateralExercise: React.FC<
 
   return (
     <VStack spacing={4} align="center">
-      <Text fontSize="lg" fontWeight="bold" mb={4}>
-        {quizData.questions[0]?.text ||
-          'Place the correct vowel symbols on the IPA vowel chart'}
-      </Text>
+      {/* Instructions */}
+      <Box
+        bg="gray.50"
+        p={3}
+        borderRadius="lg"
+        border="1px solid"
+        borderColor="gray.200"
+      >
+        <Text fontSize="sm" color="black">
+          <Text as="span" fontWeight="bold">
+            Instructions:
+          </Text>{' '}
+          Click on a vowel from the bank below, then click on a position on the
+          chart to place it. Click on a vowel again to replace an existing
+          vowel. Click on an empty position to clear it.
+        </Text>
+      </Box>
+
+      <IPAKeyboard
+        customSymbols={shuffledVowels}
+        onSymbolClick={handleVowelSelect}
+        showTextArea={false}
+        compact={true}
+        hideInstructions={false}
+        persistClickedSymbols={false}
+        title="Vowel Bank"
+        symbolSize="lg"
+      />
 
       <Box position="relative" maxW="800px" w="full">
         <Image
@@ -288,34 +315,6 @@ export const VowelQuadrilateralExercise: React.FC<
             </Box>
           )
         })}
-      </Box>
-
-      <IPAKeyboard
-        customSymbols={availableVowels}
-        onSymbolClick={handleVowelSelect}
-        showTextArea={false}
-        compact={true}
-        hideInstructions={false}
-        persistClickedSymbols={false}
-        title="Vowel Bank"
-      />
-
-      {/* Instructions */}
-      <Box
-        bg="gray.50"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="gray.200"
-      >
-        <Text fontSize="sm" color="black">
-          <Text as="span" fontWeight="bold">
-            Instructions:
-          </Text>{' '}
-          Click on a vowel from the bank above, then click on a position on the
-          chart to place it. Click on a vowel again to replace an existing
-          vowel. Click on an empty position to clear it.
-        </Text>
       </Box>
 
       <QuizNavigation
