@@ -3985,7 +3985,7 @@
     },
     {
       "id": 401,
-      "text": "Enjoy",
+      "text": "Enj{oy}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -3995,7 +3995,7 @@
     },
     {
       "id": 402,
-      "text": "Share",
+      "text": "Sh{are}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4005,7 +4005,7 @@
     },
     {
       "id": 403,
-      "text": "High",
+      "text": "H{igh}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4015,7 +4015,7 @@
     },
     {
       "id": 404,
-      "text": "Flour",
+      "text": "Fl{our}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4025,7 +4025,7 @@
     },
     {
       "id": 405,
-      "text": "Oboe",
+      "text": "{O}b{oe}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4036,7 +4036,7 @@
     },
     {
       "id": 406,
-      "text": "Corn",
+      "text": "C{or}n",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4046,7 +4046,7 @@
     },
     {
       "id": 407,
-      "text": "Stay",
+      "text": "St{ay}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4056,7 +4056,7 @@
     },
     {
       "id": 408,
-      "text": "Choir",
+      "text": "Ch{oir}",
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [
@@ -4070,7 +4070,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/%C9%91%C9%9A%CC%86.mp3"
     },
     {
       "id": 410,
@@ -4078,7 +4078,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/%C9%94%C9%AA%CC%86%C9%9A%CC%86.mp3"
     },
     {
       "id": 411,
@@ -4086,7 +4086,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/%C9%AA%CC%86u.mp3"
     },
     {
       "id": 412,
@@ -4102,7 +4102,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/%C9%AA%C9%9A%CC%86.mp3"
     },
     {
       "id": 414,
@@ -4110,7 +4110,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/a%CA%8A%CC%86.mp3"
     },
     {
       "id": 415,
@@ -4118,7 +4118,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/%CA%8A%C9%9A%CC%86.mp3"
     },
     {
       "id": 416,
@@ -7948,7 +7948,7 @@
     },
     {
       "id": 505,
-      "optionText": "pretty",
+      "optionText": "{p}retty",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -7958,7 +7958,7 @@
     },
     {
       "id": 506,
-      "optionText": "stop",
+      "optionText": "sto{p}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -7968,7 +7968,7 @@
     },
     {
       "id": 507,
-      "optionText": "babe",
+      "optionText": "{b}a{b}e",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -7978,7 +7978,7 @@
     },
     {
       "id": 508,
-      "optionText": "club",
+      "optionText": "clu{b}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -7988,7 +7988,7 @@
     },
     {
       "id": 509,
-      "optionText": "mist",
+      "optionText": "{m}ist",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -7998,7 +7998,7 @@
     },
     {
       "id": 510,
-      "optionText": "comb",
+      "optionText": "co{m}b",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8008,7 +8008,7 @@
     },
     {
       "id": 511,
-      "optionText": "offer",
+      "optionText": "o{ff}er",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8018,7 +8018,7 @@
     },
     {
       "id": 512,
-      "optionText": "sift",
+      "optionText": "si{f}t",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8028,7 +8028,7 @@
     },
     {
       "id": 513,
-      "optionText": "vain",
+      "optionText": "{v}ain",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8038,7 +8038,7 @@
     },
     {
       "id": 514,
-      "optionText": "of",
+      "optionText": "o{f}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8048,7 +8048,7 @@
     },
     {
       "id": 515,
-      "optionText": "tire",
+      "optionText": "{t}ire",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8058,7 +8058,7 @@
     },
     {
       "id": 516,
-      "optionText": "bait",
+      "optionText": "bai{t}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8068,7 +8068,7 @@
     },
     {
       "id": 517,
-      "optionText": "dead",
+      "optionText": "{d}ea{d}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8078,7 +8078,7 @@
     },
     {
       "id": 518,
-      "optionText": "adorn",
+      "optionText": "a{d}orn",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8088,7 +8088,7 @@
     },
     {
       "id": 519,
-      "optionText": "noon",
+      "optionText": "{n}oo{n}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8098,7 +8098,7 @@
     },
     {
       "id": 520,
-      "optionText": "win",
+      "optionText": "wi{n}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8108,7 +8108,7 @@
     },
     {
       "id": 521,
-      "optionText": "patting",
+      "optionText": "pa{tt}ing",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8118,7 +8118,7 @@
     },
     {
       "id": 522,
-      "optionText": "hearty",
+      "optionText": "hear{t}y",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8128,7 +8128,7 @@
     },
     {
       "id": 523,
-      "optionText": "fourth",
+      "optionText": "four{th}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8138,7 +8138,7 @@
     },
     {
       "id": 524,
-      "optionText": "think",
+      "optionText": "{th}ink",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8148,7 +8148,7 @@
     },
     {
       "id": 525,
-      "optionText": "breathe",
+      "optionText": "brea{th}e",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8158,7 +8158,7 @@
     },
     {
       "id": 526,
-      "optionText": "bother",
+      "optionText": "bo{th}er",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8168,7 +8168,7 @@
     },
     {
       "id": 527,
-      "optionText": "suspect",
+      "optionText": "{s}u{s}pect",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8178,7 +8178,7 @@
     },
     {
       "id": 528,
-      "optionText": "cent",
+      "optionText": "{c}ent",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8188,7 +8188,7 @@
     },
     {
       "id": 529,
-      "optionText": "scissors",
+      "optionText": "sci{ss}or{s}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8198,7 +8198,7 @@
     },
     {
       "id": 530,
-      "optionText": "cheese",
+      "optionText": "chee{s}e",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8208,7 +8208,7 @@
     },
     {
       "id": 531,
-      "optionText": "shush",
+      "optionText": "{sh}u{sh}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8218,7 +8218,7 @@
     },
     {
       "id": 532,
-      "optionText": "ocean",
+      "optionText": "o{ce}an",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8228,7 +8228,7 @@
     },
     {
       "id": 533,
-      "optionText": "garage",
+      "optionText": "gara{g}e",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8238,7 +8238,7 @@
     },
     {
       "id": 534,
-      "optionText": "measure",
+      "optionText": "mea{s}ure",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8248,7 +8248,7 @@
     },
     {
       "id": 535,
-      "optionText": "bring",
+      "optionText": "b{r}ing",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8258,7 +8258,7 @@
     },
     {
       "id": 536,
-      "optionText": "arrange",
+      "optionText": "a{rr}ange",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8268,7 +8268,7 @@
     },
     {
       "id": 537,
-      "optionText": "lily",
+      "optionText": "{l}i{l}y",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8278,7 +8278,7 @@
     },
     {
       "id": 538,
-      "optionText": "mellow",
+      "optionText": "me{ll}ow",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8288,7 +8288,7 @@
     },
     {
       "id": 539,
-      "optionText": "yelp",
+      "optionText": "{y}elp",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8298,7 +8298,7 @@
     },
     {
       "id": 540,
-      "optionText": "uniform",
+      "optionText": "{u}niform",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8308,7 +8308,7 @@
     },
     {
       "id": 541,
-      "optionText": "crack",
+      "optionText": "{c}ra{ck}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8318,7 +8318,7 @@
     },
     {
       "id": 542,
-      "optionText": "scheme",
+      "optionText": "s{ch}eme",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8328,7 +8328,7 @@
     },
     {
       "id": 543,
-      "optionText": "gurgle",
+      "optionText": "{g}ur{g}le",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8338,7 +8338,7 @@
     },
     {
       "id": 544,
-      "optionText": "green",
+      "optionText": "{g}reen",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8348,7 +8348,7 @@
     },
     {
       "id": 545,
-      "optionText": "tongue",
+      "optionText": "to{ng}ue",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8358,7 +8358,7 @@
     },
     {
       "id": 546,
-      "optionText": "think",
+      "optionText": "thi{n}k",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8368,7 +8368,7 @@
     },
     {
       "id": 547,
-      "optionText": "curtain",
+      "optionText": "cur{t}ain",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8378,7 +8378,7 @@
     },
     {
       "id": 548,
-      "optionText": "uh-oh",
+      "optionText": "uh{-}oh",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8388,7 +8388,7 @@
     },
     {
       "id": 549,
-      "optionText": "hoist",
+      "optionText": "{h}oist",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8398,7 +8398,7 @@
     },
     {
       "id": 550,
-      "optionText": "behave",
+      "optionText": "be{h}ave",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8408,7 +8408,7 @@
     },
     {
       "id": 551,
-      "optionText": "inhumane",
+      "optionText": "in{h}umane",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8418,7 +8418,7 @@
     },
     {
       "id": 552,
-      "optionText": "hubris",
+      "optionText": "{h}ubris",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8428,7 +8428,7 @@
     },
     {
       "id": 553,
-      "optionText": "one",
+      "optionText": "{o}ne",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8438,7 +8438,7 @@
     },
     {
       "id": 554,
-      "optionText": "inward",
+      "optionText": "in{w}ard",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8448,7 +8448,7 @@
     },
     {
       "id": 555,
-      "optionText": "church",
+      "optionText": "{ch}ur{ch}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8458,7 +8458,7 @@
     },
     {
       "id": 556,
-      "optionText": "itchy",
+      "optionText": "i{tch}y",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8468,7 +8468,7 @@
     },
     {
       "id": 557,
-      "optionText": "judge",
+      "optionText": "{j}u{dge}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8478,7 +8478,7 @@
     },
     {
       "id": 558,
-      "optionText": "gerbil",
+      "optionText": "{g}erbil",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8488,7 +8488,7 @@
     },
     {
       "id": 559,
-      "optionText": "pull",
+      "optionText": "pu{ll}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8498,7 +8498,7 @@
     },
     {
       "id": 560,
-      "optionText": "tilt",
+      "optionText": "ti{l}t",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8508,7 +8508,7 @@
     },
     {
       "id": 561,
-      "optionText": "feed",
+      "optionText": "f{ee}d",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8518,7 +8518,7 @@
     },
     {
       "id": 562,
-      "optionText": "chief",
+      "optionText": "ch{ie}f",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8528,7 +8528,7 @@
     },
     {
       "id": 563,
-      "optionText": "nifty",
+      "optionText": "nift{y}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8538,7 +8538,7 @@
     },
     {
       "id": 564,
-      "optionText": "machine",
+      "optionText": "mach{i}ne",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8548,7 +8548,7 @@
     },
     {
       "id": 565,
-      "optionText": "chill",
+      "optionText": "ch{i}ll",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8558,7 +8558,7 @@
     },
     {
       "id": 566,
-      "optionText": "think",
+      "optionText": "th{i}nk",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8568,7 +8568,7 @@
     },
     {
       "id": 567,
-      "optionText": "mischief",
+      "optionText": "m{i}sch{ie}f",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8578,7 +8578,7 @@
     },
     {
       "id": 568,
-      "optionText": "scent",
+      "optionText": "sc{e}nt",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8588,7 +8588,7 @@
     },
     {
       "id": 569,
-      "optionText": "sweat",
+      "optionText": "sw{ea}t",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8598,7 +8598,7 @@
     },
     {
       "id": 570,
-      "optionText": "measure",
+      "optionText": "m{ea}sure",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8608,7 +8608,7 @@
     },
     {
       "id": 571,
-      "optionText": "black",
+      "optionText": "bl{a}ck",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8618,7 +8618,7 @@
     },
     {
       "id": 572,
-      "optionText": "champion",
+      "optionText": "ch{a}mpion",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8628,7 +8628,7 @@
     },
     {
       "id": 573,
-      "optionText": "asterisk",
+      "optionText": "{a}sterisk",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8638,7 +8638,7 @@
     },
     {
       "id": 574,
-      "optionText": "blot",
+      "optionText": "bl{o}t",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8648,7 +8648,7 @@
     },
     {
       "id": 575,
-      "optionText": "option",
+      "optionText": "{o}ption",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8658,7 +8658,7 @@
     },
     {
       "id": 576,
-      "optionText": "auto",
+      "optionText": "{au}to",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8668,7 +8668,7 @@
     },
     {
       "id": 577,
-      "optionText": "bunny",
+      "optionText": "b{u}nny",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8678,7 +8678,7 @@
     },
     {
       "id": 578,
-      "optionText": "loving",
+      "optionText": "l{o}ving",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8688,7 +8688,7 @@
     },
     {
       "id": 579,
-      "optionText": "trunk",
+      "optionText": "tr{u}nk",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8698,7 +8698,7 @@
     },
     {
       "id": 580,
-      "optionText": "put",
+      "optionText": "p{u}t",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8708,7 +8708,7 @@
     },
     {
       "id": 581,
-      "optionText": "should",
+      "optionText": "sh{ou}ld",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8718,7 +8718,7 @@
     },
     {
       "id": 582,
-      "optionText": "wood",
+      "optionText": "w{oo}d",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8728,7 +8728,7 @@
     },
     {
       "id": 583,
-      "optionText": "blue",
+      "optionText": "bl{ue}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8738,7 +8738,7 @@
     },
     {
       "id": 584,
-      "optionText": "screw",
+      "optionText": "scr{ew}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8748,7 +8748,7 @@
     },
     {
       "id": 585,
-      "optionText": "move",
+      "optionText": "m{o}ve",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8758,7 +8758,7 @@
     },
     {
       "id": 586,
-      "optionText": "amaze",
+      "optionText": "{a}maze",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8768,7 +8768,7 @@
     },
     {
       "id": 587,
-      "optionText": "llama",
+      "optionText": "llam{a}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8778,7 +8778,7 @@
     },
     {
       "id": 588,
-      "optionText": "famous",
+      "optionText": "fam{ou}s",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8788,7 +8788,7 @@
     },
     {
       "id": 589,
-      "optionText": "caller",
+      "optionText": "call{er}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8798,7 +8798,7 @@
     },
     {
       "id": 590,
-      "optionText": "perceive",
+      "optionText": "p{er}ceive",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8808,7 +8808,7 @@
     },
     {
       "id": 591,
-      "optionText": "earner",
+      "optionText": "earn{er}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8818,7 +8818,7 @@
     },
     {
       "id": 592,
-      "optionText": "purse",
+      "optionText": "p{ur}se",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8828,7 +8828,7 @@
     },
     {
       "id": 593,
-      "optionText": "world",
+      "optionText": "w{or}ld",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8838,7 +8838,7 @@
     },
     {
       "id": 594,
-      "optionText": "learn",
+      "optionText": "l{ear}n",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8848,7 +8848,7 @@
     },
     {
       "id": 595,
-      "optionText": "fly",
+      "optionText": "fl{y}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8858,7 +8858,7 @@
     },
     {
       "id": 596,
-      "optionText": "island",
+      "optionText": "{i}sland",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8868,7 +8868,7 @@
     },
     {
       "id": 597,
-      "optionText": "pray",
+      "optionText": "pr{ay}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8878,7 +8878,7 @@
     },
     {
       "id": 598,
-      "optionText": "angel",
+      "optionText": "{a}ngel",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8888,7 +8888,7 @@
     },
     {
       "id": 599,
-      "optionText": "employ",
+      "optionText": "empl{oy}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8898,7 +8898,7 @@
     },
     {
       "id": 600,
-      "optionText": "broil",
+      "optionText": "br{oi}l",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8908,7 +8908,7 @@
     },
     {
       "id": 601,
-      "optionText": "music",
+      "optionText": "m{u}sic",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8918,7 +8918,7 @@
     },
     {
       "id": 602,
-      "optionText": "beauty",
+      "optionText": "b{eau}ty",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8928,7 +8928,7 @@
     },
     {
       "id": 603,
-      "optionText": "though",
+      "optionText": "th{ough}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8938,7 +8938,7 @@
     },
     {
       "id": 604,
-      "optionText": "mow",
+      "optionText": "m{ow}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8948,7 +8948,7 @@
     },
     {
       "id": 605,
-      "optionText": "park",
+      "optionText": "p{ar}k",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8958,7 +8958,7 @@
     },
     {
       "id": 606,
-      "optionText": "margin",
+      "optionText": "m{ar}gin",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8968,7 +8968,7 @@
     },
     {
       "id": 607,
-      "optionText": "ensnare",
+      "optionText": "ensn{are}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8978,7 +8978,7 @@
     },
     {
       "id": 608,
-      "optionText": "fair",
+      "optionText": "f{air}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8988,7 +8988,7 @@
     },
     {
       "id": 609,
-      "optionText": "clear",
+      "optionText": "cl{ear}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -8998,7 +8998,7 @@
     },
     {
       "id": 610,
-      "optionText": "steer",
+      "optionText": "st{eer}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9008,7 +9008,7 @@
     },
     {
       "id": 611,
-      "optionText": "chord",
+      "optionText": "ch{or}d",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9018,7 +9018,7 @@
     },
     {
       "id": 612,
-      "optionText": "implore",
+      "optionText": "impl{ore}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9028,7 +9028,7 @@
     },
     {
       "id": 613,
-      "optionText": "cure",
+      "optionText": "c{ure}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9038,7 +9038,7 @@
     },
     {
       "id": 614,
-      "optionText": "manure",
+      "optionText": "man{ure}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9048,7 +9048,7 @@
     },
     {
       "id": 615,
-      "optionText": "pyre",
+      "optionText": "p{yre}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9058,7 +9058,7 @@
     },
     {
       "id": 616,
-      "optionText": "shire",
+      "optionText": "sh{ire}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9068,7 +9068,7 @@
     },
     {
       "id": 617,
-      "optionText": "giant",
+      "optionText": "g{ia}nt",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9078,7 +9078,7 @@
     },
     {
       "id": 618,
-      "optionText": "bias",
+      "optionText": "b{ia}s",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9088,7 +9088,7 @@
     },
     {
       "id": 619,
-      "optionText": "hour",
+      "optionText": "h{our}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9098,7 +9098,7 @@
     },
     {
       "id": 620,
-      "optionText": "flour",
+      "optionText": "fl{our}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9108,7 +9108,7 @@
     },
     {
       "id": 621,
-      "optionText": "Sawyer",
+      "optionText": "S{awyer}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9118,7 +9118,7 @@
     },
     {
       "id": 622,
-      "optionText": "lawyer",
+      "optionText": "l{awyer}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9128,7 +9128,7 @@
     },
     {
       "id": 623,
-      "optionText": "demure",
+      "optionText": "dem{ure}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9138,7 +9138,7 @@
     },
     {
       "id": 624,
-      "optionText": "impure",
+      "optionText": "imp{ure}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9148,7 +9148,7 @@
     },
     {
       "id": 625,
-      "optionText": "soothsayer",
+      "optionText": "sooths{ayer}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9158,7 +9158,7 @@
     },
     {
       "id": 626,
-      "optionText": "they’re",
+      "optionText": "th{ey’re}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9168,7 +9168,7 @@
     },
     {
       "id": 627,
-      "optionText": "grower",
+      "optionText": "gr{ower}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -9178,7 +9178,7 @@
     },
     {
       "id": 628,
-      "optionText": "sewer",
+      "optionText": "s{ewer}",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,

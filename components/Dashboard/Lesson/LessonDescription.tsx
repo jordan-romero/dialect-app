@@ -5,16 +5,15 @@ import {
   Heading,
   Text,
   Image,
-  Tooltip,
   Icon,
   VStack,
   Spacer,
 } from '@chakra-ui/react'
-import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { FiPlayCircle, FiFileText, FiEdit3 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { Lesson } from '../Course/courseTypes'
 import { buildLessonOutline, OutlineItem } from './lessonOutline'
+import { lessonIllustration } from './lessonIllustration'
 
 type LessonDescriptionProps = {
   lesson: Lesson
@@ -51,28 +50,9 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
       direction={{ base: 'column', lg: 'row' }}
     >
       <Box flex="1" maxW="600px" w="100%">
-        <Flex align="center" gap={2} mb={3}>
-          <Heading size="lg" letterSpacing="-0.02em">
-            Lesson Description
-          </Heading>
-          <Tooltip
-            label="Work top to bottom: watch the video first, then complete each item in order."
-            fontSize="sm"
-            placement="top"
-            hasArrow
-            borderRadius="md"
-            px={3}
-            py={2}
-          >
-            <Icon
-              as={InfoOutlineIcon}
-              w={5}
-              h={5}
-              color="gray.400"
-              cursor="help"
-            />
-          </Tooltip>
-        </Flex>
+        <Heading size="lg" letterSpacing="-0.02em" mb={3}>
+          Lesson Description
+        </Heading>
 
         <Text color="gray.600" fontSize="md" lineHeight="1.7" mb={7}>
           {lesson.description}
@@ -145,9 +125,10 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
         maxW="480px"
       >
         <Image
-          src="./descriptionIllustration.svg"
-          alt="Lesson overview"
+          src={lessonIllustration(lesson.id)}
+          alt={`${lesson.title} illustration`}
           w="100%"
+          fallbackSrc="./descriptionIllustration.svg"
         />
       </Box>
     </Flex>
