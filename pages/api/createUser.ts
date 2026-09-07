@@ -51,14 +51,18 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const existingByEmail = await prisma.user.findUnique({ where: { email } })
     if (existingByEmail) {
-      // A row exists for this email but isn't linked to an auth0Id yet. Because
-      // the session proves the user authenticated as this email, it's safe to
-      // bind this identity to the existing row.
-      const updated = await prisma.user.update({
-        where: { email },
-        data: { auth0Id },
+      // auth0Id is required + unique, so this row is already bound to a
+      // different Auth0 identity (the current sub wasn't found above).
+      // Rebinding it would transfer that account's paid access and progress to
+      // this session, so refuse with a conflict instead.
+      if (existingByEmail.auth0Id === auth0Id) {
+        return res
+          .status(200)
+          .json({ message: 'User already exists', user: existingByEmail })
+      }
+      return res.status(409).json({
+        error: 'This email is already associated with another account.',
       })
-      return res.status(200).json({ message: 'User linked', user: updated })
     }
 
     const created = await prisma.user.create({ data: { email, auth0Id } })

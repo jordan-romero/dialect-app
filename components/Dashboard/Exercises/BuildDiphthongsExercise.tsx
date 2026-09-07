@@ -110,8 +110,8 @@ const BuildDiphthongsExercise: React.FC<BuildDiphthongsExerciseProps> = ({
   const total = data?.items.length ?? 0
   const allDone = index >= total
 
-  const submitQuiz = async () => {
-    if (!data) return
+  const submitQuiz = async (): Promise<boolean> => {
+    if (!data) return false
     setIsLoading(true)
     try {
       const res = await fetch('/api/submitQuiz', {
@@ -126,17 +126,23 @@ const BuildDiphthongsExercise: React.FC<BuildDiphthongsExerciseProps> = ({
           })),
         }),
       })
-      if (res.ok) setIsCompleted(true)
+      if (res.ok) {
+        setIsCompleted(true)
+        return true
+      }
+      return false
     } catch (e) {
       console.error('Error submitting build-diphthongs quiz:', e)
+      return false
     } finally {
       setIsLoading(false)
     }
   }
 
   const handleFinish = async () => {
-    if (!isCompleted) await submitQuiz()
-    onComplete()
+    // Only advance/unlock once the completion has actually saved, so a failed
+    // request can't mark the quiz done in the parent's state.
+    if (isCompleted || (await submitQuiz())) onComplete()
   }
 
   if (!data) return <QuizSkeleton />

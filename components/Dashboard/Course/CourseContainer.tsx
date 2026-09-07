@@ -26,7 +26,6 @@ const CourseContainer = () => {
   const router = useRouter()
   const [courses, setCourses] = useState<Course[] | null>(null)
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
-  const [selectedStepIndex, setSelectedStepIndex] = useState(0)
   const [lessonProgress, setLessonProgress] = useState<{
     [key: number]: number
   }>({})
@@ -106,18 +105,12 @@ const CourseContainer = () => {
   ) => {
     const all = orderedLessons(coursesArg)
     const requestedLessonId = Number(router.query.lesson)
-    const requestedStepIndex = Number(router.query.step)
     const requestedLesson = Number.isInteger(requestedLessonId)
       ? all.find((lesson) => lesson.id === requestedLessonId)
       : undefined
 
     if (requestedLesson) {
       setSelectedLesson(requestedLesson)
-      setSelectedStepIndex(
-        Number.isInteger(requestedStepIndex) && requestedStepIndex >= 0
-          ? requestedStepIndex
-          : 0,
-      )
       return
     }
 
@@ -125,29 +118,29 @@ const CourseContainer = () => {
       all.find((lesson) => progress[lesson.id] !== 100) ?? all[0]
     if (lessonToSelect) {
       setSelectedLesson(lessonToSelect)
-      setSelectedStepIndex(0)
     }
   }
 
-  // Keep the learner's exact location in the current history entry. Going to
-  // Library pushes a new route, so Back returns here with this lesson and step
-  // instead of falling back to the next incomplete lesson.
+  // Keep the current lesson in the history entry. Going to Library pushes a new
+  // route, so Back returns here with this lesson instead of falling back to the
+  // next incomplete lesson. The step within a lesson is owned entirely by
+  // LessonContainerV3 (persisted to localStorage), so it isn't mirrored here —
+  // one source of truth avoids the URL and the displayed step drifting apart.
   useEffect(() => {
     if (!router.isReady || !selectedLesson) return
 
     const lesson = String(selectedLesson.id)
-    const step = String(selectedStepIndex)
-    if (router.query.lesson === lesson && router.query.step === step) return
+    if (router.query.lesson === lesson) return
 
     void router.replace(
       {
         pathname: router.pathname,
-        query: { ...router.query, lesson, step },
+        query: { ...router.query, lesson },
       },
       undefined,
       { shallow: true },
     )
-  }, [router, selectedLesson, selectedStepIndex])
+  }, [router, selectedLesson])
 
   // After finishing a lesson: advance to the very next lesson in order.
   const goToNextLesson = (currentLessonId: number) => {
@@ -156,13 +149,11 @@ const CourseContainer = () => {
     const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
     if (next) {
       setSelectedLesson(next)
-      setSelectedStepIndex(0)
     }
   }
 
   const handleSelectLesson = (lesson: Lesson) => {
     setSelectedLesson(lesson)
-    setSelectedStepIndex(0)
     // Set the lesson as in progress when selected, if not already completed
     setLessonProgress((prev) => ({
       ...prev,
@@ -193,7 +184,6 @@ const CourseContainer = () => {
           const next = idx >= 0 && idx + 1 < all.length ? all[idx + 1] : null
           if (next) {
             setSelectedLesson(next)
-            setSelectedStepIndex(0)
           }
           return
         }
@@ -280,7 +270,6 @@ const CourseContainer = () => {
                   key={selectedLesson.id}
                   lesson={selectedLesson}
                   onLessonComplete={handleLessonComplete}
-                  onStepChange={setSelectedStepIndex}
                 />
               </Box>
             ) : (

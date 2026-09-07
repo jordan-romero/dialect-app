@@ -71,6 +71,47 @@ export async function getUnlockedCourseIds(
   return unlocked
 }
 
+// Server-side access check for a single lesson's content, mirroring the gate
+// in /api/quizzes: the lesson's phase must be unlocked, and gated lessons
+// require purchase. Endpoints that serve a fixed lesson's audio/data must call
+// this with that lesson's own id (never a client-supplied one), so a caller
+// can't pass a free lesson's id to unlock paid content.
+export type LessonAccess =
+  | { ok: true }
+  | { ok: false; status: number; message: string }
+
+export async function getLessonAccess(
+  prisma: PrismaClient,
+  email: string | null | undefined,
+  lessonId: number,
+): Promise<LessonAccess> {
+  const lesson = await prisma.lesson.findUnique({
+    where: { id: lessonId },
+    select: { isGatedLesson: true, courseId: true },
+  })
+  if (!lesson) return { ok: false, status: 404, message: 'Lesson not found' }
+
+  const [unlocked, paid] = await Promise.all([
+    getUnlockedCourseIds(prisma, email),
+    hasPaidAccess(prisma, email),
+  ])
+  if (!unlocked.has(lesson.courseId)) {
+    return {
+      ok: false,
+      status: 403,
+      message: 'Complete the previous phase to unlock this.',
+    }
+  }
+  if (lesson.isGatedLesson && !paid) {
+    return {
+      ok: false,
+      status: 403,
+      message: 'This lesson requires full course access.',
+    }
+  }
+  return { ok: true }
+}
+
 // Strip content from a lesson the user can't access, tagging WHY:
 //   - 'phase' = the previous phase isn't complete yet (takes precedence)
 //   - 'paid'  = gated lesson and the user hasn't purchased

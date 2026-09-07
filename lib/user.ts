@@ -37,7 +37,12 @@ export async function getOrCreateUser(
 
   const byEmail = await prisma.user.findUnique({ where: { email } })
   if (byEmail) {
-    return prisma.user.update({ where: { email }, data: { auth0Id } })
+    // auth0Id is a required, unique column, so this row already belongs to a
+    // different Auth0 identity (the current sub wasn't found above). Rebinding
+    // it — or even returning it — would hand this session another account's
+    // paid access and progress, so refuse rather than take the row over.
+    if (byEmail.auth0Id === auth0Id) return byEmail
+    return null
   }
 
   try {

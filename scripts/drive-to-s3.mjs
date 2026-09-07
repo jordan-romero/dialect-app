@@ -40,8 +40,15 @@ const exists = async (Key) => {
   try {
     const h = await s3.send(new HeadObjectCommand({ Bucket, Key }))
     return h.ContentLength ?? 0
-  } catch {
-    return null
+  } catch (err) {
+    // Only a genuine "not there" means we may upload. A transient network error
+    // or an AccessDenied on an existing key must NOT be read as missing, or the
+    // never-overwrite guarantee breaks and PutObject clobbers the object.
+    const status = err?.$metadata?.httpStatusCode
+    if (err?.name === 'NotFound' || err?.name === 'NoSuchKey' || status === 404) {
+      return null
+    }
+    throw err
   }
 }
 

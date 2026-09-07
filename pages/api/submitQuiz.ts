@@ -79,6 +79,23 @@ export default async function handler(
         typeof a.textAnswer === 'string',
     )
 
+    // Completion is only earned by covering every question in the quiz.
+    // Filtering invalid entries isn't enough on its own: an empty or partial
+    // array would otherwise still fall through and mark the lesson complete
+    // (progress: 100), letting a caller advance phase gating without actually
+    // answering the quiz.
+    const submittedQuestionIds = new Set(
+      cleanAnswers.map((a) => a.questionId as number),
+    )
+    const coversEveryQuestion =
+      quiz.questions.length > 0 &&
+      quiz.questions.every((q) => submittedQuestionIds.has(q.id))
+    if (!coversEveryQuestion) {
+      return res
+        .status(400)
+        .json({ error: 'Answer every question before completing the quiz' })
+    }
+
     // Save each answer
     for (const answer of cleanAnswers) {
       const existingAnswer = await prisma.userAnswer.findFirst({

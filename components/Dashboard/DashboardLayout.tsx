@@ -11,7 +11,6 @@ import { IpaKeyboardProvider } from '../Community/IpaKeyboardPip'
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
     <IpaKeyboardProvider>
-      <UserScopeGuard />
       <Flex
         align="stretch"
         bg="surface.canvas"
@@ -20,7 +19,10 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       >
         <DashboardNavigationContainer />
         <Box flex="1" minW={0}>
-          {children}
+          {/* Holds the content back until the per-user localStorage scope is
+              reconciled, so a new account can't inherit a previous one's
+              resume state on a shared browser. */}
+          <UserScopeGuard>{children}</UserScopeGuard>
         </Box>
         {/* Global: pops a celebration anywhere in the dashboard when a badge is earned. */}
         <BadgeCelebrationManager />

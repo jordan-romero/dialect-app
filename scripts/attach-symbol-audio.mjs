@@ -177,8 +177,14 @@ if (failures.length) {
 }
 
 if (unresolved.length) {
-  console.log('\nNo recording found for (see docs/ipa-symbol-notation.md):')
-  unresolved.forEach((u) => console.log(`  ${u.symbol}  — ${u.quiz}`))
+  // The script promises every target question ends up with audio, so a single
+  // unresolved target means the guarantee can't be met — abort before writing
+  // a partial result rather than silently leaving questions silent.
+  console.error(
+    '\nUnresolved — nothing written (see docs/ipa-symbol-notation.md):',
+  )
+  unresolved.forEach((u) => console.error(`  ${u.symbol}  — ${u.quiz}`))
+  process.exit(1)
 }
 
 let written = 0

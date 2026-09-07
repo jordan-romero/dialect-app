@@ -40,7 +40,6 @@ import BuildDiphthongsExercise from '../Exercises/BuildDiphthongsExercise'
 type LessonContainerProps = {
   lesson: Lesson
   onLessonComplete: () => void
-  onStepChange?: (stepIndex: number) => void
 }
 
 const stepStorageKey = (lessonId: number) => `aa:lesson:${lessonId}:step`
@@ -48,7 +47,6 @@ const stepStorageKey = (lessonId: number) => `aa:lesson:${lessonId}:step`
 const LessonContainerV3: React.FC<LessonContainerProps> = ({
   lesson,
   onLessonComplete,
-  onStepChange,
 }) => {
   // Lessons can opt out of the IPA keyboard popping open the moment a field
   // is focused (autoOpenIpaKeyboard = false); it stays available on the
@@ -553,7 +551,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
 
   const changeStep = (stepIndex: number) => {
     setCurrentStepIndex(stepIndex)
-    onStepChange?.(stepIndex)
   }
 
   // Paid-content gate: gated lessons come back from the API with `locked: true`
