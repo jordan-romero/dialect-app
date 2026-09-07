@@ -16,6 +16,7 @@ import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -58,15 +59,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   const toast = useToast()
 
   const quizData = useMemo(() => {
-    console.log('🎲 Quiz Selection:', {
-      foundQuizzes: quizzes?.length,
-      targetIndex: quizIndex,
-      quizzes: quizzes?.map((q) => ({
-        id: q.id,
-        order: q.order,
-        type: q.quizType,
-      })),
-    })
     return quizzes?.find((quiz) => quiz.order === quizIndex)
   }, [quizzes, quizIndex])
 
@@ -93,16 +85,6 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   }, [optionsSignature])
 
   useEffect(() => {
-    console.log('🎯 Questions Data:', {
-      hasQuizData: !!quizData,
-      questionsCount: quizData?.questions?.length,
-      questions: quizData?.questions?.map((q) => ({
-        id: q.id,
-        text: q.text,
-        answerOptionsCount: q.answerOptions?.length,
-      })),
-    })
-
     if (quizData?.questions) {
       const part1 = quizData.questions.filter(
         (question) => question.categories?.[0] !== undefined,
@@ -111,32 +93,16 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         (question) => question.categories?.[0] === undefined,
       )
 
-      console.log('📝 Parts Debug:', {
-        part1Count: part1.length,
-        part2Count: part2.length,
-        shuffledPart1: shuffledPart1Questions.length,
-        shuffledPart2: shuffledPart2Questions.length,
-      })
-
       setShuffledPart1Questions(part1)
       setShuffledPart2Questions(part2)
     }
   }, [quizData?.questions])
-
-  // Log render state
-  console.log('🎨 Render State:', {
-    hasQuizzes: quizzes?.length > 0,
-    hasQuizData: !!quizData,
-    part1Questions: shuffledPart1Questions.length,
-    part2Questions: shuffledPart2Questions.length,
-  })
 
   // Use the order-matched quiz for progress/submission. A lesson can have
   // more than one multipleChoice quiz (e.g. "Multiple Choice Transcription"
   // and "Regional Options"); keying off quizType alone would always resolve
   // to the first one and conflate their progress/answers.
   const multipleChoiceQuiz = quizData
-  console.log('🎯 Multiple choice quiz:', multipleChoiceQuiz)
 
   // Load saved progress when component mounts
   useEffect(() => {
@@ -144,17 +110,14 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       if (!multipleChoiceQuiz) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${multipleChoiceQuiz.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(multipleChoiceQuiz.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
 
           // Restore saved answers
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswers: Record<number, number> = {}
-            data.answers.forEach((answer: any) => {
+            data.answers.forEach((answer) => {
               savedAnswers[answer.questionId] = parseInt(answer.textAnswer)
             })
             setSelectedAnswers(savedAnswers)
@@ -251,19 +214,13 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         }),
       )
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: multipleChoiceQuiz.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: multipleChoiceQuiz.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
       } else {
         console.error('Failed to submit quiz')
@@ -394,10 +351,10 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       <Box
         position="sticky"
         top="0"
-        bg="white"
+        bg="surface.card"
         zIndex="1"
         py={4}
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontStyle="italic" mb={4}>
           {/* A quiz can carry its own wording. The fallbacks below infer it

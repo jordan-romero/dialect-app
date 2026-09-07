@@ -75,18 +75,21 @@ export async function getUnlockedCourseIds(
 //   - 'phase' = the previous phase isn't complete yet (takes precedence)
 //   - 'paid'  = gated lesson and the user hasn't purchased
 // Keeps title/order so the UI can render a locked placeholder.
-export function gateLessonFull(
-  lesson: any,
+type GatedLesson<T> = T & { locked?: boolean; lockReason?: 'phase' | 'paid' }
+
+export function gateLessonFull<T extends { isGatedLesson?: boolean | null }>(
+  lesson: T,
   opts: { paidAccess: boolean; phaseUnlocked: boolean },
-): any {
-  const lock = (reason: 'phase' | 'paid') => ({
-    ...lesson,
-    locked: true,
-    lockReason: reason,
-    videoUrl: null,
-    resources: [],
-    quiz: [],
-  })
+): GatedLesson<T> {
+  const lock = (reason: 'phase' | 'paid'): GatedLesson<T> =>
+    ({
+      ...lesson,
+      locked: true,
+      lockReason: reason,
+      videoUrl: null,
+      resources: [],
+      quiz: [],
+    } as GatedLesson<T>)
   if (!opts.phaseUnlocked) return lock('phase')
   if (!opts.paidAccess && lesson?.isGatedLesson) return lock('paid')
   return lesson

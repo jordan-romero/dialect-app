@@ -17,6 +17,7 @@ import { Icon } from '@chakra-ui/react'
 import { MdKeyboard, MdVolumeUp } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface HangmanQuestion {
@@ -85,15 +86,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        console.log(
-          'Loading hangman IPA quiz data for lessonId:',
-          lessonId,
-          'quizIndex:',
-          quizIndex,
-        )
         const response = await fetch(dataUrl)
         const data: HangmanQuizData = await response.json()
-        console.log('Loaded hangman quiz data:', data)
         setQuizData(data)
 
         // Initialize empty answers
@@ -108,7 +102,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
     }
 
     loadQuizData()
-  }, [lessonId, quizIndex])
+  }, [lessonId, quizIndex, dataUrl])
 
   // Load saved progress
   useEffect(() => {
@@ -116,15 +110,12 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
       if (!quizData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === quizData.questions[0]?.id,
+              (answer) => answer.questionId === quizData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -282,19 +273,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         textAnswer: JSON.stringify(userAnswers), // Save all answers as JSON
       }))
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: quizData.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
         onComplete()
       }
@@ -331,7 +316,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Progress indicator */}
       <Box textAlign="center">
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="text.muted">
           Question {currentQuestionIndex + 1} of{' '}
           {quizData.questions_data.length}({completedQuestions.length}{' '}
           completed)
@@ -340,13 +325,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold" color="green.600">
             Instructions:
           </Text>{' '}
@@ -450,13 +435,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold">
             Instructions:
           </Text>{' '}
@@ -479,7 +464,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           borderColor="brand.iris"
           borderRadius="lg"
           p={6}
-          bg="white"
+          bg="surface.card"
         >
           <Text fontSize="lg" fontWeight="bold" mb={3}>
             QUESTION {currentQuestionIndex + 1}:

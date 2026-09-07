@@ -54,7 +54,7 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
           Lesson Description
         </Heading>
 
-        <Text color="gray.600" fontSize="md" lineHeight="1.7" mb={7}>
+        <Text color="text.muted" fontSize="md" lineHeight="1.7" mb={7}>
           {lesson.description}
         </Text>
 
@@ -80,9 +80,9 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
                     gap={3}
                     p={3}
                     borderRadius="xl"
-                    bg="gray.50"
+                    bg="surface.subtle"
                     border="1px solid"
-                    borderColor="gray.100"
+                    borderColor="border.subtle"
                     transition="transform 0.12s ease, box-shadow 0.12s ease"
                     _hover={{ transform: 'translateX(2px)', boxShadow: 'sm' }}
                   >
@@ -97,7 +97,11 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
                     >
                       <Icon as={meta.icon} boxSize={5} />
                     </Flex>
-                    <Text fontWeight="medium" color="gray.800" noOfLines={1}>
+                    <Text
+                      fontWeight="medium"
+                      color="text.primary"
+                      noOfLines={1}
+                    >
                       {item.label}
                     </Text>
                     <Spacer />

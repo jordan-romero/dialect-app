@@ -247,7 +247,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
       ? 'green.200'
       : isActive
       ? 'purple.400'
-      : 'gray.200'
+      : 'border.subtle'
 
     return (
       <Flex
@@ -268,7 +268,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
             ? 'red.50'
             : isAnswered
             ? 'green.50'
-            : 'white'
+            : 'surface.card'
         }
         opacity={!isAnswered && !isActive ? 0.45 : 1}
         transition="background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease"
@@ -292,9 +292,9 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
           px={2}
           borderWidth={isAnswered ? 0 : 2}
           borderStyle="dashed"
-          borderColor={showWrong ? 'red.300' : 'gray.300'}
+          borderColor={showWrong ? 'red.300' : 'border.subtle'}
           borderRadius="md"
-          bg={isAnswered ? 'transparent' : 'gray.50'}
+          bg={isAnswered ? 'transparent' : 'surface.subtle'}
         >
           <Text
             fontFamily="ipa"
@@ -319,7 +319,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
 
   return (
     <Box>
-      <Box bg="white" pt={4} pb={3}>
+      <Box bg="surface.card" pt={4} pb={3}>
         <Text fontStyle="italic" mb={3}>
           Select the IPA symbol that corresponds with the underlined part of the
           word when spoken in a General American dialect.
@@ -347,7 +347,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
           colorScheme="green"
           flex="1"
         />
-        <Text fontSize="sm" color="gray.600" whiteSpace="nowrap">
+        <Text fontSize="sm" color="text.muted" whiteSpace="nowrap">
           {answeredCount} / {total}
         </Text>
       </Flex>

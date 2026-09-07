@@ -6,7 +6,6 @@ import {
   VStack,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { EmailIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
 import React from 'react'
 

@@ -22,6 +22,7 @@ model User {
   interests              String[]         @default([])
   badges                 String[]         @default([])
   hasAccessToPaidCourses Boolean          @default(false)
+  hasSeenWelcome         Boolean          @default(false)
   enrollments            Enrollment[]
   lessonProgress         LessonProgress[]
   userAnswers            UserAnswer[]

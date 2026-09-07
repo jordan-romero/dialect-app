@@ -68,7 +68,7 @@ const Cell: React.FC<{
   // Cells with no possible articulation. Same dashed rule as every other cell
   // so the grid reads as one continuous table rather than only appearing
   // around the shaded regions.
-  if (slots.length === 0) return <Td bg="purple.50" {...gridCell} />
+  if (slots.length === 0) return <Td bg="surface.subtle" {...gridCell} />
   return (
     <Td p={1} {...gridCell}>
       <Flex gap={1} justify="center">
@@ -221,11 +221,11 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
         {data.questions[0]?.text}
       </Text>
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontSize="sm">
           <b>Instructions:</b> Click a symbol from the bank, then click the

@@ -40,14 +40,14 @@ import BuildDiphthongsExercise from '../Exercises/BuildDiphthongsExercise'
 type LessonContainerProps = {
   lesson: Lesson
   onLessonComplete: () => void
-  initialStepIndex?: number
   onStepChange?: (stepIndex: number) => void
 }
+
+const stepStorageKey = (lessonId: number) => `aa:lesson:${lessonId}:step`
 
 const LessonContainerV3: React.FC<LessonContainerProps> = ({
   lesson,
   onLessonComplete,
-  initialStepIndex = 0,
   onStepChange,
 }) => {
   // Lessons can opt out of the IPA keyboard popping open the moment a field
@@ -55,7 +55,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   // exercise's own "IPA Keyboard" button. Defaults to on.
   useIpaAutoOpen(lesson.autoOpenIpaKeyboard !== false)
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(initialStepIndex)
+  // Resume where the learner left off: read the saved step for this lesson.
+  // (CourseContainer keys this component by lesson id, so this initializer
+  // re-runs whenever a different lesson is opened.)
+  const [currentStepIndex, setCurrentStepIndex] = useState(() => {
+    if (typeof window === 'undefined') return 0
+    const saved = Number(window.localStorage.getItem(stepStorageKey(lesson.id)))
+    return Number.isInteger(saved) && saved > 0 ? saved : 0
+  })
   const [isMarkingComplete, setIsMarkingComplete] = useState(false)
   const [completedQuizzes, setCompletedQuizzes] = useState<number[]>([])
   const [quizCompletionStatus, setQuizCompletionStatus] = useState<{
@@ -135,6 +142,30 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     loadQuizCompletionStatus()
   }, [lesson.id, quizIdsKey])
 
+  // Expand the stored outline into the concrete sequence the learner walks
+  // through — one resource per resource step, in authored order — so Next moves
+  // through each resource, video, and quiz one at a time. Pure call; safe to run
+  // before the guard below (returns [] when the lesson has no steps).
+  const steps = expandLessonSteps(lesson)
+
+  // If a saved step is now out of range (e.g. the lesson's steps changed),
+  // clamp it back into bounds. (Kept above the early return so hook order is
+  // stable on every render — react-hooks/rules-of-hooks.)
+  useEffect(() => {
+    if (currentStepIndex > steps.length - 1) {
+      setCurrentStepIndex(Math.max(0, steps.length - 1))
+    }
+  }, [steps.length, currentStepIndex])
+
+  // Remember where the learner is so they resume here next time.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(
+      stepStorageKey(lesson.id),
+      String(currentStepIndex),
+    )
+  }, [lesson.id, currentStepIndex])
+
   if (!lesson || !lesson.steps || lesson.steps.length === 0) {
     return (
       <Flex justifyContent="center" alignItems="center" height="100vh">
@@ -146,19 +177,8 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
     )
   }
 
-  // Expand the stored outline into the concrete sequence the learner walks
-  // through — one resource per resource step, in authored order — so Next moves
-  // through each resource, video, and quiz one at a time.
-  const steps = expandLessonSteps(lesson)
   const resources = orderedResources(lesson)
   const currentStep = steps[currentStepIndex] ?? steps[0]
-
-  console.log(lesson.quiz, 'lesson.quiz')
-  console.log(
-    'Quiz types:',
-    lesson.quiz?.map((q) => ({ id: q.id, type: q.quizType, order: q.order })),
-  )
-  console.log('Lesson steps:', lesson.steps)
 
   const getCurrentQuiz = () => {
     if (currentStep.type !== 'quiz' || !lesson.quiz) return null
@@ -170,20 +190,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
 
     const currentOrder = quizStepsCount - 1 // This will be 0 for the first quiz
     const quiz = lesson.quiz.find((quiz) => quiz.order === currentOrder)
-
-    console.log('🎲 getCurrentQuiz Debug:', {
-      currentStepIndex,
-      currentStepType: currentStep.type,
-      quizStepsCount,
-      currentOrder,
-      foundQuiz: quiz,
-      allQuizzes: lesson.quiz.map((q) => ({
-        id: q.id,
-        type: q.quizType?.trim(),
-        order: q.order,
-      })),
-      stepsSlice: steps.slice(0, currentStepIndex + 1),
-    })
 
     return quiz
   }
@@ -364,13 +370,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         return <LessonOutro resources={lesson.resources} />
       case 'quiz':
         const currentQuiz = getCurrentQuiz()
-        console.log('🎯 Quiz rendering debug:', {
-          currentQuiz,
-          quizType: currentQuiz?.quizType,
-          lessonId: lesson.id,
-          quizOrder: currentQuiz?.order,
-          isQuizNull: currentQuiz === null,
-        })
         return currentQuiz ? (
           <Paper
             key={`${currentQuiz.id}-${retryNonce[currentQuiz.id] || 0}`}
@@ -383,7 +382,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               />
             )}
             <Flex justify="space-between" align="center" mb={2} gap={3}>
-              <Text fontSize="lg" fontWeight="bold" color="gray.700">
+              <Text fontSize="lg" fontWeight="bold" color="text.primary">
                 {currentQuiz.title?.trim() || ''}
               </Text>
               {/* Try again only appears once the quiz has been completed. */}
@@ -406,7 +405,6 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
               )}
             </Flex>
             {(() => {
-              console.log('🎲 Quiz type switch:', currentQuiz.quizType)
               switch (currentQuiz.quizType) {
                 case 'dragAndDrop':
                   return (
@@ -569,23 +567,39 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
   }
 
   return (
-    <Box w="100%" h="100%" p={10} pl={0} overflowY="auto">
+    <Box
+      w="100%"
+      h="100%"
+      p={{ base: 4, md: 8 }}
+      pl={{ base: 4, md: 0 }}
+      overflowY="auto"
+    >
+      {/* Full-bleed title bar: extends from the course nav to the right edge at
+          any screen size (rounded right end). */}
       <Box
         backgroundImage="linear-gradient(to left, #5F53CF, #7EACE2)"
         w="100%"
-        h="100px"
+        h={{ base: '56px', md: '72px' }}
         borderTopEndRadius="full"
         borderBottomEndRadius="full"
         display="flex"
         justifyContent="center"
         alignItems="center"
+        px={4}
       >
-        <Text fontSize="5xl" fontWeight="bold" color="util.white">
+        <Text
+          fontSize={{ base: 'lg', md: 'xl', lg: '2xl' }}
+          fontWeight="bold"
+          color="util.white"
+          noOfLines={1}
+          textAlign="center"
+        >
           {lesson.title}
         </Text>
       </Box>
       <Box
         w="96%"
+        maxW="1100px"
         mr="auto"
         ml="auto"
         mt="8"

@@ -1238,18 +1238,18 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     const isSelected = selectedSymbol === symbol
     const isInHistory = clickedSymbols.has(symbol)
 
-    // Light turquoise for currently cycling symbol (temporary highlight during T9)
+    // Currently cycling symbol (temporary highlight during T9)
     if (isSelected) {
-      return 'brand.blueLight'
+      return 'symbol.selected'
     }
 
-    // Blue for symbols that have been used (permanent highlight)
+    // Symbols that have been used (permanent highlight)
     if (isInHistory) {
-      return 'brand.blue'
+      return 'symbol.used'
     }
 
-    // White for unused symbols
-    return 'white'
+    // Default surface for unused symbols (dark-mode aware)
+    return 'surface.card'
   }
 
   const handleCopy = async () => {
@@ -1345,7 +1345,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 align="stretch"
                 spacing={4}
                 fontSize="sm"
-                color="gray.700"
+                color="text.primary"
               >
                 <Box>
                   <Text fontWeight="bold" mb={1}>
@@ -1378,7 +1378,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     <Text>
                       {altLabel}. — long ( ː ), {altLabel}.. — extra-short ( ̆ )
                     </Text>
-                    <Text mt={1} fontStyle="italic" color="gray.500">
+                    <Text mt={1} fontStyle="italic" color="text.muted">
                       Shift still types capitals. Hover any symbol to see its
                       shortcut.
                     </Text>
@@ -1432,11 +1432,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             the text area / rich editor — inserts land at the live caret. */}
         <Box
           border="1px solid"
-          borderColor="gray.200"
+          borderColor="border.subtle"
           borderRadius="xl"
           boxShadow="sm"
           p={compact ? 2 : 3}
-          bg="white"
+          bg="surface.card"
           onMouseDownCapture={(e) => e.preventDefault()}
         >
           {/* Compact mode - simple symbol list or categorized */}
@@ -1447,7 +1447,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 <VStack spacing={3} align="stretch">
                   {symbolBankCategories.consonants &&
                     symbolBankCategories.consonants.length > 0 && (
-                      <Box bg="gray.50" p={1.5} borderRadius="md">
+                      <Box bg="surface.subtle" p={1.5} borderRadius="md">
                         <Flex align="center" gap={1.5} flexWrap="wrap">
                           <Badge
                             colorScheme="purple"
@@ -1478,7 +1478,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     borderRadius="lg"
                                     fontWeight="semibold"
                                     _hover={{
-                                      bg: 'purple.50',
+                                      bg: 'accent.subtle',
                                       borderColor: 'brand.iris',
                                       color: 'brand.iris',
                                     }}
@@ -1495,7 +1495,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     )}
                   {symbolBankCategories.monophthongs &&
                     symbolBankCategories.monophthongs.length > 0 && (
-                      <Box bg="gray.50" p={1.5} borderRadius="md">
+                      <Box bg="surface.subtle" p={1.5} borderRadius="md">
                         <Flex align="center" gap={1.5} flexWrap="wrap">
                           <Badge
                             colorScheme="purple"
@@ -1526,7 +1526,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     borderRadius="lg"
                                     fontWeight="semibold"
                                     _hover={{
-                                      bg: 'purple.50',
+                                      bg: 'accent.subtle',
                                       borderColor: 'brand.iris',
                                       color: 'brand.iris',
                                     }}
@@ -1543,7 +1543,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     )}
                   {symbolBankCategories.diphthongs &&
                     symbolBankCategories.diphthongs.length > 0 && (
-                      <Box bg="gray.50" p={2} borderRadius="md">
+                      <Box bg="surface.subtle" p={2} borderRadius="md">
                         <Flex align="center" gap={2} flexWrap="wrap">
                           <Badge
                             colorScheme="purple"
@@ -1574,7 +1574,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     borderRadius="lg"
                                     fontWeight="semibold"
                                     _hover={{
-                                      bg: 'purple.50',
+                                      bg: 'accent.subtle',
                                       borderColor: 'brand.iris',
                                       color: 'brand.iris',
                                     }}
@@ -1591,7 +1591,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     )}
                   {symbolBankCategories.triphthongs &&
                     symbolBankCategories.triphthongs.length > 0 && (
-                      <Box bg="gray.50" p={2} borderRadius="md">
+                      <Box bg="surface.subtle" p={2} borderRadius="md">
                         <Flex align="center" gap={2} flexWrap="wrap">
                           <Badge
                             colorScheme="purple"
@@ -1622,7 +1622,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     borderRadius="lg"
                                     fontWeight="semibold"
                                     _hover={{
-                                      bg: 'purple.50',
+                                      bg: 'accent.subtle',
                                       borderColor: 'brand.iris',
                                       color: 'brand.iris',
                                     }}
@@ -1639,7 +1639,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     )}
                   {symbolBankCategories.diacritics &&
                     symbolBankCategories.diacritics.length > 0 && (
-                      <Box bg="gray.50" p={1.5} borderRadius="md">
+                      <Box bg="surface.subtle" p={1.5} borderRadius="md">
                         <Flex align="center" gap={1.5} flexWrap="wrap">
                           <Badge
                             colorScheme="purple"
@@ -1670,7 +1670,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     borderRadius="lg"
                                     fontWeight="semibold"
                                     _hover={{
-                                      bg: 'purple.50',
+                                      bg: 'accent.subtle',
                                       borderColor: 'brand.iris',
                                       color: 'brand.iris',
                                     }}
@@ -1707,7 +1707,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                           borderRadius="lg"
                           fontWeight="semibold"
                           _hover={{
-                            bg: 'purple.50',
+                            bg: 'accent.subtle',
                             borderColor: 'brand.iris',
                             color: 'brand.iris',
                           }}
@@ -1755,7 +1755,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                     return (
                       <Box
                         key={group.letter}
-                        bg="gray.50"
+                        bg="surface.subtle"
                         p={1.5}
                         borderRadius="md"
                         minW="fit-content"
@@ -1809,7 +1809,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                     borderRadius="lg"
                                     fontWeight="semibold"
                                     _hover={{
-                                      bg: 'purple.50',
+                                      bg: 'accent.subtle',
                                       borderColor: 'brand.iris',
                                       color: 'brand.iris',
                                     }}
@@ -1832,9 +1832,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 <Accordion allowMultiple defaultIndex={[]} mt={2}>
                   <AccordionItem border="none">
                     <AccordionButton
-                      bg="gray.100"
+                      bg="surface.subtle"
                       borderRadius="md"
-                      _hover={{ bg: 'gray.200' }}
+                      _hover={{ bg: 'border.subtle' }}
                       px={3}
                       py={2}
                     >
@@ -1853,7 +1853,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                           return (
                             <Box
                               key={letter}
-                              bg="gray.50"
+                              bg="surface.subtle"
                               p={1.5}
                               borderRadius="md"
                               minW="fit-content"
@@ -1893,7 +1893,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                           borderRadius="lg"
                                           fontWeight="semibold"
                                           _hover={{
-                                            bg: 'purple.50',
+                                            bg: 'accent.subtle',
                                             borderColor: 'brand.iris',
                                             color: 'brand.iris',
                                           }}
@@ -1924,9 +1924,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                   </AccordionItem>
                   <AccordionItem border="none" mt={2}>
                     <AccordionButton
-                      bg="gray.100"
+                      bg="surface.subtle"
                       borderRadius="md"
-                      _hover={{ bg: 'gray.200' }}
+                      _hover={{ bg: 'border.subtle' }}
                       px={3}
                       py={2}
                     >
@@ -1944,7 +1944,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                           if (!group || group.symbols.length === 0) return null
                           return (
                             <Box
-                              bg="gray.50"
+                              bg="surface.subtle"
                               p={2}
                               borderRadius="md"
                               minW="fit-content"
@@ -1981,7 +1981,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                         borderRadius="lg"
                                         fontWeight="semibold"
                                         _hover={{
-                                          bg: 'purple.50',
+                                          bg: 'accent.subtle',
                                           borderColor: 'brand.iris',
                                           color: 'brand.iris',
                                         }}
@@ -2011,10 +2011,10 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             position="sticky"
             bottom={0}
             zIndex={2}
-            bg="white"
+            bg="surface.card"
             pt={2}
             borderTop="1px solid"
-            borderColor="gray.100"
+            borderColor="border.subtle"
           >
             {useRichTextEditor ? (
               <RichTextIPAEditor
@@ -2028,11 +2028,11 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             ) : (
               <Box
                 border="1px solid"
-                borderColor="gray.200"
+                borderColor="border.subtle"
                 borderRadius="xl"
                 boxShadow="sm"
                 p={2}
-                bg="white"
+                bg="surface.card"
                 position="relative"
               >
                 <Textarea
@@ -2046,7 +2046,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                   minH="80px"
                   resize="vertical"
                   border="1px solid"
-                  borderColor="gray.300"
+                  borderColor="border.subtle"
                   _focus={{ borderColor: 'brand.iris' }}
                   pr="100px" // Make room for buttons
                 />

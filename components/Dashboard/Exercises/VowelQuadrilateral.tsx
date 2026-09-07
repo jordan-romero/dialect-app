@@ -4,6 +4,7 @@ import { Box, Button, Flex, Image, VStack, Text } from '@chakra-ui/react'
 import vowelChartImage from '@/public/ipaVowelChart.png'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface VowelPosition {
@@ -69,10 +70,8 @@ export const VowelQuadrilateralExercise: React.FC<
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        console.log('Loading vowel quadrilateral data...')
         const response = await fetch('/vowelQuadrilateralData.json')
         const data: VowelQuadrilateralData = await response.json()
-        console.log('Loaded vowel quadrilateral data:', data)
         setQuizData(data)
         setAvailableVowels(data.availableVowels)
 
@@ -89,7 +88,6 @@ export const VowelQuadrilateralExercise: React.FC<
           }
         })
         setVowelPositions(initialPositions)
-        console.log('Initialized vowel positions:', initialPositions)
       } catch (error) {
         console.error('Error loading vowel quadrilateral data:', error)
       }
@@ -104,19 +102,16 @@ export const VowelQuadrilateralExercise: React.FC<
       if (!quizData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (data) {
           // Whether a past attempt still counts as finished is decided below,
           // once we know what it actually covered.
           let stillComplete = data.isCompleted
 
           // Restore saved vowel positions if available
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === quizData.questions[0]?.id,
+              (answer) => answer.questionId === quizData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -236,29 +231,15 @@ export const VowelQuadrilateralExercise: React.FC<
         textAnswer: JSON.stringify(vowelPositions), // Save the current vowel positions as JSON
       }))
 
-      console.log('Submitting vowel quadrilateral quiz:', {
+      const ok = await postQuizAnswers({
         quizId: quizData.id,
-        lessonId: lessonId,
+        lessonId,
         answers: answersToSubmit,
-        vowelPositions,
       })
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
-      })
-
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
         setIsQuizComplete(true)
-        console.log('Vowel quadrilateral quiz submitted successfully')
       } else {
         console.error('Failed to submit quiz')
       }
@@ -279,13 +260,13 @@ export const VowelQuadrilateralExercise: React.FC<
     <VStack spacing={4} align="center">
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold">
             Instructions:
           </Text>{' '}

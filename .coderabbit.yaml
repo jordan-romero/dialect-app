@@ -86,12 +86,19 @@ ignore:
 # Enable/disable specific review features
 enable_free_tier: true
 
-# Knowledge base - provide context about your project
+# Project context (for maintainers; CodeRabbit's knowledge_base is an object,
+# not free text, so the project facts live here as comments):
+# - Next.js app for Acting Accents, a dialect training platform
+# - TypeScript, React, Chakra UI, Auth0 authentication, Prisma + Supabase
+# - The IPA (International Phonetic Alphabet) keyboard is a key feature
+# - Focus on accessibility and UX for actors and linguists
 knowledge_base:
-  - 'This is a Next.js application for Acting Accents, a dialect training platform'
-  - 'Uses TypeScript, React, Chakra UI, and Auth0 for authentication'
-  - 'IPA (International Phonetic Alphabet) keyboard is a key feature'
-  - 'Focus on accessibility and user experience for actors and linguists'
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto
 
 # Review effort estimation
 review_effort_levels:

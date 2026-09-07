@@ -1,7 +1,7 @@
 // Shared dashboard/overview computation: continue lesson, progress, streak, and
 // derived badges. Used by /api/overview and /api/badges/check so the badge
 // logic never diverges.
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient, User, Course, Lesson } from '@prisma/client'
 import { getUnlockedCourseIds } from './access'
 
 export interface BadgeResult {
@@ -11,6 +11,9 @@ export interface BadgeResult {
   earned: boolean
   count?: number
 }
+
+type CourseWithLessons = Course & { lessons: Lesson[] }
+type LessonWithCourse = Lesson & { courseId: number }
 
 const dayKey = (d: Date) => d.toISOString().slice(0, 10)
 
@@ -65,36 +68,34 @@ export async function computeOverview(
 
   const unlocked = await getUnlockedCourseIds(prisma, email)
 
-  const orderLessons = (c: any) =>
+  const orderLessons = (c: CourseWithLessons): Lesson[] =>
     [...(c.lessons || [])].sort(
       (a, b) =>
         (a.displayOrder ?? Number.POSITIVE_INFINITY) -
         (b.displayOrder ?? Number.POSITIVE_INFINITY),
     )
 
-  const phases = courses.map((c: any) => {
+  const phases = courses.map((c) => {
     const lessons = orderLessons(c)
     return {
       id: c.id,
       title: c.title,
       unlocked: unlocked.has(c.id),
       total: lessons.length,
-      completed: lessons.filter((l: any) => isDone(l.id)).length,
+      completed: lessons.filter((l) => isDone(l.id)).length,
     }
   })
 
-  const allLessons = courses.flatMap((c: any) =>
-    orderLessons(c).map((l: any) => ({ ...l, courseId: c.id })),
+  const allLessons: LessonWithCourse[] = courses.flatMap((c) =>
+    orderLessons(c).map((l) => ({ ...l, courseId: c.id })),
   )
   const totalLessons = allLessons.length
-  const completedLessons = allLessons.filter((l: any) => isDone(l.id)).length
+  const completedLessons = allLessons.filter((l) => isDone(l.id)).length
 
   const continueLesson =
-    allLessons.find((l: any) => unlocked.has(l.courseId) && !isDone(l.id)) ||
+    allLessons.find((l) => unlocked.has(l.courseId) && !isDone(l.id)) ||
     allLessons[0]
-  const continuePhase = courses.find(
-    (c: any) => c.id === continueLesson?.courseId,
-  )
+  const continuePhase = courses.find((c) => c.id === continueLesson?.courseId)
 
   const days = new Set<string>()
   answers.forEach((a) => {
@@ -111,7 +112,7 @@ export async function computeOverview(
     phases[idx].completed === phases[idx].total
   const allDone = totalLessons > 0 && completedLessons === totalLessons
   const checkpointsCompleted = allLessons.filter(
-    (l: any) => /checkpoint/i.test(l.title || '') && isDone(l.id),
+    (l) => /checkpoint/i.test(l.title || '') && isDone(l.id),
   ).length
 
   const badges: BadgeResult[] = [

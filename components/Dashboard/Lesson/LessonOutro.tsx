@@ -93,7 +93,7 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
         my={2}
         fallbackSrc="./completionIllustration.svg"
       />
-      <Text color="gray.600" maxW="440px" textAlign="center" mb={5}>
+      <Text color="text.muted" maxW="440px" textAlign="center" mb={5}>
         Nice work! Keep these resources handy as you practice.
       </Text>
       <Button
@@ -133,8 +133,8 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
                   p={4}
                   borderRadius="xl"
                   border="1px solid"
-                  borderColor="gray.200"
-                  bg="white"
+                  borderColor="border.subtle"
+                  bg="surface.card"
                   boxShadow="sm"
                   gridColumn={
                     expanded
@@ -148,7 +148,7 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
                       justify="center"
                       boxSize={9}
                       borderRadius="lg"
-                      bg="purple.50"
+                      bg="accent.subtle"
                       color="brand.iris"
                       flexShrink={0}
                     >
