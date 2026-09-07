@@ -109,7 +109,9 @@ export const VowelQuadrilateralExercise: React.FC<
         )
         if (response.ok) {
           const data = await response.json()
-          setIsCompleted(data.isCompleted)
+          // Whether a past attempt still counts as finished is decided below,
+          // once we know what it actually covered.
+          let stillComplete = data.isCompleted
 
           // Restore saved vowel positions if available
           if (data.answers && data.answers.length > 0) {
@@ -123,6 +125,18 @@ export const VowelQuadrilateralExercise: React.FC<
             ) {
               try {
                 const savedPositions = JSON.parse(savedAnswer.textAnswer)
+                // An attempt finished before the rhotic slots existed covers
+                // only the nine chart positions. Left marked complete it would
+                // lock the learner out of the two new ones — placements are
+                // frozen once completed — so it reopens instead.
+                const missesRequiredSlot = Object.entries(
+                  quizData.vowelPositions,
+                ).some(
+                  ([key, position]) =>
+                    position.isCorrect && !savedPositions[key]?.vowel,
+                )
+                if (missesRequiredSlot) stillComplete = false
+
                 // Merge onto the current slots rather than replacing them:
                 // saved answers predate any slot added since, and a missing
                 // slot crashes the completion check.
@@ -142,6 +156,8 @@ export const VowelQuadrilateralExercise: React.FC<
               }
             }
           }
+
+          setIsCompleted(stillComplete)
         }
       } catch (error) {
         console.error('Error loading quiz progress:', error)
