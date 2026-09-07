@@ -248,6 +248,9 @@
           "type": "quiz"
         },
         {
+          "type": "quiz"
+        },
+        {
           "type": "outro"
         }
       ],
@@ -475,6 +478,9 @@
           "type": "video"
         },
         {
+          "type": "quiz"
+        },
+        {
           "type": "resource"
         },
         {
@@ -589,7 +595,7 @@
       "id": 23,
       "title": "Dialect Transcription in Action",
       "description": "In this module, you will learn about the order of operations to undergo when transcribing your text from one dialect into another, along with some helpful tips and tricks.",
-      "videoUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9%20Transcription%20in%20Action.mp4",
+      "videoUrl": "https://acting-accents.s3.amazonaws.com/14a.%20Dialect%20Transcription%20in%20Action/14a%20Dialect%20Transcription%20in%20Action.mp4",
       "videoTitle": "Transcription in Action",
       "courseId": 5,
       "passScore": null,
@@ -1205,7 +1211,7 @@
       "passScore": 75,
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
-      "order": 0,
+      "order": 1,
       "isCompleted": false
     },
     {
@@ -1216,7 +1222,7 @@
       "passScore": 75,
       "hasBeenAttempted": false,
       "quizType": "symbolPicker",
-      "order": 1,
+      "order": 2,
       "isCompleted": false
     },
     {
@@ -1294,7 +1300,8 @@
       "hasBeenAttempted": false,
       "quizType": "shortAnswer",
       "order": 2,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Transcribe the following words into the IPA using the provided symbol bank. Click the word to hear it pronounced. Once you’re done, click “reveal answer.”"
     },
     {
       "id": 26,
@@ -1316,7 +1323,8 @@
       "hasBeenAttempted": false,
       "quizType": "shortAnswer",
       "order": 2,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "In this exercise, you will be presented with an audio clip of a short sentence and an unconnected speech version of the IPA transcription. In the provided answer space, type out the connected speech version to match the audio. Click “reveal answer” to see how close yours is. This is less an exact science, and more an exercise to reveal the distinction between connected and unconnected speech."
     },
     {
       "id": 28,
@@ -1437,7 +1445,32 @@
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
       "order": 2,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Play the provided sound clip, then choose the correct transcription that matches the audio for the presented word."
+    },
+    {
+      "id": 39,
+      "title": "Choose the Right Transcription",
+      "lessonId": 19,
+      "score": null,
+      "passScore": 70,
+      "hasBeenAttempted": false,
+      "quizType": "multipleChoice",
+      "order": 0,
+      "isCompleted": false,
+      "instructions": "Choose the transcription that best represents the presented audio clip."
+    },
+    {
+      "id": 40,
+      "title": "Building the Diphthongs & Triphthongs",
+      "lessonId": 10,
+      "score": null,
+      "passScore": 70,
+      "hasBeenAttempted": false,
+      "quizType": "buildDiphthongs",
+      "order": 0,
+      "isCompleted": false,
+      "instructions": null
     }
   ],
   "Question": [
@@ -2093,7 +2126,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.dog.mp3"
     },
     {
       "id": 157,
@@ -2101,7 +2134,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.sheep.mp3"
     },
     {
       "id": 158,
@@ -2109,7 +2142,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.tiger.mp3"
     },
     {
       "id": 159,
@@ -2117,7 +2150,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.ostrich.mp3"
     },
     {
       "id": 160,
@@ -2125,7 +2158,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.elephant.mp3"
     },
     {
       "id": 161,
@@ -2133,7 +2166,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.blue.mp3"
     },
     {
       "id": 162,
@@ -2141,7 +2174,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.purple.mp3"
     },
     {
       "id": 163,
@@ -2149,7 +2182,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.fuschia.mp3"
     },
     {
       "id": 164,
@@ -2157,7 +2190,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.chartreuse.mp3"
     },
     {
       "id": 165,
@@ -2173,7 +2206,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.lettuce.mp3"
     },
     {
       "id": 167,
@@ -2181,7 +2214,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.broccoli.mp3"
     },
     {
       "id": 168,
@@ -2189,7 +2222,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.asparagus.mp3"
     },
     {
       "id": 169,
@@ -2197,7 +2230,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.cucumber.mp3"
     },
     {
       "id": 170,
@@ -2205,7 +2238,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.scallions.mp3"
     },
     {
       "id": 171,
@@ -2213,7 +2246,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.pineapple.mp3"
     },
     {
       "id": 172,
@@ -2221,7 +2254,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.pomegranate.mp3"
     },
     {
       "id": 173,
@@ -2229,7 +2262,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.kumquat.mp3"
     },
     {
       "id": 174,
@@ -2237,7 +2270,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.boysenberry.mp3"
     },
     {
       "id": 175,
@@ -2245,7 +2278,7 @@
       "questionType": "shortAnswer",
       "quizId": 25,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8C.Audio/8C.papaya.mp3"
     },
     {
       "id": 176,
@@ -2321,51 +2354,51 @@
     },
     {
       "id": 185,
-      "text": "“Give me a break.”",
+      "text": "“Give me a break.” — unconnected /gɪv mi eɪ̆ bɹeɪ̆k/",
       "questionType": "shortAnswer",
       "quizId": 27,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9C.Audio/9C.1.mp3"
     },
     {
       "id": 186,
-      "text": "“The wheels on the automobile”",
+      "text": "“The wheels on the automobile” — unconnected /ði wiɫz ɑn ði ɑtoʊ̆moʊ̆biɫ/",
       "questionType": "shortAnswer",
       "quizId": 27,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9C.Audio/9C.2.mp3"
     },
     {
       "id": 187,
-      "text": "“Do you want to go for coffee?”",
+      "text": "“Do you want to go for coffee?” — unconnected /du ju wɑnt tu goʊ̆ fɔɚ̆ kɑfĭ/",
       "questionType": "shortAnswer",
       "quizId": 27,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9C.Audio/9C.3.mp3"
     },
     {
       "id": 188,
-      "text": "“You two are too close to the campfire.”",
+      "text": "“You two are too close to the campfire.” — unconnected /ju tu ɑɚ̆ tu kloʊ̆s tu ði kæmpfaɪ̆ɚ̆/",
       "questionType": "shortAnswer",
       "quizId": 27,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9C.Audio/9C.4.mp3"
     },
     {
       "id": 189,
-      "text": "“In his suit and tie”",
+      "text": "“In his suit and tie” — unconnected /ɪn hɪz sut ænd taɪ̆/",
       "questionType": "shortAnswer",
       "quizId": 27,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9C.Audio/9C.5.mp3"
     },
     {
       "id": 190,
-      "text": "“He got cranky on the trip to the plaza.”",
+      "text": "“He got cranky on the trip to the plaza.” — unconnected /hi gɑt kɹæŋkĭ ɑn ðə tɹɪp tu ðə plɑzə/",
       "questionType": "shortAnswer",
       "quizId": 27,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/9.%20Transcription%20in%20Action/9C.Audio/9C.6.mp3"
     },
     {
       "id": 191,
@@ -3941,7 +3974,7 @@
       "questionType": "multipleChoice",
       "quizId": 38,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.1.mp3"
     },
     {
       "id": 396,
@@ -3949,7 +3982,7 @@
       "questionType": "multipleChoice",
       "quizId": 38,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.2.mp3"
     },
     {
       "id": 397,
@@ -3957,7 +3990,7 @@
       "questionType": "multipleChoice",
       "quizId": 38,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.3.mp3"
     },
     {
       "id": 398,
@@ -3965,7 +3998,7 @@
       "questionType": "multipleChoice",
       "quizId": 38,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.4.mp3"
     },
     {
       "id": 399,
@@ -3973,7 +4006,7 @@
       "questionType": "multipleChoice",
       "quizId": 38,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.5.mp3"
     },
     {
       "id": 400,
@@ -3981,7 +4014,7 @@
       "questionType": "multipleChoice",
       "quizId": 38,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.6.mp3"
     },
     {
       "id": 401,
@@ -4094,7 +4127,7 @@
       "questionType": "multipleChoice",
       "quizId": 10,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Diphthongs%20%26%20Triphtongs/audio/a%C9%AA%CC%86%C9%99%CC%86.mp3"
     },
     {
       "id": 413,
@@ -4141,6 +4174,62 @@
       "text": "Place each IPA symbol in its correct spot on the lexical chart.",
       "questionType": "lexicalChart",
       "quizId": 13,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 419,
+      "text": "Arthur is our only son.",
+      "questionType": "multipleChoice",
+      "quizId": 39,
+      "categories": [],
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.1.a.mp3"
+    },
+    {
+      "id": 420,
+      "text": "Mama is an expert of tax law in America and France.",
+      "questionType": "multipleChoice",
+      "quizId": 39,
+      "categories": [],
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.2.a.mp3"
+    },
+    {
+      "id": 421,
+      "text": "On Tuesdays I take the tube to the duke’s new studio.",
+      "questionType": "multipleChoice",
+      "quizId": 39,
+      "categories": [],
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.3.a.mp3"
+    },
+    {
+      "id": 422,
+      "text": "They found an ordinary dictionary in the observatory.",
+      "questionType": "multipleChoice",
+      "quizId": 39,
+      "categories": [],
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.4.a.mp3"
+    },
+    {
+      "id": 423,
+      "text": "The hostile juvenile was agile with his mobile phone.",
+      "questionType": "multipleChoice",
+      "quizId": 39,
+      "categories": [],
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.5.a.mp3"
+    },
+    {
+      "id": 424,
+      "text": "It was silly to worry about losing the gray bag.",
+      "questionType": "multipleChoice",
+      "quizId": 39,
+      "categories": [],
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.6.a.mp3"
+    },
+    {
+      "id": 425,
+      "text": "Building the Diphthongs & Triphthongs",
+      "questionType": "buildDiphthongs",
+      "quizId": 40,
       "categories": [],
       "audioUrl": null
     }
@@ -14925,6 +15014,246 @@
       "audioUrl": null,
       "feedback": null,
       "questionId": 415
+    },
+    {
+      "id": 1251,
+      "optionText": "ɑθə ɹɪz ɑ ɹəʊ̆nlĭ sʌn",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.1.a.mp3",
+      "feedback": null,
+      "questionId": 419
+    },
+    {
+      "id": 1252,
+      "optionText": "ɑθə ɪz ɑ əʊ̆nlĭ sʌn",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.1.b.mp3",
+      "feedback": null,
+      "questionId": 419
+    },
+    {
+      "id": 1253,
+      "optionText": "ɑθɚ ɪz ɑɚ̆ əʊ̆nlĭ sʌn",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.1.c.p3.mp3",
+      "feedback": null,
+      "questionId": 419
+    },
+    {
+      "id": 1254,
+      "optionText": "ɑθə rɪz ɑ rəʊ̆nlĭ sʌn",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.1.d.mp3",
+      "feedback": null,
+      "questionId": 419
+    },
+    {
+      "id": 1255,
+      "optionText": "məmɑ ɹɪz ən ɛkspət əv tæks lɔ ɹɪn əmɛɹɪkə ɹænd fɹɑns",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.2.a.mp3",
+      "feedback": null,
+      "questionId": 420
+    },
+    {
+      "id": 1256,
+      "optionText": "məmɑ ɪz ən ɛkspət əv tæks lɔ ɪn əmɛɹɪkə ænd fɹɑns",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.2.b.mp3",
+      "feedback": null,
+      "questionId": 420
+    },
+    {
+      "id": 1257,
+      "optionText": "məmɑ rɪz ən ɛkspət əv tæks lɔ rɪn əmɛɹɪkə rænd fɹɑns",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.2.c.mp3",
+      "feedback": null,
+      "questionId": 420
+    },
+    {
+      "id": 1258,
+      "optionText": "məmɑɚ ɪz ən ɛkspət əv tæks lɔɚ ɪn əmɛɹɪkɚ ænd fɹɑns",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.2.d.mp3",
+      "feedback": null,
+      "questionId": 420
+    },
+    {
+      "id": 1259,
+      "optionText": "ɒn tɪ̆uzdeɪ̆z aɪ̆ teɪ̆k ðə tɪ̆ub tʊ ðə dɪ̆uks nɪ̆u ˈstɪ̆udĭˌəʊ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.3.a.mp3",
+      "feedback": null,
+      "questionId": 421
+    },
+    {
+      "id": 1260,
+      "optionText": "ɒn tuzdeɪ̆z aɪ̆ teɪ̆k ðə tub tʊ ðə duks nu ˈstudĭˌəʊ̆",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.3.b.mp3",
+      "feedback": null,
+      "questionId": 421
+    },
+    {
+      "id": 1261,
+      "optionText": "ɒn tyuzdeɪ̆z aɪ̆ teɪ̆k ðə tyub tʊ ðə dyuks nyu ˈstyudĭˌəʊ̆",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.3.c.mp3",
+      "feedback": null,
+      "questionId": 421
+    },
+    {
+      "id": 1262,
+      "optionText": "ɒn tiʊzdeɪ̆z aɪ̆ teɪ̆k ðə tiʊb tʊ ðə diʊks niʊ ˈstiʊdĭˌəʊ̆",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.3.d.mp3",
+      "feedback": null,
+      "questionId": 421
+    },
+    {
+      "id": 1263,
+      "optionText": "ðeɪ̆ faʊ̆nd ən ɔd̚n̩ɹĭ dɪkʃn̩ɹĭ ɪn ðə əbzɜvətɹĭ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.4.a.mp3",
+      "feedback": null,
+      "questionId": 422
+    },
+    {
+      "id": 1264,
+      "optionText": "ðeɪ̆ faʊ̆nd ən ɔdn̩ɛɹĭ dɪkʃn̩ɛɹĭ ɪn ðə əbzɜvətɔɹĭ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.4.b.mp3",
+      "feedback": null,
+      "questionId": 422
+    },
+    {
+      "id": 1265,
+      "optionText": "ðeɪ̆ faʊ̆nd ən ɔdn̩ɹy dɪkʃn̩ɹy ɪn ðə əbzɜvətɹy",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.4.c.mp3",
+      "feedback": null,
+      "questionId": 422
+    },
+    {
+      "id": 1266,
+      "optionText": "ðeɪ̆ faʊ̆nd ən ɔdn̩rĭ dɪkʃn̩rĭ ɪn ðə əbzɜvətrĭ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.4.d.mp3",
+      "feedback": null,
+      "questionId": 422
+    },
+    {
+      "id": 1267,
+      "optionText": "ðə hɒstaɪ̆l d͡ʒuvənaɪ̆l wəz æd͡ʒaɪ̆l wɪθ hɪz məʊ̆baɪ̆l fəʊ̆n",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.5.a.mp3",
+      "feedback": null,
+      "questionId": 423
+    },
+    {
+      "id": 1268,
+      "optionText": "ðə hɒstɫ̩ d͡ʒuvənɫ̩ wəz æd͡ʒɫ̩ wɪθ hɪz məʊ̆bɫ̩ fəʊ̆n",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.5.b.mp3",
+      "feedback": null,
+      "questionId": 423
+    },
+    {
+      "id": 1269,
+      "optionText": "ðə hɒstaɪ̆ʊ d͡ʒuvənaɪ̆ʊ wəz æd͡ʒaɪ̆ʊ wɪvɪz məʊ̆baɪ̆ʊ fəʊ̆n",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.5.c.mp3",
+      "feedback": null,
+      "questionId": 423
+    },
+    {
+      "id": 1270,
+      "optionText": "ðə hɒstil d͡ʒuvənil wəz æd͡ʒil wɪð hɪz məʊ̆bil fəʊ̆n",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.5.d.mp3",
+      "feedback": null,
+      "questionId": 423
+    },
+    {
+      "id": 1271,
+      "optionText": "ɪt wəz͜ sɪlɪ tʊ wʌɾɪ əbaʊ̆t luzɪŋ ðə gɹɛɪ̆ bɛg",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.6.a.mp3",
+      "feedback": null,
+      "questionId": 424
+    },
+    {
+      "id": 1272,
+      "optionText": "ɪt wəz͜ sɪlĭ tʊ wʌɹĭ əbaʊ̆t luzɪŋ ðə gɹeɪ̆ bæg",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.6.b.mp3",
+      "feedback": null,
+      "questionId": 424
+    },
+    {
+      "id": 1273,
+      "optionText": "ɪt wəz͜ sɪlɪ tʊ wʌdĭ əbaʊ̆t luzɪŋ ðə gɹɛɪ̆ bɜg",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.6.c.mp3",
+      "feedback": null,
+      "questionId": 424
+    },
+    {
+      "id": 1274,
+      "optionText": "ɪt wəz͜ sɪly tʊ wɝɪ əbaʊ̆t luzɪŋ ðə gɹaɪ̆ bɜg",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.6.d.mp3",
+      "feedback": null,
+      "questionId": 424
     }
   ],
   "ExtraOption": []

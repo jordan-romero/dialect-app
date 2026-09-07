@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
-import { MdKeyboard } from 'react-icons/md'
+import { MdKeyboard, MdVolumeUp } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
@@ -24,6 +24,10 @@ interface HangmanQuestion {
   word: string
   blanks: number
   correctAnswer: string[]
+  /** Build-a-Word ships a recording per word ("Record words for playback" in
+   *  its design doc); the Hangman dataset has none, so this stays optional and
+   *  the button only appears where a clip exists. */
+  audioUrl?: string
 }
 
 interface HangmanQuizData {
@@ -348,6 +352,9 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           </Text>{' '}
           Point and click the correct IPA symbol into the blank spaces to
           transcribe the presented word.
+          {quizData.questions_data.some((q) => q.audioUrl)
+            ? ' Click the "Play Audio" button to hear the word.'
+            : ''}
         </Text>
         <Text fontSize="sm" color="purple.600" mt={1}>
           Syllabic consonant indicators, stress indicators, and syllable breaks
@@ -433,8 +440,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   Active Blank:
                 </Text>{' '}
                 Position {activeBlankIndex + 1} - Click a symbol above or use
-                Option (Mac) / Alt (Windows) + letter shortcuts. The symbol
-                will cycle in the blank space and be committed after 1 second.
+                Option (Mac) / Alt (Windows) + letter shortcuts. The symbol will
+                cycle in the blank space and be committed after 1 second.
               </Text>
             </Box>
           )}
@@ -478,9 +485,22 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             QUESTION {currentQuestionIndex + 1}:
           </Text>
 
-          <Text fontSize="xl" fontWeight="bold" mb={2}>
-            &ldquo;{currentQuestion.word}&rdquo;
-          </Text>
+          <Flex align="center" gap={3} mb={2}>
+            <Text fontSize="xl" fontWeight="bold">
+              &ldquo;{currentQuestion.word}&rdquo;
+            </Text>
+            {currentQuestion.audioUrl && (
+              <Button
+                size="sm"
+                leftIcon={<MdVolumeUp />}
+                onClick={() =>
+                  new Audio(currentQuestion.audioUrl).play().catch(() => {})
+                }
+              >
+                Play Audio
+              </Button>
+            )}
+          </Flex>
 
           {/* Blank spaces */}
           <Flex gap={2} align="center" mb={3}>

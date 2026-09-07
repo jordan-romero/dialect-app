@@ -37,6 +37,12 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   /** Quiz the current word order was shuffled for, so it's shuffled once and
    *  never re-rolled mid-exercise by an incidental re-render. */
   const shuffledForQuizId = useRef<number | null>(null)
+  /** The word list scrolls inside itself so the symbol bank can never leave the
+   *  screen, and the active word is kept centred in it as the learner advances.
+   *  (A sticky bank doesn't work here: an ancestor with `overflow: auto` that
+   *  never scrolls becomes its containing block, so it scrolls away.) */
+  const gridRef = useRef<HTMLDivElement | null>(null)
+  const activeCellRef = useRef<HTMLDivElement | null>(null)
 
   // Match by `order` (not array index) so it stays correct if quiz ordering changes.
   const quizData = quizzes.find((q) => q.order === quizIndex)
@@ -161,6 +167,24 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     }
   }, [])
 
+  // Keep the active word centred as it advances, so the learner never has to
+  // scroll to find where they are. Scrolls the grid directly rather than using
+  // scrollIntoView, which would also move ancestors and drag the page around.
+  useEffect(() => {
+    const grid = gridRef.current
+    const cell = activeCellRef.current
+    if (!grid || !cell) return
+    const target =
+      cell.offsetTop - grid.clientHeight / 2 + cell.offsetHeight / 2
+    const reduceMotion = window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+    grid.scrollTo({
+      top: Math.max(0, target),
+      behavior: reduceMotion ? 'auto' : 'smooth',
+    })
+  }, [currentWordIndex])
+
   const total = shuffledAnswerOptions.length
   const areAllAnswered = () => currentWordIndex >= total
 
@@ -228,6 +252,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
     return (
       <Flex
         key={option.id}
+        ref={isActive ? activeCellRef : undefined}
         align="center"
         justify="space-between"
         gap={3}
@@ -294,7 +319,7 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
 
   return (
     <Box>
-      <Box position="sticky" top="0" bg="white" zIndex="1" pt={4} pb={3}>
+      <Box bg="white" pt={4} pb={3}>
         <Text fontStyle="italic" mb={3}>
           Select the IPA symbol that corresponds with the underlined part of the
           word when spoken in a General American dialect.
@@ -328,7 +353,16 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
       </Flex>
 
       {/* Two words per row, filled in order. */}
-      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={3}>
+      <Grid
+        ref={gridRef}
+        templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
+        gap={3}
+        position="relative"
+        maxH={{ base: '48vh', md: '52vh' }}
+        overflowY="auto"
+        pr={2}
+        pb={1}
+      >
         {shuffledAnswerOptions.map((option, index) =>
           renderWordCell(option, index),
         )}

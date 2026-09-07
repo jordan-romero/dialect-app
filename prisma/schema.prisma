@@ -91,6 +91,10 @@ model Quiz {
   order            Int          @default(0)
   isCompleted      Boolean      @default(false)
   userAnswers      UserAnswer[]
+  // Overrides the exercise component's built-in instruction text. The generic
+  // components infer wording from the quiz shape, which is wrong for one-off
+  // exercises (e.g. 13b.B asks the learner to match audio to a transcription).
+  instructions     String?
 }
 
 // Question Model

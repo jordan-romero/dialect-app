@@ -207,6 +207,13 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     <Box>
       {currentQuestion && (
         <Box>
+          {/* Not every short-answer quiz carries wording; those that do have
+              it authored in the content, so it isn't inferred here. */}
+          {currentQuiz?.instructions && (
+            <Text fontStyle="italic" mb={4}>
+              Instructions: {currentQuiz.instructions}
+            </Text>
+          )}
           <Box display="flex" justifyContent="flex-end" mb={2}>
             <Button
               size="sm"

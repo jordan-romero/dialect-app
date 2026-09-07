@@ -11,6 +11,12 @@ interface VowelPosition {
   left: number
   vowel: string | null
   isCorrect?: boolean
+  /** Rendered below the chart rather than on it. The printed IPA chart has no
+   *  position for the r-coloured vowels, so ɚ and ɝ get their own labelled
+   *  slots underneath — the same treatment the consonant rectangle gives
+   *  sounds that don't fit its grid. */
+  extra?: boolean
+  label?: string
 }
 
 interface VowelQuadrilateralData {
@@ -78,6 +84,8 @@ export const VowelQuadrilateralExercise: React.FC<
             left: position.left,
             vowel: null,
             isCorrect: position.isCorrect,
+            extra: position.extra,
+            label: position.label,
           }
         })
         setVowelPositions(initialPositions)
@@ -115,7 +123,19 @@ export const VowelQuadrilateralExercise: React.FC<
             ) {
               try {
                 const savedPositions = JSON.parse(savedAnswer.textAnswer)
-                setVowelPositions(savedPositions)
+                // Merge onto the current slots rather than replacing them:
+                // saved answers predate any slot added since, and a missing
+                // slot crashes the completion check.
+                setVowelPositions((current) => {
+                  const merged: { [key: string]: VowelPosition } = {}
+                  Object.entries(current).forEach(([key, position]) => {
+                    merged[key] = {
+                      ...position,
+                      vowel: savedPositions[key]?.vowel ?? null,
+                    }
+                  })
+                  return merged
+                })
               } catch (error) {
                 console.error('Error parsing saved vowel positions:', error)
                 // If parsing fails, keep the default empty positions
@@ -162,7 +182,7 @@ export const VowelQuadrilateralExercise: React.FC<
       ([key, correctPosition]) => {
         if (correctPosition.isCorrect) {
           const userPosition = vowelPositions[key]
-          return userPosition.vowel === correctPosition.vowel
+          return userPosition?.vowel === correctPosition.vowel
         }
         return true
       },
@@ -176,7 +196,7 @@ export const VowelQuadrilateralExercise: React.FC<
       ([key, correctPosition]) => {
         if (correctPosition.isCorrect) {
           const userPosition = vowelPositions[key]
-          return userPosition.vowel === correctPosition.vowel
+          return userPosition?.vowel === correctPosition.vowel
         }
         return true
       },
@@ -278,44 +298,105 @@ export const VowelQuadrilateralExercise: React.FC<
           height="auto"
         />
 
-        {Object.entries(vowelPositions).map(([key, position]) => {
-          const correctPosition = quizData.vowelPositions[key]
-          const isCorrect = position.vowel === correctPosition.vowel
-          const isWrong =
-            position.vowel && position.vowel !== correctPosition.vowel
+        {Object.entries(vowelPositions)
+          .filter(([, position]) => !position.extra)
+          .map(([key, position]) => {
+            const correctPosition = quizData.vowelPositions[key]
+            const isCorrect = position.vowel === correctPosition.vowel
+            const isWrong =
+              position.vowel && position.vowel !== correctPosition.vowel
 
-          return (
-            <Box
-              key={key}
-              position="absolute"
-              top={`${position.top}%`}
-              left={`${position.left}%`}
-              w="30px"
-              h="30px"
-              bg={position.vowel ? 'white' : 'rgba(255, 255, 255, 0.5)'}
-              border="2px solid"
-              borderColor={
-                isCorrect
-                  ? 'green.500'
-                  : isWrong
-                  ? 'red.500'
-                  : selectedVowel
-                  ? 'teal.500'
-                  : 'gray.300'
-              }
-              borderRadius="full"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              fontWeight="bold"
-              cursor="pointer"
-              onClick={() => handleVowelClick(key)}
-            >
-              {position.vowel}
-            </Box>
-          )
-        })}
+            return (
+              <Box
+                key={key}
+                position="absolute"
+                top={`${position.top}%`}
+                left={`${position.left}%`}
+                w="30px"
+                h="30px"
+                bg={position.vowel ? 'white' : 'rgba(255, 255, 255, 0.5)'}
+                border="2px solid"
+                borderColor={
+                  isCorrect
+                    ? 'green.500'
+                    : isWrong
+                    ? 'red.500'
+                    : selectedVowel
+                    ? 'teal.500'
+                    : 'gray.300'
+                }
+                borderRadius="full"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                fontWeight="bold"
+                cursor="pointer"
+                onClick={() => handleVowelClick(key)}
+              >
+                {position.vowel}
+              </Box>
+            )
+          })}
       </Box>
+
+      {Object.entries(vowelPositions).some(([, p]) => p.extra) && (
+        <Box w="full" maxW="800px">
+          <Text fontWeight="bold" mb={2}>
+            Rhotic Vowels
+          </Text>
+          <Text fontSize="sm" color="gray.600" mb={3}>
+            These two aren&apos;t marked on the chart above — place them here.
+          </Text>
+          <VStack align="stretch" spacing={0} maxW="440px">
+            {Object.entries(vowelPositions)
+              .filter(([, position]) => position.extra)
+              .map(([key, position], i) => {
+                const correctPosition = quizData.vowelPositions[key]
+                const isCorrect = position.vowel === correctPosition.vowel
+                const isWrong =
+                  position.vowel && position.vowel !== correctPosition.vowel
+                return (
+                  <Flex
+                    key={key}
+                    align="center"
+                    borderWidth={1}
+                    borderColor="gray.200"
+                    mt={i === 0 ? 0 : '-1px'}
+                  >
+                    <Text flex="1" px={3} py={2} fontSize="sm">
+                      {correctPosition.label}:
+                    </Text>
+                    <Flex
+                      align="center"
+                      justify="center"
+                      w="52px"
+                      h="40px"
+                      borderLeftWidth={1}
+                      borderColor="gray.200"
+                      bg={
+                        isCorrect
+                          ? 'green.50'
+                          : isWrong
+                          ? 'red.50'
+                          : selectedVowel
+                          ? 'teal.50'
+                          : 'white'
+                      }
+                      fontFamily="ipa"
+                      className="ipa-text"
+                      fontSize="xl"
+                      fontWeight="bold"
+                      cursor="pointer"
+                      onClick={() => handleVowelClick(key)}
+                    >
+                      {position.vowel}
+                    </Flex>
+                  </Flex>
+                )
+              })}
+          </VStack>
+        </Box>
+      )}
 
       <QuizNavigation
         currentQuestion={1}

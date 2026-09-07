@@ -27,6 +27,8 @@ export type Quiz = {
   passScore: number
   hasBeenAttempted: boolean
   quizType: string
+  /** Optional per-quiz instruction text; overrides the component default. */
+  instructions?: string | null
   questions: Question[]
   answerOptions: AnswerOption[]
   order: number

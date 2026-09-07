@@ -322,34 +322,34 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
           most are a single IPA symbol, but some are whole words. Wrapping
           keeps them tight on desktop and reflows them on tablet/phone. */}
       <Flex wrap="wrap" gap={{ base: 2, md: 3 }} width="100%">
-        {(
-          shuffledOptionsByQuestion[question.id] ?? question.answerOptions
-        ).map((option: AnswerOption) => (
-          <Button
-            key={option.id}
-            onClick={() => handleAnswerSelect(question.id, option.id)}
-            fontFamily="ipa"
-            fontSize={{ base: 'md', md: 'lg' }}
-            minW={{ base: '60px', md: '68px' }}
-            maxW="100%"
-            h="auto"
-            px={{ base: 3, md: 4 }}
-            py={{ base: 2, md: 2.5 }}
-            whiteSpace="normal"
-            variant={
-              selectedAnswers[question.id] === option.id ? 'solid' : 'outline'
-            }
-            colorScheme={
-              selectedAnswers[question.id] === option.id
-                ? isQuestionCorrect(question.id)
-                  ? 'green'
-                  : 'red'
-                : 'gray'
-            }
-          >
-            {renderUnderlined(option.optionText)}
-          </Button>
-        ))}
+        {(shuffledOptionsByQuestion[question.id] ?? question.answerOptions).map(
+          (option: AnswerOption) => (
+            <Button
+              key={option.id}
+              onClick={() => handleAnswerSelect(question.id, option.id)}
+              fontFamily="ipa"
+              fontSize={{ base: 'md', md: 'lg' }}
+              minW={{ base: '60px', md: '68px' }}
+              maxW="100%"
+              h="auto"
+              px={{ base: 3, md: 4 }}
+              py={{ base: 2, md: 2.5 }}
+              whiteSpace="normal"
+              variant={
+                selectedAnswers[question.id] === option.id ? 'solid' : 'outline'
+              }
+              colorScheme={
+                selectedAnswers[question.id] === option.id
+                  ? isQuestionCorrect(question.id)
+                    ? 'green'
+                    : 'red'
+                  : 'gray'
+              }
+            >
+              {renderUnderlined(option.optionText)}
+            </Button>
+          ),
+        )}
       </Flex>
       {(() => {
         const selectedId = selectedAnswers[question.id]
@@ -357,11 +357,26 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         const selected = question.answerOptions.find(
           (o: AnswerOption) => o.id === selectedId,
         )
-        return selected?.feedback ? (
-          <Text mt={3} fontSize="sm" fontStyle="italic" color="orange.600">
-            {selected.feedback}
-          </Text>
-        ) : null
+        if (!selected) return null
+        return (
+          <Box mt={3}>
+            {selected.feedback && (
+              <Text fontSize="sm" fontStyle="italic" color="orange.600" mb={2}>
+                {selected.feedback}
+              </Text>
+            )}
+            {/* Hearing the wrong choice read aloud is how the learner works out
+                why it's wrong, so it only appears once they've picked it. */}
+            {selected.audioUrl && (
+              <Flex align="center" gap={2}>
+                <Text fontSize="sm" color="gray.600">
+                  Hear your answer:
+                </Text>
+                <AudioButton audioUrl={selected.audioUrl} />
+              </Flex>
+            )}
+          </Box>
+        )
       })()}
     </Box>
   )
@@ -385,7 +400,12 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         borderColor="gray.200"
       >
         <Text fontStyle="italic" mb={4}>
-          {!hasParts
+          {/* A quiz can carry its own wording. The fallbacks below infer it
+              from the quiz shape, which is right for the symbol⇄word
+              exercises but wrong for anything one-off. */}
+          {multipleChoiceQuiz.instructions
+            ? `Instructions: ${multipleChoiceQuiz.instructions}`
+            : !hasParts
             ? 'Instructions: Choose the correct transcription for the presented word in a General American Dialect.'
             : currentPart === 1
             ? 'Instructions: Choose the correct symbol that matches the sound in the underlined part of the word. Click the "Play Audio" button to hear the word.'

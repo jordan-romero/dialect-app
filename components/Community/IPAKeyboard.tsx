@@ -848,16 +848,19 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
   const filteredGroupsRef = useRef(filteredGroups)
   filteredGroupsRef.current = filteredGroups
+  // Symbols carry diacritics (breves, tie bars) that are hard to read and hard
+  // to hit accurately at small sizes, so every tier runs a step larger than a
+  // plain text button would.
   const buttonSize = symbolSize
-    ? { sm: '28px', md: '36px', lg: '46px' }[symbolSize]
+    ? { sm: '32px', md: '42px', lg: '52px' }[symbolSize]
     : compact
-    ? '28px'
-    : '32px'
+    ? '34px'
+    : '38px'
   const buttonFontSize = symbolSize
-    ? { sm: 'sm', md: 'lg', lg: '2xl' }[symbolSize]
+    ? { sm: 'md', md: 'xl', lg: '2xl' }[symbolSize]
     : compact
-    ? 'sm'
-    : 'lg'
+    ? 'md'
+    : 'xl'
   // Shortcut display labels — Mac glyphs vs Windows/Linux text. Only rendered
   // inside the Drawer (mounts client-side on open), so navigator sniffing is
   // hydration-safe here.

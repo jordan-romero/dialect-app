@@ -35,6 +35,7 @@ import { LexicalChartExercise } from '../Exercises/LexicalChartExercise'
 import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
 import LockedLessonPaywall from './LockedLessonPaywall'
 import { expandLessonSteps, orderedResources } from './lessonOutline'
+import BuildDiphthongsExercise from '../Exercises/BuildDiphthongsExercise'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -264,6 +265,11 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
         if (!r) return null
         const isAudio = r.type === 'mp3' || /\.(mp3|wav)(\?|$)/i.test(r.url)
         const isLink = r.type === 'link'
+        // Images were falling through to the Google Docs viewer, which renders
+        // documents, not pictures — the GenAm Consonant Placement PNG came up
+        // as "Could not preview the file". Show them directly instead.
+        const isImage =
+          r.type === 'image' || /\.(png|jpe?g|gif|webp|svg)(\?|$)/i.test(r.url)
         return (
           <Box height="100%" overflowY="auto">
             <Box mb={8}>
@@ -330,6 +336,15 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                     Open the IPA chart ↗
                   </Button>
                 </Box>
+              ) : isImage ? (
+                <Image
+                  src={r.url}
+                  alt={r.name}
+                  maxW="100%"
+                  borderRadius="md"
+                  borderWidth={1}
+                  borderColor="gray.200"
+                />
               ) : (
                 <IframeWithSkeleton
                   src={`https://docs.google.com/viewer?url=${encodeURIComponent(
@@ -412,6 +427,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                 case 'multipleChoice':
                   return (
                     <MultipleChoiceExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'buildDiphthongs':
+                  return (
+                    <BuildDiphthongsExercise
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
@@ -505,7 +528,7 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
-                      dataUrl="/buildAWordData.json"
+                      dataUrl="/api/buildAWord"
                     />
                   )
                 default:
