@@ -1,8 +1,19 @@
 # Audio still needed
 
-Everything on this page is blocking an exercise. Two of them — 13b.A and 14a.B
-— are the last unbuilt exercises in the course, and neither can ship without
-recordings, because in both the audio clip _is_ the question.
+Everything on this page is blocking an exercise.
+
+**Both 13b.A and 14a.B are now built.** Their content, answer keys and wiring
+are committed; each has a script that verifies every clip exists on S3 and
+refuses to write until they do. So the day the recordings land, each exercise
+goes live in one command — no further build work:
+
+```bash
+node --env-file=.env scripts/add-13bA-exercise.mjs && yarn seed
+node --env-file=.env scripts/add-14aB-exercise.mjs && yarn seed
+```
+
+They are deliberately not registered as lesson steps yet. In both the audio
+clip _is_ the question, so a silent version would just be a broken step.
 
 Compiled 2026-09-06 by auditing the Drive master content and the S3 bucket
 against the course database. Filenames below follow the conventions already in

@@ -63,11 +63,11 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
   const toast = useToast()
 
   useEffect(() => {
-    fetch('/api/repeatAfterMe')
+    fetch(`/api/repeatAfterMe?lessonId=${lessonId}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d: RepeatAfterMeData | null) => d && setData(d))
       .catch((e) => console.error('Error loading repeat-after-me:', e))
-  }, [])
+  }, [lessonId])
 
   // Completion is a simple marker (this is a practice drill, not graded).
   useEffect(() => {

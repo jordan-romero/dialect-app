@@ -1484,7 +1484,7 @@
     },
     {
       "id": 2,
-      "text": "From the word bank below, drag all the words that rhyme with the word “THOUGHT” in a General American dialect to \"Thought\" column.",
+      "text": "Select the three words that do not rhyme with the word “THOUGHT” in a General American dialect from the words below.",
       "questionType": "rhymingCategories",
       "quizId": 1,
       "categories": [
@@ -1494,7 +1494,7 @@
     },
     {
       "id": 3,
-      "text": "Drag the words in the word-bank below beneath their rhyming counterparts. ",
+      "text": "Drag the words in the word-bank below beneath their rhyming counterparts. Be careful, some words in the bank do not have a rhyming partner.",
       "questionType": "rhymingCategories",
       "quizId": 1,
       "categories": [
@@ -4358,7 +4358,7 @@
     {
       "id": 14,
       "optionText": "Drought",
-      "isCorrect": false,
+      "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Intro+to+the+IPA/Question+2/Drought.mp3",
@@ -4418,7 +4418,7 @@
     {
       "id": 21,
       "optionText": "Laughed",
-      "isCorrect": false,
+      "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Intro+to+the+IPA/Question+2/Laughed.mp3",
@@ -4617,7 +4617,7 @@
     },
     {
       "id": 42,
-      "optionText": "Faired",
+      "optionText": "Fared",
       "isCorrect": false,
       "rhymeCategory": "Bared",
       "rhymingWordId": null,
@@ -4647,7 +4647,7 @@
     },
     {
       "id": 45,
-      "optionText": "Gourd ",
+      "optionText": "Gourd",
       "isCorrect": false,
       "rhymeCategory": "Bored",
       "rhymingWordId": null,
@@ -15254,6 +15254,66 @@
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.B.Audio/13bB.6.d.mp3",
       "feedback": null,
       "questionId": 424
+    },
+    {
+      "id": 1275,
+      "optionText": "Nought",
+      "isCorrect": false,
+      "questionId": 2,
+      "feedback": null,
+      "rhymeCategory": "thought",
+      "rhymingWordId": null,
+      "audioUrl": null
+    },
+    {
+      "id": 1276,
+      "optionText": "Nuclear",
+      "isCorrect": false,
+      "questionId": 3,
+      "feedback": null,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null
+    },
+    {
+      "id": 1277,
+      "optionText": "Liar",
+      "isCorrect": false,
+      "questionId": 3,
+      "feedback": null,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null
+    },
+    {
+      "id": 1278,
+      "optionText": "Drier",
+      "isCorrect": false,
+      "questionId": 3,
+      "feedback": null,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null
+    },
+    {
+      "id": 1279,
+      "optionText": "Aired",
+      "isCorrect": false,
+      "questionId": 4,
+      "feedback": null,
+      "rhymeCategory": "Bared",
+      "rhymingWordId": null,
+      "audioUrl": null
+    },
+    {
+      "id": 1280,
+      "optionText": "Paired",
+      "isCorrect": false,
+      "questionId": 4,
+      "feedback": null,
+      "rhymeCategory": "Bared",
+      "rhymingWordId": null,
+      "audioUrl": null
     }
   ],
   "ExtraOption": []
