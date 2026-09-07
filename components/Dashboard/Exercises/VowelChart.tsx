@@ -188,7 +188,8 @@ const VowelChart: React.FC<VowelChartProps> = ({
         <Box position="relative" flex="1" minH="340px">
           <Box
             as="svg"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // Chakra's Box-as-svg types omit SVG-only attributes, so this
+            // small prop bag is cast through to reach the underlying element.
             {...({
               viewBox: '0 0 100 100',
               preserveAspectRatio: 'none',

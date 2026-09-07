@@ -233,6 +233,15 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
     ? `Start with ${c?.title || 'your first lesson'}`
     : c?.title || 'Get started'
 
+  // A locator line that adds context without echoing the heading's title.
+  const subtitle = allDone
+    ? 'Revisit any lesson any time'
+    : c?.moduleNumber
+    ? `Module ${c.moduleNumber}`
+    : firstTime
+    ? 'Your first lesson'
+    : ''
+
   return (
     <Box
       bgGradient="linear(to-r, #5F53CF, #7EACE2)"
@@ -244,18 +253,14 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
       <Text fontSize="sm" opacity={0.9} mb={1}>
         {eyebrow}
       </Text>
-      <Heading size={{ base: 'lg', md: 'xl' }} mb={1}>
+      <Heading size={{ base: 'lg', md: 'xl' }} mb={subtitle ? 1 : 5}>
         {heading}
       </Heading>
-      <Text fontSize="md" opacity={0.9} mb={5}>
-        {allDone
-          ? "You've completed the course"
-          : c?.title
-          ? c.moduleNumber
-            ? `Module ${c.moduleNumber}: ${c.title}`
-            : c.title
-          : 'Start your first lesson'}
-      </Text>
+      {subtitle && (
+        <Text fontSize="md" opacity={0.9} mb={5}>
+          {subtitle}
+        </Text>
+      )}
       <Button
         as={NextLink}
         href="/dashboard"
