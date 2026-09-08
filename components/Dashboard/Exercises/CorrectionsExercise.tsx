@@ -121,17 +121,17 @@ export const CorrectionsExercise: React.FC<Props> = ({
 
   return (
     <VStack spacing={5} align="stretch">
-      <Text fontSize="sm" color="gray.600">
+      <Text fontSize="sm" color="text.muted">
         Sentence {index + 1} of {data.items.length}
         {completed.size > 0 && ` · ${completed.size} fixed`}
       </Text>
 
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontSize="sm">
           <b>Instructions:</b>{' '}
@@ -141,7 +141,7 @@ export const CorrectionsExercise: React.FC<Props> = ({
         </Text>
       </Box>
 
-      <Text fontSize="md" fontStyle="italic" color="gray.700">
+      <Text fontSize="md" fontStyle="italic" color="text.primary">
         “{item.sentence}”
       </Text>
 
@@ -150,7 +150,7 @@ export const CorrectionsExercise: React.FC<Props> = ({
           {item.words.map((w, i) => (
             <WrapItem key={i}>
               <Button
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
                 variant="outline"
                 colorScheme={wrongPick === w.ipa ? 'red' : 'gray'}
@@ -166,7 +166,7 @@ export const CorrectionsExercise: React.FC<Props> = ({
           {options.map((o, i) => (
             <Button
               key={i}
-              fontFamily="'Charis SIL', serif"
+              fontFamily="ipa"
               fontSize="lg"
               variant="outline"
               colorScheme={wrongPick === o.text ? 'red' : 'gray'}

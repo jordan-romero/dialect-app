@@ -34,6 +34,8 @@ type IpaKeyboardContextValue = {
   open: () => void
   close: () => void
   toggle: () => void
+  // Lets a screen turn the focus-triggered auto-open off (see useIpaAutoOpen).
+  setAutoOpen: (enabled: boolean) => void
 }
 
 const IpaKeyboardContext = createContext<IpaKeyboardContextValue>({
@@ -41,9 +43,23 @@ const IpaKeyboardContext = createContext<IpaKeyboardContextValue>({
   open: () => {},
   close: () => {},
   toggle: () => {},
+  setAutoOpen: () => {},
 })
 
 export const useIpaKeyboard = () => useContext(IpaKeyboardContext)
+
+/**
+ * Opt a screen out of the keyboard popping open on its own. Pass `false` and
+ * the PIP only opens when the user asks for it; it re-enables on unmount so
+ * the setting can't leak into the next lesson.
+ */
+export const useIpaAutoOpen = (enabled: boolean) => {
+  const { setAutoOpen } = useIpaKeyboard()
+  useEffect(() => {
+    setAutoOpen(enabled)
+    return () => setAutoOpen(true)
+  }, [enabled, setAutoOpen])
+}
 
 const popIn = keyframes`
   0% { opacity: 0; transform: translateY(12px) scale(0.97); }
@@ -96,6 +112,8 @@ export const IpaKeyboardProvider = ({
   const [size, setSize] = useState({ w: DEFAULT_W, h: DEFAULT_H })
   // Once the user explicitly closes it, don't auto-reopen on the next focus.
   const dismissedRef = useRef(false)
+  // Per-lesson opt-out: when false, focusing an IPA field won't open the PIP.
+  const autoOpenRef = useRef(true)
 
   const activeFieldRef = useRef<EditableEl | null>(null)
   const dragRef = useRef<{ dx: number; dy: number } | null>(null)
@@ -164,7 +182,7 @@ export const IpaKeyboardProvider = ({
         t.matches('[data-ipa-field]')
       ) {
         activeFieldRef.current = t
-        if (!dismissedRef.current && !isOpen) {
+        if (autoOpenRef.current && !dismissedRef.current && !isOpen) {
           ensurePosition()
           setIsOpen(true)
         }
@@ -241,7 +259,17 @@ export const IpaKeyboardProvider = ({
     insertAtCaret(el, symbol)
   }, [])
 
-  const ctx: IpaKeyboardContextValue = { isOpen, open, close, toggle }
+  const setAutoOpen = useCallback((enabled: boolean) => {
+    autoOpenRef.current = enabled
+  }, [])
+
+  const ctx: IpaKeyboardContextValue = {
+    isOpen,
+    open,
+    close,
+    toggle,
+    setAutoOpen,
+  }
 
   return (
     <IpaKeyboardContext.Provider value={ctx}>
@@ -261,11 +289,12 @@ export const IpaKeyboardProvider = ({
             maxH="calc(100vh - 24px)"
             display="flex"
             flexDirection="column"
-            bg="white"
+            bg="surface.card"
+            color="text.primary"
             borderRadius="2xl"
             boxShadow="0 24px 60px rgba(15, 23, 42, 0.28)"
             border="1px solid"
-            borderColor="gray.200"
+            borderColor="border.subtle"
             overflow="hidden"
             animation={`${popIn} 0.2s cubic-bezier(0.22,1,0.36,1)`}
           >

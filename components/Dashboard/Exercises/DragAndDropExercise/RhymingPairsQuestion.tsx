@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { renderUnderlined } from '../UnderlineMarkup'
 import { Box, Text, VStack, Button } from '@chakra-ui/react'
 import { Question, AnswerOption } from '../QuizTypes'
 
@@ -127,7 +128,7 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
           <b>Instructions:</b>
           English spelling is incredibly inconsistent, as you will discover in
           this exercise.
-          <b>{question.text}</b>
+          <b>{renderUnderlined(question.text)}</b>
           Be careful, some words do not have a rhyming partner.
         </Text>
       </Box>
@@ -150,7 +151,7 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
               marginBottom={2}
               onMouseDown={() => playAudio(word.audioUrl)}
             >
-              {word.optionText}
+              {renderUnderlined(word.optionText)}
             </Button>
           ))}
         </Box>

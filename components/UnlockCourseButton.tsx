@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { FiLock } from 'react-icons/fi'
 import {
   Button,
   useToast,
@@ -21,7 +22,17 @@ import {
 // Opens an unlock modal and starts Stripe Checkout. For admin emails
 // (ADMIN_EMAILS), the modal also shows the Stripe TEST card so the full
 // purchase flow can be exercised without bypassing the paywall.
-const UnlockCourseButton: React.FC<{ size?: string }> = ({ size = 'lg' }) => {
+const UnlockCourseButton: React.FC<{
+  size?: string
+  appearance?: 'default' | 'light'
+  label?: string
+  showLock?: boolean
+}> = ({
+  size = 'lg',
+  appearance = 'default',
+  label = 'Unlock the full course',
+  showLock = false,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [loading, setLoading] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -58,8 +69,14 @@ const UnlockCourseButton: React.FC<{ size?: string }> = ({ size = 'lg' }) => {
 
   return (
     <>
-      <Button colorScheme="purple" size={size} onClick={onOpen}>
-        Unlock the full course
+      <Button
+        colorScheme={appearance === 'default' ? 'purple' : undefined}
+        variant={appearance === 'light' ? 'brandWhite' : undefined}
+        size={size}
+        onClick={onOpen}
+        leftIcon={showLock ? <FiLock /> : undefined}
+      >
+        {label}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -69,8 +86,8 @@ const UnlockCourseButton: React.FC<{ size?: string }> = ({ size = 'lg' }) => {
           <ModalCloseButton />
           <ModalBody>
             <Text color="gray.600">
-              One-time payment for lifetime access to every lesson, handout, and
-              exercise.
+              One-time payment for lifetime access to all lessons, handouts, and
+              exercises in The Actor’s Guide to IPA and Accents.
             </Text>
 
             {isAdmin && (

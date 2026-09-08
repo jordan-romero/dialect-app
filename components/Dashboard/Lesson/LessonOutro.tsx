@@ -28,6 +28,7 @@ import {
 import { IconType } from 'react-icons'
 import { Resource } from '../Course/courseTypes'
 import IframeWithSkeleton from './IframeWithSkeleton'
+import { COMPLETION_ILLUSTRATION } from './lessonIllustration'
 
 type LessonOutroProps = {
   resources: Resource[]
@@ -86,12 +87,13 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
         Lesson complete
       </Heading>
       <Image
-        src="./completionIllustration.svg"
+        src={COMPLETION_ILLUSTRATION}
         alt="Lesson complete"
         boxSize="170px"
         my={2}
+        fallbackSrc="./completionIllustration.svg"
       />
-      <Text color="gray.600" maxW="440px" textAlign="center" mb={5}>
+      <Text color="text.muted" maxW="440px" textAlign="center" mb={5}>
         Nice work! Keep these resources handy as you practice.
       </Text>
       <Button
@@ -119,7 +121,9 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
           </Text>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
             {resources.map((resource) => {
-              const meta = KIND_META[kindOf(resource)]
+              const kind = kindOf(resource)
+              const meta = KIND_META[kind]
+              const canPreview = kind !== 'link'
               const expanded = expandedId === resource.id
               return (
                 <Flex
@@ -129,8 +133,8 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
                   p={4}
                   borderRadius="xl"
                   border="1px solid"
-                  borderColor="gray.200"
-                  bg="white"
+                  borderColor="border.subtle"
+                  bg="surface.card"
                   boxShadow="sm"
                   gridColumn={
                     expanded
@@ -144,7 +148,7 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
                       justify="center"
                       boxSize={9}
                       borderRadius="lg"
-                      bg="purple.50"
+                      bg="accent.subtle"
                       color="brand.iris"
                       flexShrink={0}
                     >
@@ -166,18 +170,20 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
                         variant="ghost"
                       />
                     </ChakraLink>
-                    <IconButton
-                      aria-label={expanded ? 'Hide preview' : 'Show preview'}
-                      icon={expanded ? <FiEyeOff /> : <FiEye />}
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setExpandedId(expanded ? null : resource.id)
-                      }
-                    />
+                    {canPreview && (
+                      <IconButton
+                        aria-label={expanded ? 'Hide preview' : 'Show preview'}
+                        icon={expanded ? <FiEyeOff /> : <FiEye />}
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          setExpandedId(expanded ? null : resource.id)
+                        }
+                      />
+                    )}
                   </Flex>
 
-                  {expanded && (
+                  {canPreview && expanded && (
                     <IframeWithSkeleton
                       src={`https://docs.google.com/viewer?url=${encodeURIComponent(
                         resource.url,

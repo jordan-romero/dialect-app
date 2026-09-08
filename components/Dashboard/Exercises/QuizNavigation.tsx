@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, IconButton, Text, Icon } from '@chakra-ui/react'
+import { Flex, IconButton, Text, Icon, Tooltip } from '@chakra-ui/react'
 import { ArrowRightIcon, ArrowLeftIcon, CheckIcon } from '@chakra-ui/icons'
 import { MdCheckCircle } from 'react-icons/md'
 
@@ -17,6 +17,11 @@ interface QuizNavigationProps {
    * step before moving on).
    */
   isCompleted?: boolean
+  /**
+   * Shown on hover/focus when forward navigation is blocked, so the learner
+   * can see what's still required instead of guessing at a dead button.
+   */
+  disabledReason?: string
 }
 
 const QuizNavigation: React.FC<QuizNavigationProps> = ({
@@ -27,11 +32,15 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   onFinish,
   isNextDisabled,
   isCompleted = false,
+  disabledReason,
 }) => {
   const isFirstQuestion = currentQuestion === 1
   const isLastQuestion = currentQuestion === totalQuestions
   // Completed → free review navigation; otherwise honor the gate.
   const nextDisabled = isCompleted ? false : isNextDisabled
+  // Chakra needs shouldWrapChildren to surface a tooltip on a disabled
+  // control (disabled elements don't emit pointer events themselves).
+  const hint = nextDisabled ? disabledReason ?? '' : ''
 
   return (
     <Flex
@@ -68,21 +77,25 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
           Completed
         </Flex>
       ) : isLastQuestion ? (
-        <IconButton
-          aria-label="Finish quiz"
-          icon={<CheckIcon />}
-          onClick={onFinish}
-          isDisabled={nextDisabled}
-          variant="brandBold"
-        />
+        <Tooltip label={hint} isDisabled={!hint} shouldWrapChildren hasArrow>
+          <IconButton
+            aria-label="Finish quiz"
+            icon={<CheckIcon />}
+            onClick={onFinish}
+            isDisabled={nextDisabled}
+            variant="brandBold"
+          />
+        </Tooltip>
       ) : (
-        <IconButton
-          aria-label="Next question"
-          icon={<ArrowRightIcon />}
-          onClick={onNext}
-          isDisabled={nextDisabled}
-          variant="brandBold"
-        />
+        <Tooltip label={hint} isDisabled={!hint} shouldWrapChildren hasArrow>
+          <IconButton
+            aria-label="Next question"
+            icon={<ArrowRightIcon />}
+            onClick={onNext}
+            isDisabled={nextDisabled}
+            variant="brandBold"
+          />
+        </Tooltip>
       )}
     </Flex>
   )

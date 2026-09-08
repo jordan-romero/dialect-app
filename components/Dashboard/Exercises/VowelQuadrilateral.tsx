@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useShuffledBank } from './shuffle'
 import { Box, Button, Flex, Image, VStack, Text } from '@chakra-ui/react'
 import vowelChartImage from '@/public/ipaVowelChart.png'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface VowelPosition {
@@ -10,6 +12,12 @@ interface VowelPosition {
   left: number
   vowel: string | null
   isCorrect?: boolean
+  /** Rendered below the chart rather than on it. The printed IPA chart has no
+   *  position for the r-coloured vowels, so ɚ and ɝ get their own labelled
+   *  slots underneath — the same treatment the consonant rectangle gives
+   *  sounds that don't fit its grid. */
+  extra?: boolean
+  label?: string
 }
 
 interface VowelQuadrilateralData {
@@ -51,6 +59,8 @@ export const VowelQuadrilateralExercise: React.FC<
     [key: string]: VowelPosition
   }>({})
   const [availableVowels, setAvailableVowels] = useState<string[]>([])
+  // Authored in quadrilateral order, which gives the answers away.
+  const shuffledVowels = useShuffledBank(availableVowels)
   const [quizData, setQuizData] = useState<VowelQuadrilateralData | null>(null)
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -60,10 +70,8 @@ export const VowelQuadrilateralExercise: React.FC<
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        console.log('Loading vowel quadrilateral data...')
         const response = await fetch('/vowelQuadrilateralData.json')
         const data: VowelQuadrilateralData = await response.json()
-        console.log('Loaded vowel quadrilateral data:', data)
         setQuizData(data)
         setAvailableVowels(data.availableVowels)
 
@@ -75,10 +83,11 @@ export const VowelQuadrilateralExercise: React.FC<
             left: position.left,
             vowel: null,
             isCorrect: position.isCorrect,
+            extra: position.extra,
+            label: position.label,
           }
         })
         setVowelPositions(initialPositions)
-        console.log('Initialized vowel positions:', initialPositions)
       } catch (error) {
         console.error('Error loading vowel quadrilateral data:', error)
       }
@@ -93,17 +102,16 @@ export const VowelQuadrilateralExercise: React.FC<
       if (!quizData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
-          setIsCompleted(data.isCompleted)
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (data) {
+          // Whether a past attempt still counts as finished is decided below,
+          // once we know what it actually covered.
+          let stillComplete = data.isCompleted
 
           // Restore saved vowel positions if available
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === quizData.questions[0]?.id,
+              (answer) => answer.questionId === quizData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -112,13 +120,39 @@ export const VowelQuadrilateralExercise: React.FC<
             ) {
               try {
                 const savedPositions = JSON.parse(savedAnswer.textAnswer)
-                setVowelPositions(savedPositions)
+                // An attempt finished before the rhotic slots existed covers
+                // only the nine chart positions. Left marked complete it would
+                // lock the learner out of the two new ones — placements are
+                // frozen once completed — so it reopens instead.
+                const missesRequiredSlot = Object.entries(
+                  quizData.vowelPositions,
+                ).some(
+                  ([key, position]) =>
+                    position.isCorrect && !savedPositions[key]?.vowel,
+                )
+                if (missesRequiredSlot) stillComplete = false
+
+                // Merge onto the current slots rather than replacing them:
+                // saved answers predate any slot added since, and a missing
+                // slot crashes the completion check.
+                setVowelPositions((current) => {
+                  const merged: { [key: string]: VowelPosition } = {}
+                  Object.entries(current).forEach(([key, position]) => {
+                    merged[key] = {
+                      ...position,
+                      vowel: savedPositions[key]?.vowel ?? null,
+                    }
+                  })
+                  return merged
+                })
               } catch (error) {
                 console.error('Error parsing saved vowel positions:', error)
                 // If parsing fails, keep the default empty positions
               }
             }
           }
+
+          setIsCompleted(stillComplete)
         }
       } catch (error) {
         console.error('Error loading quiz progress:', error)
@@ -159,7 +193,7 @@ export const VowelQuadrilateralExercise: React.FC<
       ([key, correctPosition]) => {
         if (correctPosition.isCorrect) {
           const userPosition = vowelPositions[key]
-          return userPosition.vowel === correctPosition.vowel
+          return userPosition?.vowel === correctPosition.vowel
         }
         return true
       },
@@ -173,7 +207,7 @@ export const VowelQuadrilateralExercise: React.FC<
       ([key, correctPosition]) => {
         if (correctPosition.isCorrect) {
           const userPosition = vowelPositions[key]
-          return userPosition.vowel === correctPosition.vowel
+          return userPosition?.vowel === correctPosition.vowel
         }
         return true
       },
@@ -197,29 +231,15 @@ export const VowelQuadrilateralExercise: React.FC<
         textAnswer: JSON.stringify(vowelPositions), // Save the current vowel positions as JSON
       }))
 
-      console.log('Submitting vowel quadrilateral quiz:', {
+      const ok = await postQuizAnswers({
         quizId: quizData.id,
-        lessonId: lessonId,
+        lessonId,
         answers: answersToSubmit,
-        vowelPositions,
       })
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
-      })
-
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
         setIsQuizComplete(true)
-        console.log('Vowel quadrilateral quiz submitted successfully')
       } else {
         console.error('Failed to submit quiz')
       }
@@ -238,10 +258,34 @@ export const VowelQuadrilateralExercise: React.FC<
 
   return (
     <VStack spacing={4} align="center">
-      <Text fontSize="lg" fontWeight="bold" mb={4}>
-        {quizData.questions[0]?.text ||
-          'Place the correct vowel symbols on the IPA vowel chart'}
-      </Text>
+      {/* Instructions */}
+      <Box
+        bg="surface.subtle"
+        p={3}
+        borderRadius="lg"
+        border="1px solid"
+        borderColor="border.subtle"
+      >
+        <Text fontSize="sm" color="text.primary">
+          <Text as="span" fontWeight="bold">
+            Instructions:
+          </Text>{' '}
+          Click on a vowel from the bank below, then click on a position on the
+          chart to place it. Click on a vowel again to replace an existing
+          vowel. Click on an empty position to clear it.
+        </Text>
+      </Box>
+
+      <IPAKeyboard
+        customSymbols={shuffledVowels}
+        onSymbolClick={handleVowelSelect}
+        showTextArea={false}
+        compact={true}
+        hideInstructions={false}
+        persistClickedSymbols={false}
+        title="Vowel Bank"
+        symbolSize="lg"
+      />
 
       <Box position="relative" maxW="800px" w="full">
         <Image
@@ -251,72 +295,105 @@ export const VowelQuadrilateralExercise: React.FC<
           height="auto"
         />
 
-        {Object.entries(vowelPositions).map(([key, position]) => {
-          const correctPosition = quizData.vowelPositions[key]
-          const isCorrect = position.vowel === correctPosition.vowel
-          const isWrong =
-            position.vowel && position.vowel !== correctPosition.vowel
+        {Object.entries(vowelPositions)
+          .filter(([, position]) => !position.extra)
+          .map(([key, position]) => {
+            const correctPosition = quizData.vowelPositions[key]
+            const isCorrect = position.vowel === correctPosition.vowel
+            const isWrong =
+              position.vowel && position.vowel !== correctPosition.vowel
 
-          return (
-            <Box
-              key={key}
-              position="absolute"
-              top={`${position.top}%`}
-              left={`${position.left}%`}
-              w="30px"
-              h="30px"
-              bg={position.vowel ? 'white' : 'rgba(255, 255, 255, 0.5)'}
-              border="2px solid"
-              borderColor={
-                isCorrect
-                  ? 'green.500'
-                  : isWrong
-                  ? 'red.500'
-                  : selectedVowel
-                  ? 'teal.500'
-                  : 'gray.300'
-              }
-              borderRadius="full"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              fontWeight="bold"
-              cursor="pointer"
-              onClick={() => handleVowelClick(key)}
-            >
-              {position.vowel}
-            </Box>
-          )
-        })}
+            return (
+              <Box
+                key={key}
+                position="absolute"
+                top={`${position.top}%`}
+                left={`${position.left}%`}
+                w="30px"
+                h="30px"
+                bg={position.vowel ? 'white' : 'rgba(255, 255, 255, 0.5)'}
+                border="2px solid"
+                borderColor={
+                  isCorrect
+                    ? 'green.500'
+                    : isWrong
+                    ? 'red.500'
+                    : selectedVowel
+                    ? 'teal.500'
+                    : 'gray.300'
+                }
+                borderRadius="full"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                fontWeight="bold"
+                cursor="pointer"
+                onClick={() => handleVowelClick(key)}
+              >
+                {position.vowel}
+              </Box>
+            )
+          })}
       </Box>
 
-      <IPAKeyboard
-        customSymbols={availableVowels}
-        onSymbolClick={handleVowelSelect}
-        showTextArea={false}
-        compact={true}
-        hideInstructions={false}
-        persistClickedSymbols={false}
-        title="Vowel Bank"
-      />
-
-      {/* Instructions */}
-      <Box
-        bg="gray.50"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="gray.200"
-      >
-        <Text fontSize="sm" color="black">
-          <Text as="span" fontWeight="bold">
-            Instructions:
-          </Text>{' '}
-          Click on a vowel from the bank above, then click on a position on the
-          chart to place it. Click on a vowel again to replace an existing
-          vowel. Click on an empty position to clear it.
-        </Text>
-      </Box>
+      {Object.entries(vowelPositions).some(([, p]) => p.extra) && (
+        <Box w="full" maxW="800px">
+          <Text fontWeight="bold" mb={2}>
+            Rhotic Vowels
+          </Text>
+          <Text fontSize="sm" color="gray.600" mb={3}>
+            These two aren&apos;t marked on the chart above — place them here.
+          </Text>
+          <VStack align="stretch" spacing={0} maxW="440px">
+            {Object.entries(vowelPositions)
+              .filter(([, position]) => position.extra)
+              .map(([key, position], i) => {
+                const correctPosition = quizData.vowelPositions[key]
+                const isCorrect = position.vowel === correctPosition.vowel
+                const isWrong =
+                  position.vowel && position.vowel !== correctPosition.vowel
+                return (
+                  <Flex
+                    key={key}
+                    align="center"
+                    borderWidth={1}
+                    borderColor="gray.200"
+                    mt={i === 0 ? 0 : '-1px'}
+                  >
+                    <Text flex="1" px={3} py={2} fontSize="sm">
+                      {correctPosition.label}:
+                    </Text>
+                    <Flex
+                      align="center"
+                      justify="center"
+                      w="52px"
+                      h="40px"
+                      borderLeftWidth={1}
+                      borderColor="gray.200"
+                      bg={
+                        isCorrect
+                          ? 'green.50'
+                          : isWrong
+                          ? 'red.50'
+                          : selectedVowel
+                          ? 'teal.50'
+                          : 'white'
+                      }
+                      fontFamily="ipa"
+                      className="ipa-text"
+                      fontSize="xl"
+                      fontWeight="bold"
+                      cursor="pointer"
+                      onClick={() => handleVowelClick(key)}
+                    >
+                      {position.vowel}
+                    </Flex>
+                  </Flex>
+                )
+              })}
+          </VStack>
+        </Box>
+      )}
 
       <QuizNavigation
         currentQuestion={1}

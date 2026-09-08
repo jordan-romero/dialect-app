@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
+import { useShuffledBank } from './shuffle'
 import {
   Box,
   Button,
@@ -13,9 +14,10 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
-import { MdKeyboard } from 'react-icons/md'
+import { MdKeyboard, MdVolumeUp } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
 interface HangmanQuestion {
@@ -23,6 +25,10 @@ interface HangmanQuestion {
   word: string
   blanks: number
   correctAnswer: string[]
+  /** Build-a-Word ships a recording per word ("Record words for playback" in
+   *  its design doc); the Hangman dataset has none, so this stays optional and
+   *  the button only appears where a clip exists. */
+  audioUrl?: string
 }
 
 interface HangmanQuizData {
@@ -62,6 +68,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   dataUrl = '/hangmanIPAData.json',
 }) => {
   const [quizData, setQuizData] = useState<HangmanQuizData | null>(null)
+  // Authored in chart order, which gives the answers away.
+  const shuffledHangmanBank = useShuffledBank(quizData?.symbolBank)
   const [userAnswers, setUserAnswers] = useState<{
     [questionId: number]: string[]
   }>({})
@@ -78,15 +86,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        console.log(
-          'Loading hangman IPA quiz data for lessonId:',
-          lessonId,
-          'quizIndex:',
-          quizIndex,
-        )
         const response = await fetch(dataUrl)
         const data: HangmanQuizData = await response.json()
-        console.log('Loaded hangman quiz data:', data)
         setQuizData(data)
 
         // Initialize empty answers
@@ -101,7 +102,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
     }
 
     loadQuizData()
-  }, [lessonId, quizIndex])
+  }, [lessonId, quizIndex, dataUrl])
 
   // Load saved progress
   useEffect(() => {
@@ -109,15 +110,12 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
       if (!quizData) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${quizData.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(quizData.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswer = data.answers.find(
-              (answer: any) => answer.questionId === quizData.questions[0]?.id,
+              (answer) => answer.questionId === quizData.questions[0]?.id,
             )
             if (
               savedAnswer &&
@@ -275,19 +273,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         textAnswer: JSON.stringify(userAnswers), // Save all answers as JSON
       }))
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: quizData.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: quizData.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
         onComplete()
       }
@@ -324,7 +316,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Progress indicator */}
       <Box textAlign="center">
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="text.muted">
           Question {currentQuestionIndex + 1} of{' '}
           {quizData.questions_data.length}({completedQuestions.length}{' '}
           completed)
@@ -333,18 +325,21 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold" color="green.600">
             Instructions:
           </Text>{' '}
           Point and click the correct IPA symbol into the blank spaces to
           transcribe the presented word.
+          {quizData.questions_data.some((q) => q.audioUrl)
+            ? ' Click the "Play Audio" button to hear the word.'
+            : ''}
         </Text>
         <Text fontSize="sm" color="purple.600" mt={1}>
           Syllabic consonant indicators, stress indicators, and syllable breaks
@@ -380,7 +375,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         </Flex>
         <IPAKeyboard
           symbolBankCategories={quizData.symbolBankCategories}
-          customSymbols={quizData.symbolBank}
+          customSymbols={shuffledHangmanBank}
           onSymbolClick={handleSymbolSelect}
           showTextArea={false}
           compact={true}
@@ -393,8 +388,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             Selected:{' '}
             <Text
               as="span"
-              fontFamily="'Charis SIL', serif"
-              fontWeight="bold"
+              fontFamily="ipa"
+              fontWeight="semibold"
               fontSize="lg"
             >
               {selectedSymbol}
@@ -430,8 +425,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   Active Blank:
                 </Text>{' '}
                 Position {activeBlankIndex + 1} - Click a symbol above or use
-                Option (Mac) / Alt (Windows) + letter shortcuts. The symbol
-                will cycle in the blank space and be committed after 1 second.
+                Option (Mac) / Alt (Windows) + letter shortcuts. The symbol will
+                cycle in the blank space and be committed after 1 second.
               </Text>
             </Box>
           )}
@@ -440,13 +435,13 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
       {/* Instructions */}
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
-        <Text fontSize="sm" color="black">
+        <Text fontSize="sm" color="text.primary">
           <Text as="span" fontWeight="bold">
             Instructions:
           </Text>{' '}
@@ -469,15 +464,28 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           borderColor="brand.iris"
           borderRadius="lg"
           p={6}
-          bg="white"
+          bg="surface.card"
         >
           <Text fontSize="lg" fontWeight="bold" mb={3}>
             QUESTION {currentQuestionIndex + 1}:
           </Text>
 
-          <Text fontSize="xl" fontWeight="bold" mb={2}>
-            &ldquo;{currentQuestion.word}&rdquo;
-          </Text>
+          <Flex align="center" gap={3} mb={2}>
+            <Text fontSize="xl" fontWeight="bold">
+              &ldquo;{currentQuestion.word}&rdquo;
+            </Text>
+            {currentQuestion.audioUrl && (
+              <Button
+                size="sm"
+                leftIcon={<MdVolumeUp />}
+                onClick={() =>
+                  new Audio(currentQuestion.audioUrl).play().catch(() => {})
+                }
+              >
+                Play Audio
+              </Button>
+            )}
+          </Flex>
 
           {/* Blank spaces */}
           <Flex gap={2} align="center" mb={3}>
@@ -535,8 +543,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   {displaySymbol ? (
                     <Text
                       fontSize="lg"
-                      fontWeight="bold"
-                      fontFamily="'Charis SIL', serif"
+                      fontWeight="semibold"
+                      fontFamily="ipa"
                       color={
                         isActiveBlank && pendingSymbol ? 'blue.600' : 'black'
                       }

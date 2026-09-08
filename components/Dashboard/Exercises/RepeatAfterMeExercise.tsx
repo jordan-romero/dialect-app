@@ -63,11 +63,11 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
   const toast = useToast()
 
   useEffect(() => {
-    fetch('/api/repeatAfterMe')
+    fetch(`/api/repeatAfterMe?lessonId=${lessonId}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d: RepeatAfterMeData | null) => d && setData(d))
       .catch((e) => console.error('Error loading repeat-after-me:', e))
-  }, [])
+  }, [lessonId])
 
   // Completion is a simple marker (this is a practice drill, not graded).
   useEffect(() => {
@@ -177,18 +177,18 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
   return (
     <VStack spacing={5} align="stretch">
       <Box
-        bg="gray.50"
+        bg="surface.subtle"
         p={3}
         borderRadius="lg"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="border.subtle"
       >
         <Text fontSize="sm">
           <b>Instructions:</b> {data.instructions}
         </Text>
       </Box>
 
-      <Text fontSize="sm" color="gray.600">
+      <Text fontSize="sm" color="text.muted">
         {index + 1} of {data.items.length}
       </Text>
 
@@ -207,14 +207,14 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
               <Td fontWeight="bold">{s.name}</Td>
               <Td
                 textAlign="center"
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
               >
                 {s.ga}
               </Td>
               <Td
                 textAlign="center"
-                fontFamily="'Charis SIL', serif"
+                fontFamily="ipa"
                 fontSize="lg"
                 color="brand.purple"
               >
@@ -226,7 +226,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       </Table>
 
       {item.note && (
-        <Text fontSize="sm" fontStyle="italic" color="gray.600">
+        <Text fontSize="sm" fontStyle="italic" color="text.muted">
           Note: {item.note}
         </Text>
       )}
@@ -236,7 +236,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Text fontSize="lg" mb={2}>
           “{item.sentence}”
         </Text>
-        <Text fontFamily="'Charis SIL', serif" fontSize="lg" color="gray.700">
+        <Text fontFamily="ipa" fontSize="lg" color="text.primary">
           {item.ipa}
         </Text>
       </Box>

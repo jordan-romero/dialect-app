@@ -140,10 +140,10 @@ const CourseSideBar = ({
       p={3}
       width={300}
       height="100%"
-      bg="white"
-      color="gray.800"
+      bg="surface.card"
+      color="text.primary"
       borderRight="1px solid"
-      borderColor="gray.100"
+      borderColor="border.subtle"
       overflowY="auto"
     >
       <VStack spacing={5} align="stretch">
@@ -163,7 +163,7 @@ const CourseSideBar = ({
                   py={2}
                   borderRadius="lg"
                   opacity={courseLocked ? 0.55 : 1}
-                  _hover={{ bg: 'gray.50' }}
+                  _hover={{ bg: 'surface.hover' }}
                   transition="background 0.15s ease"
                   onClick={() => toggleCourseExpansion(course.id)}
                 >
@@ -208,13 +208,15 @@ const CourseSideBar = ({
                           borderLeftColor={
                             isCurrent ? 'brand.iris' : 'transparent'
                           }
-                          bg={isCurrent ? 'purple.50' : 'transparent'}
-                          color={isCurrent ? 'brand.iris' : 'gray.700'}
+                          bg={isCurrent ? 'accent.subtle' : 'transparent'}
+                          color={isCurrent ? 'brand.iris' : 'text.primary'}
                           fontWeight={isCurrent ? 'semibold' : 'normal'}
                           opacity={isLocked ? 0.5 : 1}
                           cursor={isLocked ? 'not-allowed' : 'pointer'}
                           transition="background 0.15s ease"
-                          _hover={{ bg: isLocked ? 'transparent' : 'gray.50' }}
+                          _hover={{
+                            bg: isLocked ? 'transparent' : 'surface.hover',
+                          }}
                           onClick={() => !isLocked && onSelectLesson(lesson)}
                         >
                           <Icon
@@ -261,10 +263,10 @@ const CourseSideBar = ({
                     py={2}
                     borderRadius="lg"
                     opacity={locked ? 0.55 : 1}
-                    bg={isCurrent ? 'purple.50' : 'transparent'}
+                    bg={isCurrent ? 'accent.subtle' : 'transparent'}
                     cursor={locked ? 'not-allowed' : 'pointer'}
                     transition="background 0.15s ease"
-                    _hover={{ bg: locked ? 'transparent' : 'gray.50' }}
+                    _hover={{ bg: locked ? 'transparent' : 'surface.hover' }}
                     onClick={() => !locked && onSelectLesson(cp)}
                   >
                     <HStack spacing={2}>
@@ -275,7 +277,7 @@ const CourseSideBar = ({
                         fontWeight="bold"
                         fontSize="md"
                         letterSpacing="-0.01em"
-                        color={isCurrent ? 'brand.iris' : 'gray.800'}
+                        color={isCurrent ? 'brand.iris' : 'text.primary'}
                       >
                         {cp.title}
                       </Text>

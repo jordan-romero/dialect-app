@@ -9,6 +9,7 @@ const quizTypeLabels: Record<string, string> = {
   lexicalChart: 'Lexical chart',
   hangman: 'Hangman',
   consonantRect: 'Consonant rectangle',
+  buildDiphthongs: 'Building diphthongs',
   corrections: 'Corrections',
   buildAWord: 'Build-a-word',
   repeatAfterMe: 'Repeat after me',
