@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 # Dev runner: starts the Stripe webhook relay (so local test purchases actually
-# unlock content) alongside `next dev`. The Stripe key is read from .env at
-# runtime — never hardcoded. If the Stripe CLI or key is missing, it just runs
-# Next without the relay.
+# unlock content) alongside `next dev`. Secrets are never hardcoded — they come
+# from Doppler when this repo is set up for it (see doppler.yaml), otherwise
+# from a local .env. If the Stripe CLI or key is missing, it just runs Next
+# without the relay.
 
-# Load .env so STRIPE_SECRET_KEY is available to this shell.
-set -a
-[ -f .env ] && . ./.env
-set +a
+# Re-exec once under `doppler run` so both `next dev` and `stripe listen`
+# inherit the injected secrets. DOPPLER_PROJECT is set by `doppler run`, which
+# guards against a re-exec loop.
+if [ -z "${DOPPLER_PROJECT:-}" ] && command -v doppler >/dev/null 2>&1 &&
+  doppler configure get project --plain >/dev/null 2>&1; then
+  exec doppler run -- bash "$0" "$@"
+fi
+
+# Fallback when Doppler isn't set up: load .env so secrets are available here.
+if [ -z "${DOPPLER_PROJECT:-}" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  [ -f .env ] && . ./.env
+  set +a
+fi
 
 # Start from a clean build cache to avoid stale-.next ENOENT errors (which
 # happen when a previous dev server was killed mid-compile).

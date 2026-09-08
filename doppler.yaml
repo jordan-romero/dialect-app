@@ -1,0 +1,8 @@
+# Doppler project mapping for this repo. `doppler setup` reads this so every
+# contributor scopes to the same project/config without being prompted. Secrets
+# live in Doppler (dev/stg/prd configs), never in the repo. A local .env still
+# works as a fallback for anyone who hasn't set Doppler up — see
+# scripts/with-env.sh.
+setup:
+  project: acting-accents
+  config: dev
