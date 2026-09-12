@@ -8,6 +8,7 @@ import {
   Icon,
   VStack,
   Spacer,
+  Skeleton,
 } from '@chakra-ui/react'
 import { FiPlayCircle, FiFileText, FiEdit3 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
@@ -128,11 +129,15 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
         w="100%"
         maxW="480px"
       >
+        {/* Key by lesson so switching lessons remounts cleanly. Use a neutral
+            Skeleton while loading — NOT the old generic illustration as a
+            fallbackSrc, which made the art visibly flash old → new. */}
         <Image
+          key={lesson.id}
           src={lessonIllustration(lesson.id)}
           alt={`${lesson.title} illustration`}
           w="100%"
-          fallbackSrc="./descriptionIllustration.svg"
+          fallback={<Skeleton w="100%" h="260px" borderRadius="md" />}
         />
       </Box>
     </Flex>
