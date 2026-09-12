@@ -12,6 +12,7 @@ import {
   Icon,
   Link as ChakraLink,
   Badge,
+  Skeleton,
 } from '@chakra-ui/react'
 import { keyframes } from '@emotion/react'
 import {
@@ -91,7 +92,7 @@ const LessonOutro = ({ resources }: LessonOutroProps) => {
         alt="Lesson complete"
         boxSize="170px"
         my={2}
-        fallbackSrc="./completionIllustration.svg"
+        fallback={<Skeleton boxSize="170px" my={2} borderRadius="md" />}
       />
       <Text color="text.muted" maxW="440px" textAlign="center" mb={5}>
         Nice work! Keep these resources handy as you practice.

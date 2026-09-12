@@ -256,9 +256,9 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
     <Box
       key={question.id}
       width="100%"
-      bg="white"
+      bg="surface.card"
       border="1px solid"
-      borderColor="gray.200"
+      borderColor="border.subtle"
       borderRadius="lg"
       p={{ base: 4, md: 5 }}
     >
@@ -326,7 +326,7 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
                 why it's wrong, so it only appears once they've picked it. */}
             {selected.audioUrl && (
               <Flex align="center" gap={2}>
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color="text.muted">
                   Hear your answer:
                 </Text>
                 <AudioButton audioUrl={selected.audioUrl} />
@@ -373,7 +373,7 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
             mb={8}
             gap={3}
             align="flex-start"
-            bg="purple.50"
+            bg="accent.subtle"
             borderLeft="4px solid"
             borderColor="brand.iris"
             borderRadius="md"
