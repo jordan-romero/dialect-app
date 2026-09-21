@@ -334,6 +334,17 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
                     </Tooltip>
                   </GridItem>
                   <GridItem
+                    as="button"
+                    type="button"
+                    aria-label={`${item.exampleWord.replace(/[{}]/g, '')}${
+                      userAnswer ? `, ${userAnswer} placed` : ', empty'
+                    }${
+                      isCorrect
+                        ? ', correct'
+                        : hasAnswer
+                        ? ', incorrect'
+                        : ''
+                    }`}
                     borderBottom="1px solid white"
                     display="flex"
                     alignItems="center"
@@ -342,10 +353,25 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
                     bg={
                       isCorrect ? 'green.100' : hasAnswer ? 'red.100' : 'white'
                     }
-                    border="2px solid"
+                    // The chart blocks reproduce the printed sheet and keep
+                    // their pastel fills in both modes, so the answer colour is
+                    // pinned rather than inherited from the card.
+                    color="gray.800"
+                    borderWidth="2px"
+                    // Dashed marks a wrong answer without relying on the fill
+                    // colour alone.
+                    borderStyle={hasAnswer && !isCorrect ? 'dashed' : 'solid'}
                     borderColor="black"
                     onClick={() => handlePositionClick(item.id)}
                     onDoubleClick={() => handleClearPosition(item.id)}
+                    // Double-click clears, which the keyboard can't do —
+                    // Delete/Backspace is the equivalent for keyboard users.
+                    onKeyDown={(e: React.KeyboardEvent) => {
+                      if (e.key === 'Delete' || e.key === 'Backspace') {
+                        e.preventDefault()
+                        handleClearPosition(item.id)
+                      }
+                    }}
                     _hover={{ bg: 'whiteAlpha.800' }}
                     transition="background 0.15s"
                   >

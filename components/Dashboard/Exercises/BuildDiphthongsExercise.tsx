@@ -236,7 +236,7 @@ const BuildDiphthongsExercise: React.FC<BuildDiphthongsExerciseProps> = ({
                       : 'gray.300'
                   }
                   borderRadius="md"
-                  bg={placed[i] ? 'white' : 'gray.50'}
+                  bg={placed[i] ? 'surface.slot' : 'surface.subtle'}
                   fontFamily="ipa"
                   className="ipa-text"
                   fontSize="2xl"
