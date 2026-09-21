@@ -279,12 +279,14 @@ export const VowelQuadrilateralExercise: React.FC<
       <IPAKeyboard
         customSymbols={shuffledVowels}
         onSymbolClick={handleVowelSelect}
+        selectedSymbol={selectedVowel}
         showTextArea={false}
         compact={true}
         hideInstructions={false}
         persistClickedSymbols={false}
         title="Vowel Bank"
         symbolSize="lg"
+        maxW="100%"
       />
 
       <Box position="relative" maxW="800px" w="full">

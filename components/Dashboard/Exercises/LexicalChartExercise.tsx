@@ -396,12 +396,14 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
       <IPAKeyboard
         customSymbols={getAvailableSymbols()}
         onSymbolClick={handleSymbolSelect}
+        selectedSymbol={selectedSymbol}
         showTextArea={false}
         compact={true}
         hideInstructions={true}
         persistClickedSymbols={false}
         title="Symbol Bank"
         symbolSize="lg"
+        maxW="100%"
       />
       {/* The chart, matching the printed General American sheet: coloured
           blocks with a rotated section label down the left edge, each block a

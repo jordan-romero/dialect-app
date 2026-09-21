@@ -242,10 +242,11 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
           return (
             <WrapItem key={sym}>
               <Button
-                size="md"
+                size="lg"
                 fontFamily="ipa"
-                fontSize="xl"
-                minW="42px"
+                fontSize="2xl"
+                minW="52px"
+                h="52px"
                 variant={selectedSymbol === sym ? 'solid' : 'outline'}
                 colorScheme={selectedSymbol === sym ? 'teal' : 'gray'}
                 opacity={used ? 0.4 : 1}
