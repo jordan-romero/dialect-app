@@ -308,6 +308,11 @@ export const VowelQuadrilateralExercise: React.FC<
             return (
               <Box
                 key={key}
+                as="button"
+                type="button"
+                aria-label={`Chart position${
+                  position.vowel ? `, ${position.vowel} placed` : ', empty'
+                }${isCorrect ? ', correct' : isWrong ? ', incorrect' : ''}`}
                 position="absolute"
                 top={`${position.top}%`}
                 left={`${position.left}%`}
@@ -318,7 +323,10 @@ export const VowelQuadrilateralExercise: React.FC<
                 // not change with colour mode, so the inherited text.primary
                 // would go near-white on white in dark mode.
                 color="gray.800"
-                border="2px solid"
+                borderWidth="2px"
+                // Wrong answers are dashed as well as red, so correctness is
+                // not carried by colour alone.
+                borderStyle={isWrong ? 'dashed' : 'solid'}
                 borderColor={
                   isCorrect
                     ? 'green.500'
@@ -370,12 +378,24 @@ export const VowelQuadrilateralExercise: React.FC<
                       {correctPosition.label}:
                     </Text>
                     <Flex
+                      as="button"
+                      type="button"
+                      aria-label={`${correctPosition.label}${
+                        position.vowel
+                          ? `, ${position.vowel} placed`
+                          : ', empty'
+                      }${
+                        isCorrect ? ', correct' : isWrong ? ', incorrect' : ''
+                      }`}
                       align="center"
                       justify="center"
                       w="52px"
                       h="40px"
-                      borderLeftWidth={1}
-                      borderColor="gray.200"
+                      borderLeftWidth={isWrong ? 3 : 1}
+                      // Dashed as well as tinted, so a wrong answer reads
+                      // without relying on colour.
+                      borderLeftStyle={isWrong ? 'dashed' : 'solid'}
+                      borderColor={isWrong ? 'red.500' : 'gray.200'}
                       bg={
                         isCorrect
                           ? 'surface.correct'
