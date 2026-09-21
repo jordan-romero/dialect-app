@@ -68,6 +68,14 @@ interface IPAKeyboardProps {
   persistClickedSymbols?: boolean
   /** Overrides symbol button sizing independently of `compact` layout. */
   symbolSize?: 'sm' | 'md' | 'lg'
+  /** The symbol the parent is holding until it gets placed. Click-to-place
+   *  quizzes own that state — the click here only hands the symbol over — so
+   *  without it the bank has no way to show what's currently selected. */
+  selectedSymbol?: string | null
+  /** Width cap for the whole keyboard. Quiz banks pass "100%" so the bank
+   *  matches the width of the exercise it belongs to; the standalone keyboard
+   *  pages keep the fixed default. */
+  maxW?: string
 }
 
 // Symbol names for tooltips
@@ -710,6 +718,8 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   editorRef: externalEditorRef,
   persistClickedSymbols = true,
   symbolSize,
+  selectedSymbol: controlledSelectedSymbol,
+  maxW = '1000px',
 }) => {
   const STORAGE_KEY = 'ipa-keyboard-text'
   const HISTORY_KEY = 'ipa-keyboard-history'
@@ -1235,7 +1245,13 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
 
   // Helper to get button background color
   const getButtonBg = (symbol: string) => {
-    const isSelected = selectedSymbol === symbol
+    // A controlled selection outranks the internal one: the shortcut cycle sets
+    // `selectedSymbol` for a couple of hundred milliseconds, whereas a parent
+    // holding a symbol expects it lit until the symbol is placed.
+    const isSelected =
+      controlledSelectedSymbol !== undefined
+        ? controlledSelectedSymbol === symbol
+        : selectedSymbol === symbol
     const isInHistory = clickedSymbols.has(symbol)
 
     // Currently cycling symbol (temporary highlight during T9)
@@ -1292,7 +1308,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     <Box
       ref={keyboardRootRef}
       w="full"
-      maxW="1000px"
+      maxW={maxW}
       mx="auto"
       maxH={showTextArea ? 'calc(100vh - 110px)' : undefined}
       overflowY={showTextArea ? 'auto' : undefined}

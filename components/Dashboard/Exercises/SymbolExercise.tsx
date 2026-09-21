@@ -335,6 +335,8 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
           hideInstructions={true}
           persistClickedSymbols={false}
           title="Symbol Bank"
+          symbolSize="lg"
+          maxW="100%"
         />
       </Box>
 

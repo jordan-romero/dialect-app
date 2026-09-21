@@ -377,11 +377,14 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           symbolBankCategories={quizData.symbolBankCategories}
           customSymbols={shuffledHangmanBank}
           onSymbolClick={handleSymbolSelect}
+          selectedSymbol={selectedSymbol}
           showTextArea={false}
           compact={true}
           hideInstructions={true}
           persistClickedSymbols={false}
           showCategoriesInCompact={!!quizData.symbolBankCategories}
+          symbolSize="lg"
+          maxW="100%"
         />
         {selectedSymbol && (
           <Text mt={3} fontSize="sm" fontWeight="medium" textAlign="center">
