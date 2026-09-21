@@ -249,6 +249,10 @@ const VowelChart: React.FC<VowelChartProps> = ({
                   fontSize="xl"
                   variant="outline"
                   bg="white"
+                  // The quadrilateral behind these keeps its light rules in
+                  // both modes, so the symbol colour is pinned rather than
+                  // inherited.
+                  color="gray.800"
                   borderColor={used ? 'purple.300' : 'gray.200'}
                   opacity={used ? 0.45 : 1}
                   isDisabled={disabled}

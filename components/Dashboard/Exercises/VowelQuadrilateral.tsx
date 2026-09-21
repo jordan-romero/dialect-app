@@ -314,6 +314,10 @@ export const VowelQuadrilateralExercise: React.FC<
                 w="30px"
                 h="30px"
                 bg={position.vowel ? 'white' : 'rgba(255, 255, 255, 0.5)'}
+                // Pinned dark: these sit on the light chart image, which does
+                // not change with colour mode, so the inherited text.primary
+                // would go near-white on white in dark mode.
+                color="gray.800"
                 border="2px solid"
                 borderColor={
                   isCorrect
@@ -374,12 +378,12 @@ export const VowelQuadrilateralExercise: React.FC<
                       borderColor="gray.200"
                       bg={
                         isCorrect
-                          ? 'green.50'
+                          ? 'surface.correct'
                           : isWrong
-                          ? 'red.50'
+                          ? 'surface.wrong'
                           : selectedVowel
-                          ? 'teal.50'
-                          : 'white'
+                          ? 'accent.subtle'
+                          : 'surface.slot'
                       }
                       fontFamily="ipa"
                       className="ipa-text"

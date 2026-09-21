@@ -342,6 +342,10 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
                     bg={
                       isCorrect ? 'green.100' : hasAnswer ? 'red.100' : 'white'
                     }
+                    // The chart blocks reproduce the printed sheet and keep
+                    // their pastel fills in both modes, so the answer colour is
+                    // pinned rather than inherited from the card.
+                    color="gray.800"
                     border="2px solid"
                     borderColor="black"
                     onClick={() => handlePositionClick(item.id)}
