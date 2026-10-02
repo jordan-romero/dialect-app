@@ -1254,7 +1254,8 @@
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
       "order": 1,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Select the correct IPA transcription suitable for a General American Dialect. This exercise is meant to highlight different pronunciations among native English speakers."
     },
     {
       "id": 24,
