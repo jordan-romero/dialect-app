@@ -280,10 +280,10 @@
           "type": "quiz"
         },
         {
-          "type": "quiz"
+          "type": "resource"
         },
         {
-          "type": "resource"
+          "type": "quiz"
         },
         {
           "type": "outro"
@@ -313,9 +313,6 @@
         },
         {
           "type": "quiz"
-        },
-        {
-          "type": "resource"
         },
         {
           "type": "quiz"
@@ -836,7 +833,7 @@
       "id": 18,
       "name": "Typing in the IPA",
       "type": "pdf",
-      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8D+-+TYPING+IN+THE+IPA.pdf",
+      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8C+-+IPA+KEYBOARD+INSTRUCTIONS.pdf",
       "courseId": null,
       "lessonId": 13,
       "order": 2
@@ -1092,24 +1089,6 @@
       "courseId": null,
       "lessonId": 26,
       "order": 4
-    },
-    {
-      "id": 47,
-      "name": "Audio: Hamlet’s Advice Phrases (Part 3)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/Checkpoint+2C+pt3+Hamlet+Phrases.mp3",
-      "courseId": null,
-      "lessonId": 26,
-      "order": 5
-    },
-    {
-      "id": 50,
-      "name": "Audio: Descriptive Transcription Phrases (9C)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/9.+Transcription+in+Action/9C+Descriptive+Transcription+Phrases.mp3",
-      "courseId": null,
-      "lessonId": 14,
-      "order": 0
     }
   ],
   "Quiz": [
@@ -7755,7 +7734,7 @@
     },
     {
       "id": 479,
-      "optionText": "/skæljənz/",
+      "optionText": "/skæljənz/ OR /skælĭ.ənz/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
