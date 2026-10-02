@@ -277,16 +277,10 @@
           "type": "quiz"
         },
         {
-          "type": "resource"
-        },
-        {
           "type": "quiz"
         },
         {
           "type": "quiz"
-        },
-        {
-          "type": "resource"
         },
         {
           "type": "resource"
@@ -1109,24 +1103,6 @@
       "order": 5
     },
     {
-      "id": 48,
-      "name": "Audio: Transcription Matching Words (8A)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8A+Transcription+Matching+Words.mp3",
-      "courseId": null,
-      "lessonId": 13,
-      "order": 0
-    },
-    {
-      "id": 49,
-      "name": "Audio: Simple Transcription Words (8C)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8C+Simple+Transcription+Words.mp3",
-      "courseId": null,
-      "lessonId": 13,
-      "order": 1
-    },
-    {
       "id": 50,
       "name": "Audio: Descriptive Transcription Phrases (9C)",
       "type": "mp3",
@@ -1751,7 +1727,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.eyes.mp3"
     },
     {
       "id": 110,
@@ -1759,7 +1735,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.seizure.mp3"
     },
     {
       "id": 111,
@@ -1767,7 +1743,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.scissors.mp3"
     },
     {
       "id": 112,
@@ -1775,7 +1751,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.mission.mp3"
     },
     {
       "id": 113,
@@ -1783,7 +1759,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.wrecked.mp3"
     },
     {
       "id": 114,
@@ -1791,7 +1767,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.muttered.mp3"
     },
     {
       "id": 115,
@@ -1799,7 +1775,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.naked.mp3"
     },
     {
       "id": 116,
@@ -1807,7 +1783,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.singing.mp3"
     },
     {
       "id": 117,
@@ -1815,7 +1791,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.hunger.mp3"
     },
     {
       "id": 118,
@@ -1823,7 +1799,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.binging.mp3"
     },
     {
       "id": 119,
@@ -1831,7 +1807,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.tongue.mp3"
     },
     {
       "id": 120,
@@ -1839,7 +1815,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.winner.mp3"
     },
     {
       "id": 121,
@@ -1847,7 +1823,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.apply.mp3"
     },
     {
       "id": 122,
@@ -1855,7 +1831,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.fool.mp3"
     },
     {
       "id": 123,
@@ -1863,7 +1839,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.tomb.mp3"
     },
     {
       "id": 124,
@@ -1871,7 +1847,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.listen.mp3"
     },
     {
       "id": 125,
@@ -1879,7 +1855,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.button.mp3"
     },
     {
       "id": 126,
@@ -1887,7 +1863,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.mathematical.mp3"
     },
     {
       "id": 127,
@@ -1895,7 +1871,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.ronald.mp3"
     },
     {
       "id": 128,
@@ -1903,7 +1879,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.georgia.mp3"
     },
     {
       "id": 129,
@@ -1911,7 +1887,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.banana.mp3"
     },
     {
       "id": 130,
@@ -1919,7 +1895,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.surfer.mp3"
     },
     {
       "id": 131,
@@ -1927,7 +1903,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.among.mp3"
     },
     {
       "id": 132,
@@ -1935,7 +1911,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.built.mp3"
     },
     {
       "id": 133,
