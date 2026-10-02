@@ -38,7 +38,7 @@ interface HangmanQuestion {
   markers?: Record<string, string>
   /** Diacritics printed on a blank for the learner, who places only the base
    *  symbol: a syllabic line under it (n̩, ɫ̩) or a non-syllabic breve over it
-   *  (ɪ̆). Keyed by blank index. */
+   *  (ĭ). Keyed by blank index. */
   diacritics?: Record<string, BlankDiacritic>
 }
 
@@ -59,7 +59,7 @@ const DIACRITIC_DISPLAY: Record<
 const LEGACY_DIACRITIC_ANSWERS: Record<string, string> = {
   'n̩': 'n',
   'ɫ̩': 'ɫ',
-  ĭ: 'ɪ',
+  ĭ: 'i',
 }
 
 interface HangmanQuizData {
