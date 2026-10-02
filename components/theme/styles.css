@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Charis+SIL:wght@400;700&family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Noto+Sans:wght@400;700&display=swap');
 
 /* Enhanced IPA font rendering */
 .ipa-text {
-  /* Charis SIL first: it's an SIL linguistics face with full Combining
-     Diacritical Marks coverage, so affricate tie bars (t͡ʃ, d͡ʒ — U+0361)
-     render. Arimo led this list previously and has no glyph for the tie bar,
-     which is what produced the tofu box. */
+  /* Charis SIL first, self-hosted in styles/globals.css. Google's copy is
+     deliberately not imported above: its subsets omit the U+0361 tie bar and
+     U+0306 breve, which then broke into tofu next to other combining marks. */
   font-family: 'Charis SIL', 'Doulos SIL', 'Noto Sans', 'Arial Unicode MS',
     serif !important;
   font-feature-settings: 'ccmp' 1, 'mark' 1, 'mkmk' 1;

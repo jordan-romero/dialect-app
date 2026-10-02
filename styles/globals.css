@@ -19,6 +19,43 @@ body {
 }
 
 /*
+ * Charis SIL is self-hosted rather than taken from Google Fonts: Google's
+ * subsets leave out the U+0361 tie bar and U+0306 breve, so those marks were
+ * borrowed from a system font and broke into a tofu box whenever another mark
+ * (e.g. syllabic U+0329 in t͡ʃn̩) shared the cluster. These files are SIL's
+ * Charis 7.000 cut down to Latin, IPA and the combining-mark blocks. OFL
+ * licence alongside them in public/fonts.
+ */
+@font-face {
+  font-family: 'Charis SIL';
+  src: url('/fonts/CharisSIL-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charis SIL';
+  src: url('/fonts/CharisSIL-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charis SIL';
+  src: url('/fonts/CharisSIL-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charis SIL';
+  src: url('/fonts/CharisSIL-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/*
  * Eight components already tag IPA with className="ipa-text", but the class
  * had no rule, so it did nothing and those spots inherited the body font.
  * Keep this in step with `fonts.ipa` in components/theme/index.ts.
