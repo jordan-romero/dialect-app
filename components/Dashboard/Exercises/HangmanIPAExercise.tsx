@@ -36,6 +36,30 @@ interface HangmanQuestion {
    *  than filled in. Keyed by the blank index they render before, so blank
    *  numbering (and therefore correctAnswer and saved progress) is unchanged. */
   markers?: Record<string, string>
+  /** Diacritics printed on a blank for the learner, who places only the base
+   *  symbol: a syllabic line under it (n̩, ɫ̩) or a non-syllabic breve over it
+   *  (ɪ̆). Keyed by blank index. */
+  diacritics?: Record<string, BlankDiacritic>
+}
+
+type BlankDiacritic = 'syllabic' | 'nonSyllabic'
+
+/** The mark sits on a no-break space so it renders on its own, outside the
+ *  slot, without a dotted-circle placeholder. */
+const DIACRITIC_DISPLAY: Record<
+  BlankDiacritic,
+  { mark: string; label: string; above: boolean }
+> = {
+  syllabic: { mark: ' ̩', label: 'syllabic', above: false },
+  nonSyllabic: { mark: ' ̆', label: 'non-syllabic', above: true },
+}
+
+/** Progress saved before the diacritics moved onto the blanks holds the full
+ *  symbol; reduce it to the base the learner now places. */
+const LEGACY_DIACRITIC_ANSWERS: Record<string, string> = {
+  'n̩': 'n',
+  'ɫ̩': 'ɫ',
+  ĭ: 'ɪ',
 }
 
 interface HangmanQuizData {
@@ -132,7 +156,17 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
               savedAnswer.textAnswer !== 'pending'
             ) {
               try {
-                const savedAnswers = JSON.parse(savedAnswer.textAnswer)
+                const savedAnswers: { [questionId: number]: string[] } =
+                  JSON.parse(savedAnswer.textAnswer)
+                for (const q of quizData.questions_data) {
+                  const saved = savedAnswers[q.id]
+                  if (!saved || !q.diacritics) continue
+                  savedAnswers[q.id] = saved.map((a, i) =>
+                    q.diacritics?.[String(i)]
+                      ? LEGACY_DIACRITIC_ANSWERS[a] ?? a
+                      : a,
+                  )
+                }
                 setUserAnswers(savedAnswers)
               } catch (error) {
                 console.error('Error parsing saved hangman answers:', error)
@@ -482,7 +516,9 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           </Flex>
 
           {/* Blank spaces */}
-          <Flex gap={2} align="center" mb={3}>
+          {/* Vertical padding leaves room for marks printed above or below
+              a blank. */}
+          <Flex gap={2} align="center" py={4} mb={3}>
             {Array.from({ length: currentQuestion.blanks }, (_, blankIndex) => {
               const userAnswer = userAnswers[currentQuestion.id] || []
               const isCorrect =
@@ -500,6 +536,11 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
               // rather than filled in, so they render as plain text between
               // the blanks and are not clickable.
               const marker = currentQuestion.markers?.[String(blankIndex)]
+              const diacriticKind =
+                currentQuestion.diacritics?.[String(blankIndex)]
+              const diacritic = diacriticKind
+                ? DIACRITIC_DISPLAY[diacriticKind]
+                : undefined
 
               return (
                 <Fragment key={blankIndex}>
@@ -558,7 +599,30 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   }}
                   transition="all 0.2s"
                   position="relative"
+                  aria-label={
+                    diacritic ? `blank ${blankIndex + 1}, ${diacritic.label}` : undefined
+                  }
                 >
+                  {diacritic && (
+                    <Text
+                      aria-hidden
+                      position="absolute"
+                      left="50%"
+                      transform="translateX(-50%)"
+                      {...(diacritic.above
+                        ? { bottom: '100%', mb: '-6px' }
+                        : { top: '100%', mt: '-14px' })}
+                      fontFamily="ipa"
+                      className="ipa-text"
+                      fontSize="2xl"
+                      fontWeight="bold"
+                      lineHeight="1"
+                      color="text.primary"
+                      pointerEvents="none"
+                    >
+                      {diacritic.mark}
+                    </Text>
+                  )}
                   {displaySymbol ? (
                     <Text
                       fontSize="lg"

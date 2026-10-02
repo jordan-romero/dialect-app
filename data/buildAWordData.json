@@ -29,7 +29,6 @@
     "l",
     "m",
     "n",
-    "n̩",
     "oʊ̆",
     "oʊ̆ɚ̆",
     "p",
@@ -43,7 +42,6 @@
     "æ",
     "ç",
     "ð",
-    "ĭ",
     "ŋ",
     "ɑ",
     "ɑɚ̆",
@@ -61,7 +59,6 @@
     "ɪ̆u",
     "ɪ̆ʊɚ̆",
     "ɫ",
-    "ɫ̩",
     "ɹ",
     "ɾ",
     "ʃ",
@@ -137,11 +134,6 @@
       "ɪ̆ʊɚ̆",
       "ɛɪ̆ɚ̆",
       "oʊ̆ɚ̆"
-    ],
-    "diacritics": [
-      "n̩",
-      "ɫ̩",
-      "ĭ"
     ]
   },
   "questions_data": [
@@ -207,11 +199,14 @@
         "k",
         "oʊ̆",
         "ʃ",
-        "n̩"
+        "n"
       ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.PacificOcean.mp3",
       "markers": {
         "2": "ˈ"
+      },
+      "diacritics": {
+        "9": "syllabic"
       }
     },
     {
@@ -221,7 +216,7 @@
       "correctAnswer": [
         "w",
         "ɝ",
-        "ĭ",
+        "ɪ",
         "ɪ",
         "ŋ"
       ],
@@ -229,6 +224,9 @@
       "markers": {
         "2": ".",
         "3": "."
+      },
+      "diacritics": {
+        "2": "nonSyllabic"
       }
     },
     {
@@ -281,13 +279,16 @@
         "ɾ",
         "ɪ",
         "k",
-        "ɫ̩"
+        "ɫ"
       ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Theoretical.mp3",
       "markers": {
         "0": "ˌ",
         "2": ".",
         "3": "ˈ"
+      },
+      "diacritics": {
+        "8": "syllabic"
       }
     },
     {
@@ -301,7 +302,7 @@
         "ə",
         "t",
         "ɔɚ̆",
-        "ĭ",
+        "ɪ",
         "ə",
         "ɫ"
       ],
@@ -311,6 +312,9 @@
         "4": "ˈ",
         "6": ".",
         "7": "."
+      },
+      "diacritics": {
+        "6": "nonSyllabic"
       }
     }
   ]
