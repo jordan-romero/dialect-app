@@ -29,7 +29,6 @@
     "l",
     "m",
     "n",
-    "n̩",
     "oʊ̆",
     "oʊ̆ɚ̆",
     "p",
@@ -43,7 +42,6 @@
     "æ",
     "ç",
     "ð",
-    "ĭ",
     "ŋ",
     "ɑ",
     "ɑɚ̆",
@@ -61,7 +59,6 @@
     "ɪ̆u",
     "ɪ̆ʊɚ̆",
     "ɫ",
-    "ɫ̩",
     "ɹ",
     "ɾ",
     "ʃ",
@@ -137,11 +134,6 @@
       "ɪ̆ʊɚ̆",
       "ɛɪ̆ɚ̆",
       "oʊ̆ɚ̆"
-    ],
-    "diacritics": [
-      "n̩",
-      "ɫ̩",
-      "ĭ"
     ]
   },
   "questions_data": [
@@ -207,9 +199,15 @@
         "k",
         "oʊ̆",
         "ʃ",
-        "n̩"
+        "n"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.PacificOcean.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.PacificOcean.mp3",
+      "markers": {
+        "2": "ˈ"
+      },
+      "diacritics": {
+        "9": "syllabic"
+      }
     },
     {
       "id": 6,
@@ -218,11 +216,18 @@
       "correctAnswer": [
         "w",
         "ɝ",
-        "ĭ",
+        "i",
         "ɪ",
         "ŋ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Worrying.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Worrying.mp3",
+      "markers": {
+        "2": ".",
+        "3": "."
+      },
+      "diacritics": {
+        "2": "nonSyllabic"
+      }
     },
     {
       "id": 7,
@@ -236,7 +241,10 @@
         "eɪ̆",
         "ɚ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Conveyor.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Conveyor.mp3",
+      "markers": {
+        "5": "."
+      }
     },
     {
       "id": 8,
@@ -252,7 +260,11 @@
         "ɪ",
         "k"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Automatic.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Automatic.mp3",
+      "markers": {
+        "0": "ˌ",
+        "3": "ˈ"
+      }
     },
     {
       "id": 9,
@@ -267,9 +279,17 @@
         "ɾ",
         "ɪ",
         "k",
-        "ɫ̩"
+        "ɫ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Theoretical.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Theoretical.mp3",
+      "markers": {
+        "0": "ˌ",
+        "2": ".",
+        "3": "ˈ"
+      },
+      "diacritics": {
+        "8": "syllabic"
+      }
     },
     {
       "id": 10,
@@ -282,11 +302,20 @@
         "ə",
         "t",
         "ɔɚ̆",
-        "ĭ",
+        "i",
         "ə",
         "ɫ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Janitorial.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Janitorial.mp3",
+      "markers": {
+        "0": "ˌ",
+        "4": "ˈ",
+        "6": ".",
+        "7": "."
+      },
+      "diacritics": {
+        "6": "nonSyllabic"
+      }
     }
   ]
 }

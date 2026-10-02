@@ -421,7 +421,7 @@
     {
       "id": "player",
       "exampleWord": "PL{AYER}",
-      "ipaSymbol": "eɪ̆.ɚ̆",
+      "ipaSymbol": "ɛɪ̆ɚ̆",
       "wordBank": [
         "lair",
         "mayor",
@@ -435,7 +435,7 @@
     {
       "id": "lower",
       "exampleWord": "L{OWER}",
-      "ipaSymbol": "oʊ̆.ɚ̆",
+      "ipaSymbol": "oʊ̆ɚ̆",
       "wordBank": [
         "goer",
         "blower",
@@ -875,8 +875,8 @@
     "aɪ̆ɚ̆",
     "aʊ̆ɚ̆",
     "ɔɪ̆ɚ̆",
-    "eɪ̆.ɚ̆",
-    "oʊ̆.ɚ̆",
+    "ɛɪ̆ɚ̆",
+    "oʊ̆ɚ̆",
     "p",
     "b",
     "t",

@@ -20,6 +20,9 @@ import QuizSkeleton from './QuizSkeleton'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
 
+/** How long a completed word stays on screen before the next one loads. */
+const ADVANCE_DELAY_MS = 3000
+
 interface HangmanQuestion {
   id: number
   word: string
@@ -29,6 +32,34 @@ interface HangmanQuestion {
    *  its design doc); the Hangman dataset has none, so this stays optional and
    *  the button only appears where a clip exists. */
   audioUrl?: string
+  /** Stress marks and syllable breaks that are given to the learner rather
+   *  than filled in. Keyed by the blank index they render before, so blank
+   *  numbering (and therefore correctAnswer and saved progress) is unchanged. */
+  markers?: Record<string, string>
+  /** Diacritics printed on a blank for the learner, who places only the base
+   *  symbol: a syllabic line under it (n̩, ɫ̩) or a non-syllabic breve over it
+   *  (ĭ). Keyed by blank index. */
+  diacritics?: Record<string, BlankDiacritic>
+}
+
+type BlankDiacritic = 'syllabic' | 'nonSyllabic'
+
+/** The mark sits on a no-break space so it renders on its own, outside the
+ *  slot, without a dotted-circle placeholder. */
+const DIACRITIC_DISPLAY: Record<
+  BlankDiacritic,
+  { mark: string; label: string; above: boolean }
+> = {
+  syllabic: { mark: ' ̩', label: 'syllabic', above: false },
+  nonSyllabic: { mark: ' ̆', label: 'non-syllabic', above: true },
+}
+
+/** Progress saved before the diacritics moved onto the blanks holds the full
+ *  symbol; reduce it to the base the learner now places. */
+const LEGACY_DIACRITIC_ANSWERS: Record<string, string> = {
+  'n̩': 'n',
+  'ɫ̩': 'ɫ',
+  ĭ: 'i',
 }
 
 interface HangmanQuizData {
@@ -76,6 +107,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  /** True while a finished word is being held on screen before advancing. */
+  const [isHolding, setIsHolding] = useState(false)
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
   const [completedQuestions, setCompletedQuestions] = useState<number[]>([])
   const { isOpen: isKeyboardOpen, onToggle: onToggleKeyboard } = useDisclosure()
@@ -123,7 +156,17 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
               savedAnswer.textAnswer !== 'pending'
             ) {
               try {
-                const savedAnswers = JSON.parse(savedAnswer.textAnswer)
+                const savedAnswers: { [questionId: number]: string[] } =
+                  JSON.parse(savedAnswer.textAnswer)
+                for (const q of quizData.questions_data) {
+                  const saved = savedAnswers[q.id]
+                  if (!saved || !q.diacritics) continue
+                  savedAnswers[q.id] = saved.map((a, i) =>
+                    q.diacritics?.[String(i)]
+                      ? LEGACY_DIACRITIC_ANSWERS[a] ?? a
+                      : a,
+                  )
+                }
                 setUserAnswers(savedAnswers)
               } catch (error) {
                 console.error('Error parsing saved hangman answers:', error)
@@ -153,28 +196,42 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
     [userAnswers],
   )
 
-  // Auto-advance to next question when current question is completed
+  // Hold on a finished word before moving on, so the learner sees their
+  // completed transcription confirmed instead of it vanishing the instant the
+  // last symbol lands.
   useEffect(() => {
     if (!quizData) return
 
     const currentQuestion = quizData.questions_data[currentQuestionIndex]
-    if (currentQuestion && checkQuestionCompletion(currentQuestion)) {
-      // Mark question as completed
-      if (!completedQuestions.includes(currentQuestion.id)) {
-        setCompletedQuestions((prev) => [...prev, currentQuestion.id])
-      }
-
-      // Move to next incomplete question
-      const nextQuestionIndex = quizData.questions_data.findIndex(
-        (question, index) =>
-          index > currentQuestionIndex &&
-          !completedQuestions.includes(question.id),
-      )
-
-      if (nextQuestionIndex !== -1) {
-        setCurrentQuestionIndex(nextQuestionIndex)
-      }
+    if (!currentQuestion || !checkQuestionCompletion(currentQuestion)) {
+      setIsHolding(false)
+      return
     }
+
+    // Mark question as completed
+    if (!completedQuestions.includes(currentQuestion.id)) {
+      setCompletedQuestions((prev) => [...prev, currentQuestion.id])
+    }
+
+    // Move to next incomplete question
+    const nextQuestionIndex = quizData.questions_data.findIndex(
+      (question, index) =>
+        index > currentQuestionIndex &&
+        !completedQuestions.includes(question.id),
+    )
+
+    // Nothing left to advance to — the quiz-complete state takes over.
+    if (nextQuestionIndex === -1) {
+      setIsHolding(false)
+      return
+    }
+
+    setIsHolding(true)
+    const timer = setTimeout(() => {
+      setIsHolding(false)
+      setCurrentQuestionIndex(nextQuestionIndex)
+    }, ADVANCE_DELAY_MS)
+    return () => clearTimeout(timer)
   }, [
     userAnswers,
     currentQuestionIndex,
@@ -336,22 +393,11 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             Instructions:
           </Text>{' '}
           Point and click the correct IPA symbol into the blank spaces to
-          transcribe the presented word.
+          transcribe the presented word. Syllabic consonant indicators, stress
+          indicators, and syllable breaks have been provided for you.
           {quizData.questions_data.some((q) => q.audioUrl)
             ? ' Click the "Play Audio" button to hear the word.'
             : ''}
-        </Text>
-        <Text fontSize="sm" color="purple.600" mt={1}>
-          Syllabic consonant indicators, stress indicators, and syllable breaks
-          have been provided for you.
-        </Text>
-        <Text fontSize="sm" color="red.600" mt={2}>
-          <Text as="span" fontWeight="bold">
-            Note:
-          </Text>{' '}
-          This is just hangman, minus the hanged man. A word will appear with
-          the corresponding number of blank spots, must point and click from the
-          same word bank each time to fill in the blank.
         </Text>
       </Box>
 
@@ -436,43 +482,22 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         </Box>
       </Collapse>
 
-      {/* Instructions */}
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm" color="text.primary">
-          <Text as="span" fontWeight="bold">
-            Instructions:
-          </Text>{' '}
-          Click on a symbol from the bank above, then click on a blank space to
-          place it. You can also click the{' '}
-          <Icon as={MdKeyboard} display="inline" verticalAlign="middle" />{' '}
-          button to open the full IPA keyboard - then{' '}
-          <Text as="span" fontWeight="bold" color="blue.600">
-            click a blank space first
-          </Text>{' '}
-          (it will turn blue), then click symbols from the keyboard or use
-          Ctrl+letter shortcuts. Double-click on a filled space to clear it.
-        </Text>
-      </Box>
-
-      {/* Current Question */}
-      {currentQuestion && !isCurrentQuestionComplete && (
+      {/* Current Question. Stays on screen through the hold so the finished
+          transcription is visible before the next word replaces it. */}
+      {currentQuestion && (!isCurrentQuestionComplete || isHolding) && (
         <Box
           border="2px solid"
-          borderColor="brand.iris"
+          borderColor={isHolding ? 'green.500' : 'brand.iris'}
           borderRadius="lg"
           p={6}
-          bg="surface.card"
+          bg={isHolding ? 'surface.correct' : 'surface.card'}
+          transition="background-color 0.2s ease, border-color 0.2s ease"
         >
-          <Text fontSize="lg" fontWeight="bold" mb={3}>
-            QUESTION {currentQuestionIndex + 1}:
-          </Text>
-
+          {isHolding && (
+            <Text fontSize="sm" fontWeight="bold" color="green.700" mb={2}>
+              Correct
+            </Text>
+          )}
           <Flex align="center" gap={3} mb={2}>
             <Text fontSize="xl" fontWeight="bold">
               &ldquo;{currentQuestion.word}&rdquo;
@@ -491,7 +516,9 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           </Flex>
 
           {/* Blank spaces */}
-          <Flex gap={2} align="center" mb={3}>
+          {/* Vertical padding leaves room for marks printed above or below
+              a blank. */}
+          <Flex gap={2} align="center" py={4} mb={3}>
             {Array.from({ length: currentQuestion.blanks }, (_, blankIndex) => {
               const userAnswer = userAnswers[currentQuestion.id] || []
               const isCorrect =
@@ -505,9 +532,39 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   ? pendingSymbol
                   : userAnswer[blankIndex]
 
+              // Stress marks and syllable breaks are given to the learner
+              // rather than filled in, so they render as plain text between
+              // the blanks and are not clickable.
+              const marker = currentQuestion.markers?.[String(blankIndex)]
+              const diacriticKind =
+                currentQuestion.diacritics?.[String(blankIndex)]
+              const diacritic = diacriticKind
+                ? DIACRITIC_DISPLAY[diacriticKind]
+                : undefined
+
               return (
+                <Fragment key={blankIndex}>
+                  {marker && (
+                    <Text
+                      fontFamily="ipa"
+                      className="ipa-text"
+                      fontSize="lg"
+                      fontWeight="semibold"
+                      color="text.muted"
+                      aria-label={
+                        marker === '.'
+                          ? 'syllable break'
+                          : marker === 'ˈ'
+                          ? 'primary stress'
+                          : marker === 'ˌ'
+                          ? 'secondary stress'
+                          : marker
+                      }
+                    >
+                      {marker}
+                    </Text>
+                  )}
                 <Box
-                  key={blankIndex}
                   minW="50px"
                   h="50px"
                   border="2px solid"
@@ -542,7 +599,30 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                   }}
                   transition="all 0.2s"
                   position="relative"
+                  aria-label={
+                    diacritic ? `blank ${blankIndex + 1}, ${diacritic.label}` : undefined
+                  }
                 >
+                  {diacritic && (
+                    <Text
+                      aria-hidden
+                      position="absolute"
+                      left="50%"
+                      transform="translateX(-50%)"
+                      {...(diacritic.above
+                        ? { bottom: '100%', mb: '-6px' }
+                        : { top: '100%', mt: '-14px' })}
+                      fontFamily="ipa"
+                      className="ipa-text"
+                      fontSize="2xl"
+                      fontWeight="bold"
+                      lineHeight="1"
+                      color="text.primary"
+                      pointerEvents="none"
+                    >
+                      {diacritic.mark}
+                    </Text>
+                  )}
                   {displaySymbol ? (
                     <Text
                       fontSize="lg"
@@ -560,6 +640,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                     </Text>
                   )}
                 </Box>
+                </Fragment>
               )
             })}
           </Flex>

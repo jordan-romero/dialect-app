@@ -30,6 +30,12 @@ const theme = extendTheme({
       'text.primary': { default: 'gray.800', _dark: 'gray.100' },
       'text.muted': { default: 'gray.500', _dark: 'gray.400' },
       'border.subtle': { default: 'gray.200', _dark: 'whiteAlpha.300' },
+      // Answer slots in the click-to-place exercises. These sit inside a Paper,
+      // which sets color="text.primary" — so a hardcoded white slot inherits
+      // near-white text in dark mode and the learner's answer disappears.
+      'surface.slot': { default: 'white', _dark: 'gray.700' },
+      'surface.correct': { default: 'green.50', _dark: 'rgba(72,187,120,0.22)' },
+      'surface.wrong': { default: 'red.50', _dark: 'rgba(245,101,101,0.22)' },
       // IPA keyboard key highlights — bright in light mode, gently tinted in dark.
       'symbol.used': {
         default: 'brand.blue',

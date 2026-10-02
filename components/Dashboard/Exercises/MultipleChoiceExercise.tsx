@@ -310,15 +310,26 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
       </Flex>
       {(() => {
         const selectedId = selectedAnswers[question.id]
-        if (!selectedId || isQuestionCorrect(question.id)) return null
+        if (!selectedId) return null
+        const isCorrect = isQuestionCorrect(question.id)
         const selected = question.answerOptions.find(
           (o: AnswerOption) => o.id === selectedId,
         )
         if (!selected) return null
+        // Feedback used to be hidden whenever the answer was right, but several
+        // notes are written to explain the *correct* transcription (the
+        // devoiced [ɹ̥] in "crib", the unvoiced [ʍ] in "question") and are
+        // meant to appear once it's been found.
+        if (isCorrect && !selected.feedback) return null
         return (
           <Box mt={3}>
             {selected.feedback && (
-              <Text fontSize="sm" fontStyle="italic" color="orange.600" mb={2}>
+              <Text
+                fontSize="sm"
+                fontStyle="italic"
+                color={isCorrect ? 'green.700' : 'orange.600'}
+                mb={2}
+              >
                 {selected.feedback}
               </Text>
             )}

@@ -277,19 +277,13 @@
           "type": "quiz"
         },
         {
-          "type": "resource"
-        },
-        {
-          "type": "quiz"
-        },
-        {
           "type": "quiz"
         },
         {
           "type": "resource"
         },
         {
-          "type": "resource"
+          "type": "quiz"
         },
         {
           "type": "outro"
@@ -319,9 +313,6 @@
         },
         {
           "type": "quiz"
-        },
-        {
-          "type": "resource"
         },
         {
           "type": "quiz"
@@ -842,7 +833,7 @@
       "id": 18,
       "name": "Typing in the IPA",
       "type": "pdf",
-      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8D+-+TYPING+IN+THE+IPA.pdf",
+      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8C+-+IPA+KEYBOARD+INSTRUCTIONS.pdf",
       "courseId": null,
       "lessonId": 13,
       "order": 2
@@ -1098,42 +1089,6 @@
       "courseId": null,
       "lessonId": 26,
       "order": 4
-    },
-    {
-      "id": 47,
-      "name": "Audio: Hamlet’s Advice Phrases (Part 3)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/Checkpoint+2C+pt3+Hamlet+Phrases.mp3",
-      "courseId": null,
-      "lessonId": 26,
-      "order": 5
-    },
-    {
-      "id": 48,
-      "name": "Audio: Transcription Matching Words (8A)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8A+Transcription+Matching+Words.mp3",
-      "courseId": null,
-      "lessonId": 13,
-      "order": 0
-    },
-    {
-      "id": 49,
-      "name": "Audio: Simple Transcription Words (8C)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/8.+Transcription+Concepts/8C+Simple+Transcription+Words.mp3",
-      "courseId": null,
-      "lessonId": 13,
-      "order": 1
-    },
-    {
-      "id": 50,
-      "name": "Audio: Descriptive Transcription Phrases (9C)",
-      "type": "mp3",
-      "url": "https://acting-accents.s3.amazonaws.com/9.+Transcription+in+Action/9C+Descriptive+Transcription+Phrases.mp3",
-      "courseId": null,
-      "lessonId": 14,
-      "order": 0
     }
   ],
   "Quiz": [
@@ -1161,7 +1116,7 @@
     },
     {
       "id": 3,
-      "title": "Multiple Choice Quiz",
+      "title": "Match the Consonant Symbol to the Sound",
       "lessonId": 6,
       "score": null,
       "passScore": 75,
@@ -1172,7 +1127,7 @@
     },
     {
       "id": 4,
-      "title": "Multiple Choice Quiz",
+      "title": "Match the Vowel Symbol to the Sound",
       "lessonId": 8,
       "score": null,
       "passScore": 75,
@@ -1183,7 +1138,7 @@
     },
     {
       "id": 8,
-      "title": "Choose the Right Symbol",
+      "title": "Consonants in Word Context",
       "lessonId": 6,
       "score": null,
       "passScore": 75,
@@ -1194,7 +1149,7 @@
     },
     {
       "id": 9,
-      "title": "Choose the Right Symbol",
+      "title": "Vowels in Word Context",
       "lessonId": 8,
       "score": null,
       "passScore": 75,
@@ -1205,7 +1160,7 @@
     },
     {
       "id": 10,
-      "title": "Multiple Choice Quiz (two ways)",
+      "title": "Match the Diphthong/Triphthong Symbol to the Sound",
       "lessonId": 10,
       "score": null,
       "passScore": 75,
@@ -1216,7 +1171,7 @@
     },
     {
       "id": 11,
-      "title": "Choose the Right Symbol",
+      "title": "Diphthongs & Triphthongs in Word Context",
       "lessonId": 10,
       "score": null,
       "passScore": 75,
@@ -1278,7 +1233,8 @@
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
       "order": 1,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Select the correct IPA transcription suitable for a General American Dialect. This exercise is meant to highlight different pronunciations among native English speakers."
     },
     {
       "id": 24,
@@ -1344,7 +1300,7 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
+      "quizType": "matching",
       "order": 1,
       "isCompleted": false
     },
@@ -1357,7 +1313,8 @@
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
       "order": 2,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Identify the correct word based on the IPA transcription."
     },
     {
       "id": 31,
@@ -1750,7 +1707,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.eyes.mp3"
     },
     {
       "id": 110,
@@ -1758,7 +1715,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.seizure.mp3"
     },
     {
       "id": 111,
@@ -1766,7 +1723,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.scissors.mp3"
     },
     {
       "id": 112,
@@ -1774,7 +1731,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.mission.mp3"
     },
     {
       "id": 113,
@@ -1782,7 +1739,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.wrecked.mp3"
     },
     {
       "id": 114,
@@ -1790,7 +1747,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.muttered.mp3"
     },
     {
       "id": 115,
@@ -1798,7 +1755,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.naked.mp3"
     },
     {
       "id": 116,
@@ -1806,7 +1763,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.singing.mp3"
     },
     {
       "id": 117,
@@ -1814,7 +1771,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.hunger.mp3"
     },
     {
       "id": 118,
@@ -1822,7 +1779,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.binging.mp3"
     },
     {
       "id": 119,
@@ -1830,7 +1787,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.tongue.mp3"
     },
     {
       "id": 120,
@@ -1838,7 +1795,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.winner.mp3"
     },
     {
       "id": 121,
@@ -1846,7 +1803,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.apply.mp3"
     },
     {
       "id": 122,
@@ -1854,7 +1811,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.fool.mp3"
     },
     {
       "id": 123,
@@ -1862,7 +1819,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.tomb.mp3"
     },
     {
       "id": 124,
@@ -1870,7 +1827,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.listen.mp3"
     },
     {
       "id": 125,
@@ -1878,7 +1835,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.button.mp3"
     },
     {
       "id": 126,
@@ -1886,7 +1843,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.mathematical.mp3"
     },
     {
       "id": 127,
@@ -1894,7 +1851,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.ronald.mp3"
     },
     {
       "id": 128,
@@ -1902,7 +1859,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.georgia.mp3"
     },
     {
       "id": 129,
@@ -1910,7 +1867,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.banana.mp3"
     },
     {
       "id": 130,
@@ -1918,7 +1875,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.surfer.mp3"
     },
     {
       "id": 131,
@@ -1926,7 +1883,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.among.mp3"
     },
     {
       "id": 132,
@@ -1934,7 +1891,7 @@
       "questionType": "multipleChoice",
       "quizId": 22,
       "categories": [],
-      "audioUrl": null
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/8.%20Transcription%20Concepts/8A.Audio/8A.built.mp3"
     },
     {
       "id": 133,
@@ -3178,7 +3135,7 @@
     },
     {
       "id": 288,
-      "text": "Identify the word: /hɑt/",
+      "text": "/hɑt/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3186,7 +3143,7 @@
     },
     {
       "id": 289,
-      "text": "Identify the word: /bɑt/",
+      "text": "/bɑt/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3194,7 +3151,7 @@
     },
     {
       "id": 290,
-      "text": "Identify the word: /lɝnd/",
+      "text": "/lɝnd/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3202,7 +3159,7 @@
     },
     {
       "id": 291,
-      "text": "Identify the word: /naɪ̆f/",
+      "text": "/naɪ̆f/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3210,7 +3167,7 @@
     },
     {
       "id": 292,
-      "text": "Identify the word: /bɔɪ̆lɪŋ/",
+      "text": "/bɔɪ̆lɪŋ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3218,7 +3175,7 @@
     },
     {
       "id": 293,
-      "text": "Identify the word: /kʍɛst͡ʃn̩/*",
+      "text": "/kʍɛst͡ʃn̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3226,7 +3183,7 @@
     },
     {
       "id": 294,
-      "text": "Identify the word: /ɹəlɪd͡ʒn̩/",
+      "text": "/ɹəlɪd͡ʒn̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3234,7 +3191,7 @@
     },
     {
       "id": 295,
-      "text": "Identify the word: /kɹ̥ɪb/",
+      "text": "/kɹ̥ɪb/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3242,7 +3199,7 @@
     },
     {
       "id": 296,
-      "text": "Identify the word: /gɔɚ̆d͡ʒ/",
+      "text": "/gɔɚ̆d͡ʒ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3250,7 +3207,7 @@
     },
     {
       "id": 297,
-      "text": "Identify the word: /faʊ̆ɫ/",
+      "text": "/faʊ̆ɫ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3258,7 +3215,7 @@
     },
     {
       "id": 298,
-      "text": "Identify the word: /çɪ̆ud͡ʒ/",
+      "text": "/çɪ̆ud͡ʒ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3266,7 +3223,7 @@
     },
     {
       "id": 299,
-      "text": "Identify the word: /pl̥æd/",
+      "text": "/pl̥æd/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3274,7 +3231,7 @@
     },
     {
       "id": 300,
-      "text": "Identify the word: /bɛɾɚ/",
+      "text": "/bɛɾɚ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3282,7 +3239,7 @@
     },
     {
       "id": 301,
-      "text": "Identify the word: /kɝʔn̩/",
+      "text": "/kɝʔn̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3290,7 +3247,7 @@
     },
     {
       "id": 302,
-      "text": "Identify the word: /ɛnˈθuzĭˌæzm̩/",
+      "text": "/ɛnˈθuzĭˌæzm̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -7777,7 +7734,7 @@
     },
     {
       "id": 479,
-      "optionText": "/skæljənz/",
+      "optionText": "/skæljənz/ OR /skælĭ.ənz/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -11837,8 +11794,8 @@
     },
     {
       "id": 885,
-      "optionText": "foul",
-      "isCorrect": true,
+      "optionText": "foil",
+      "isCorrect": false,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
