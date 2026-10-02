@@ -440,6 +440,12 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         borderRadius="sm"
         bg="surface.card"
         overflowX="auto"
+        // Shrink the frame to the chart rather than the column, and centre it.
+        // alignSelf is needed as well as mx: the parent VStack is align="stretch".
+        w="fit-content"
+        maxW="100%"
+        mx="auto"
+        alignSelf="center"
       >
         <Text
           fontSize="xl"

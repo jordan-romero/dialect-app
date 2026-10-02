@@ -1161,7 +1161,7 @@
     },
     {
       "id": 3,
-      "title": "Multiple Choice Quiz",
+      "title": "Match the Consonant Symbol to the Sound",
       "lessonId": 6,
       "score": null,
       "passScore": 75,
@@ -1172,7 +1172,7 @@
     },
     {
       "id": 4,
-      "title": "Multiple Choice Quiz",
+      "title": "Match the Vowel Symbol to the Sound",
       "lessonId": 8,
       "score": null,
       "passScore": 75,
@@ -1183,7 +1183,7 @@
     },
     {
       "id": 8,
-      "title": "Choose the Right Symbol",
+      "title": "Consonants in Word Context",
       "lessonId": 6,
       "score": null,
       "passScore": 75,
@@ -1194,7 +1194,7 @@
     },
     {
       "id": 9,
-      "title": "Choose the Right Symbol",
+      "title": "Vowels in Word Context",
       "lessonId": 8,
       "score": null,
       "passScore": 75,
@@ -1205,7 +1205,7 @@
     },
     {
       "id": 10,
-      "title": "Multiple Choice Quiz (two ways)",
+      "title": "Match the Diphthong/Triphthong Symbol to the Sound",
       "lessonId": 10,
       "score": null,
       "passScore": 75,
@@ -1216,7 +1216,7 @@
     },
     {
       "id": 11,
-      "title": "Choose the Right Symbol",
+      "title": "Diphthongs & Triphthongs in Word Context",
       "lessonId": 10,
       "score": null,
       "passScore": 75,
@@ -1344,7 +1344,7 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
+      "quizType": "matching",
       "order": 1,
       "isCompleted": false
     },
@@ -1357,7 +1357,8 @@
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
       "order": 2,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Identify the correct word based on the IPA transcription."
     },
     {
       "id": 31,
@@ -3178,7 +3179,7 @@
     },
     {
       "id": 288,
-      "text": "Identify the word: /hɑt/",
+      "text": "/hɑt/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3186,7 +3187,7 @@
     },
     {
       "id": 289,
-      "text": "Identify the word: /bɑt/",
+      "text": "/bɑt/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3194,7 +3195,7 @@
     },
     {
       "id": 290,
-      "text": "Identify the word: /lɝnd/",
+      "text": "/lɝnd/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3202,7 +3203,7 @@
     },
     {
       "id": 291,
-      "text": "Identify the word: /naɪ̆f/",
+      "text": "/naɪ̆f/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3210,7 +3211,7 @@
     },
     {
       "id": 292,
-      "text": "Identify the word: /bɔɪ̆lɪŋ/",
+      "text": "/bɔɪ̆lɪŋ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3218,7 +3219,7 @@
     },
     {
       "id": 293,
-      "text": "Identify the word: /kʍɛst͡ʃn̩/*",
+      "text": "/kʍɛst͡ʃn̩/*",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3226,7 +3227,7 @@
     },
     {
       "id": 294,
-      "text": "Identify the word: /ɹəlɪd͡ʒn̩/",
+      "text": "/ɹəlɪd͡ʒn̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3234,7 +3235,7 @@
     },
     {
       "id": 295,
-      "text": "Identify the word: /kɹ̥ɪb/",
+      "text": "/kɹ̥ɪb/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3242,7 +3243,7 @@
     },
     {
       "id": 296,
-      "text": "Identify the word: /gɔɚ̆d͡ʒ/",
+      "text": "/gɔɚ̆d͡ʒ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3250,7 +3251,7 @@
     },
     {
       "id": 297,
-      "text": "Identify the word: /faʊ̆ɫ/",
+      "text": "/faʊ̆ɫ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3258,7 +3259,7 @@
     },
     {
       "id": 298,
-      "text": "Identify the word: /çɪ̆ud͡ʒ/",
+      "text": "/çɪ̆ud͡ʒ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3266,7 +3267,7 @@
     },
     {
       "id": 299,
-      "text": "Identify the word: /pl̥æd/",
+      "text": "/pl̥æd/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3274,7 +3275,7 @@
     },
     {
       "id": 300,
-      "text": "Identify the word: /bɛɾɚ/",
+      "text": "/bɛɾɚ/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3282,7 +3283,7 @@
     },
     {
       "id": 301,
-      "text": "Identify the word: /kɝʔn̩/",
+      "text": "/kɝʔn̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -3290,7 +3291,7 @@
     },
     {
       "id": 302,
-      "text": "Identify the word: /ɛnˈθuzĭˌæzm̩/",
+      "text": "/ɛnˈθuzĭˌæzm̩/",
       "questionType": "multipleChoice",
       "quizId": 30,
       "categories": [],
@@ -11837,8 +11838,8 @@
     },
     {
       "id": 885,
-      "optionText": "foul",
-      "isCorrect": true,
+      "optionText": "foil",
+      "isCorrect": false,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,

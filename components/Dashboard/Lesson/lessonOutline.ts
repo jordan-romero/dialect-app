@@ -4,6 +4,7 @@ const quizTypeLabels: Record<string, string> = {
   dragAndDrop: 'Drag and drop',
   shortAnswer: 'Short answer',
   multipleChoice: 'Multiple choice',
+  matching: 'Matching',
   symbolPicker: 'Symbol picker',
   vowelQuad: 'Vowel quadrilateral',
   lexicalChart: 'Lexical chart',

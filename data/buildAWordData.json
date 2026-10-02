@@ -209,7 +209,10 @@
         "ʃ",
         "n̩"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.PacificOcean.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.PacificOcean.mp3",
+      "markers": {
+        "2": "ˈ"
+      }
     },
     {
       "id": 6,
@@ -222,7 +225,11 @@
         "ɪ",
         "ŋ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Worrying.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Worrying.mp3",
+      "markers": {
+        "2": ".",
+        "3": "."
+      }
     },
     {
       "id": 7,
@@ -236,7 +243,10 @@
         "eɪ̆",
         "ɚ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Conveyor.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Conveyor.mp3",
+      "markers": {
+        "5": "."
+      }
     },
     {
       "id": 8,
@@ -252,7 +262,11 @@
         "ɪ",
         "k"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Automatic.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Automatic.mp3",
+      "markers": {
+        "0": "ˌ",
+        "3": "ˈ"
+      }
     },
     {
       "id": 9,
@@ -269,7 +283,12 @@
         "k",
         "ɫ̩"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Theoretical.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Theoretical.mp3",
+      "markers": {
+        "0": "ˌ",
+        "2": ".",
+        "3": "ˈ"
+      }
     },
     {
       "id": 10,
@@ -286,7 +305,13 @@
         "ə",
         "ɫ"
       ],
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Janitorial.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%201/D%20-%20Build-a-Word/CP1D.Janitorial.mp3",
+      "markers": {
+        "0": "ˌ",
+        "4": "ˈ",
+        "6": ".",
+        "7": "."
+      }
     }
   ]
 }

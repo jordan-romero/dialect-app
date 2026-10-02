@@ -17,3 +17,15 @@ body {
   left: 0;
   right: 0;
 }
+
+/*
+ * Eight components already tag IPA with className="ipa-text", but the class
+ * had no rule, so it did nothing and those spots inherited the body font.
+ * Keep this in step with `fonts.ipa` in components/theme/index.ts.
+ */
+.ipa-text {
+  font-family: 'Charis SIL', 'Doulos SIL', 'Noto Sans', 'DejaVu Sans', serif;
+  /* Combining marks sit badly when the browser synthesises a bold face, and
+     IPA is frequently bolded in the exercises. */
+  font-synthesis: none;
+}
