@@ -1268,7 +1268,8 @@
       "hasBeenAttempted": false,
       "quizType": "shortAnswer",
       "order": 0,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Translate the following movie quotes from the IPA into plain English. Note: all transcriptions are provided in GenAm (even if the character spoke it with a different accent)."
     },
     {
       "id": 27,
