@@ -209,7 +209,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           <Box display="flex" justifyContent="flex-end" mb={2}>
             <Button
               size="sm"
-              variant={ipaKeyboard.isOpen ? 'brandBold' : 'outline'}
+              variant="brandBold"
               leftIcon={<Icon as={MdKeyboard} />}
               onClick={ipaKeyboard.toggle}
             >

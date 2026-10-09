@@ -414,7 +414,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
               aria-label="Toggle IPA Keyboard"
               icon={<MdKeyboard size={24} />}
               onClick={onToggleKeyboard}
-              variant={isKeyboardOpen ? 'brandBold' : 'brandWhite'}
+              variant="brandBold"
               size="sm"
             />
           </Tooltip>
