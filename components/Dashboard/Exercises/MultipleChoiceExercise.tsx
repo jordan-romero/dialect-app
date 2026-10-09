@@ -32,11 +32,20 @@ const AudioButton: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
   }
 
   return (
-    <Button onClick={playAudio} size="sm" leftIcon={<MdVolumeUp />}>
+    <Button
+      onClick={playAudio}
+      size="md"
+      leftIcon={<MdVolumeUp size={22} />}
+      flexShrink={0}
+    >
       Play Audio
     </Button>
   )
 }
+
+// The dictionary caution is about transcribing words; it doesn't apply to
+// matching connected speech to an audio clip (9B Connected Speech Matching).
+const QUIZ_IDS_WITHOUT_DICTIONARY_NOTE = new Set([24])
 
 const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   lessonId,
@@ -379,34 +388,35 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
             ? 'Instructions: Choose the correct symbol that matches the sound in the underlined part of the word. Click the "Play Audio" button to hear the word.'
             : 'Instructions: Choose the correct word that contains the sound of the presented symbol. Click the "Play Audio" button to hear the symbol.'}
         </Text>
-        {(!hasParts || currentPart === 1) && (
-          <Flex
-            mb={8}
-            gap={3}
-            align="flex-start"
-            bg="accent.subtle"
-            borderLeft="4px solid"
-            borderColor="brand.iris"
-            borderRadius="md"
-            p={4}
-          >
-            <Icon
-              as={MdAutoAwesome}
-              color="brand.iris"
-              boxSize={5}
-              mt="2px"
-              flexShrink={0}
-              aria-hidden
-            />
-            <Text fontFamily="body" fontSize="sm" color="purple.900">
-              Note: when doing these exercises you may be tempted to check a
-              dictionary to help you with these answers – we caution you that
-              the dictionary&apos;s transcription may be more broad than what we
-              are teaching you, therefore not as helpful. When in doubt, check
-              the "Expanded Lexical Sets" worksheet from module 2.
-            </Text>
-          </Flex>
-        )}
+        {(!hasParts || currentPart === 1) &&
+          !QUIZ_IDS_WITHOUT_DICTIONARY_NOTE.has(multipleChoiceQuiz.id) && (
+            <Flex
+              mb={8}
+              gap={3}
+              align="flex-start"
+              bg="accent.subtle"
+              borderLeft="4px solid"
+              borderColor="brand.iris"
+              borderRadius="md"
+              p={4}
+            >
+              <Icon
+                as={MdAutoAwesome}
+                color="brand.iris"
+                boxSize={5}
+                mt="2px"
+                flexShrink={0}
+                aria-hidden
+              />
+              <Text fontFamily="body" fontSize="sm" color="purple.900">
+                Note: when doing these exercises you may be tempted to check a
+                dictionary to help you with these answers – we caution you that
+                the dictionary&apos;s transcription may be more broad than what
+                we are teaching you, therefore not as helpful. When in doubt,
+                check the "Expanded Lexical Sets" worksheet from module 2.
+              </Text>
+            </Flex>
+          )}
       </Box>
       {/* Question cards pair up on wide screens so the options don't trail
           off into empty space, and fall back to one column on iPad/mobile. */}

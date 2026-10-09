@@ -1245,7 +1245,8 @@
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
       "order": 1,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "Choose the transcription which best represents the indicated portion of connected speech as spoken in the audio sample. Be aware, many of these are examples of colloquial American English, and while some may not be considered proper grammar, can be found throughout the U.S."
     },
     {
       "id": 25,
