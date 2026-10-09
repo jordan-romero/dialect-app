@@ -216,7 +216,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
             </Button>
           </Box>
-          <Text fontSize="xl">{currentQuestion.text}</Text>
+          <Text fontSize="xl">{renderUnderlined(currentQuestion.text)}</Text>
           {currentQuestion.audioUrl && (
             <Button
               onClick={() => playAudio(currentQuestion.audioUrl)}
@@ -258,11 +258,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                     marginBottom={2}
                   />
                   {!revealSentenceOption && showSentence && (
-                    <Text
-                      mt={1}
-                      fontFamily="ipa"
-                      color="green.700"
-                    >
+                    <Text mt={1} fontFamily="ipa" color="green.700">
                       Answer: {option.optionText}
                     </Text>
                   )}
