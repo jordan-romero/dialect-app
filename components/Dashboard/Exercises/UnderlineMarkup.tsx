@@ -54,15 +54,21 @@ export const renderUnderlined = (text: string): React.ReactNode => {
   if (!text) return text
   if (!HAS_IPA.test(text)) return underline(text)
 
-  // Odd indexes are the captured IPA segments.
-  return text.split(IPA_SEGMENT).map((part, i) =>
-    i % 2 === 1 ? (
-      <span key={i} className="ipa-text">
-        {underline(part)}
-      </span>
-    ) : (
-      <React.Fragment key={i}>{underline(part)}</React.Fragment>
-    ),
+  // Odd indexes are the captured IPA segments. One wrapping span keeps the
+  // pieces in a single inline run: as direct children of a flex container
+  // (Chakra's Button), the spaces between words would collapse away.
+  return (
+    <span>
+      {text.split(IPA_SEGMENT).map((part, i) =>
+        i % 2 === 1 ? (
+          <span key={i} className="ipa-text">
+            {underline(part)}
+          </span>
+        ) : (
+          <React.Fragment key={i}>{underline(part)}</React.Fragment>
+        ),
+      )}
+    </span>
   )
 }
 
