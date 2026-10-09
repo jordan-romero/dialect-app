@@ -24,6 +24,8 @@ interface ShortAnswerQuizProps {
   onComplete: () => void
 }
 
+const UNCONNECTED_MARKER = ' — unconnected '
+
 const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   lessonId,
   quizIndex,
@@ -216,7 +218,48 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
             </Button>
           </Box>
-          <Text fontSize="xl">{renderUnderlined(currentQuestion.text)}</Text>
+          {(() => {
+            // Descriptive Transcription prompts are authored as
+            // "“Quote.” — unconnected /…/": show the quote, then the
+            // unconnected transcription in its own labelled box beneath.
+            const [quote, unconnected] =
+              currentQuestion.text.split(UNCONNECTED_MARKER)
+            if (unconnected === undefined) {
+              return (
+                <Text fontSize="xl">
+                  {renderUnderlined(currentQuestion.text)}
+                </Text>
+              )
+            }
+            return (
+              <>
+                <Text fontSize="xl">{renderUnderlined(quote)}</Text>
+                <Box
+                  mt={3}
+                  bg="accent.subtle"
+                  borderLeft="4px solid"
+                  borderColor="brand.iris"
+                  borderRadius="md"
+                  px={4}
+                  py={3}
+                >
+                  <Text
+                    fontSize="xs"
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    letterSpacing="wide"
+                    color="brand.iris"
+                    mb={1}
+                  >
+                    Unconnected speech
+                  </Text>
+                  <Text fontSize="xl" className="ipa-text" color="purple.900">
+                    {unconnected}
+                  </Text>
+                </Box>
+              </>
+            )
+          })()}
           {currentQuestion.audioUrl && (
             <Button
               onClick={() => playAudio(currentQuestion.audioUrl)}
