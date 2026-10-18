@@ -96,32 +96,25 @@ export default async function handler(
         .json({ error: 'Answer every question before completing the quiz' })
     }
 
-    // Save each answer
-    for (const answer of cleanAnswers) {
-      const existingAnswer = await prisma.userAnswer.findFirst({
-        where: {
-          userId: user.id,
-          questionId: answer.questionId,
-          quizId: quizId,
-        },
-      })
-
-      if (existingAnswer) {
-        await prisma.userAnswer.update({
-          where: { id: existingAnswer.id },
-          data: { textAnswer: answer.textAnswer },
-        })
-      } else {
-        await prisma.userAnswer.create({
-          data: {
-            userId: user.id,
-            quizId: quizId,
-            questionId: answer.questionId,
-            textAnswer: answer.textAnswer,
-          },
-        })
-      }
-    }
+    // Save every answer in one statement. The per-answer find-then-write loop
+    // this replaces cost two database round trips per question, which against
+    // the hosted database made a 31-question save take ~40s. Upserting on the
+    // (userId, questionId, quizId) unique key keeps each row's createdAt, which
+    // the streak counts. One entry per question: Postgres won't upsert the same
+    // row twice in a statement, and the last answer sent is the one to keep.
+    const latest = new Map<number, string>()
+    cleanAnswers.forEach((a) => latest.set(a.questionId, a.textAnswer))
+    await prisma.$executeRaw`
+      INSERT INTO "UserAnswer"
+        ("quizId", "questionId", "userId", "textAnswer", "createdAt", "updatedAt")
+      SELECT ${Number(quizId)}, q, ${user.id}, t, now(), now()
+      FROM unnest(
+        ${Array.from(latest.keys())}::int[],
+        ${Array.from(latest.values())}::text[]
+      ) AS a(q, t)
+      ON CONFLICT ("userId", "questionId", "quizId")
+      DO UPDATE SET "textAnswer" = EXCLUDED."textAnswer", "updatedAt" = now()
+    `
 
     // Mark quiz as completed for this user/lesson. This records that an
     // exercise was done, not that the lesson was: progress reaches 100 only
