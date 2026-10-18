@@ -129,7 +129,8 @@ try {
       data: { quizType: QUIZ_TYPE, instructions: INSTRUCTIONS },
     })
     console.log(`database updated (${answers.count} learner answers to deleted questions removed)`)
-  })
+    // ~25 round trips to a remote database outlast Prisma's 5s default.
+  }, { timeout: 60_000 })
 } finally {
   await prisma.$disconnect()
 }
