@@ -123,7 +123,11 @@ export default async function handler(
       }
     }
 
-    // Mark quiz as completed for this user/lesson
+    // Mark quiz as completed for this user/lesson. This records that an
+    // exercise was done, not that the lesson was: progress reaches 100 only
+    // when the learner finishes the lesson (/api/updateProgress). Creating the
+    // row at 100 here made a lesson count as complete after its first
+    // exercise, which awarded lesson badges (e.g. Checkpoint Champion) early.
     const existingProgress = await prisma.lessonProgress.findFirst({
       where: {
         userId: user.id,
@@ -141,7 +145,7 @@ export default async function handler(
         data: {
           userId: user.id,
           lessonId: lessonId,
-          progress: 100,
+          progress: 0,
           hasQuizBeenCompleted: true,
         },
       })
