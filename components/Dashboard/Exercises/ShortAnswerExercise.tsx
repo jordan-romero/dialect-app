@@ -5,13 +5,14 @@ import {
   Box,
   Text,
   VStack,
+  HStack,
   Input,
   Icon,
   Tooltip,
   useToast,
 } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import { MdKeyboard } from 'react-icons/md'
+import { MdKeyboard, MdPlayArrow } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
@@ -226,14 +227,40 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               currentQuestion.text.split(UNCONNECTED_MARKER)
             if (unconnected === undefined) {
               return (
-                <Text fontSize="xl">
-                  {renderUnderlined(currentQuestion.text)}
-                </Text>
+                <>
+                  <Text fontSize="xl">
+                    {renderUnderlined(currentQuestion.text)}
+                  </Text>
+                  {currentQuestion.audioUrl && (
+                    <Button
+                      onClick={() => playAudio(currentQuestion.audioUrl)}
+                      mt={2}
+                      mb={4}
+                    >
+                      Play Question Audio
+                    </Button>
+                  )}
+                </>
               )
             }
+            // The clip is what the learner transcribes, so its button sits
+            // beside the sentence it speaks rather than below the IPA box.
             return (
               <>
-                <Text fontSize="xl">{renderUnderlined(quote)}</Text>
+                <HStack spacing={3} flexWrap="wrap">
+                  <Text fontSize="xl" fontWeight="bold">
+                    {renderUnderlined(quote)}
+                  </Text>
+                  {currentQuestion.audioUrl && (
+                    <Button
+                      size="sm"
+                      leftIcon={<Icon as={MdPlayArrow} />}
+                      onClick={() => playAudio(currentQuestion.audioUrl)}
+                    >
+                      Play Audio
+                    </Button>
+                  )}
+                </HStack>
                 <Box
                   mt={3}
                   bg="accent.subtle"
@@ -260,15 +287,6 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               </>
             )
           })()}
-          {currentQuestion.audioUrl && (
-            <Button
-              onClick={() => playAudio(currentQuestion.audioUrl)}
-              mt={2}
-              mb={4}
-            >
-              Play Question Audio
-            </Button>
-          )}
           <VStack spacing={4} mt={4} align="start">
             {currentQuestion.answerOptions
               .filter((option) => !option.audioUrl)
