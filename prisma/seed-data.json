@@ -672,7 +672,7 @@
     {
       "id": 26,
       "title": "Checkpoint 2",
-      "description": "Welcome to the 2nd checkpoint, which must be completed prior to advancing to phase 3. In these exercises, you will be tasked with transcribing an edited version of a monologue from Shakespeare’s Hamlet, famously called “Hamlet’s Advice to the Players”. The “Contextualizing Hamlet’s Advice” handout in this lesson’s resources provides more context about the play, this piece, and some definitions of archaic terms.\n\nFor the first half of the monologue, each line will be presented as a different transcription exercise. For the second half, you will transcribe it on your own from scratch – you’ll be provided with an answer key to check your work.",
+      "description": "Welcome to the 2nd checkpoint, which must be completed prior to advancing to phase 3. In these exercises, you will be tasked with transcribing an edited version of a monologue from Shakespeare’s Hamlet, famously called “Hamlet’s Advice to the Players”. Up next, the “Contextualizing Hamlet’s Advice” handout provides more context about the play, this piece, and some definitions of archaic terms.\n\nFor the first half of the monologue, each line will be presented as a different transcription exercise. For the second half, you will transcribe it on your own from scratch – you’ll be provided with an answer key to check your work.",
       "videoUrl": null,
       "videoTitle": null,
       "courseId": 2,
@@ -682,6 +682,9 @@
       "steps": [
         {
           "type": "description"
+        },
+        {
+          "type": "resource"
         },
         {
           "type": "quiz"
@@ -1049,23 +1052,23 @@
       "id": 43,
       "name": "Hamlet's Advice pt. 4",
       "type": "pdf",
-      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/D+-+Hamlet_s+Advice+pt.+4.pdf",
-      "courseId": null,
-      "lessonId": 26,
-      "order": 1
-    },
-    {
-      "id": 44,
-      "name": "Contextualizing Hamlet's Advice",
-      "type": "pdf",
-      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/E+-+Contextualizing+_Hamlet_s+Advice_.pdf",
+      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/E+-+Hamlet_s+Advice+pt.+4.pdf",
       "courseId": null,
       "lessonId": 26,
       "order": 2
     },
     {
+      "id": 44,
+      "name": "Contextualizing \"Hamlet's Advice\"",
+      "type": "pdf",
+      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/A+-+Contextualizing+Hamlet_s+Advice.pdf",
+      "courseId": null,
+      "lessonId": 26,
+      "order": 1
+    },
+    {
       "id": 45,
-      "name": "Hamlet's Advice Full GenAm Transcription (Answer Key)",
+      "name": "Hamlet's Advice Answer Key",
       "type": "pdf",
       "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/F+-+Hamlet_s+Advice+Full+GenAm+Transcription.pdf",
       "courseId": null,
@@ -1074,7 +1077,7 @@
     },
     {
       "id": 46,
-      "name": "Hamlet's Advice (Plain Text)",
+      "name": "Hamlet's Advice Plain Text",
       "type": "pdf",
       "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/G+-+Hamlet_s+Advice+(plain+text).pdf",
       "courseId": null,
