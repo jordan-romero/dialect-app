@@ -15,6 +15,7 @@ const quizTypeLabels: Record<string, string> = {
   buildAWord: 'Build-a-word',
   repeatAfterMe: 'Repeat after me',
   stressPlacement: 'Fill in the blanks',
+  lineBuilder: 'Build the line',
 }
 
 const getQuizOutlineLabel = (quiz: Quiz | undefined): string => {

@@ -1389,7 +1389,7 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
+      "quizType": "lineBuilder",
       "order": 1,
       "isCompleted": false,
       "instructions": "For each word in the line, you will be presented with three choices for the transcription – choose the correct one."
@@ -3480,250 +3480,312 @@
     },
     {
       "id": 364,
-      "text": "“Nor”",
-      "questionType": "multipleChoice",
+      "text": "Nor",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 365,
-      "text": "“do”",
-      "questionType": "multipleChoice",
+      "text": "do",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 366,
-      "text": "“not”",
-      "questionType": "multipleChoice",
+      "text": "not",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 367,
-      "text": "“saw”",
-      "questionType": "multipleChoice",
+      "text": "saw",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 368,
-      "text": "“the”",
-      "questionType": "multipleChoice",
+      "text": "the",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 369,
-      "text": "“air”",
-      "questionType": "multipleChoice",
+      "text": "air",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 370,
-      "text": "“too”",
-      "questionType": "multipleChoice",
+      "text": "too",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 371,
-      "text": "“much”",
-      "questionType": "multipleChoice",
+      "text": "much",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 372,
-      "text": "“with”",
-      "questionType": "multipleChoice",
+      "text": "with",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 373,
-      "text": "“your”",
-      "questionType": "multipleChoice",
+      "text": "your",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 374,
-      "text": "“hand”",
-      "questionType": "multipleChoice",
+      "text": "hand",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 375,
-      "text": "“thus”",
-      "questionType": "multipleChoice",
+      "text": "thus,",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 376,
-      "text": "“but”",
-      "questionType": "multipleChoice",
+      "text": "but",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 377,
-      "text": "“use”",
-      "questionType": "multipleChoice",
+      "text": "use",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 378,
-      "text": "“all”",
-      "questionType": "multipleChoice",
+      "text": "all",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 379,
-      "text": "“gently”",
-      "questionType": "multipleChoice",
+      "text": "gently.",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": null
     },
     {
       "id": 380,
-      "text": "“For”",
-      "questionType": "multipleChoice",
+      "text": "For",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 381,
-      "text": "“in”",
-      "questionType": "multipleChoice",
+      "text": "in",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 382,
-      "text": "“the”",
-      "questionType": "multipleChoice",
+      "text": "the",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 383,
-      "text": "“very”",
-      "questionType": "multipleChoice",
+      "text": "very",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 384,
-      "text": "“torrent”",
-      "questionType": "multipleChoice",
+      "text": "torrent,",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 385,
-      "text": "“tempest”",
-      "questionType": "multipleChoice",
+      "text": "tempest,",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 386,
-      "text": "“and”",
-      "questionType": "multipleChoice",
+      "text": "and,",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 387,
-      "text": "“as”",
-      "questionType": "multipleChoice",
+      "text": "as",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 388,
-      "text": "“I”",
-      "questionType": "multipleChoice",
+      "text": "I",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 389,
-      "text": "“may”",
-      "questionType": "multipleChoice",
+      "text": "may",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 390,
-      "text": "“say”",
-      "questionType": "multipleChoice",
+      "text": "say,",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 391,
-      "text": "“whirlwind”",
-      "questionType": "multipleChoice",
+      "text": "whirlwind",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 392,
-      "text": "“of”",
-      "questionType": "multipleChoice",
+      "text": "of",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 393,
-      "text": "“your”",
-      "questionType": "multipleChoice",
+      "text": "your",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {
       "id": 394,
-      "text": "“passion”",
-      "questionType": "multipleChoice",
+      "text": "passion,",
+      "questionType": "lineBuilder",
       "quizId": 37,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": null
     },
     {

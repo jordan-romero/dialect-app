@@ -21,6 +21,7 @@ import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExe
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
 import StressPlacementExercise from '../Exercises/StressPlacementExercise'
+import LineBuilderExercise from '../Exercises/LineBuilderExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
@@ -425,6 +426,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                 case 'multipleChoice':
                   return (
                     <MultipleChoiceExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'lineBuilder':
+                  return (
+                    <LineBuilderExercise
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
