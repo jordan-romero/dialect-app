@@ -41,13 +41,17 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [focusedOptionId, setFocusedOptionId] = useState<number | null>(null)
   const toast = useToast()
   const ipaKeyboard = useIpaKeyboard()
 
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion = currentQuiz?.questions[currentQuestionIndex]
 
-  const revealSentenceOption = currentQuestion?.answerOptions.find(
+  const isUnconnectedPrompt =
+    currentQuestion?.text.includes(UNCONNECTED_MARKER) ?? false
+
+  const revealSentenceOption =currentQuestion?.answerOptions.find(
     (option) => option.audioUrl,
   )
 
@@ -314,10 +318,22 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                         e.target.value,
                       )
                     }
+                    onFocus={() => setFocusedOptionId(option.id)}
+                    onBlur={() => setFocusedOptionId(null)}
                     isReadOnly={isCompleted}
                     width="100%"
                     marginBottom={2}
                   />
+                  {/* Descriptive Transcription's task, restated where the
+                      learner is typing so it's in view while they answer. */}
+                  {isUnconnectedPrompt &&
+                    focusedOptionId === option.id &&
+                    !isCompleted && (
+                      <Text mt={-1} fontSize="sm" color="gray.500">
+                        Type out the connected speech version to match the
+                        audio.
+                      </Text>
+                    )}
                   {!revealSentenceOption && showSentence && (
                     <Text mt={1} fontFamily="ipa" color="green.700">
                       Answer: {option.optionText}
