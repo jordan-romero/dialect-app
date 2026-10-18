@@ -1358,9 +1358,10 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
+      "quizType": "stressPlacement",
       "order": 0,
-      "isCompleted": false
+      "isCompleted": false,
+      "instructions": "For each example sentence, tap the transcribed words to place them in the correct spots based on the contextual meaning of the different stresses."
     },
     {
       "id": 35,
@@ -3273,160 +3274,80 @@
     },
     {
       "id": 313,
-      "text": "“We will ___ the crowd at this ___ .”” — Which transcription of “Address” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 314,
-      "text": "“We will ___ the crowd at this ___ .”” — Which transcription of “Address” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Address — “We will ___ the crowd at this ___.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 315,
-      "text": "“His tendency to ___ made him a ___ .”” — Which transcription of “Rebel” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 316,
-      "text": "“His tendency to ___ made him a ___ .”” — Which transcription of “Rebel” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Rebel — “His tendency to ___ made him a ___.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 317,
-      "text": "“I did not ___ to the ___ .”” — Which transcription of “Object” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 318,
-      "text": "“I did not ___ to the ___ .”” — Which transcription of “Object” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Object — “I did not ___ to the ___.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 319,
-      "text": "“The ___ made it their mission to ___ me.”” — Which transcription of “Convert” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 320,
-      "text": "“The ___ made it their mission to ___ me.”” — Which transcription of “Convert” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Convert — “The ___ made it their mission to ___ me.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 321,
-      "text": "“I avoid ___ opinions when I ___ with my boss.”” — Which transcription of “Converse” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 322,
-      "text": "“I avoid ___ opinions when I ___ with my boss.”” — Which transcription of “Converse” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Converse — “I avoid ___ opinions when I ___ with my boss.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 323,
-      "text": "“I was able to ___ a new song for the ___ .”” — Which transcription of “Record” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 324,
-      "text": "“I was able to ___ a new song for the ___ .”” — Which transcription of “Record” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Record — “I was able to ___ a new song for the ___.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 325,
-      "text": "“I went to the ___ to ___ the new law.”” — Which transcription of “Protest” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 326,
-      "text": "“I went to the ___ to ___ the new law.”” — Which transcription of “Protest” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Protest — “I went to the ___ to ___ the new law.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 327,
-      "text": "“The soldier made an attempt to ___ while in the ___ .”” — Which transcription of “Desert” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 328,
-      "text": "“The soldier made an attempt to ___ while in the ___ .”” — Which transcription of “Desert” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Desert — “The soldier made an attempt to ___ while in the ___.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 329,
-      "text": "“The celebrity’s glorious ___ was sure to ___ the crowd.”” — Which transcription of “Entrance” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 330,
-      "text": "“The celebrity’s glorious ___ was sure to ___ the crowd.”” — Which transcription of “Entrance” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Entrance — “The celebrity’s glorious ___ was sure to ___ the crowd.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 331,
-      "text": "“To ___ the population, citizens were provided with a ___ .”” — Which transcription of “Survey” fills the FIRST blank?",
-      "questionType": "multipleChoice",
-      "quizId": 34,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 332,
-      "text": "“To ___ the population, citizens were provided with a ___ .”” — Which transcription of “Survey” fills the SECOND blank?",
-      "questionType": "multipleChoice",
+      "text": "Survey — “To ___ the population, citizens were provided with a ___.”",
+      "questionType": "stressPlacement",
       "quizId": 34,
       "categories": [],
       "audioUrl": null
@@ -12047,32 +11968,12 @@
     {
       "id": 958,
       "optionText": "/ˈædɹɛs/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 313
-    },
-    {
-      "id": 959,
-      "optionText": "/ˈædɹɛs/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 314
-    },
-    {
-      "id": 960,
-      "optionText": "/ədɹɛs/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 314
+      "questionId": 313
     },
     {
       "id": 961,
@@ -12087,32 +11988,12 @@
     {
       "id": 962,
       "optionText": "/ɹɛbɫ̩/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 315
-    },
-    {
-      "id": 963,
-      "optionText": "/ɹɛbɫ̩/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 316
-    },
-    {
-      "id": 964,
-      "optionText": "/ɹəbɛɫ/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 316
+      "questionId": 315
     },
     {
       "id": 965,
@@ -12127,32 +12008,12 @@
     {
       "id": 966,
       "optionText": "/ˈɑbd͡ʒɛkt/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 317
-    },
-    {
-      "id": 967,
-      "optionText": "/ˈɑbd͡ʒɛkt/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 318
-    },
-    {
-      "id": 968,
-      "optionText": "/əbd͡ʒɛkt/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 318
+      "questionId": 317
     },
     {
       "id": 969,
@@ -12167,32 +12028,12 @@
     {
       "id": 970,
       "optionText": "/kənvɝt/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 319
-    },
-    {
-      "id": 971,
-      "optionText": "/kənvɝt/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 320
-    },
-    {
-      "id": 972,
-      "optionText": "/kɑnvɚt/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 320
+      "questionId": 319
     },
     {
       "id": 973,
@@ -12207,32 +12048,12 @@
     {
       "id": 974,
       "optionText": "/kənvɝs/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 321
-    },
-    {
-      "id": 975,
-      "optionText": "/kənvɝs/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 322
-    },
-    {
-      "id": 976,
-      "optionText": "/kɑnvɚs/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 322
+      "questionId": 321
     },
     {
       "id": 977,
@@ -12247,32 +12068,12 @@
     {
       "id": 978,
       "optionText": "/ɹɛkɚd/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 323
-    },
-    {
-      "id": 979,
-      "optionText": "/ɹɛkɚd/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 324
-    },
-    {
-      "id": 980,
-      "optionText": "/ɹəkɔɚ̆d/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 324
+      "questionId": 323
     },
     {
       "id": 981,
@@ -12287,32 +12088,12 @@
     {
       "id": 982,
       "optionText": "/pɹətɛst/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 325
-    },
-    {
-      "id": 983,
-      "optionText": "/pɹətɛst/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 326
-    },
-    {
-      "id": 984,
-      "optionText": "/ˈpɹoʊ̆tɛst/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 326
+      "questionId": 325
     },
     {
       "id": 985,
@@ -12327,32 +12108,12 @@
     {
       "id": 986,
       "optionText": "/dɛzɚt/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 327
-    },
-    {
-      "id": 987,
-      "optionText": "/dɛzɚt/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 328
-    },
-    {
-      "id": 988,
-      "optionText": "/dəzɝt/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 328
+      "questionId": 327
     },
     {
       "id": 989,
@@ -12367,32 +12128,12 @@
     {
       "id": 990,
       "optionText": "/ɛnˈtɹæns/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 329
-    },
-    {
-      "id": 991,
-      "optionText": "/ɛnˈtɹæns/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 330
-    },
-    {
-      "id": 992,
-      "optionText": "/ɛntɹəns/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 330
+      "questionId": 329
     },
     {
       "id": 993,
@@ -12407,32 +12148,12 @@
     {
       "id": 994,
       "optionText": "/ˈsɝveɪ̆/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 331
-    },
-    {
-      "id": 995,
-      "optionText": "/ˈsɝveɪ̆/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
       "audioUrl": null,
       "feedback": null,
-      "questionId": 332
-    },
-    {
-      "id": 996,
-      "optionText": "/sɚveɪ̆/",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 332
+      "questionId": 331
     },
     {
       "id": 997,

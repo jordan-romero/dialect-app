@@ -20,6 +20,7 @@ import { lessonTypeComponentMap } from './utils'
 import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExercise'
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
+import StressPlacementExercise from '../Exercises/StressPlacementExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
@@ -424,6 +425,14 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                 case 'multipleChoice':
                   return (
                     <MultipleChoiceExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'stressPlacement':
+                  return (
+                    <StressPlacementExercise
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
