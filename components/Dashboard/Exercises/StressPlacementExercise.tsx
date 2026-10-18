@@ -122,6 +122,11 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
     setPlacement(next)
   }
 
+  const retry = () => {
+    setPlacement(Array(blankCount).fill(null))
+    setChecked((prev) => ({ ...prev, [question.id]: false }))
+  }
+
   const submitQuiz = async () => {
     setIsLoading(true)
     try {
@@ -240,7 +245,19 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
           <Text fontWeight="bold" color={isQuestionCorrect ? 'green.600' : 'red.600'}>
             {isQuestionCorrect ? 'Correct!' : 'Not quite.'}
           </Text>
-          {!isQuestionCorrect && (
+          {/* A wrong answer stays on screen until the learner chooses to
+              retry; the answer itself only shows once the quiz is done. */}
+          {!isQuestionCorrect && !isCompleted && (
+            <Button
+              alignSelf="flex-start"
+              mt={2}
+              variant="brandBold"
+              onClick={retry}
+            >
+              Retry
+            </Button>
+          )}
+          {!isQuestionCorrect && isCompleted && (
             <Text>
               Correct order:{' '}
               <Text as="span" className="ipa-text">
@@ -257,11 +274,13 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
         onPrevious={() => setQuestionIndex((i) => Math.max(0, i - 1))}
         onNext={handleNext}
         onFinish={handleNext}
-        isNextDisabled={!isChecked || isLoading}
+        isNextDisabled={!(isChecked && isQuestionCorrect) || isLoading}
         isCompleted={isCompleted}
         disabledReason={
           isChecked
-            ? undefined
+            ? isQuestionCorrect
+              ? undefined
+              : 'Retry to get this one right before continuing'
             : allFilled
             ? 'Check your answer to continue'
             : 'Fill both blanks to continue'
