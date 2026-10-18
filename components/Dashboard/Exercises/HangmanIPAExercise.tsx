@@ -456,7 +456,8 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             click a blank space first
           </Text>{' '}
           (it will turn blue), then click symbols from the keyboard or use
-          Ctrl+letter shortcuts. Double-click on a filled space to clear it.
+          Option (Mac) / Alt (Windows) + letter shortcuts. Double-click on a
+          filled space to clear it.
         </Text>
       </Box>
 

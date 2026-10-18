@@ -28,12 +28,21 @@ import {
 import { CopyIcon, CloseIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import RichTextIPAEditor from './RichTextIPAEditor'
 import {
-  isApplePlatform,
+  ipaModifierLabel,
   ipaShortcutKey,
   ipaShortcutKeyRepeated,
   notifyIpaAltLetterShortcutHandled,
   shouldSuppressMacOptionDeadKeyBeforeInput,
 } from './ipaKeyboardPlatform'
+import {
+  DIRECT_SHORTCUTS,
+  LETTER_GROUPS,
+  findShortcutGroup,
+  getDirectShortcutToken,
+  getShortcutSymbols,
+  getSymbolShortcut,
+  isDirectShortcutPrefix,
+} from './ipaShortcuts'
 
 interface IPAKeyboardProps {
   onSymbolClick?: (symbol: string) => void
@@ -271,6 +280,17 @@ const SYMBOL_NAMES: { [key: string]: string } = {
   '˧': 'mid tone',
   '˨': 'low tone',
   '˩': 'extra low tone',
+  '꜈': 'extra high dotted tone bar',
+  '꜉': 'high dotted tone bar',
+  '꜊': 'mid dotted tone bar',
+  '꜋': 'low dotted tone bar',
+  '꜌': 'extra low dotted tone bar',
+  '꜍': 'extra high dotted left-stem tone bar',
+  '꜎': 'high dotted left-stem tone bar',
+  '꜏': 'mid dotted left-stem tone bar',
+  '꜐': 'low dotted left-stem tone bar',
+  '꜑': 'extra low dotted left-stem tone bar',
+  '꜒': 'extra high left-stem tone bar',
   '↗': 'global rise',
   '↘': 'global fall',
 }
@@ -284,33 +304,6 @@ const getSymbolName = (symbol: string): string => {
 // left of the pen, so on its own it hangs off the left edge of the key. We nudge
 // just this glyph to the right so it renders inside the button.
 const TIE_BAR = '͡' // ͡
-
-// Helper to get keyboard shortcut for a symbol
-const getSymbolShortcut = (symbol: string): string | null => {
-  // First check direct shortcuts
-  for (const [shortcut, sym] of Object.entries(DIRECT_SHORTCUTS)) {
-    if (sym === symbol) {
-      // Format the shortcut nicely for display
-      return shortcut
-        .replace('shift+alt+', '⇧⌥')
-        .replace('alt+', '⌥')
-        .replace('ArrowUp', '↑')
-        .replace('ArrowDown', '↓')
-        .replace('ArrowLeft', '←')
-        .replace('ArrowRight', '→')
-        .toUpperCase()
-    }
-  }
-
-  // Then check T9-style cycling shortcuts
-  for (const group of LETTER_GROUPS) {
-    const symbolIndex = getShortcutSymbols(group).indexOf(symbol)
-    if (symbolIndex !== -1) {
-      return ipaShortcutKeyRepeated(group.letter, symbolIndex + 1)
-    }
-  }
-  return null
-}
 
 // Symbol categories for filtering
 const SYMBOL_CATEGORIES = {
@@ -521,187 +514,6 @@ const buildGroupsFromSymbols = (symbols: string[]) => {
   return [{ letter: 'Symbols', symbols }]
 }
 
-// IPA symbols organized by Latin letters (matching TypeIt layout)
-const LETTER_GROUPS = [
-  { letter: 'A', symbols: ['a', 'æ', 'ɑ', 'ɐ'] },
-  { letter: 'B', symbols: ['b', 'β', 'ɓ'] },
-  { letter: 'C', symbols: ['c', 'ç', 'ɕ'] },
-  { letter: 'D', symbols: ['d', 'ð', 'ɖ', 'ɗ'] },
-  { letter: 'E', symbols: ['e', 'ə', 'ɚ', 'ɞ', 'ɘ'] },
-  { letter: 'F', symbols: ['f'] },
-  { letter: 'G', symbols: ['g', 'ɠ', 'ɢ'] },
-  { letter: 'H', symbols: ['h', 'ħ', 'ɦ', 'ɥ', 'ʜ', 'ɧ'] },
-  { letter: 'I', symbols: ['i', 'ɪ', 'ɨ'] },
-  { letter: 'J', symbols: ['j', 'ʝ', 'ɟ', 'ʄ'] },
-  { letter: 'K', symbols: ['k'] },
-  { letter: 'L', symbols: ['l', 'ɫ', 'ɬ', 'ɭ', 'ʟ', 'ɮ'] },
-  { letter: 'M', symbols: ['m', 'ɱ'] },
-  { letter: 'N', symbols: ['n', 'ŋ', 'ɲ', 'ɳ', 'ɴ'] },
-  { letter: 'O', symbols: ['o', 'ɔ', 'ɒ', 'œ', 'ɵ', 'ø'] },
-  { letter: 'P', symbols: ['p', 'ɸ'] },
-  { letter: 'Q', symbols: ['q'] },
-  { letter: 'R', symbols: ['r', 'ɹ', 'ɾ', 'ɻ', 'ʀ', 'ʁ', 'ɽ'] },
-  { letter: 'S', symbols: ['s', 'ʃ', 'ʂ'] },
-  { letter: 'T', symbols: ['t', 'θ'] },
-  { letter: 'U', symbols: ['u', 'ʊ', 'ʉ'] },
-  { letter: 'V', symbols: ['v', 'ʌ', 'ʋ', 'ⱱ'] },
-  { letter: 'W', symbols: ['w', 'ʍ', 'ɯ', 'ɰ'] },
-  { letter: 'X', symbols: ['x', 'χ'] },
-  { letter: 'Y', symbols: ['y', 'ɣ', 'ʏ', 'ʎ', 'ɤ'] },
-  { letter: 'Z', symbols: ['z', 'ʒ', 'ʐ', 'ʑ'] },
-  { letter: '2', symbols: ['ʔ', 'ʕ', 'ʡ', 'ʢ'] },
-  { letter: '3', symbols: ['ɛ', 'ɜ', 'ɝ'] },
-  // Additional symbol groups
-  {
-    letter: 'Diacritics',
-    symbols: [
-      '̥',
-      '̊',
-      '̤',
-      '̰',
-      '̪',
-      '̺',
-      '̻',
-      '̼',
-      '̹',
-      '̜',
-      '̟',
-      '̠',
-      '̈',
-      '̽',
-      '̩',
-      '̯',
-      '˞',
-      '̚',
-      '̃',
-      'ʰ',
-      'ʷ',
-      'ʲ',
-      'ˠ',
-      'ˤ',
-      '̴',
-      '̝',
-      '̞',
-      '̘',
-      '̙',
-    ],
-  },
-  {
-    letter: 'Suprasegmentals',
-    symbols: ['ˈ', 'ˌ', '̆', 'ː', 'ˑ', '‿', '͡', '|', '||'],
-  },
-  {
-    letter: 'Tones',
-    symbols: [
-      '˥',
-      '˦',
-      '˧',
-      '˨',
-      '˩',
-      '꜈',
-      '꜉',
-      '꜊',
-      '꜋',
-      '꜌',
-      '꜍',
-      '꜎',
-      '꜏',
-      '꜐',
-      '꜑',
-      '꜒',
-      '↗',
-      '↘',
-    ],
-  },
-]
-
-type LetterGroup = (typeof LETTER_GROUPS)[number]
-
-/**
- * A plain letter (for example, A → a) is entered directly from the keyboard,
- * so it intentionally has no IPA Alt/Option shortcut. The remaining symbols
- * in that group begin the Alt/Option cycle at one press.
- */
-const getShortcutSymbols = (group: LetterGroup): string[] => {
-  if (group.letter.length !== 1) return []
-  return group.symbols[0] === group.letter.toLowerCase()
-    ? group.symbols.slice(1)
-    : group.symbols
-}
-
-// Direct keyboard shortcuts for diacritics and suprasegmentals. Repeated keys
-// are deliberately kept as sequences (rather than T9 cycles) to mirror the
-// printable hotkey reference.
-const DIRECT_SHORTCUTS: { [key: string]: string } = {
-  // Shift+Alt combinations
-  'shift+alt+o': '̥', // voiceless
-  'shift+alt+oo': '̊', // voiceless above (double o)
-  'shift+alt+..': '̤', // breathy voiced (double period)
-  'shift+alt+sss': '̰', // creaky voiced
-  'shift+alt+d': '̪', // dental
-  'shift+alt+dd': '̺', // apical (double d)
-  'shift+alt+ooo': '̻', // laminal (triple o)
-  'shift+alt+m': '̼', // linguolabial
-  'shift+alt+,': '̹', // more rounded
-  'shift+alt+,,': '̜', // less rounded (double comma)
-  'shift+alt+ArrowLeft': '̟', // advanced
-  'shift+alt+ArrowRight': '̠', // retracted
-  'shift+alt+.': '̈', // centralized
-  'shift+alt+x': '̽', // mid-centralized
-  'shift+alt+i': '̩', // syllabic
-  'shift+alt+c': '̯', // non-syllabic
-  'shift+alt+r': '˞', // rhoticity
-  'shift+alt+l': '̚', // no audible release
-  'shift+alt+s': '̃', // nasalized
-  'shift+alt+h': 'ʰ', // aspirated
-  'shift+alt+w': 'ʷ', // labialized
-  'shift+alt+j': 'ʲ', // palatalized
-  'shift+alt+y': 'ˠ', // velarized
-  'shift+alt+2': 'ˤ', // pharyngealized
-  'shift+alt+ss': '̴', // velarized/pharyngealized (double s)
-  'shift+alt+ArrowUp': '̝', // raised
-  'shift+alt+ArrowDown': '̞', // lowered
-  'shift+alt+ArrowLeftArrowLeft': '̘', // advanced tongue root
-  'shift+alt+ArrowRightArrowRight': '̙', // retracted tongue root
-
-  // Alt combinations
-  'alt+f': '‿', // linking (absence of break)
-  'alt+ff': '͡', // tie bar above
-  'alt+1': '|', // minor group
-  'alt+11': '‖', // major group (double 1)
-  'alt+ArrowLeft': '̟', // advanced
-  'alt+ArrowRight': '̠', // retracted
-  'alt+.': 'ː', // long
-  'alt+..': '̆', // extra-short (double period)
-  'alt+...': 'ˑ', // half-long (triple period)
-}
-
-const getDirectShortcutToken = (event: KeyboardEvent): string | null => {
-  const { code, key } = event
-
-  if (code.startsWith('Key')) return code.substring(3).toLowerCase()
-  if (code.startsWith('Digit')) return code.substring(5)
-
-  const codeTokens: { [key: string]: string } = {
-    Period: '.',
-    Comma: ',',
-    ArrowUp: 'ArrowUp',
-    ArrowDown: 'ArrowDown',
-    ArrowLeft: 'ArrowLeft',
-    ArrowRight: 'ArrowRight',
-  }
-
-  if (codeTokens[code]) return codeTokens[code]
-  return key.length === 1 ? key.toLowerCase() : null
-}
-
-const isDirectShortcutPrefix = (prefix: string, keys: string): boolean =>
-  Object.keys(DIRECT_SHORTCUTS).some(
-    (shortcut) =>
-      shortcut.startsWith(`${prefix}${keys}`) &&
-      shortcut !== `${prefix}${keys}`,
-  )
-
 export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   onSymbolClick,
   onSymbolPreview,
@@ -856,8 +668,6 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     return LETTER_GROUPS
   }, [customSymbols, autoDetectCategory, filterCategories])
 
-  const filteredGroupsRef = useRef(filteredGroups)
-  filteredGroupsRef.current = filteredGroups
   // Symbols carry diacritics (breves, tie bars) that are hard to read and hard
   // to hit accurately at small sizes, so every tier runs a step larger than a
   // plain text button would.
@@ -871,11 +681,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
     : compact
     ? 'md'
     : 'xl'
-  // Shortcut display labels — Mac glyphs vs Windows/Linux text. Only rendered
-  // inside the Drawer (mounts client-side on open), so navigator sniffing is
-  // hydration-safe here.
-  const shiftAltLabel = isApplePlatform() ? '⇧⌥' : 'Shift+Alt+'
-  const altLabel = isApplePlatform() ? '⌥' : 'Alt+'
+  // Option on Mac, Alt on Windows/Linux. Only rendered inside the Drawer
+  // (mounts client-side on open), so navigator sniffing is hydration-safe here.
+  const mod = ipaModifierLabel()
   const spacing = compact ? 0.5 : 1
   const hideKeyboardShortcuts = false // Always show shortcuts in tooltips
 
@@ -1066,9 +874,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
           return
         }
 
-        const letterGroup = filteredGroupsRef.current.find(
-          (group) => group.letter.toLowerCase() === key || group.letter === key,
-        )
+        const letterGroup = findShortcutGroup(key)
 
         if (letterGroup) {
           const shortcutSymbols = getShortcutSymbols(letterGroup)
@@ -1380,25 +1186,75 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                 </Box>
                 <Box>
                   <Text fontWeight="bold" mb={1}>
-                    Diacritics (direct access)
+                    Diacritics
                   </Text>
                   <VStack align="stretch" spacing={0.5}>
                     <Text>
-                      {shiftAltLabel}O — voiceless ( ̥ ), {shiftAltLabel}OO —
-                      voiceless above ( ̊ )
+                      Shift+{mod}+O — voiceless ( ̥ ), Shift+{mod}+OO — voiceless
+                      above ( ̊ )
                     </Text>
                     <Text>
-                      {shiftAltLabel}D — dental ( ̪ ), {altLabel}F — tie bar ( ͡
-                      ), {altLabel}FF — linking ( ‿ )
-                    </Text>
-                    <Text>
-                      {altLabel}. — long ( ː ), {altLabel}.. — extra-short ( ̆ )
+                      Shift+{mod}+D — dental ( ̪ ), Shift+{mod}+S — nasalized ( ̃
+                      ), Shift+{mod}+H — aspirated ( ʰ )
                     </Text>
                     <Text mt={1} fontStyle="italic" color="text.muted">
-                      Shift still types capitals. Hover any symbol to see its
-                      shortcut.
+                      Every diacritic has a Shift+{mod} shortcut — hover it to
+                      see which.
                     </Text>
                   </VStack>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Length, linking and stress
+                  </Text>
+                  <VStack align="stretch" spacing={0.5}>
+                    <Text>
+                      {mod}+. — long ( ː ), {mod}+.. — extra-short ( ̆ ), {mod}
+                      +... — half-long ( ˑ )
+                    </Text>
+                    <Text>
+                      {mod}+F — linking ( ‿ ), {mod}+FF — tie bar ( ͡ )
+                    </Text>
+                    <Text>
+                      {mod}+1 — minor group ( | ), {mod}+11 — major group ( ‖ )
+                    </Text>
+                    <Text>
+                      {mod}+&apos; — primary stress ( ˈ ), {mod}+, — secondary
+                      stress ( ˌ )
+                    </Text>
+                  </VStack>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Tones
+                  </Text>
+                  <VStack align="stretch" spacing={0.5}>
+                    <Text>
+                      {mod}+6 — tone bars ˥ ˦ ˧ ˨ ˩ (press 1–5 times, high to
+                      low)
+                    </Text>
+                    <Text>
+                      {mod}+7 — dotted tone bars, {mod}+8 — dotted left-stem,{' '}
+                      {mod}+9 — ꜒
+                    </Text>
+                    <Text>
+                      {mod}+↑ — global rise ( ↗ ), {mod}+↓ — global fall ( ↘ )
+                    </Text>
+                  </VStack>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold" mb={1}>
+                    Diphthongs and triphthongs
+                  </Text>
+                  <Text>
+                    Type them one piece at a time — the tooltip lists the keys
+                    in order, e.g. eɪ̆ is E, {mod}+I, {mod}+.. (pause between
+                    repeated presses of the same key).
+                  </Text>
+                  <Text mt={1} fontStyle="italic" color="text.muted">
+                    Shift still types capitals. Hover any symbol to see its
+                    shortcut.
+                  </Text>
                 </Box>
                 {useRichTextEditor && (
                   <>
@@ -1750,7 +1606,9 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                       ),
                   )
                   .map((group) => {
-                    const shortcutSymbols = getShortcutSymbols(group)
+                    const shortcutSymbols = getShortcutSymbols(
+                      findShortcutGroup(group.letter.toLowerCase()) ?? group,
+                    )
                     const groupLabel = (
                       <Badge
                         bg="brand.purple"
@@ -1791,15 +1649,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                             ))}
                           <HStack spacing={0.5}>
                             {group.symbols.map((symbol, idx) => {
-                              const shortcutIndex =
-                                shortcutSymbols.indexOf(symbol)
-                              const shortcut =
-                                shortcutIndex === -1
-                                  ? null
-                                  : ipaShortcutKeyRepeated(
-                                      group.letter,
-                                      shortcutIndex + 1,
-                                    )
+                              const shortcut = getSymbolShortcut(symbol)
 
                               return (
                                 <Tooltip
@@ -1982,7 +1832,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
                                       key={idx}
                                       label={`${symbol} - ${getSymbolName(
                                         symbol,
-                                      )} (Tones)`}
+                                      )} (${getSymbolShortcut(symbol)})`}
                                     >
                                       <Button
                                         size="sm"
