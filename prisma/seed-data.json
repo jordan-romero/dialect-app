@@ -1374,10 +1374,10 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
+      "quizType": "stressPlacement",
       "order": 0,
       "isCompleted": false,
-      "instructions": "Build the presented line by choosing the correctly transcribed version of each word in it."
+      "instructions": "Build the presented phrase by tapping the correctly transcribed words from the word bank in the right order."
     },
     {
       "id": 37,
@@ -3429,168 +3429,48 @@
     },
     {
       "id": 343,
-      "text": "Line: “as I pronounced it to you,” — correct transcription of “as”?",
-      "questionType": "multipleChoice",
+      "text": "Speak the speech, I pray you,",
+      "questionType": "stressPlacement",
       "quizId": 36,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 344,
-      "text": "Line: “as I pronounced it to you,” — correct transcription of “I”?",
-      "questionType": "multipleChoice",
+      "text": "as I pronounced it to you,",
+      "questionType": "stressPlacement",
       "quizId": 36,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 345,
-      "text": "Line: “as I pronounced it to you,” — correct transcription of “pronounced”?",
-      "questionType": "multipleChoice",
+      "text": "trippingly on the tongue.",
+      "questionType": "stressPlacement",
       "quizId": 36,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 346,
-      "text": "Line: “as I pronounced it to you,” — correct transcription of “it”?",
-      "questionType": "multipleChoice",
+      "text": "But if you mouth it,",
+      "questionType": "stressPlacement",
       "quizId": 36,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 347,
-      "text": "Line: “as I pronounced it to you,” — correct transcription of “to”?",
-      "questionType": "multipleChoice",
+      "text": "as many of your players do,",
+      "questionType": "stressPlacement",
       "quizId": 36,
       "categories": [],
       "audioUrl": null
     },
     {
       "id": 348,
-      "text": "Line: “as I pronounced it to you,” — correct transcription of “you”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 349,
-      "text": "Line: “trippingly on the tongue.” — correct transcription of “trippingly”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 350,
-      "text": "Line: “trippingly on the tongue.” — correct transcription of “on”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 351,
-      "text": "Line: “trippingly on the tongue.” — correct transcription of “the”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 352,
-      "text": "Line: “trippingly on the tongue.” — correct transcription of “tongue”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 353,
-      "text": "Line: “But if you mouth it,” — correct transcription of “But”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 354,
-      "text": "Line: “But if you mouth it,” — correct transcription of “if”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 355,
-      "text": "Line: “But if you mouth it,” — correct transcription of “you”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 356,
-      "text": "Line: “But if you mouth it,” — correct transcription of “mouth”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 357,
-      "text": "Line: “But if you mouth it,” — correct transcription of “it”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 358,
-      "text": "Line: “as many of your players do,” — correct transcription of “as”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 359,
-      "text": "Line: “as many of your players do,” — correct transcription of “many”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 360,
-      "text": "Line: “as many of your players do,” — correct transcription of “of”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 361,
-      "text": "Line: “as many of your players do,” — correct transcription of “your”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 362,
-      "text": "Line: “as many of your players do,” — correct transcription of “players”?",
-      "questionType": "multipleChoice",
-      "quizId": 36,
-      "categories": [],
-      "audioUrl": null
-    },
-    {
-      "id": 363,
-      "text": "Line: “as many of your players do,” — correct transcription of “do”?",
-      "questionType": "multipleChoice",
+      "text": "I had as lief the town-crier spoke my lines.",
+      "questionType": "stressPlacement",
       "quizId": 36,
       "categories": [],
       "audioUrl": null
@@ -12351,636 +12231,6 @@
       "questionId": 342
     },
     {
-      "id": 1017,
-      "optionText": "æz",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 343
-    },
-    {
-      "id": 1018,
-      "optionText": "ai",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 343
-    },
-    {
-      "id": 1019,
-      "optionText": "pɹənaʊ̆nzd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 343
-    },
-    {
-      "id": 1020,
-      "optionText": "ai",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 344
-    },
-    {
-      "id": 1021,
-      "optionText": "pɹənaʊ̆nzd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 344
-    },
-    {
-      "id": 1022,
-      "optionText": "aɪ̆",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 344
-    },
-    {
-      "id": 1023,
-      "optionText": "pɹənaʊ̆nzd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 345
-    },
-    {
-      "id": 1024,
-      "optionText": "pɹənaʊ̆nst",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 345
-    },
-    {
-      "id": 1025,
-      "optionText": "ai",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 345
-    },
-    {
-      "id": 1026,
-      "optionText": "ɪt",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 346
-    },
-    {
-      "id": 1027,
-      "optionText": "ai",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 346
-    },
-    {
-      "id": 1028,
-      "optionText": "pɹənaʊ̆nzd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 346
-    },
-    {
-      "id": 1029,
-      "optionText": "ai",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 347
-    },
-    {
-      "id": 1030,
-      "optionText": "pɹənaʊ̆nzd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 347
-    },
-    {
-      "id": 1031,
-      "optionText": "tʊ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 347
-    },
-    {
-      "id": 1032,
-      "optionText": "pɹənaʊ̆nzd",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 348
-    },
-    {
-      "id": 1033,
-      "optionText": "ju",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 348
-    },
-    {
-      "id": 1034,
-      "optionText": "ai",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 348
-    },
-    {
-      "id": 1035,
-      "optionText": "ˈtɹɪpɪŋlĭ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 349
-    },
-    {
-      "id": 1036,
-      "optionText": "tɹɪpɪŋglĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 349
-    },
-    {
-      "id": 1037,
-      "optionText": "təŋ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 349
-    },
-    {
-      "id": 1038,
-      "optionText": "tɹɪpɪŋglĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 350
-    },
-    {
-      "id": 1039,
-      "optionText": "təŋ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 350
-    },
-    {
-      "id": 1040,
-      "optionText": "ɑn",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 350
-    },
-    {
-      "id": 1041,
-      "optionText": "təŋ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 351
-    },
-    {
-      "id": 1042,
-      "optionText": "ðə",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 351
-    },
-    {
-      "id": 1043,
-      "optionText": "tɹɪpɪŋglĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 351
-    },
-    {
-      "id": 1044,
-      "optionText": "tʌŋ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 352
-    },
-    {
-      "id": 1045,
-      "optionText": "tɹɪpɪŋglĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 352
-    },
-    {
-      "id": 1046,
-      "optionText": "təŋ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 352
-    },
-    {
-      "id": 1047,
-      "optionText": "jə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 353
-    },
-    {
-      "id": 1048,
-      "optionText": "maɪ̆θ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 353
-    },
-    {
-      "id": 1049,
-      "optionText": "bəɾ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 353
-    },
-    {
-      "id": 1050,
-      "optionText": "maɪ̆θ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 354
-    },
-    {
-      "id": 1051,
-      "optionText": "ɪf",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 354
-    },
-    {
-      "id": 1052,
-      "optionText": "jə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 354
-    },
-    {
-      "id": 1053,
-      "optionText": "ju",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 355
-    },
-    {
-      "id": 1054,
-      "optionText": "jə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 355
-    },
-    {
-      "id": 1055,
-      "optionText": "maɪ̆θ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 355
-    },
-    {
-      "id": 1056,
-      "optionText": "jə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 356
-    },
-    {
-      "id": 1057,
-      "optionText": "maɪ̆θ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 356
-    },
-    {
-      "id": 1058,
-      "optionText": "maʊ̆ð",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 356
-    },
-    {
-      "id": 1059,
-      "optionText": "maɪ̆θ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 357
-    },
-    {
-      "id": 1060,
-      "optionText": "ɪt̚",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 357
-    },
-    {
-      "id": 1061,
-      "optionText": "jə",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 357
-    },
-    {
-      "id": 1062,
-      "optionText": "æz",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 358
-    },
-    {
-      "id": 1063,
-      "optionText": "mɪnĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 358
-    },
-    {
-      "id": 1064,
-      "optionText": "jɝ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 358
-    },
-    {
-      "id": 1065,
-      "optionText": "mɪnĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 359
-    },
-    {
-      "id": 1066,
-      "optionText": "jɝ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 359
-    },
-    {
-      "id": 1067,
-      "optionText": "mɛnĭ",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 359
-    },
-    {
-      "id": 1068,
-      "optionText": "jɝ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 360
-    },
-    {
-      "id": 1069,
-      "optionText": "əv",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 360
-    },
-    {
-      "id": 1070,
-      "optionText": "mɪnĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 360
-    },
-    {
-      "id": 1071,
-      "optionText": "jɔɚ̆",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 361
-    },
-    {
-      "id": 1072,
-      "optionText": "mɪnĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 361
-    },
-    {
-      "id": 1073,
-      "optionText": "jɝ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 361
-    },
-    {
-      "id": 1074,
-      "optionText": "mɪnĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 362
-    },
-    {
-      "id": 1075,
-      "optionText": "jɝ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 362
-    },
-    {
-      "id": 1076,
-      "optionText": "ple.ɚz",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 362
-    },
-    {
-      "id": 1077,
-      "optionText": "jɝ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 363
-    },
-    {
-      "id": 1078,
-      "optionText": "du",
-      "isCorrect": true,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 363
-    },
-    {
-      "id": 1079,
-      "optionText": "mɪnĭ",
-      "isCorrect": false,
-      "rhymeCategory": null,
-      "rhymingWordId": null,
-      "audioUrl": null,
-      "feedback": null,
-      "questionId": 363
-    },
-    {
       "id": 1080,
       "optionText": "nɔɚ̆",
       "isCorrect": true,
@@ -14989,6 +14239,516 @@
       "rhymeCategory": "Bared",
       "rhymingWordId": null,
       "audioUrl": null
+    },
+    {
+      "id": 1281,
+      "optionText": "spik",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1282,
+      "optionText": "ðə",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1283,
+      "optionText": "spit͡ʃ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1284,
+      "optionText": "aɪ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1285,
+      "optionText": "pɹeɪ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1286,
+      "optionText": "ju",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1287,
+      "optionText": "speɪ̆k",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1288,
+      "optionText": "spiʃ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1289,
+      "optionText": "pɾeɪ̆",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 343
+    },
+    {
+      "id": 1290,
+      "optionText": "æz",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1291,
+      "optionText": "aɪ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1292,
+      "optionText": "pɹənaʊ̆nst",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1293,
+      "optionText": "ɪt",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1294,
+      "optionText": "tʊ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1295,
+      "optionText": "ju",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1296,
+      "optionText": "ai",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1297,
+      "optionText": "pɹənaʊ̆nzd",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 344
+    },
+    {
+      "id": 1298,
+      "optionText": "ˈtɹɪpɪŋlĭ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 345
+    },
+    {
+      "id": 1299,
+      "optionText": "ɑn",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 345
+    },
+    {
+      "id": 1300,
+      "optionText": "ðə",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 345
+    },
+    {
+      "id": 1301,
+      "optionText": "tʌŋ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 345
+    },
+    {
+      "id": 1302,
+      "optionText": "tɹɪpɪŋglĭ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 345
+    },
+    {
+      "id": 1303,
+      "optionText": "təŋ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 345
+    },
+    {
+      "id": 1304,
+      "optionText": "bəɾ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1305,
+      "optionText": "ɪf",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1306,
+      "optionText": "ju",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1307,
+      "optionText": "maʊ̆ð",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1308,
+      "optionText": "ɪt̚",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1309,
+      "optionText": "jə",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1310,
+      "optionText": "maɪ̆θ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 346
+    },
+    {
+      "id": 1311,
+      "optionText": "æz",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1312,
+      "optionText": "mɛnĭ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1313,
+      "optionText": "əv",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1314,
+      "optionText": "jɔɚ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1315,
+      "optionText": "ple.ɚz",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1316,
+      "optionText": "du",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1317,
+      "optionText": "mɪnĭ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1318,
+      "optionText": "jɝ",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 347
+    },
+    {
+      "id": 1319,
+      "optionText": "aɪ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1320,
+      "optionText": "hæd",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1321,
+      "optionText": "æz",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1322,
+      "optionText": "lif",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1323,
+      "optionText": "ðə",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1324,
+      "optionText": "taʊ̆n",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1325,
+      "optionText": "kɹaɪ̆ɚ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1326,
+      "optionText": "spoʊ̆k",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1327,
+      "optionText": "maɪ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1328,
+      "optionText": "laɪ̆nz",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1329,
+      "optionText": "hɑd",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1330,
+      "optionText": "kraɪ̆ɚ̆",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
+    },
+    {
+      "id": 1331,
+      "optionText": "ɫaɪ̆ns",
+      "isCorrect": false,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 348
     }
   ],
   "ExtraOption": []

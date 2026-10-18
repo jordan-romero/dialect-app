@@ -1,5 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Button, Flex, Text, Wrap, WrapItem, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  Wrap,
+  WrapItem,
+  useToast,
+} from '@chakra-ui/react'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
@@ -7,11 +15,17 @@ import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 
-// 10B Syllabic Stress: Noun vs. Verb. Each question is one sentence with a
-// blank per stress pattern of the same word, authored as
-// "Address — “We will ___ the crowd at this ___.”". Its answer options are the
-// transcriptions in blank order (the API returns them sorted by id), so the
-// option at index i is the one that belongs in blank i.
+// Tap-to-place: the learner taps transcriptions from a bank into blanks, in
+// order. Two shapes share it:
+//
+// - 10B Syllabic Stress: Noun vs. Verb. The blanks sit inside the sentence,
+//   authored as "Address — “We will ___ the crowd at this ___.”".
+// - CP2 Hamlet's Advice pt. 1. The text is a line of the monologue with no
+//   blanks; the learner builds its transcription in a row of slots beneath,
+//   one per word, from a bank that also holds decoys.
+//
+// Correct options (isCorrect) are the answer in order (the API returns options
+// sorted by id); the rest are decoys.
 
 const BLANK = '___'
 const WORD_MARKER = ' — '
@@ -93,17 +107,22 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
     ? question.text.split(WORD_MARKER)
     : [undefined, question.text]
   const parts = sentence.split(BLANK)
-  const blankCount = parts.length - 1
+  const isInline = parts.length > 1
+  const correctOrder = question.answerOptions.filter((o) => o.isCorrect)
+  const blankCount = isInline ? parts.length - 1 : correctOrder.length
   const placement: Placement =
     placements[question.id] ?? Array(blankCount).fill(null)
   const isChecked = !!checked[question.id] || isCompleted
   const isLocked = isChecked
-  const allFilled = placement.length === blankCount && placement.every((id) => id !== null)
+  const allFilled =
+    placement.length === blankCount && placement.every((id) => id !== null)
   const optionById = (id: number | null) =>
     question.answerOptions.find((o) => o.id === id)
+  // By text, so two identical words in a line are interchangeable.
   const isBlankCorrect = (i: number) =>
-    placement[i] === question.answerOptions[i]?.id
-  const isQuestionCorrect = allFilled && placement.every((_, i) => isBlankCorrect(i))
+    optionById(placement[i])?.optionText === correctOrder[i]?.optionText
+  const isQuestionCorrect =
+    allFilled && placement.every((_, i) => isBlankCorrect(i))
   const bank = (shuffledByQuestion[question.id] ?? []).filter(
     (o) => !placement.includes(o.id),
   )
@@ -170,6 +189,33 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
     }
   }
 
+  const renderBlank = (i: number) => (
+    <Button
+      key={i}
+      as="span"
+      role="button"
+      mx={1}
+      minW={isInline ? '7rem' : '4rem'}
+      size="md"
+      className="ipa-text"
+      fontSize="lg"
+      variant="outline"
+      borderStyle={placement[i] === null ? 'dashed' : 'solid'}
+      colorScheme={isChecked ? (isBlankCorrect(i) ? 'green' : 'red') : 'purple'}
+      cursor={isLocked || placement[i] === null ? 'default' : 'pointer'}
+      onClick={() => clearBlank(i)}
+      aria-label={
+        placement[i] === null
+          ? `Blank ${i + 1}, empty`
+          : `Blank ${i + 1}: ${
+              optionById(placement[i])?.optionText
+            }. Tap to remove`
+      }
+    >
+      {optionById(placement[i])?.optionText ?? ' '}
+    </Button>
+  )
+
   return (
     <Box>
       {quiz.instructions && (
@@ -178,42 +224,38 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
         </Text>
       )}
       {word && (
-        <Text fontSize="sm" fontWeight="bold" textTransform="uppercase" letterSpacing="wide" color="brand.iris" mb={2}>
+        <Text
+          fontSize="sm"
+          fontWeight="bold"
+          textTransform="uppercase"
+          letterSpacing="wide"
+          color="brand.iris"
+          mb={2}
+        >
           {word}
         </Text>
       )}
-      <Text fontSize="xl" fontWeight="bold" lineHeight="tall">
-        {parts.map((part, i) => (
-          <React.Fragment key={i}>
-            {part}
-            {i < blankCount && (
-              <Button
-                as="span"
-                role="button"
-                mx={1}
-                minW="7rem"
-                size="md"
-                className="ipa-text"
-                fontSize="lg"
-                variant="outline"
-                borderStyle={placement[i] === null ? 'dashed' : 'solid'}
-                colorScheme={
-                  isChecked ? (isBlankCorrect(i) ? 'green' : 'red') : 'purple'
-                }
-                cursor={isLocked || placement[i] === null ? 'default' : 'pointer'}
-                onClick={() => clearBlank(i)}
-                aria-label={
-                  placement[i] === null
-                    ? `Blank ${i + 1}, empty`
-                    : `Blank ${i + 1}: ${optionById(placement[i])?.optionText}. Tap to remove`
-                }
-              >
-                {optionById(placement[i])?.optionText ?? ' '}
-              </Button>
-            )}
-          </React.Fragment>
-        ))}
-      </Text>
+      {isInline ? (
+        <Text fontSize="xl" fontWeight="bold" lineHeight="tall">
+          {parts.map((part, i) => (
+            <React.Fragment key={i}>
+              {part}
+              {i < blankCount && renderBlank(i)}
+            </React.Fragment>
+          ))}
+        </Text>
+      ) : (
+        <>
+          <Text fontSize="xl" fontWeight="bold">
+            “{sentence}”
+          </Text>
+          <Wrap spacing={2} mt={4}>
+            {placement.map((_, i) => (
+              <WrapItem key={i}>{renderBlank(i)}</WrapItem>
+            ))}
+          </Wrap>
+        </>
+      )}
 
       {!isLocked && (
         <Wrap spacing={3} mt={6}>
@@ -247,7 +289,10 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
 
       {isChecked && allFilled && (
         <Flex mt={6} direction="column" gap={1}>
-          <Text fontWeight="bold" color={isQuestionCorrect ? 'green.600' : 'red.600'}>
+          <Text
+            fontWeight="bold"
+            color={isQuestionCorrect ? 'green.600' : 'red.600'}
+          >
             {isQuestionCorrect ? 'Correct!' : 'Not quite.'}
           </Text>
           {/* A wrong answer stays on screen until the learner chooses to
@@ -266,7 +311,9 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
             <Text>
               Correct order:{' '}
               <Text as="span" className="ipa-text">
-                {question.answerOptions.map((o) => o.optionText).join(' … ')}
+                {correctOrder
+                  .map((o) => o.optionText)
+                  .join(isInline ? ' … ' : ' ')}
               </Text>
             </Text>
           )}
@@ -288,7 +335,7 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
               : 'Retry to get this one right before continuing'
             : allFilled
             ? 'Check your answer to continue'
-            : 'Fill both blanks to continue'
+            : 'Fill every blank to continue'
         }
       />
     </Box>
