@@ -76,11 +76,16 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
             // arrays; leave those questions empty.
           }
         })
-        setPlacements(restored)
-        setChecked(restoredChecked)
+        // Saved answers fill in around this session's, never over them: a
+        // refetch mid-quiz used to wipe placements, and the submit then
+        // missed questions and was rejected.
+        setPlacements((prev) => ({ ...restored, ...prev }))
+        setChecked((prev) => ({ ...restoredChecked, ...prev }))
       })
       .catch((error) => console.error('Error loading quiz progress:', error))
-  }, [quiz, lessonId])
+    // Keyed on the id: the quiz object is rebuilt on every quizzes refetch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quiz?.id, lessonId])
 
   if (!quiz || !question) return <QuizSkeleton />
 
