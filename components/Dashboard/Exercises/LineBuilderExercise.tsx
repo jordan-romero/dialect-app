@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -26,6 +26,10 @@ import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 // Answers are saved like multiple choice ({questionId: optionId}) so earlier
 // progress on this quiz still restores.
 
+// A correct pick stays on screen, green, before the line fills in and the next
+// word's choices replace it, so the advance doesn't jump under the learner.
+const ADVANCE_DELAY_MS = 1000
+
 interface LineBuilderProps {
   lessonId: number
   quizIndex: number
@@ -47,6 +51,16 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
   const [misses, setMisses] = useState<Record<number, number[]>>({})
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [heldOptionId, setHeldOptionId] = useState<number | null>(null)
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Don't let a pending advance fire after unmount / "Try again".
+  useEffect(
+    () => () => {
+      if (advanceTimer.current) clearTimeout(advanceTimer.current)
+    },
+    [],
+  )
   const toast = useToast()
 
   const sentences = useMemo(() => {
@@ -101,8 +115,14 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
   const plain = (q: Question) => q.text.replace(/[“”]/g, '')
 
   const choose = (q: Question, option: AnswerOption) => {
+    if (heldOptionId !== null) return
     if (option.isCorrect) {
-      setPicked((prev) => ({ ...prev, [q.id]: option.id }))
+      setHeldOptionId(option.id)
+      advanceTimer.current = setTimeout(() => {
+        advanceTimer.current = null
+        setPicked((prev) => ({ ...prev, [q.id]: option.id }))
+        setHeldOptionId(null)
+      }, ADVANCE_DELAY_MS)
     } else {
       setMisses((prev) => ({
         ...prev,
@@ -216,14 +236,15 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
           <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={3}>
             {(shuffledByQuestion[current.id] ?? []).map((option) => {
               const missed = misses[current.id]?.includes(option.id)
+              const held = heldOptionId === option.id
               return (
                 <Button
                   key={option.id}
                   className="ipa-text"
                   fontSize="xl"
                   size="lg"
-                  variant={missed ? 'outline' : 'brandWhite'}
-                  colorScheme={missed ? 'red' : undefined}
+                  variant={held ? 'solid' : missed ? 'outline' : 'brandWhite'}
+                  colorScheme={held ? 'green' : missed ? 'red' : undefined}
                   isDisabled={missed}
                   onClick={() => choose(current, option)}
                 >
@@ -232,7 +253,11 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
               )
             })}
           </SimpleGrid>
-          {misses[current.id]?.length ? (
+          {heldOptionId !== null ? (
+            <Text mt={2} color="green.600" fontWeight="bold">
+              Correct!
+            </Text>
+          ) : misses[current.id]?.length ? (
             <Text mt={2} color="red.600" fontWeight="bold">
               Not quite – try another.
             </Text>
