@@ -9,6 +9,7 @@ import {
   WrapItem,
   useToast,
 } from '@chakra-ui/react'
+import { MdVolumeUp } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption, Question } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
@@ -16,12 +17,18 @@ import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 
-// CP2 C - Hamlet's Advice pt. 2. One question per word, three transcriptions
-// each, but the learner should feel they're transcribing a sentence: per the
-// doc, "each word populates in the final sentence as they find the correct
-// answer". Words are grouped into sentences by categories[0] and shown in id
-// order as a line across the top; the current word's choices sit beneath it,
-// and a correct pick drops its transcription into the line and moves on.
+// Hamlet's Advice pts. 2 and 3. One question per word or phrase, a few
+// transcriptions each, but the learner should feel they're transcribing a
+// sentence: per the pt. 2 doc, "each word populates in the final sentence as
+// they find the correct answer". Questions are grouped into sentences by
+// categories[0] and shown in id order as a line across the top; the current
+// question's choices sit beneath it, and a correct pick drops its
+// transcription into the line and moves on.
+//
+// A question's text is either the word itself (pt. 2: "thus,") or a phrase
+// with the transcribed part in brackets (pt. 3: "and [beget a] temperance",
+// which also carries the phrase's audio clip). Only the bracketed part is
+// bold and gets replaced; the rest of the phrase reads as context.
 //
 // Answers are saved like multiple choice ({questionId: optionId}) so earlier
 // progress on this quiz still restores.
@@ -112,7 +119,31 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
   const isWordDone = (q: Question) => picked[q.id] === correctOf(q)?.id
   const current = isCompleted ? undefined : words.find((q) => !isWordDone(q))
   const isSentenceDone = isCompleted || !current
-  const plain = (q: Question) => q.text.replace(/[“”]/g, '')
+  const parse = (q: Question) => {
+    const text = q.text.replace(/[“”]/g, '')
+    const m = text.match(/^(.*?)\[(.+?)\](.*)$/)
+    return m
+      ? { before: m[1].trim(), focus: m[2], after: m[3].trim() }
+      : { before: '', focus: text, after: '' }
+  }
+  const plain = (q: Question) => parse(q).focus
+  const playAudio = (url: string) => new Audio(url).play()
+  const contextWords = (text: string, key: string) =>
+    text
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w, i) => (
+        <WrapItem key={`${key}-${i}`}>
+          <Flex direction="column" align="center">
+            <Text fontSize="xl" lineHeight="short" color="text.primary" px={1}>
+              {w}
+            </Text>
+            <Text fontSize="xs" visibility="hidden" aria-hidden>
+              .
+            </Text>
+          </Flex>
+        </WrapItem>
+      ))
 
   const choose = (q: Question, option: AnswerOption) => {
     if (heldOptionId !== null) return
@@ -187,10 +218,12 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
         py={4}
       >
         <Wrap spacingX={3} spacingY={3} align="flex-end">
-          {words.map((q) => {
+          {words.flatMap((q) => {
             const done = isCompleted || isWordDone(q)
             const isCurrent = q.id === current?.id
-            return (
+            const { before, focus, after } = parse(q)
+            return [
+              ...contextWords(before, `${q.id}-b`),
               <WrapItem key={q.id}>
                 <Flex direction="column" align="center" minW="2.5rem">
                   <Text
@@ -209,30 +242,42 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
                     borderColor={isCurrent ? 'brand.iris' : 'transparent'}
                     px={1}
                   >
-                    {done ? correctOf(q)?.optionText : plain(q)}
+                    {done ? correctOf(q)?.optionText : focus}
                   </Text>
                   <Text
                     fontSize="xs"
                     color="text.muted"
                     visibility={done ? 'visible' : 'hidden'}
                   >
-                    {plain(q)}
+                    {focus}
                   </Text>
                 </Flex>
-              </WrapItem>
-            )
+              </WrapItem>,
+              ...contextWords(after, `${q.id}-a`),
+            ]
           })}
         </Wrap>
       </Box>
 
       {current && (
         <Box mt={6}>
-          <Text mb={3}>
-            Transcribe{' '}
-            <Text as="span" fontWeight="bold" color="brand.iris">
-              {plain(current)}
+          <Flex mb={3} align="center" gap={3} wrap="wrap">
+            <Text>
+              Transcribe{' '}
+              <Text as="span" fontWeight="bold" color="brand.iris">
+                {plain(current).replace(/[.,;:!?]+$/, '')}
+              </Text>
             </Text>
-          </Text>
+            {current.audioUrl && (
+              <Button
+                size="sm"
+                leftIcon={<MdVolumeUp size={18} />}
+                onClick={() => playAudio(current.audioUrl as string)}
+              >
+                Play Audio
+              </Button>
+            )}
+          </Flex>
           <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={3}>
             {(shuffledByQuestion[current.id] ?? []).map((option) => {
               const missed = misses[current.id]?.includes(option.id)

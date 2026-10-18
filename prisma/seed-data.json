@@ -1401,7 +1401,7 @@
       "score": null,
       "passScore": 70,
       "hasBeenAttempted": false,
-      "quizType": "multipleChoice",
+      "quizType": "lineBuilder",
       "order": 2,
       "isCompleted": false,
       "instructions": "Play the provided sound clip, then choose the correct transcription that matches the audio for the presented word."
@@ -3790,50 +3790,62 @@
     },
     {
       "id": 395,
-      "text": "In “…You must acquire…”, choose the correct transcription of “acquire”:",
-      "questionType": "multipleChoice",
+      "text": "You must [acquire]",
+      "questionType": "lineBuilder",
       "quizId": 38,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.1.mp3"
     },
     {
       "id": 396,
-      "text": "In “…and beget a temperance…”, choose the correct transcription of “beget a”:",
-      "questionType": "multipleChoice",
+      "text": "and [beget a] temperance",
+      "questionType": "lineBuilder",
       "quizId": 38,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.2.mp3"
     },
     {
       "id": 397,
-      "text": "In “…that may give it smoothness…”, choose the correct transcription of “smoothness”:",
-      "questionType": "multipleChoice",
+      "text": "that may give it [smoothness.]",
+      "questionType": "lineBuilder",
       "quizId": 38,
-      "categories": [],
+      "categories": [
+        "1"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.3.mp3"
     },
     {
       "id": 398,
-      "text": "In “…Be not too tame neither,…”, choose the correct transcription of “neither”:",
-      "questionType": "multipleChoice",
+      "text": "Be not too tame [neither,]",
+      "questionType": "lineBuilder",
       "quizId": 38,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.4.mp3"
     },
     {
       "id": 399,
-      "text": "In “…but let your own discretion…”, choose the correct transcription of “let your”:",
-      "questionType": "multipleChoice",
+      "text": "but [let your] own discretion",
+      "questionType": "lineBuilder",
       "quizId": 38,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.5.mp3"
     },
     {
       "id": 400,
-      "text": "In “…be your tutor.…”, choose the correct transcription of “tutor”:",
-      "questionType": "multipleChoice",
+      "text": "be your [tutor.]",
+      "questionType": "lineBuilder",
       "quizId": 38,
-      "categories": [],
+      "categories": [
+        "2"
+      ],
       "audioUrl": "https://acting-accents.s3.amazonaws.com/Checkpoint%20Exercise%202/C%20-%20Hamlet_s%20Advice%20pt.%203/CP2.C.6.mp3"
     },
     {
