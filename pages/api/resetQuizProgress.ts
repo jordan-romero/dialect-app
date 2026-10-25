@@ -4,6 +4,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
+import { getUserByAuth0Id } from '../../lib/user'
 
 const prisma = new PrismaClient()
 
@@ -22,9 +23,7 @@ export default async function handler(
   if (!quizId) return res.status(400).json({ error: 'Missing quizId' })
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { auth0Id: session.user.sub },
-    })
+    const user = await getUserByAuth0Id(prisma, session.user.sub)
     if (!user) return res.status(404).json({ error: 'User not found' })
 
     await prisma.userAnswer.deleteMany({

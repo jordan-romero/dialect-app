@@ -1,0 +1,197 @@
+{
+  "id": 40,
+  "lessonId": 10,
+  "quizType": "buildDiphthongs",
+  "title": "Building the Diphthongs & Triphthongs",
+  "instructions": "A diphthong or triphthong will play. Build it by clicking its vowels, in order, on the quadrilateral. Double-click any vowel to hear it on its own.",
+  "questions": [
+    {
+      "id": 425,
+      "text": "Building the Diphthongs & Triphthongs"
+    }
+  ],
+  "items": [
+    {
+      "symbol": "aɪ̆",
+      "parts": [
+        "a",
+        "ɪ"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86.mp3"
+    },
+    {
+      "symbol": "eɪ̆",
+      "parts": [
+        "e",
+        "ɪ"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/e%C9%AA%CC%86.mp3"
+    },
+    {
+      "symbol": "oʊ̆",
+      "parts": [
+        "o",
+        "ʊ"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/o%CA%8A%CC%86.mp3"
+    },
+    {
+      "symbol": "aʊ̆",
+      "parts": [
+        "a",
+        "ʊ"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%CA%8A%CC%86.mp3"
+    },
+    {
+      "symbol": "ɪ̆u",
+      "parts": [
+        "ɪ",
+        "u"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%CC%86u.mp3"
+    },
+    {
+      "symbol": "ɔɪ̆",
+      "parts": [
+        "ɔ",
+        "ɪ"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%AA%CC%86.mp3"
+    },
+    {
+      "symbol": "aɪ̆ə̆",
+      "parts": [
+        "a",
+        "ɪ",
+        "ə"
+      ],
+      "rhotic": false,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86%C9%99%CC%86.mp3"
+    },
+    {
+      "symbol": "ɑɚ̆",
+      "parts": [
+        "ɑ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%91%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "ɔɚ̆",
+      "parts": [
+        "ɔ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "ɛɚ̆",
+      "parts": [
+        "ɛ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7D.Audio/%C9%9B%C9%9A%CC%86.wav"
+    },
+    {
+      "symbol": "ɪɚ̆",
+      "parts": [
+        "ɪ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "ʊɚ̆",
+      "parts": [
+        "ʊ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%CA%8A%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "aɪ̆ɚ̆",
+      "parts": [
+        "a",
+        "ɪ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "aʊ̆ɚ̆",
+      "parts": [
+        "a",
+        "ʊ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%CA%8A%CC%86%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "ɔɪ̆ɚ̆",
+      "parts": [
+        "ɔ",
+        "ɪ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%AA%CC%86%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "ɪ̆ʊɚ̆",
+      "parts": [
+        "ɪ",
+        "ʊ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%CC%86%CA%8A%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "ɛɪ̆ɚ̆",
+      "parts": [
+        "ɛ",
+        "ɪ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%9B%C9%AA%CC%86%C9%9A%CC%86.mp3"
+    },
+    {
+      "symbol": "oʊ̆ɚ̆",
+      "parts": [
+        "o",
+        "ʊ",
+        "ɚ"
+      ],
+      "rhotic": true,
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/o%CA%8A%CC%86%C9%9A%CC%86.mp3"
+    }
+  ],
+  "chartAudio": {
+    "i": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/i.mp3",
+    "u": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/u.mp3",
+    "æ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C3%A6.mp3",
+    "ɑ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%91.mp3",
+    "ə": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%99.mp3",
+    "ɚ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%9A.mp3",
+    "ɛ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%9B.mp3",
+    "ɝ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%9D.mp3",
+    "ʊ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%CA%8A.mp3",
+    "ʌ": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%CA%8C.mp3",
+    "ɪ": "https://acting-accents.s3.amazonaws.com/6.%20Vowels/6B.Audio/i%CC%86.wav"
+  }
+}

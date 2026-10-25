@@ -779,9 +779,9 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
       <VStack spacing={0} align="stretch" w="full">
         {/* Formatting Toolbar */}
         <Box
-          bg="white"
+          bg="surface.card"
           borderBottom="2px solid"
-          borderColor="gray.200"
+          borderColor="border.subtle"
           px={2}
           py={1}
           borderTopRadius="lg"
@@ -854,7 +854,11 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               />
             </Tooltip>
 
-            <Divider orientation="vertical" h="24px" borderColor="gray.300" />
+            <Divider
+              orientation="vertical"
+              h="24px"
+              borderColor="border.subtle"
+            />
 
             {/* Subscript/Superscript */}
             <Tooltip label="Subscript">
@@ -893,7 +897,11 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               />
             </Tooltip>
 
-            <Divider orientation="vertical" h="24px" borderColor="gray.300" />
+            <Divider
+              orientation="vertical"
+              h="24px"
+              borderColor="border.subtle"
+            />
 
             {/* History Controls */}
             <Tooltip label={`Undo (${shortcutLabels.undo})`}>
@@ -924,7 +932,11 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
               />
             </Tooltip>
 
-            <Divider orientation="vertical" h="24px" borderColor="gray.300" />
+            <Divider
+              orientation="vertical"
+              h="24px"
+              borderColor="border.subtle"
+            />
 
             {/* Utility Controls */}
             <Tooltip label="Copy to clipboard">
@@ -959,12 +971,13 @@ export const RichTextIPAEditor = forwardRef<any, RichTextIPAEditorProps>(
         <Box
           ref={editorRef}
           contentEditable
+          spellCheck={false}
           suppressContentEditableWarning
           onInput={handleInput}
           onMouseUp={updateActiveFormats}
           onKeyUp={updateActiveFormats}
           className="ipa-text"
-          bg="white"
+          bg="surface.card"
           p={2.5}
           minH={minHeight}
           maxH={maxHeight}

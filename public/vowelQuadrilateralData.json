@@ -73,6 +73,22 @@
       "left": 86,
       "vowel": "ɑ",
       "isCorrect": true
+    },
+    "rhoticUnstressed": {
+      "top": 0,
+      "left": 0,
+      "vowel": "ɚ",
+      "isCorrect": true,
+      "extra": true,
+      "label": "Unstressed Rhotic Unrounded Vowel"
+    },
+    "rhoticStressed": {
+      "top": 0,
+      "left": 0,
+      "vowel": "ɝ",
+      "isCorrect": true,
+      "extra": true,
+      "label": "Stressed Rhotic Unrounded Vowel"
     }
   },
   "availableVowels": [

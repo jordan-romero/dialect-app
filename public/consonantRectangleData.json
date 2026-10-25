@@ -177,9 +177,9 @@
       "symbol": "h"
     },
     {
-      "id": "Approximant|Postalveolar|voiced",
+      "id": "Approximant|Alveolar|voiced",
       "manner": "Approximant",
-      "place": "Postalveolar",
+      "place": "Alveolar",
       "voicing": "voiced",
       "symbol": "ɹ"
     },

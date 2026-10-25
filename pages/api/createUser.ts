@@ -1,72 +1,75 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const createUser = async (req: any, res: any) => {
+// Provision the database row for the signed-in user. Identity comes ONLY from
+// the verified Auth0 session — never from the request body — so a caller can't
+// bind an arbitrary email to an arbitrary auth0Id (account takeover).
+const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST'])
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const session = await getSession(req, res)
+  if (!session?.user) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  const email = session.user.email as string | undefined
+  const auth0Id = session.user.sub as string | undefined
+  if (!email || !auth0Id) {
+    return res.status(400).json({ error: 'Session is missing email or sub' })
+  }
+
   try {
-    console.log('🔍 Debug - Creating user with data:', req.body.user)
-    const { email, sub: auth0Id } = req.body.user // Extract email and auth0Id from profile.user
-
-    console.log('🔍 Debug - Extracted values:', { email, auth0Id })
-
-    if (!email || !auth0Id) {
-      console.log('❌ Missing required fields:', { email, auth0Id })
-      return res.status(400).json({ error: 'Email and auth0Id are required' })
-    }
-
-    // Check if the user already exists in the database by email or auth0Id
-    const existingUserByEmail = await prisma.user.findUnique({
-      where: { email },
-    })
-
-    const existingUserByAuth0Id = await prisma.user.findUnique({
+    const existingByAuth0Id = await prisma.user.findUnique({
       where: { auth0Id },
     })
 
-    if (existingUserByEmail && existingUserByAuth0Id) {
-      // User exists with both email and auth0Id
+    if (existingByAuth0Id) {
+      // Already provisioned. Keep the email in sync if Auth0's changed, but only
+      // when the new email isn't already owned by a different row.
+      if (existingByAuth0Id.email !== email) {
+        const clash = await prisma.user.findUnique({ where: { email } })
+        if (!clash || clash.id === existingByAuth0Id.id) {
+          const updated = await prisma.user.update({
+            where: { auth0Id },
+            data: { email },
+          })
+          return res
+            .status(200)
+            .json({ message: 'User updated', user: updated })
+        }
+      }
       return res
         .status(200)
-        .json({ message: 'User already exists', user: existingUserByEmail })
-    } else if (existingUserByEmail && !existingUserByAuth0Id) {
-      // User exists by email but not auth0Id - update the auth0Id
-      const updatedUser = await prisma.user.update({
-        where: { email },
-        data: { auth0Id },
-      })
-      console.log('✅ Updated existing user with auth0Id:', updatedUser)
-      return res
-        .status(200)
-        .json({ message: 'User updated with auth0Id', user: updatedUser })
-    } else if (!existingUserByEmail && existingUserByAuth0Id) {
-      // User exists by auth0Id but not email - update the email
-      const updatedUser = await prisma.user.update({
-        where: { auth0Id },
-        data: { email },
-      })
-      console.log('✅ Updated existing user with email:', updatedUser)
-      return res
-        .status(200)
-        .json({ message: 'User updated with email', user: updatedUser })
-    } else {
-      // User doesn't exist - create new user
-      const newUser = await prisma.user.create({
-        data: {
-          email,
-          auth0Id,
-        },
-      })
-      console.log('✅ Created new user:', newUser)
-      return res
-        .status(201)
-        .json({ message: 'User created successfully', user: newUser })
+        .json({ message: 'User already exists', user: existingByAuth0Id })
     }
+
+    const existingByEmail = await prisma.user.findUnique({ where: { email } })
+    if (existingByEmail) {
+      // auth0Id is required + unique, so this row is already bound to a
+      // different Auth0 identity (the current sub wasn't found above).
+      // Rebinding it would transfer that account's paid access and progress to
+      // this session, so refuse with a conflict instead.
+      if (existingByEmail.auth0Id === auth0Id) {
+        return res
+          .status(200)
+          .json({ message: 'User already exists', user: existingByEmail })
+      }
+      return res.status(409).json({
+        error: 'This email is already associated with another account.',
+      })
+    }
+
+    const created = await prisma.user.create({ data: { email, auth0Id } })
+    return res.status(201).json({ message: 'User created', user: created })
   } catch (error) {
-    console.error('An error occurred:', error)
+    console.error('createUser error:', error)
     return res.status(500).json({ error: 'An error occurred' })
-  } finally {
-    // Ensure the response is sent
-    res.end()
   }
 }
 

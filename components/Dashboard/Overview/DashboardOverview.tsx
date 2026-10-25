@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import NextLink from 'next/link'
 import {
   Box,
@@ -29,10 +29,6 @@ import { visualFor } from '../badgeVisuals'
 import WelcomeHeader from '../WelcomeHeader'
 
 // Flames lick up from the bottom of the streak card when it ignites.
-const flicker = keyframes`
-  0%, 100% { transform: translateY(0) scaleY(1) rotate(-2deg); opacity: 0.85; }
-  50% { transform: translateY(-8px) scaleY(1.3) rotate(2deg); opacity: 1; }
-`
 const emberGlow = keyframes`
   0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0), 0 0 0 0 rgba(249,115,22,0); }
   50% { box-shadow: 0 0 0 3px rgba(249,115,22,0.35), 0 0 30px 6px rgba(249,115,22,0.5); }
@@ -57,6 +53,7 @@ interface Overview {
   continue: {
     lessonId: number
     title: string
+    moduleNumber: number | null
     phase: string
     done: boolean
   } | null
@@ -64,6 +61,7 @@ interface Overview {
   phases: Phase[]
   streak: { current: number; best: number }
   badges: Badge[]
+  firstTime?: boolean
 }
 
 const Card: React.FC<{ children: React.ReactNode } & Record<string, any>> = ({
@@ -95,7 +93,13 @@ const BadgeMedallion: React.FC<{ badge: Badge }> = ({ badge }) => {
   const subtle = useColorModeValue('gray.500', 'gray.400')
 
   return (
-    <Popover trigger="click" placement="top" isLazy>
+    <Popover
+      trigger="hover"
+      placement="top"
+      openDelay={100}
+      closeDelay={80}
+      isLazy
+    >
       <PopoverTrigger>
         <VStack
           as="button"
@@ -216,6 +220,28 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
   const c = data.continue
   const allDone =
     data.overall.total > 0 && data.overall.completed === data.overall.total
+  const firstTime = !!data.firstTime && !allDone
+
+  const eyebrow = allDone
+    ? 'All caught up'
+    : firstTime
+    ? 'Your journey starts here'
+    : 'Pick up where you left off'
+  const heading = allDone
+    ? "You've completed the course"
+    : firstTime
+    ? `Start with ${c?.title || 'your first lesson'}`
+    : c?.title || 'Get started'
+
+  // A locator line that adds context without echoing the heading's title.
+  const subtitle = allDone
+    ? 'Revisit any lesson any time'
+    : c?.moduleNumber
+    ? `Module ${c.moduleNumber}`
+    : firstTime
+    ? 'Your first lesson'
+    : ''
+
   return (
     <Box
       bgGradient="linear(to-r, #5F53CF, #7EACE2)"
@@ -225,14 +251,14 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
       boxShadow="0 12px 40px rgba(95,83,207,0.35)"
     >
       <Text fontSize="sm" opacity={0.9} mb={1}>
-        {allDone ? 'All caught up' : 'Pick up where you left off'}
+        {eyebrow}
       </Text>
-      <Heading size="lg" mb={1}>
-        {allDone ? "You've completed the course" : c?.title || 'Get started'}
+      <Heading size={{ base: 'lg', md: 'xl' }} mb={subtitle ? 1 : 5}>
+        {heading}
       </Heading>
-      {c?.phase && !allDone && (
-        <Text opacity={0.9} mb={5}>
-          {c.phase}
+      {subtitle && (
+        <Text fontSize="md" opacity={0.9} mb={5}>
+          {subtitle}
         </Text>
       )}
       <Button
@@ -240,9 +266,8 @@ const ContinueHero: React.FC<{ data: Overview }> = ({ data }) => {
         href="/dashboard"
         variant="brandWhite"
         rightIcon={<FiArrowRight />}
-        mt={allDone ? 4 : 0}
       >
-        {allDone ? 'Review lessons' : 'Continue'}
+        {allDone ? 'Review lessons' : firstTime ? 'Start' : 'Continue'}
       </Button>
     </Box>
   )
@@ -309,13 +334,20 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
   const { current, best } = data.streak
   const [igniting, setIgniting] = useState(false)
   const [displayCount, setDisplayCount] = useState(current)
+  // Run-once guard so React StrictMode's double-invoke can't re-trigger (or leave
+  // the pulse stuck on).
+  const ignitedRef = useRef(false)
 
-  // Ignite (flames + count-up) only when the streak has gone UP since last seen.
+  // Ignite (pulse + count-up) only when the streak has gone UP since last seen,
+  // then stop after ~5s.
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || ignitedRef.current) return
+    ignitedRef.current = true
+
     const key = 'aa:lastStreakSeen'
     const prev = Number(window.localStorage.getItem(key) || '0')
     window.localStorage.setItem(key, String(current))
+
     if (current > prev && current > 0) {
       setIgniting(true)
       let n = prev
@@ -325,13 +357,12 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
         setDisplayCount(n)
         if (n >= current) clearInterval(iv)
       }, 180)
-      const t = setTimeout(() => setIgniting(false), 4200)
-      return () => {
-        clearInterval(iv)
-        clearTimeout(t)
-      }
+      // Intentionally NOT cleared on cleanup: a StrictMode unmount/remount must
+      // not cancel the stop, or the pulse would never turn off.
+      setTimeout(() => setIgniting(false), 5000)
+    } else {
+      setDisplayCount(current)
     }
-    setDisplayCount(current)
   }, [current])
 
   return (
@@ -341,9 +372,9 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
       justifyContent="center"
       position="relative"
       overflow="hidden"
-      animation={
-        igniting ? `${emberGlow} 1.2s ease-in-out infinite` : undefined
-      }
+      h={{ base: 'auto', lg: '85%' }}
+      minH="fit-content"
+      animation={igniting ? `${emberGlow} 1.2s ease-in-out 4 both` : undefined}
     >
       <Heading size="md" mb={3}>
         Streak
@@ -357,14 +388,7 @@ const StreakCard: React.FC<{ data: Overview }> = ({ data }) => {
           bgGradient="linear(to-br, #F97316, #EF4444)"
           boxShadow="0 8px 20px rgba(239,68,68,0.3)"
         >
-          <Icon
-            as={MdLocalFireDepartment}
-            boxSize={7}
-            color="white"
-            animation={
-              igniting ? `${flicker} 0.5s ease-in-out infinite` : undefined
-            }
-          />
+          <Icon as={MdLocalFireDepartment} boxSize={7} color="white" />
         </Flex>
         <Box>
           <Text fontSize="3xl" fontWeight="bold" lineHeight="1">
@@ -437,10 +461,11 @@ const DashboardOverview = () => {
       color={pageColor}
       minH="100%"
       px={{ base: 4, md: 6 }}
-      py={6}
+      pt={{ base: 16, md: 6 }}
+      pb={6}
     >
       <Box maxW="1100px" mx="auto">
-        <WelcomeHeader />
+        <WelcomeHeader firstTime={data?.firstTime} />
 
         {!data ? (
           <OverviewSkeleton />

@@ -31,6 +31,10 @@ export interface QuizData {
   passScore: number
   hasBeenAttempted: boolean
   quizType: string
+  /** Optional per-quiz instruction text; overrides the component's default
+   *  wording, which is inferred from the quiz shape and is wrong for one-off
+   *  exercises. */
+  instructions?: string | null
   questions: Question[]
   answerOptions: AnswerOption[]
   order: number
