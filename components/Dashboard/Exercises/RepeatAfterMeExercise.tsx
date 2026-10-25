@@ -17,6 +17,7 @@ import {
 import { MdVolumeUp, MdMic, MdStop } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { renderUnderlined } from './UnderlineMarkup'
 
 /**
  * Renders a transcription with `{...}` marking the RP sound the clip teaches,
@@ -252,7 +253,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       {/* Sentence + transcription */}
       <Box>
         <Text fontSize="lg" mb={2}>
-          “{item.sentence}”
+          “{renderUnderlined(item.sentence)}”
         </Text>
         <Text
           fontFamily="ipa"
