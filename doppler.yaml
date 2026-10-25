@@ -3,6 +3,12 @@
 # live in Doppler (dev/stg/prd configs), never in the repo. A local .env still
 # works as a fallback for anyone who hasn't set Doppler up — see
 # scripts/with-env.sh.
+#
+# Each config holds the same secret names. DATABASE_URL / DIRECT_URL point at a
+# different Supabase project per config (dev → acting-accents-dev, prd →
+# acting-accents-prod). To run a script against another config, pass it
+# explicitly, e.g. migrate prod with:
+#   doppler run --config prd -- npx prisma migrate deploy
 setup:
   project: acting-accents
   config: dev
