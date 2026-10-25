@@ -484,6 +484,9 @@
           "type": "quiz"
         },
         {
+          "type": "quiz"
+        },
+        {
           "type": "resource"
         },
         {
@@ -1459,7 +1462,7 @@
       "passScore": 70,
       "hasBeenAttempted": false,
       "quizType": "multipleChoice",
-      "order": 0,
+      "order": 1,
       "isCompleted": false,
       "instructions": "Choose the transcription that best represents the presented audio clip."
     },
@@ -1483,9 +1486,21 @@
       "passScore": 70,
       "hasBeenAttempted": false,
       "quizType": "shortAnswer",
-      "order": 1,
+      "order": 2,
       "isCompleted": false,
       "instructions": "Using your existing transcription of Comma Gets a Cure from the previous module, review your work and add in the distinctive features you’ve learned about within this module. Type each line in RP, then reveal the answer key for that line to check your work."
+    },
+    {
+      "id": 42,
+      "title": "Repeat After Me Tongue Twisters",
+      "lessonId": 19,
+      "score": null,
+      "passScore": 70,
+      "hasBeenAttempted": false,
+      "quizType": "repeatAfterMe",
+      "order": 0,
+      "isCompleted": false,
+      "instructions": null
     }
   ],
   "Question": [
@@ -4453,6 +4468,14 @@
       "text": "but Mrs. Harrison—a millionaire lawyer—thought it was a fair price for a cure.",
       "questionType": "shortAnswer",
       "quizId": 43,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 431,
+      "text": "Repeat After Me: Distinct Feature Tongue Twisters",
+      "questionType": "repeatAfterMe",
+      "quizId": 42,
       "categories": [],
       "audioUrl": null
     }
