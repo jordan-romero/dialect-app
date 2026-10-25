@@ -1,4 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Charis+SIL:wght@400;700&family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Noto+Sans:wght@400;700&display=swap');
+
+/* Charis SIL is self-hosted, not loaded from Google Fonts: Google only serves
+   latin/latin-ext/vietnamese subsets, which drop the IPA combining marks we
+   use (tie bar U+0361, no audible release U+031A, breve U+0306), so those
+   rendered as tofu boxes. These are the complete, unmodified fonts from
+   github.com/google/fonts (OFL — see public/fonts/charis-sil/OFL.txt). */
+@font-face {
+  font-family: 'Charis SIL';
+  src: url('/fonts/charis-sil/CharisSIL-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charis SIL';
+  src: url('/fonts/charis-sil/CharisSIL-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Enhanced IPA font rendering */
 .ipa-text {
