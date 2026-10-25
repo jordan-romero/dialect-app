@@ -4,6 +4,7 @@ const quizTypeLabels: Record<string, string> = {
   dragAndDrop: 'Drag and drop',
   shortAnswer: 'Short answer',
   multipleChoice: 'Multiple choice',
+  matching: 'Matching',
   symbolPicker: 'Symbol picker',
   vowelQuad: 'Vowel quadrilateral',
   lexicalChart: 'Lexical chart',
@@ -13,6 +14,8 @@ const quizTypeLabels: Record<string, string> = {
   corrections: 'Corrections',
   buildAWord: 'Build-a-word',
   repeatAfterMe: 'Repeat after me',
+  stressPlacement: 'Fill in the blanks',
+  lineBuilder: 'Build the line',
 }
 
 const getQuizOutlineLabel = (quiz: Quiz | undefined): string => {

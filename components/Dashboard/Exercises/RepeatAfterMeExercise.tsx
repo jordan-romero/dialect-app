@@ -17,6 +17,29 @@ import {
 import { MdVolumeUp, MdMic, MdStop } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { renderUnderlined } from './UnderlineMarkup'
+
+/**
+ * Renders a transcription with `{...}` marking the RP sound the clip teaches,
+ * in the same purple as the RP column of the lexical set table:
+ *
+ *   "d͡ʒ{ɒ}n" -> d͡ʒ<purple>ɒ</purple>n
+ *
+ * Same brace convention as UnderlineMarkup; text with no markers passes through.
+ */
+const renderRpHighlights = (text: string): React.ReactNode => {
+  if (!text.includes('{')) return text
+
+  return text.split(/(\{[^{}]*\})/g).map((part, i) =>
+    part.startsWith('{') && part.endsWith('}') ? (
+      <Text as="span" key={i} color="brand.purple">
+        {part.slice(1, -1)}
+      </Text>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    ),
+  )
+}
 
 interface LexicalSet {
   name: string
@@ -120,7 +143,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       toast({
         title: 'Microphone unavailable',
         description:
-          'Allow microphone access to record yourself, or just listen and repeat aloud.',
+          'Allow microphone access to record yourself — each sentence needs a recording before you can move on.',
         status: 'warning',
         duration: 4000,
         isClosable: true,
@@ -204,12 +227,8 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Tbody>
           {item.lexicalSets.map((s) => (
             <Tr key={s.name}>
-              <Td fontWeight="bold">{s.name}</Td>
-              <Td
-                textAlign="center"
-                fontFamily="ipa"
-                fontSize="lg"
-              >
+              <Td fontWeight="bold">{renderUnderlined(s.name)}</Td>
+              <Td textAlign="center" fontFamily="ipa" fontSize="lg">
                 {s.ga}
               </Td>
               <Td
@@ -236,8 +255,13 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Text fontSize="lg" mb={2}>
           “{item.sentence}”
         </Text>
-        <Text fontFamily="ipa" fontSize="lg" color="text.primary">
-          {item.ipa}
+        <Text
+          fontFamily="ipa"
+          fontSize="lg"
+          fontWeight="bold"
+          color="text.primary"
+        >
+          {renderRpHighlights(item.ipa)}
         </Text>
       </Box>
 
@@ -287,6 +311,10 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
             src={recordings[index]}
             style={{ width: '100%', maxWidth: 420 }}
           />
+          <Text fontSize="xs" color="text.muted" mt={1}>
+            Listen to yourself, then listen back to the provided audio to
+            compare.
+          </Text>
         </Box>
       )}
 
@@ -296,10 +324,15 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         onPrevious={goPrev}
         onNext={goNext}
         onFinish={handleFinish}
-        // Practice drill: free to move through items. Finishing the last one
-        // marks it complete.
-        isNextDisabled={isLoading}
+        // Each item must be recorded before moving on. Finishing the last one
+        // marks it complete, which unlocks free review navigation.
+        isNextDisabled={isLoading || isRecording || !recordings[index]}
         isCompleted={isCompleted}
+        disabledReason={
+          isRecording
+            ? 'Stop recording to continue'
+            : 'Record yourself to continue'
+        }
       />
     </VStack>
   )

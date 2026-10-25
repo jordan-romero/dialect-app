@@ -1,4 +1,4 @@
-// Copy audio from Google Drive to the S3 bucket.
+// Copy audio (and handout PDFs) from Google Drive to the S3 bucket.
 //
 // A lot of the course's recordings exist in Drive but were never uploaded —
 // several sets are on S3 only as one long combined MP3, which is why those
@@ -34,7 +34,11 @@ const s3 = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' })
 const entries = JSON.parse(readFileSync(manifestPath, 'utf-8'))
 
 const contentTypeFor = (name) =>
-  /\.wav$/i.test(name) ? 'audio/wav' : 'audio/mpeg'
+  /\.pdf$/i.test(name)
+    ? 'application/pdf'
+    : /\.wav$/i.test(name)
+    ? 'audio/wav'
+    : 'audio/mpeg'
 
 const exists = async (Key) => {
   try {

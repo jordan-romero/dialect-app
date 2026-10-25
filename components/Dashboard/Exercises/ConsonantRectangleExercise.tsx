@@ -99,7 +99,13 @@ const Cell: React.FC<{
                     ? 'teal.400'
                     : 'gray.300'
                 }
-                bg={isCorrect ? 'green.50' : isWrong ? 'red.50' : 'white'}
+                bg={
+                  isCorrect
+                    ? 'surface.correct'
+                    : isWrong
+                    ? 'surface.wrong'
+                    : 'surface.slot'
+                }
                 onClick={() => onPlace(slot.id)}
               >
                 {placed || ''}
@@ -353,7 +359,13 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
                         ? 'teal.400'
                         : 'gray.300'
                     }
-                    bg={isCorrect ? 'green.50' : isWrong ? 'red.50' : 'white'}
+                    bg={
+                  isCorrect
+                    ? 'surface.correct'
+                    : isWrong
+                    ? 'surface.wrong'
+                    : 'surface.slot'
+                }
                     onClick={() => placeSymbol(slot.id)}
                   >
                     {placed || ''}

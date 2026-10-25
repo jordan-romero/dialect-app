@@ -33,25 +33,9 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "kæts",
-          "correct": true
-        },
-        {
-          "text": "kɑts",
-          "correct": false
-        },
-        {
-          "text": "kits",
-          "correct": false
-        },
-        {
-          "text": "kɪts",
-          "correct": false
-        }
-      ]
+      "segments": ["k", "ɑ", "t", "s"],
+      "wrongSegment": 1,
+      "correctSymbol": "æ"
     },
     {
       "sentence": "Don’t judge a book by its cover.",
@@ -85,25 +69,9 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "d͡ʒʌd͡ʒ",
-          "correct": true
-        },
-        {
-          "text": "jʌd͡ʒ",
-          "correct": false
-        },
-        {
-          "text": "pʌd͡ʒ",
-          "correct": false
-        },
-        {
-          "text": "bʌd͡ʒ",
-          "correct": false
-        }
-      ]
+      "segments": ["j", "ʌ", "d͡ʒ"],
+      "wrongSegment": 0,
+      "correctSymbol": "d͡ʒ"
     },
     {
       "sentence": "They’re blind as a bat.",
@@ -129,25 +97,9 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "blaɪ̆nd",
-          "correct": true
-        },
-        {
-          "text": "bleɪ̆nd",
-          "correct": false
-        },
-        {
-          "text": "blind",
-          "correct": false
-        },
-        {
-          "text": "blɪnd",
-          "correct": false
-        }
-      ]
+      "segments": ["b", "l", "eɪ̆", "n", "d"],
+      "wrongSegment": 2,
+      "correctSymbol": "aɪ̆"
     },
     {
       "sentence": "No use crying over spilled milk.",
@@ -177,25 +129,9 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "kɹa.ɪŋ",
-          "correct": true
-        },
-        {
-          "text": "kra.ɪŋ",
-          "correct": false
-        },
-        {
-          "text": "kpa.ɪŋ",
-          "correct": false
-        },
-        {
-          "text": "kba.ɪŋ",
-          "correct": false
-        }
-      ]
+      "segments": ["k", "r", "a.ɪ", "ŋ"],
+      "wrongSegment": 1,
+      "correctSymbol": "ɹ"
     },
     {
       "sentence": "This is the calm before the storm.",
@@ -229,25 +165,9 @@
           "wrong": true
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "stɔɚ̆m",
-          "correct": true
-        },
-        {
-          "text": "stoɹm",
-          "correct": false
-        },
-        {
-          "text": "stim",
-          "correct": false
-        },
-        {
-          "text": "stɪm",
-          "correct": false
-        }
-      ]
+      "segments": ["s", "t", "oɹ", "m"],
+      "wrongSegment": 2,
+      "correctSymbol": "ɔɚ̆"
     },
     {
       "sentence": "She knocked it out of the park.",
@@ -281,25 +201,9 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "ðə",
-          "correct": true
-        },
-        {
-          "text": "θə",
-          "correct": false
-        },
-        {
-          "text": "pə",
-          "correct": false
-        },
-        {
-          "text": "bə",
-          "correct": false
-        }
-      ]
+      "segments": ["θ", "ə"],
+      "wrongSegment": 0,
+      "correctSymbol": "ð"
     },
     {
       "sentence": "Slow and steady wins the race.",
@@ -313,7 +217,7 @@
           "wrong": false
         },
         {
-          "ipa": "stʌdĭ",
+          "ipa": "stʌdĭ",
           "wrong": true
         },
         {
@@ -329,25 +233,9 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "stɛdĭ",
-          "correct": true
-        },
-        {
-          "text": "stʌdĭ",
-          "correct": false
-        },
-        {
-          "text": "stidĭ",
-          "correct": false
-        },
-        {
-          "text": "stɪdĭ",
-          "correct": false
-        }
-      ]
+      "segments": ["s", "t", "ʌ", "d", "ĭ"],
+      "wrongSegment": 2,
+      "correctSymbol": "ɛ"
     },
     {
       "sentence": "I hate to burst your bubble.",
@@ -377,25 +265,129 @@
           "wrong": false
         }
       ],
-      "prompt": "Now pick the correct transcription of the word you fixed:",
-      "options": [
-        {
-          "text": "jɔɚ̆",
-          "correct": true
-        },
-        {
-          "text": "yɔɚ̆",
-          "correct": false
-        },
-        {
-          "text": "pɔɚ̆",
-          "correct": false
-        },
-        {
-          "text": "bɔɚ̆",
-          "correct": false
-        }
-      ]
+      "segments": ["y", "ɔɚ̆"],
+      "wrongSegment": 0,
+      "correctSymbol": "j"
     }
+  ],
+  "symbolBankCategories": {
+    "consonants": [
+      "p",
+      "b",
+      "m",
+      "f",
+      "v",
+      "t",
+      "d",
+      "n",
+      "ɾ",
+      "θ",
+      "ð",
+      "s",
+      "z",
+      "ʃ",
+      "ʒ",
+      "ɹ",
+      "l",
+      "j",
+      "k",
+      "g",
+      "ŋ",
+      "ʔ",
+      "h",
+      "ç",
+      "w",
+      "t͡ʃ",
+      "d͡ʒ",
+      "ɫ"
+    ],
+    "monophthongs": [
+      "i",
+      "ɪ",
+      "ĭ",
+      "ɛ",
+      "æ",
+      "ɑ",
+      "ʌ",
+      "ʊ",
+      "u",
+      "ə",
+      "ɚ",
+      "ɝ"
+    ],
+    "diphthongs": [
+      "aɪ̆",
+      "eɪ̆",
+      "oʊ̆",
+      "aʊ̆",
+      "ɪ̆u",
+      "ɔɪ̆",
+      "ɑɚ̆",
+      "ɔɚ̆",
+      "ɛɚ̆",
+      "ɪɚ̆",
+      "ʊɚ̆"
+    ],
+    "triphthongs": ["aɪ̆ɚ̆", "aɪ̆ə̆", "aʊ̆ɚ̆", "ɔɪ̆ɚ̆", "ɪ̆ʊɚ̆", "ɛɪ̆ɚ̆", "oʊ̆ɚ̆"]
+  },
+  "symbolBank": [
+    "p",
+    "b",
+    "m",
+    "f",
+    "v",
+    "t",
+    "d",
+    "n",
+    "ɾ",
+    "θ",
+    "ð",
+    "s",
+    "z",
+    "ʃ",
+    "ʒ",
+    "ɹ",
+    "l",
+    "j",
+    "k",
+    "g",
+    "ŋ",
+    "ʔ",
+    "h",
+    "ç",
+    "w",
+    "t͡ʃ",
+    "d͡ʒ",
+    "ɫ",
+    "i",
+    "ɪ",
+    "ĭ",
+    "ɛ",
+    "æ",
+    "ɑ",
+    "ʌ",
+    "ʊ",
+    "u",
+    "ə",
+    "ɚ",
+    "ɝ",
+    "aɪ̆",
+    "eɪ̆",
+    "oʊ̆",
+    "aʊ̆",
+    "ɪ̆u",
+    "ɔɪ̆",
+    "ɑɚ̆",
+    "ɔɚ̆",
+    "ɛɚ̆",
+    "ɪɚ̆",
+    "ʊɚ̆",
+    "aɪ̆ɚ̆",
+    "aɪ̆ə̆",
+    "aʊ̆ɚ̆",
+    "ɔɪ̆ɚ̆",
+    "ɪ̆ʊɚ̆",
+    "ɛɪ̆ɚ̆",
+    "oʊ̆ɚ̆"
   ]
 }
