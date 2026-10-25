@@ -12,11 +12,11 @@ import {
   MenuDivider,
   useMediaQuery,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useMemo } from 'react'
 import NavComponent from './NavComponent'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useFeatureFlag } from 'configcat-react'
+import { useFeatureFlag, User } from 'configcat-react'
 import Login from '../AuthComponents/Login'
 import Logout from '../AuthComponents/Logout'
 import { useUser } from '@auth0/nextjs-auth0/client'
@@ -25,11 +25,19 @@ const Navbar = () => {
   // The desktop links need more room than a phone-sized breakpoint provides,
   // especially when the account actions are visible.
   const [isCompactNav] = useMediaQuery('(max-width: 1440px)')
+  const { user: authUser, isLoading: authLoading } = useUser()
+  // Identify signed-in users to ConfigCat so targeting rules (e.g. "Email is one
+  // of ...") can turn the flag on for specific people before public launch.
+  const email = authUser?.email ?? undefined
+  const configCatUser = useMemo(
+    () => (email ? new User(email, email) : undefined),
+    [email],
+  )
   const { value: signUpAndLoginVisible } = useFeatureFlag(
     'signUpAndLoginVisible',
     false,
+    configCatUser,
   )
-  const { user: authUser, isLoading: authLoading } = useUser()
   const router = useRouter()
 
   if (router.pathname.includes('dashboard')) {
