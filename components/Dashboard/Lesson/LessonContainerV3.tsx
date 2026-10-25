@@ -20,6 +20,8 @@ import { lessonTypeComponentMap } from './utils'
 import DragAndDropExercise from '../Exercises/DragAndDropExercise/DragAndDropExercise'
 import MultipleChoiceExercise from '../Exercises/MultipleChoiceExercise'
 import ShortAnswerExercise from '../Exercises/ShortAnswerExercise'
+import StressPlacementExercise from '../Exercises/StressPlacementExercise'
+import LineBuilderExercise from '../Exercises/LineBuilderExercise'
 import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
@@ -36,6 +38,7 @@ import { HangmanIPAExercise } from '../Exercises/HangmanIPAExercise'
 import LockedLessonPaywall from './LockedLessonPaywall'
 import { expandLessonSteps, orderedResources } from './lessonOutline'
 import BuildDiphthongsExercise from '../Exercises/BuildDiphthongsExercise'
+import MatchingExercise from '../Exercises/MatchingExercise'
 
 type LessonContainerProps = {
   lesson: Lesson
@@ -423,6 +426,30 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
                 case 'multipleChoice':
                   return (
                     <MultipleChoiceExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'lineBuilder':
+                  return (
+                    <LineBuilderExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'stressPlacement':
+                  return (
+                    <StressPlacementExercise
+                      lessonId={lesson.id}
+                      quizIndex={currentQuiz.order}
+                      onComplete={() => handleQuizCompletion(currentQuiz.order)}
+                    />
+                  )
+                case 'matching':
+                  return (
+                    <MatchingExercise
                       lessonId={lesson.id}
                       quizIndex={currentQuiz.order}
                       onComplete={() => handleQuizCompletion(currentQuiz.order)}
