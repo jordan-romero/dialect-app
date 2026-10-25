@@ -551,7 +551,7 @@
           "type": "video"
         },
         {
-          "type": "resource"
+          "type": "quiz"
         },
         {
           "type": "resource"
@@ -697,6 +697,12 @@
       "steps": [
         {
           "type": "description"
+        },
+        {
+          "type": "resource"
+        },
+        {
+          "type": "quiz"
         },
         {
           "type": "quiz"
@@ -1007,15 +1013,6 @@
       "order": 0
     },
     {
-      "id": 36,
-      "name": "Transcribing Hamlet's Advice into RP",
-      "type": "pdf",
-      "url": "https://acting-accents.s3.amazonaws.com/14b.+Transcription+Transformation/14b.A+-+Transcribing+Hamlet's+Advice+into+RP.pdf",
-      "courseId": null,
-      "lessonId": 21,
-      "order": 0
-    },
-    {
       "id": 37,
       "name": "Hamlet's Advice RP Answer Key",
       "type": "pdf",
@@ -1068,15 +1065,6 @@
       "courseId": null,
       "lessonId": 16,
       "order": 3
-    },
-    {
-      "id": 43,
-      "name": "Hamlet's Advice pt. 4",
-      "type": "pdf",
-      "url": "https://acting-accents.s3.amazonaws.com/Checkpoint+Exercise+2/D+-+Hamlet_s+Advice+pt.+4.pdf",
-      "courseId": null,
-      "lessonId": 26,
-      "order": 1
     },
     {
       "id": 44,
@@ -1501,6 +1489,30 @@
       "order": 0,
       "isCompleted": false,
       "instructions": null
+    },
+    {
+      "id": 44,
+      "title": "Hamlet’s Advice pt. 4",
+      "lessonId": 26,
+      "score": null,
+      "passScore": 70,
+      "hasBeenAttempted": false,
+      "quizType": "shortAnswer",
+      "order": 3,
+      "isCompleted": false,
+      "instructions": "Transcribe the remainder of “Hamlet’s Advice” on your own, one line at a time in GenAm. After each line, reveal the answer key to check your work."
+    },
+    {
+      "id": 45,
+      "title": "Transcribing Hamlet’s Advice into RP",
+      "lessonId": 21,
+      "score": null,
+      "passScore": 70,
+      "hasBeenAttempted": false,
+      "quizType": "shortAnswer",
+      "order": 0,
+      "isCompleted": false,
+      "instructions": "Fully transcribe “Hamlet’s Advice” into British RP, one line at a time. Reference your GenAm transcription from Checkpoint Exercise 2, your Lexical Chart and the provided audio sample. After each line, reveal the answer key to check your work."
     }
   ],
   "Question": [
@@ -4476,6 +4488,174 @@
       "text": "Repeat After Me: Distinct Feature Tongue Twisters",
       "questionType": "repeatAfterMe",
       "quizId": 42,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 460,
+      "text": "8. Suit the action to the word, the word to the action,",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 461,
+      "text": "9. with this special observance, that you o'erstep not the modesty of nature.",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 462,
+      "text": "10. For anything so o’erdone is from the purpose of playing,",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 463,
+      "text": "11. whose end, both at the first and now,",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 464,
+      "text": "12. was and is to hold as ’twere, the mirror up to nature:",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 465,
+      "text": "13. to show virtue her feature, scorn her own image,",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 466,
+      "text": "14. and the very age and body of the time his form and pressure.",
+      "questionType": "shortAnswer",
+      "quizId": 44,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 470,
+      "text": "Speak the speech, I pray you, as I pronounced it to you,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 471,
+      "text": "trippingly on the tongue. But if you mouth it, as many of your players do,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 472,
+      "text": "I had as lief the town-crier spoke my lines.",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 473,
+      "text": "Nor do not saw the air too much with your hand thus, but use all gently,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 474,
+      "text": "for in the very torrent, tempest, and, as I may say, whirlwind of your passion,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 475,
+      "text": "you must acquire and beget a temperance that may give it smoothness.",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 476,
+      "text": "Be not too tame neither, but let your own discretion be your tutor.",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 477,
+      "text": "Suit the action to the word, the word to the action,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 478,
+      "text": "with this special observance, that you o'erstep not the modesty of nature.",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 479,
+      "text": "For anything so o’erdone is from the purpose of playing,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 480,
+      "text": "whose end, both at the first and now,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 481,
+      "text": "was and is to hold as ’twere, the mirror up to nature:",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 482,
+      "text": "to show virtue her feature, scorn her own image,",
+      "questionType": "shortAnswer",
+      "quizId": 45,
+      "categories": [],
+      "audioUrl": null
+    },
+    {
+      "id": 483,
+      "text": "and the very age and body of the time his form and pressure.",
+      "questionType": "shortAnswer",
+      "quizId": 45,
       "categories": [],
       "audioUrl": null
     }
@@ -15820,6 +16000,216 @@
       "audioUrl": null,
       "feedback": null,
       "questionId": 457
+    },
+    {
+      "id": 1430,
+      "optionText": "sut̚ ðĭ ækʃn̩ tʊ ðə wɝd | ðə wɝd tʊ ðĭ ækʃn̩ |",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 460
+    },
+    {
+      "id": 1431,
+      "optionText": "wɪθ͜ ðɪs spɛʃɫ̩ əbzɝvn̩s | ðæt ju ɔɚ̆stɛp nɑt̚ ðə mɑdəstĭ əv neɪ̆t͡ʃɚ ||",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 461
+    },
+    {
+      "id": 1432,
+      "optionText": "fɔɚ̆ ɛnĭθɪŋ soʊ̆ ɔɚ̆dʌn ɪz fɹʌm ðə pɝpɪs əv ple.ɪŋ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 462
+    },
+    {
+      "id": 1433,
+      "optionText": "huz ɛnd | boʊ̆θ æt̚ ðə fɝst ænd̚ naʊ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 463
+    },
+    {
+      "id": 1434,
+      "optionText": "wʌz ænd ɪz tʊ hoʊ̆ɫd æz twɝ | ðə mɪɹɚ ʌp tʊ neɪ̆t͡ʃɚ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 464
+    },
+    {
+      "id": 1435,
+      "optionText": "tʊ ʃoʊ̆ vɝt͡ʃu hɚ fit͡ʃɚ | skɔɚ̆n hɚ oʊ̆n ɪməd͡ʒ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 465
+    },
+    {
+      "id": 1436,
+      "optionText": "ænd ðə vɛɚ̆.ĭ eɪ̆d͡ʒ ænd bɑɾĭ əv ðə taɪ̆m hɪz fɔɚ̆m ænd pɹɛʃɚ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 466
+    },
+    {
+      "id": 1440,
+      "optionText": "spik ðə spit͡ʃ | aɪ̆ pɹeɪ̆ ju | æz aɪ̆ pɹənaʊ̆nst ɪt̚ tʊ ju |",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 470
+    },
+    {
+      "id": 1441,
+      "optionText": "tɹɪpɪŋlɪ ɒn ðə tʌŋ || bət ɪf ju maʊ̆ð ɪt | æz mɛnɪ əv jɔ plɛɪ̆ə̆z du |",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 471
+    },
+    {
+      "id": 1442,
+      "optionText": "aɪ̆ hæd æz lif ðə taʊ̆n kɹaɪ̆ə̆ spəʊ̆k maɪ̆ laɪ̆nz ||",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 472
+    },
+    {
+      "id": 1443,
+      "optionText": "nɔ du nɒt sɔ ði ɛː tu mʌt͡ʃ wɪð jɔ hænd ðʌs | bət juz ɔɫ d͡ʒɛntlɪ ||",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 473
+    },
+    {
+      "id": 1444,
+      "optionText": "fɔ ɹɪn ðə vɛɹɪ tɒɹənt | tɛmpəst | ænd æz aɪ̆ meɪ̆ seɪ̆ wɜɫwɪnd əv jɔ pæʃn̩ |",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 474
+    },
+    {
+      "id": 1445,
+      "optionText": "ju mʌst əkwaɪ̆ə̆ ɹænd bɪgɛt ə tɛmpɹəns ðæt meɪ̆ gɪv ɪt smuðnəs ||",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 475
+    },
+    {
+      "id": 1446,
+      "optionText": "bi nɒt̚ tu teɪ̆m naɪ̆ðə | bət lɛt jɔ ɹəʊ̆n dɪskɹɛʃn̩ bi jɔ tɪ̆utə ||",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 476
+    },
+    {
+      "id": 1447,
+      "optionText": "sɪ̆ut ðĭ ɛkʃn̩ tʊ ðə wɜd | ðə wɜd tʊ ðĭ ɛkʃn̩ |",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 477
+    },
+    {
+      "id": 1448,
+      "optionText": "wɪð͜ ðɪs spɛʃɫ̩ əbzɜvn̩s | ðæt ju ɔstɛp nɒt ðə mɒdəstĭ əv neɪ̆t͡ʃə ||",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 478
+    },
+    {
+      "id": 1449,
+      "optionText": "fɔ ɹɛnɪθɪŋ səʊ̆ ɔdʌn ɪz fɹʌm ðə pɜpɪs əv ple.ɪŋ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 479
+    },
+    {
+      "id": 1450,
+      "optionText": "huz ɛnd | bəʊ̆θ æt ðə fɜst ænd naʊ̆",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 480
+    },
+    {
+      "id": 1451,
+      "optionText": "wʌz ænd ɪz tʊ həʊ̆ɫd æz twɜ | ðə mɪɹə ɹʌp tʊ neɪ̆t͡ʃə",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 481
+    },
+    {
+      "id": 1452,
+      "optionText": "tʊ ʃəʊ̆ vɜt͡ʃu hə fit͡ʃə | skɔn hə ɹəʊ̆n ɪmɪd͡ʒ",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 482
+    },
+    {
+      "id": 1453,
+      "optionText": "ænd ðə vɛɹɪ eɪ̆d͡ʒ ænd bɒdɪ əv ðə taɪ̆m hɪz fɔːm ænd pɹɛʃə",
+      "isCorrect": true,
+      "rhymeCategory": null,
+      "rhymingWordId": null,
+      "audioUrl": null,
+      "feedback": null,
+      "questionId": 483
     }
   ],
   "ExtraOption": []
