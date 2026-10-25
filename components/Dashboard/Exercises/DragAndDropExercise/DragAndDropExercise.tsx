@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { DragDropContext, DropResult } from '@hello-pangea/dnd'
+import { shuffleArray } from '../shuffle'
+import { DragDropContext, DragStart, DropResult } from '@hello-pangea/dnd'
 import { AnswerOption, Categories, Question } from '../QuizTypes'
 import useQuiz from '../utils'
 import RhymingPairsQuestion from './RhymingPairsQuestion'
@@ -99,7 +100,9 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
         setCategories(saved.categories)
         setWordBank(saved.wordBank ?? [])
       } else {
-        setWordBank([...(currentQuestion.answerOptions || [])])
+        // Shuffled on a fresh start only — a restored bank keeps its saved
+        // order so the board doesn't rearrange under the learner.
+        setWordBank(shuffleArray(currentQuestion.answerOptions || []))
         const initialCategories: Categories = currentQuestion.categories
           ? Object.keys(currentQuestion.categories).reduce((acc, category) => {
               acc[category] = []
@@ -150,6 +153,17 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
         wordBank,
         setWordBank,
       )
+    }
+  }
+
+  const handleDragStart = (start: DragStart) => {
+    if (isCompleted || !currentQuestion) return
+
+    const draggedWord = currentQuestion.answerOptions.find(
+      (word) => word.id.toString() === start.draggableId,
+    )
+    if (draggedWord?.audioUrl) {
+      playAudio(draggedWord.audioUrl)
     }
   }
 
@@ -285,7 +299,7 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
   if (!currentQuiz) return <QuizSkeleton />
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Box>
         {currentQuestion && (
           <>

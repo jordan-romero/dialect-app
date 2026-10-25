@@ -46,7 +46,7 @@ const ContactPageForm = () => {
         setEmail('')
       }
     } catch (error) {
-      console.log(error)
+      console.error('Contact form error:', error)
       setError('Internal server error')
       setSuccess(false)
     }

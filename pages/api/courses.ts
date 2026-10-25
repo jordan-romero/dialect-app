@@ -93,7 +93,7 @@ export default async function handler(
       res.status(200).json(await signDeep(gated))
     } catch (error) {
       console.error('Error fetching courses:', error)
-      res.status(500).json({ message: 'Error fetching courses', error })
+      res.status(500).json({ message: 'Error fetching courses' })
     } finally {
       await prisma.$disconnect()
     }

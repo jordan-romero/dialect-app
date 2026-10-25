@@ -18,8 +18,9 @@ const firstNameFrom = (user?: UserProfile | null): string => {
   return first ? first.charAt(0).toUpperCase() + first.slice(1) : 'there'
 }
 
-// Large greeting shown at the top of the Dashboard overview.
-const WelcomeHeader: React.FC = () => {
+// Large greeting shown at the top of the Dashboard overview. On a learner's very
+// first visit it welcomes them aboard; every visit after, it's "Welcome back".
+const WelcomeHeader: React.FC<{ firstTime?: boolean }> = ({ firstTime }) => {
   const { user } = useUser()
   const name = firstNameFrom(user)
   const [avatarSrc, setAvatarSrc] = useState('')
@@ -49,8 +50,18 @@ const WelcomeHeader: React.FC = () => {
         bg="brand.iris"
         color="white"
       />
-      <Text fontSize="2xl" fontWeight="bold" lineHeight="1.2">
-        Welcome back, {name} 👋
+      <Text
+        fontSize="2xl"
+        fontWeight="bold"
+        lineHeight="1.2"
+        // Hidden until we know first-time vs returning, so the copy never
+        // flashes "Welcome back" before resolving to the welcome.
+        opacity={firstTime === undefined ? 0 : 1}
+        transition="opacity 0.2s ease"
+      >
+        {firstTime
+          ? `Welcome to Acting Accents, ${name} 👋`
+          : `Welcome back, ${name} 👋`}
       </Text>
     </Flex>
   )

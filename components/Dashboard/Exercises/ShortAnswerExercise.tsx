@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { renderUnderlined } from './UnderlineMarkup'
 import {
   Button,
   Box,
@@ -6,6 +7,7 @@ import {
   VStack,
   Input,
   Icon,
+  Tooltip,
   useToast,
 } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
@@ -13,6 +15,7 @@ import { MdKeyboard } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { useIpaKeyboard } from '../../Community/IpaKeyboardPip'
 
 interface ShortAnswerQuizProps {
@@ -51,17 +54,14 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
       if (!currentQuiz) return
 
       try {
-        const response = await fetch(
-          `/api/userQuizProgress?quizId=${currentQuiz.id}&lessonId=${lessonId}`,
-        )
-        if (response.ok) {
-          const data = await response.json()
+        const data = await fetchQuizProgress(currentQuiz.id, lessonId)
+        if (data) {
           setIsCompleted(data.isCompleted)
 
           // Restore saved answers
-          if (data.answers && data.answers.length > 0) {
+          if (data.answers.length > 0) {
             const savedAnswers: Record<number, Record<number, string>> = {}
-            data.answers.forEach((answer: any) => {
+            data.answers.forEach((answer) => {
               try {
                 // each question's inputs are stored as a JSON map {optionId: text}
                 savedAnswers[answer.questionId] = JSON.parse(answer.textAnswer)
@@ -143,19 +143,13 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
         }),
       )
 
-      const response = await fetch('/api/submitQuiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: currentQuiz.id,
-          lessonId: lessonId,
-          answers: answersToSubmit,
-        }),
+      const ok = await postQuizAnswers({
+        quizId: currentQuiz.id,
+        lessonId,
+        answers: answersToSubmit,
       })
 
-      if (response.ok) {
+      if (ok) {
         setIsCompleted(true)
       } else {
         console.error('Failed to submit quiz')
@@ -188,12 +182,30 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     (allInputsFilled && !revealSentenceOption)
   )
 
+  // Spell out what's still blocking the Next/Finish button. The gate is a
+  // two-step chain on reveal questions (fill everything in, then reveal), and
+  // a dead arrow with no explanation reads like a bug.
+  const nextBlockedReason = !isNextDisabled
+    ? undefined
+    : !allInputsFilled
+    ? 'Answer every prompt above to continue'
+    : revealSentenceOption && !showSentence
+    ? 'Reveal the sentence to continue'
+    : undefined
+
   if (!currentQuiz) return <QuizSkeleton />
 
   return (
     <Box>
       {currentQuestion && (
         <Box>
+          {/* Not every short-answer quiz carries wording; those that do have
+              it authored in the content, so it isn't inferred here. */}
+          {currentQuiz?.instructions && (
+            <Text fontStyle="italic" mb={4}>
+              Instructions: {currentQuiz.instructions}
+            </Text>
+          )}
           <Box display="flex" justifyContent="flex-end" mb={2}>
             <Button
               size="sm"
@@ -225,7 +237,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                       (no audio option), optionText is the answer — hide it
                       until the learner clicks "Reveal Answer". */}
                   {revealSentenceOption && (
-                    <Text mb={1}>{option.optionText}</Text>
+                    <Text mb={1}>{renderUnderlined(option.optionText)}</Text>
                   )}
                   <Input
                     ref={idx === 0 ? firstInputRef : undefined}
@@ -248,7 +260,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                   {!revealSentenceOption && showSentence && (
                     <Text
                       mt={1}
-                      fontFamily="'Charis SIL', serif"
+                      fontFamily="ipa"
                       color="green.700"
                     >
                       Answer: {option.optionText}
@@ -269,7 +281,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           )}
           {showSentence && revealSentenceOption && (
             <Box mt={4}>
-              <Text>{revealSentenceOption.optionText}</Text>
+              <Text>{renderUnderlined(revealSentenceOption.optionText)}</Text>
               <Button
                 onClick={() => playAudio(revealSentenceOption.audioUrl)}
                 mt={2}
@@ -279,14 +291,21 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
             </Box>
           )}
           {!showSentence && revealSentenceOption && (
-            <Button
-              onClick={() => setShowSentence(true)}
-              mt={4}
-              variant="brandWhite"
-              isDisabled={!allInputsFilled}
+            <Tooltip
+              label="Answer every prompt above to reveal the sentence"
+              isDisabled={allInputsFilled}
+              shouldWrapChildren
+              hasArrow
             >
-              Reveal Sentence
-            </Button>
+              <Button
+                onClick={() => setShowSentence(true)}
+                mt={4}
+                variant="brandWhite"
+                isDisabled={!allInputsFilled}
+              >
+                Reveal Sentence
+              </Button>
+            </Tooltip>
           )}
         </Box>
       )}
@@ -299,6 +318,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           onFinish={handleNextQuestion}
           isNextDisabled={isNextDisabled || isLoading}
           isCompleted={isCompleted}
+          disabledReason={nextBlockedReason}
         />
       )}
     </Box>

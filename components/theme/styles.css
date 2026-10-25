@@ -2,8 +2,12 @@
 
 /* Enhanced IPA font rendering */
 .ipa-text {
-  font-family: 'Arimo', 'Charis SIL', 'Noto Sans', 'Doulos SIL',
-    'Arial Unicode MS', sans-serif !important;
+  /* Charis SIL first: it's an SIL linguistics face with full Combining
+     Diacritical Marks coverage, so affricate tie bars (t͡ʃ, d͡ʒ — U+0361)
+     render. Arimo led this list previously and has no glyph for the tie bar,
+     which is what produced the tofu box. */
+  font-family: 'Charis SIL', 'Doulos SIL', 'Noto Sans', 'Arial Unicode MS',
+    serif !important;
   font-feature-settings: 'ccmp' 1, 'mark' 1, 'mkmk' 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

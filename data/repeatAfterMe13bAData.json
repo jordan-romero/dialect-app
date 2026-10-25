@@ -1,0 +1,83 @@
+{
+  "id": 42,
+  "lessonId": 19,
+  "quizType": "repeatAfterMe",
+  "instructions": "Listen to the presented audio clip while following along with the provided transcription. Record your own attempt at speaking the text, then play it back to compare with ours — re-record as many times as you need. This exercise also introduces alternate sound changes that may suit specific character choices, such as a pre-20th century period piece. As you go, fill out your blank Lexical Chart with the RP changes presented.",
+  "questions": [
+    {
+      "id": 431,
+      "text": "Repeat After Me: Distinct Feature Tongue Twisters"
+    }
+  ],
+  "items": [
+    {
+      "n": 1,
+      "lexicalSets": [],
+      "note": "If a syllable ending with rhoticity is followed by a syllable beginning with a vowel, that lost “R” colouring returns as a consonant “R” between the two. It helps to think of the “R” as starting the second word rather than ending the first.",
+      "sentence": "The blurry star above appears either nearer or farther away depending on where I am.",
+      "ipa": "/ðə blʌɹĭ stɑ ɹəbʌv əpɪə̆z aɪ̆ðə nɪɹə ɹɔ fɑðə ɹəweɪ̆ dəpɛndɪŋ ɒn wɛː ɹaɪ̆ æm/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.1.mp3"
+    },
+    {
+      "n": 2,
+      "lexicalSets": [],
+      "note": "An “R” inserts itself between a word ending in a vowel and one beginning with a vowel, even with no “R” in the spelling. It does not occur after a high vowel such as [i] or [u] — “the bee in the tree” keeps its gap, but “the claw in the paw” does not.",
+      "sentence": "Krista is gaga over the drama of the conga on the dance floor.",
+      "ipa": "/kɹɪstə ɹɪz gɑgɑ ɹəʊ̆və ðə dɹɑmə ɹəv ðə kɔŋgə ɹɒn ðə dɑns flɔ/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.2.mp3"
+    },
+    {
+      "n": 3,
+      "lexicalSets": [],
+      "note": "Present where [u] follows [t], [d], [n], [s], [z], the affricates [t͡ʃ] and [d͡ʒ], and rarely a light [l]. It relies partly on spelling: only in words spelled with “U” or occasionally “E-W”, never “O” or “OO” words like “too, zoo, soon”.",
+      "sentence": "The only suitable meal while on duty on Tuesdays in June is a superbly chewy stew served with juice.",
+      "ipa": "/ði əʊ̆nlĭ sɪ̆utəbɫ̩ miɫ waɪ̆ɫ ɒn dɪ̆utĭ ɒn ˈtɪ̆uzdeɪ̆z ɪn d͡ʒɪ̆un ɪz ə sɪ̆upɜblĭ t͡ʃɪ̆uwĭ stɪ̆u sɜvd wɪð d͡ʒɪ̆us/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.3.mp3"
+    },
+    {
+      "n": 4,
+      "lexicalSets": [],
+      "note": "Multisyllabic words ending in “-ury, -ory, -ary, -ery” lose the penultimate vowel. So “library” and “territory” become /ˈlaɪ̆bɹĭ/ and /ˈtɛɹɪˌtɹĭ/.",
+      "sentence": "The observatory’s lavatory was inaccessible to the secretary in January and February.",
+      "ipa": "/ði əbzɜvətɹĭz lævətɹĭ wəz ˌɪnɛkˈsɛsɪbɫ̩ tʊ ðə sɛkɹətɹĭ ɪn d͡ʒænjʊɹĭ ænd fɛbɹʊɹĭ/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.4.mp3"
+    },
+    {
+      "n": 5,
+      "lexicalSets": [],
+      "note": "The final syllable of “-ile” words takes equal stress, pronounced with the diphthong [aɪ̆] followed by a light [l].",
+      "sentence": "The hostile juvenile was agile with his mobile phone.",
+      "ipa": "/ðə hɒstaɪ̆l d͡ʒuvənaɪ̆l wəz æd͡ʒaɪ̆l wɪð hɪz məʊ̆baɪ̆l fəʊ̆n/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.5.mp3"
+    },
+    {
+      "n": 6,
+      "lexicalSets": [
+        {
+          "name": "HAPPY",
+          "ga": "[ĭ]",
+          "rp": "[ɪ]"
+        },
+        {
+          "name": "TRAP",
+          "ga": "[æ]",
+          "rp": "[ɛ]"
+        },
+        {
+          "name": "FACE",
+          "ga": "[eɪ̆]",
+          "rp": "[ɛɪ̆]"
+        },
+        {
+          "name": "HURRY",
+          "ga": "[ɹ]",
+          "rp": "[ɾ]"
+        }
+      ],
+      "note": "These changes read as more antiquated or upper class — most were present in Queen Elizabeth II’s idiolect. Not strictly “distinct features”, but grouped here as an example of that character.",
+      "sentence": "It felt silly to worry about losing her way, for she had her map in her gray bag.",
+      "ipa": "/ɪt fɛlt sɪlɪ tʊ wʌɾɪ əbaʊ̆t luzɪŋ hɜ wɛɪ̆ | fɔ ʃɪ hɛd hə mɛp ɪn hə gɾɛɪ̆ bɛg/",
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.6.mp3"
+    }
+  ]
+}

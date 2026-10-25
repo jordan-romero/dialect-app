@@ -7,7 +7,13 @@ import { IPAKeyboardWithRichText } from '../../components/Community/IPAKeyboardW
 const keyboard = () => {
   return (
     <DashboardLayout>
-      <Box maxW="1200px" mx="auto" px={{ base: 4, md: 6 }} py={6}>
+      <Box
+        maxW="1200px"
+        mx="auto"
+        px={{ base: 4, md: 6 }}
+        pt={{ base: 16, md: 6 }}
+        pb={6}
+      >
         <Heading size="lg" mb={1}>
           IPA Keyboard
         </Heading>

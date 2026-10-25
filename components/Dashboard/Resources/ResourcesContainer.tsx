@@ -246,7 +246,8 @@ const ResourcesContainer = () => {
       color={pageColor}
       minH="100vh"
       px={{ base: 4, md: 6 }}
-      py={6}
+      pt={{ base: 16, md: 6 }}
+      pb={6}
     >
       <Box maxW="1200px" mx="auto">
         <Heading size="lg" mb={1}>

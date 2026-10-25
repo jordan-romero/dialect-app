@@ -7,14 +7,15 @@ interface PaperProps extends BoxProps {
 
 const Paper: React.FC<PaperProps> = ({ children, elevation = 1, ...props }) => {
   const shadowColor = 'rgba(0, 0, 0, 0.1)'
-  const borderColor = 'rgba(0, 0, 0, 0.05)'
 
   return (
     <Box
-      bg="white"
+      bg="surface.card"
+      color="text.primary"
       borderRadius="md"
       p={4}
-      border={`1px solid ${borderColor}`}
+      borderWidth="1px"
+      borderColor="border.subtle"
       boxShadow={`
         0 -1px 1px ${shadowColor},
         0 1px 1px ${shadowColor},

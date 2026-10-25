@@ -10,11 +10,12 @@
     "lint": "next lint",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore .",
-    "seed": "node --env-file=.env prisma/seed.mjs",
-    "seed:export": "node --env-file=.env prisma/export-seed-data.mjs"
+    "seed": "bash scripts/with-env.sh node prisma/seed.mjs",
+    "seed:export": "bash scripts/with-env.sh node prisma/export-seed-data.mjs",
+    "db:migrate": "bash scripts/with-env.sh npx prisma migrate deploy"
   },
   "prisma": {
-    "seed": "node --env-file=.env prisma/seed.mjs"
+    "seed": "bash scripts/with-env.sh node prisma/seed.mjs"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^2.6.2",
