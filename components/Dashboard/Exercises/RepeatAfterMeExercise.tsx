@@ -142,7 +142,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       toast({
         title: 'Microphone unavailable',
         description:
-          'Allow microphone access to record yourself, or just listen and repeat aloud.',
+          'Allow microphone access to record yourself — each sentence needs a recording before you can move on.',
         status: 'warning',
         duration: 4000,
         isClosable: true,
@@ -310,6 +310,10 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
             src={recordings[index]}
             style={{ width: '100%', maxWidth: 420 }}
           />
+          <Text fontSize="xs" color="text.muted" mt={1}>
+            Listen to yourself, then listen back to the provided audio to
+            compare.
+          </Text>
         </Box>
       )}
 
@@ -319,10 +323,15 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         onPrevious={goPrev}
         onNext={goNext}
         onFinish={handleFinish}
-        // Practice drill: free to move through items. Finishing the last one
-        // marks it complete.
-        isNextDisabled={isLoading}
+        // Each item must be recorded before moving on. Finishing the last one
+        // marks it complete, which unlocks free review navigation.
+        isNextDisabled={isLoading || isRecording || !recordings[index]}
         isCompleted={isCompleted}
+        disabledReason={
+          isRecording
+            ? 'Stop recording to continue'
+            : 'Record yourself to continue'
+        }
       />
     </VStack>
   )
