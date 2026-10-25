@@ -18,6 +18,28 @@ import { MdVolumeUp, MdMic, MdStop } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 
+/**
+ * Renders a transcription with `{...}` marking the RP sound the clip teaches,
+ * in the same purple as the RP column of the lexical set table:
+ *
+ *   "d͡ʒ{ɒ}n" -> d͡ʒ<purple>ɒ</purple>n
+ *
+ * Same brace convention as UnderlineMarkup; text with no markers passes through.
+ */
+const renderRpHighlights = (text: string): React.ReactNode => {
+  if (!text.includes('{')) return text
+
+  return text.split(/(\{[^{}]*\})/g).map((part, i) =>
+    part.startsWith('{') && part.endsWith('}') ? (
+      <Text as="span" key={i} color="brand.purple">
+        {part.slice(1, -1)}
+      </Text>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    ),
+  )
+}
+
 interface LexicalSet {
   name: string
   ga: string
@@ -205,11 +227,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
           {item.lexicalSets.map((s) => (
             <Tr key={s.name}>
               <Td fontWeight="bold">{s.name}</Td>
-              <Td
-                textAlign="center"
-                fontFamily="ipa"
-                fontSize="lg"
-              >
+              <Td textAlign="center" fontFamily="ipa" fontSize="lg">
                 {s.ga}
               </Td>
               <Td
@@ -236,8 +254,13 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Text fontSize="lg" mb={2}>
           “{item.sentence}”
         </Text>
-        <Text fontFamily="ipa" fontSize="lg" color="text.primary">
-          {item.ipa}
+        <Text
+          fontFamily="ipa"
+          fontSize="lg"
+          fontWeight="bold"
+          color="text.primary"
+        >
+          {renderRpHighlights(item.ipa)}
         </Text>
       </Box>
 
