@@ -227,7 +227,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         <Tbody>
           {item.lexicalSets.map((s) => (
             <Tr key={s.name}>
-              <Td fontWeight="bold">{s.name}</Td>
+              <Td fontWeight="bold">{renderUnderlined(s.name)}</Td>
               <Td textAlign="center" fontFamily="ipa" fontSize="lg">
                 {s.ga}
               </Td>
@@ -253,7 +253,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       {/* Sentence + transcription */}
       <Box>
         <Text fontSize="lg" mb={2}>
-          “{renderUnderlined(item.sentence)}”
+          “{item.sentence}”
         </Text>
         <Text
           fontFamily="ipa"
