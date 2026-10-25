@@ -12,7 +12,18 @@
   "items": [
     {
       "n": 1,
-      "lexicalSets": [],
+      "lexicalSets": [
+        {
+          "name": "LINKING R",
+          "ga": "[ɚ]",
+          "rp": "[əɹ]"
+        },
+        {
+          "name": "HU{RR}Y",
+          "ga": "[ɝ]",
+          "rp": "[ʌɹ]"
+        }
+      ],
       "note": "If a syllable ending with rhoticity is followed by a syllable beginning with a vowel, that lost “R” colouring returns as a consonant “R” between the two. It helps to think of the “R” as starting the second word rather than ending the first.",
       "sentence": "The blurry star above appears either nearer or farther away depending on where I am.",
       "ipa": "/ðə blʌɹĭ stɑ ɹəbʌv əpɪə̆z aɪ̆ðə nɪɹə ɹɔ fɑðə ɹəweɪ̆ dəpɛndɪŋ ɒn wɛː ɹaɪ̆ æm/",
@@ -20,7 +31,13 @@
     },
     {
       "n": 2,
-      "lexicalSets": [],
+      "lexicalSets": [
+        {
+          "name": "INTRUSIVE R",
+          "ga": "(none)",
+          "rp": "[ɹ]"
+        }
+      ],
       "note": "An “R” inserts itself between a word ending in a vowel and one beginning with a vowel, even with no “R” in the spelling. It does not occur after a high vowel such as [i] or [u] — “the bee in the tree” keeps its gap, but “the claw in the paw” does not.",
       "sentence": "Krista is gaga over the drama of the conga on the dance floor.",
       "ipa": "/kɹɪstə ɹɪz gɑgɑ ɹəʊ̆və ðə dɹɑmə ɹəv ðə kɔŋgə ɹɒn ðə dɑns flɔ/",
@@ -28,7 +45,13 @@
     },
     {
       "n": 3,
-      "lexicalSets": [],
+      "lexicalSets": [
+        {
+          "name": "LIQUID U",
+          "ga": "[u]",
+          "rp": "[ɪ̆u]"
+        }
+      ],
       "note": "Present where [u] follows [t], [d], [n], [s], [z], the affricates [t͡ʃ] and [d͡ʒ], and rarely a light [l]. It relies partly on spelling: only in words spelled with “U” or occasionally “E-W”, never “O” or “OO” words like “too, zoo, soon”.",
       "sentence": "The only suitable meal while on duty on Tuesdays in June is a superbly chewy stew served with juice.",
       "ipa": "/ði əʊ̆nlĭ sɪ̆utəbɫ̩ miɫ waɪ̆ɫ ɒn dɪ̆utĭ ɒn ˈtɪ̆uzdeɪ̆z ɪn d͡ʒɪ̆un ɪz ə sɪ̆upɜblĭ t͡ʃɪ̆uwĭ stɪ̆u sɜvd wɪð d͡ʒɪ̆us/",
@@ -36,7 +59,13 @@
     },
     {
       "n": 4,
-      "lexicalSets": [],
+      "lexicalSets": [
+        {
+          "name": "SYNCOPE (-ory, -ary, -ery, -ury)",
+          "ga": "[ɔɹĭ] / [ɛɹĭ]",
+          "rp": "[ɹĭ]"
+        }
+      ],
       "note": "Multisyllabic words ending in “-ury, -ory, -ary, -ery” lose the penultimate vowel. So “library” and “territory” become /ˈlaɪ̆bɹĭ/ and /ˈtɛɹɪˌtɹĭ/.",
       "sentence": "The observatory’s lavatory was inaccessible to the secretary in January and February.",
       "ipa": "/ði əbzɜvətɹĭz lævətɹĭ wəz ˌɪnɛkˈsɛsɪbɫ̩ tʊ ðə sɛkɹətɹĭ ɪn d͡ʒænjʊɹĭ ænd fɛbɹʊɹĭ/",
@@ -44,7 +73,13 @@
     },
     {
       "n": 5,
-      "lexicalSets": [],
+      "lexicalSets": [
+        {
+          "name": "-ILE",
+          "ga": "[ɫ̩]",
+          "rp": "[aɪ̆l]"
+        }
+      ],
       "note": "The final syllable of “-ile” words takes equal stress, pronounced with the diphthong [aɪ̆] followed by a light [l].",
       "sentence": "The hostile juvenile was agile with his mobile phone.",
       "ipa": "/ðə hɒstaɪ̆l d͡ʒuvənaɪ̆l wəz æd͡ʒaɪ̆l wɪð hɪz məʊ̆baɪ̆l fəʊ̆n/",
@@ -54,22 +89,22 @@
       "n": 6,
       "lexicalSets": [
         {
-          "name": "HAPPY",
+          "name": "HAPP{Y}",
           "ga": "[ĭ]",
           "rp": "[ɪ]"
         },
         {
-          "name": "TRAP",
+          "name": "TR{A}P",
           "ga": "[æ]",
           "rp": "[ɛ]"
         },
         {
-          "name": "FACE",
+          "name": "F{A}CE",
           "ga": "[eɪ̆]",
           "rp": "[ɛɪ̆]"
         },
         {
-          "name": "HURRY",
+          "name": "HU{RR}Y",
           "ga": "[ɹ]",
           "rp": "[ɾ]"
         }
