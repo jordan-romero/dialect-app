@@ -51,47 +51,45 @@ const AboutCard: React.FC<AboutCardProps> = ({
             '0 1px 2px rgba(17,24,39,0.04), 0 28px 56px -24px rgba(114,63,197,0.25)',
         }}
       >
-        {/* Photo with gradient overlay carrying name + title */}
-        <Box position="relative">
-          <AspectRatio ratio={4 / 3}>
+        {/* Portrait: 1:1 square, face centered — no overlay */}
+        <Box
+          position="relative"
+          bgGradient="linear(to-br, #F5F2FF, #E6F6FB)"
+        >
+          <AspectRatio ratio={1}>
             <Image
               src={photoSrc}
               alt={name}
               objectFit="cover"
-              objectPosition="top"
+              objectPosition="center top"
             />
           </AspectRatio>
-          <Box
-            position="absolute"
-            inset={0}
-            bgGradient="linear(to-t, rgba(20,15,45,0.85) 0%, rgba(20,15,45,0.25) 45%, transparent 70%)"
-          />
-          <Stack
-            spacing={1}
-            position="absolute"
-            left={0}
-            right={0}
-            bottom={0}
-            p={{ base: 5, md: 6 }}
-            color="white"
-          >
-            <Heading
-              as="h2"
-              fontSize={{ base: '2xl', md: '3xl' }}
-              fontWeight="black"
-              letterSpacing="-0.01em"
-              lineHeight="1.1"
-            >
-              {name}
-            </Heading>
-            <Text fontSize="sm" color="whiteAlpha.800" fontWeight="medium">
-              {title}
-            </Text>
-          </Stack>
         </Box>
 
+        {/* Name + title strip */}
+        <Stack
+          spacing={1}
+          px={{ base: 6, md: 8 }}
+          pt={{ base: 6, md: 7 }}
+          pb={2}
+        >
+          <Heading
+            as="h2"
+            fontSize={{ base: '2xl', md: '3xl' }}
+            fontWeight="black"
+            letterSpacing="-0.01em"
+            lineHeight="1.15"
+            color="gray.900"
+          >
+            {name}
+          </Heading>
+          <Text fontSize="sm" color="brand.purple" fontWeight="semibold">
+            {title}
+          </Text>
+        </Stack>
+
         {/* Body */}
-        <Stack spacing={5} p={{ base: 6, md: 8 }} flex="1">
+        <Stack spacing={5} px={{ base: 6, md: 8 }} pt={4} pb={6} flex="1">
           <Text color="gray.600" lineHeight="1.7">
             {bio}
           </Text>
