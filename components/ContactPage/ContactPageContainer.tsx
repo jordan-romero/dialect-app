@@ -95,6 +95,7 @@ const ContactPageContainer = () => {
                   letterSpacing="-0.02em"
                   lineHeight="1.05"
                   color="gray.900"
+                  sx={{ textWrap: 'balance' }}
                 >
                   Questions, ideas, or ready to{' '}
                   <Box
@@ -105,7 +106,12 @@ const ContactPageContainer = () => {
                     join the list?
                   </Box>
                 </Heading>
-                <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" lineHeight="1.7">
+                <Text
+                  fontSize={{ base: 'md', md: 'lg' }}
+                  color="gray.600"
+                  lineHeight="1.7"
+                  sx={{ textWrap: 'pretty' }}
+                >
                   Drop your details and we’ll keep you posted on launch,
                   lessons, and early-access perks. Prefer email?{' '}
                   <Box

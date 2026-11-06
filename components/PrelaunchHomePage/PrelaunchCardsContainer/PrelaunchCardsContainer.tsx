@@ -55,6 +55,7 @@ const PrelaunchCardsContainer = () => {
           letterSpacing="-0.02em"
           color="gray.900"
           lineHeight="1.1"
+          sx={{ textWrap: 'balance' }}
         >
           A method, not a guess.
         </Heading>
@@ -63,6 +64,7 @@ const PrelaunchCardsContainer = () => {
           color="gray.600"
           maxW="640px"
           mx="auto"
+          sx={{ textWrap: 'balance' }}
         >
           Three reasons actors, coaches, and language enthusiasts are joining
           the early-access list.

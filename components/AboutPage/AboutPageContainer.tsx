@@ -66,6 +66,7 @@ const AboutPageContainer = () => {
               letterSpacing="-0.02em"
               lineHeight="1.05"
               color="gray.900"
+              sx={{ textWrap: 'balance' }}
             >
               Trained ears.{' '}
               <Box
@@ -82,6 +83,7 @@ const AboutPageContainer = () => {
               maxW="640px"
               mx="auto"
               lineHeight="1.7"
+              sx={{ textWrap: 'balance' }}
             >
               The coaches behind ActingAccents.com teach the systematic,
               IPA-based approach they use every day in professional theatre,
