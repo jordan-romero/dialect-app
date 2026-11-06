@@ -1,25 +1,23 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
-  Card,
-  CardBody,
-  CardFooter,
-  Heading,
-  Text,
-  Link,
-  Button,
-  Image,
-  Flex,
+  AspectRatio,
   Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
   Icon,
-  useBreakpointValue,
+  Image,
+  Link,
+  Stack,
+  Text,
 } from '@chakra-ui/react'
-import React from 'react'
+import { ArrowForwardIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Coach } from '../PrelaunchHomePage/types'
 import { getIconLink, removeProtocol } from './utils'
 import AboutCardModal from './AboutCardModal'
-import useMidSizeCheck from '../hooks/useMidSizeCheck'
 
-interface AboutCardProps extends Coach {}
+type AboutCardProps = Coach
 
 const AboutCard: React.FC<AboutCardProps> = ({
   name,
@@ -32,131 +30,154 @@ const AboutCard: React.FC<AboutCardProps> = ({
   icons,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const isMidSized = useMidSizeCheck()
-  const cardHeight = useBreakpointValue({
-    base: '1100px', // Height for mobile screens
-    md: '1400px', // Height for medium-sized screens
-    lg: '650px', // Height for large-sized screens
-  })
 
-  const cardBioHeight = useBreakpointValue({
-    base: '500px', // Height for mobile screens
-    md: '600px', // Height for medium-sized screens
-    lg: '500px', // Height for large-sized screens
-  })
-
-  const handleModal = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const handleIconClick = (link: string) => {
-    window.open(link, '_blank')
-  }
+  const handleModal = () => setIsOpen((v) => !v)
 
   return (
     <>
-      <Card
-        maxW="xl"
-        h={cardHeight}
-        w="100%"
-        m="14"
-        borderRadius="10"
-        boxShadow="dark-lg"
+      <Stack
+        spacing={0}
+        bg="white"
+        borderRadius="2xl"
+        borderWidth="1px"
+        borderColor="gray.100"
+        boxShadow="0 1px 2px rgba(17,24,39,0.04), 0 20px 48px -24px rgba(17,24,39,0.18)"
+        overflow="hidden"
+        h="100%"
+        transition="transform 0.2s ease, box-shadow 0.2s ease"
+        _hover={{
+          transform: 'translateY(-4px)',
+          boxShadow:
+            '0 1px 2px rgba(17,24,39,0.04), 0 28px 56px -24px rgba(114,63,197,0.25)',
+        }}
       >
-        <Flex
-          h={isMidSized ? '65%' : '45%'}
-          justifyContent="space-between"
-          direction={isMidSized ? 'column' : 'row'}
-        >
-          <Image
-            src={photoSrc}
-            alt={name}
-            objectFit="cover"
-            h="100%"
-            flexBasis="50%"
-            borderTopLeftRadius={10}
-            borderTopRightRadius={isMidSized ? 10 : 0}
+        {/* Photo with gradient overlay carrying name + title */}
+        <Box position="relative">
+          <AspectRatio ratio={4 / 3}>
+            <Image
+              src={photoSrc}
+              alt={name}
+              objectFit="cover"
+              objectPosition="top"
+            />
+          </AspectRatio>
+          <Box
+            position="absolute"
+            inset={0}
+            bgGradient="linear(to-t, rgba(20,15,45,0.85) 0%, rgba(20,15,45,0.25) 45%, transparent 70%)"
           />
-          <Flex
-            direction="column"
-            textAlign="end"
-            bg="brand.purple"
-            basis="50%"
-            p={3}
-            justifyContent="space-between"
-            borderTopRightRadius={isMidSized ? 0 : 10}
+          <Stack
+            spacing={1}
+            position="absolute"
+            left={0}
+            right={0}
+            bottom={0}
+            p={{ base: 5, md: 6 }}
+            color="white"
           >
-            <Box>
-              <Heading
-                size="lg"
-                fontWeight="extrabold"
-                mr={4}
-                color="util.white"
-              >
-                {name}
-              </Heading>
-              <Text color="gray.300" fontSize="sm" mb={3} mr={4}>
-                {title}
-              </Text>
-            </Box>
-            <Flex direction="column">
-              <Link
-                href={website}
-                isExternal
-                color="gray.300"
-                fontSize="sm"
-                mr={4}
-              >
-                {removeProtocol(website)}
-              </Link>
-              {websiteSecondary && (
-                <Link
-                  href={websiteSecondary}
-                  isExternal
-                  color="gray.300"
-                  fontSize="sm"
-                  mb={3}
-                  mr={4}
-                >
-                  {removeProtocol(websiteSecondary)}
-                </Link>
-              )}
-              {icons && icons?.length > 0 && (
-                <Flex justifyContent="flex-end">
-                  {icons.map((icon, index) => {
-                    const link = getIconLink(icon)
-                    return (
-                      <Icon
-                        as={icon}
-                        color="gray.300"
-                        fontSize="xl"
-                        mr={4}
-                        key={index}
-                        onClick={() => handleIconClick(link)}
-                        style={{ cursor: 'pointer' }}
-                      />
-                    )
-                  })}
-                </Flex>
-              )}
-            </Flex>
-          </Flex>
-        </Flex>
-        <CardBody w={isMidSized ? '100%' : undefined}>
-          <Text fontSize="lg" mr="6" ml="6" mt="6">
+            <Heading
+              as="h2"
+              fontSize={{ base: '2xl', md: '3xl' }}
+              fontWeight="black"
+              letterSpacing="-0.01em"
+              lineHeight="1.1"
+            >
+              {name}
+            </Heading>
+            <Text fontSize="sm" color="whiteAlpha.800" fontWeight="medium">
+              {title}
+            </Text>
+          </Stack>
+        </Box>
+
+        {/* Body */}
+        <Stack spacing={5} p={{ base: 6, md: 8 }} flex="1">
+          <Text color="gray.600" lineHeight="1.7">
             {bio}
           </Text>
-        </CardBody>
-        <CardFooter
-          style={{ borderTopColor: 'lightgray' }}
-          borderTop="1px"
-          onClick={handleModal}
-        >
-          <Button w="100%" variant="brandGhost">
-            Learn More About {name}
+
+          <Stack spacing={2}>
+            <Link
+              href={website}
+              isExternal
+              color="brand.purple"
+              fontSize="sm"
+              fontWeight="medium"
+              display="inline-flex"
+              alignItems="center"
+              gap={1.5}
+              _hover={{ color: 'brand.purpleLight', textDecoration: 'none' }}
+            >
+              {removeProtocol(website)}
+              <ExternalLinkIcon boxSize={3} />
+            </Link>
+            {websiteSecondary && (
+              <Link
+                href={websiteSecondary}
+                isExternal
+                color="brand.purple"
+                fontSize="sm"
+                fontWeight="medium"
+                display="inline-flex"
+                alignItems="center"
+                gap={1.5}
+                _hover={{ color: 'brand.purpleLight', textDecoration: 'none' }}
+              >
+                {removeProtocol(websiteSecondary)}
+                <ExternalLinkIcon boxSize={3} />
+              </Link>
+            )}
+          </Stack>
+
+          {icons && icons.length > 0 && (
+            <HStack spacing={3}>
+              {icons.map((IconComponent) => {
+                const link = getIconLink(IconComponent)
+                return (
+                  <Flex
+                    key={link}
+                    as="a"
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${name} social link`}
+                    w="38px"
+                    h="38px"
+                    align="center"
+                    justify="center"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.200"
+                    color="gray.600"
+                    transition="all 0.15s"
+                    _hover={{
+                      color: 'brand.purple',
+                      borderColor: 'brand.purpleLight',
+                      bg: 'purple.50',
+                    }}
+                  >
+                    <Icon as={IconComponent} boxSize={4} />
+                  </Flex>
+                )
+              })}
+            </HStack>
+          )}
+        </Stack>
+
+        <Box borderTopWidth="1px" borderTopColor="gray.100" p={4}>
+          <Button
+            onClick={handleModal}
+            w="100%"
+            variant="ghost"
+            color="brand.purple"
+            fontWeight="semibold"
+            rightIcon={<ArrowForwardIcon />}
+            _hover={{ bg: 'purple.50', color: 'brand.purpleLight' }}
+          >
+            Learn more about {name.split(' ')[0]}
           </Button>
-        </CardFooter>
-      </Card>
+        </Box>
+      </Stack>
       <AboutCardModal {...{ isOpen, handleModal, longBio, name }} />
     </>
   )
