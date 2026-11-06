@@ -1,6 +1,13 @@
-import React, { useState } from 'react'
-import { Flex, Center, Image, Text, useBreakpointValue } from '@chakra-ui/react'
-import useMobileCheck from '../../hooks/useMobileCheck'
+import React from 'react'
+import {
+  Box,
+  Flex,
+  Icon,
+  Image,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import { FaQuoteLeft } from 'react-icons/fa'
 
 interface PrelaunchCardProps {
   testimonial: string
@@ -17,92 +24,61 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
   image,
   altText,
 }) => {
-  const isMobile = useMobileCheck()
-  const cardHeight = useBreakpointValue({
-    base: 'auto',
-    md: '600px',
-    lg: '400px',
-  })
-
-  if (isMobile) {
-    return (
-      <Flex
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
-        w="90%"
-        mt={10}
-        mx="auto"
-        borderRadius="lg"
-        boxShadow="lg"
-        backgroundColor="white"
-        mb={5}
-        p={4}
-      >
-        <Center bg="gray.200" borderRadius="full" w={40} h={40} mb={4}>
-          <Image
-            src={image}
-            alt={altText}
-            fit="cover"
-            align={isMobile ? 'center' : 'top'}
-            borderRadius="full"
-            boxSize="full"
-          />
-        </Center>
-        <Text fontSize="lg" mb={2} h={cardHeight} overflow="hidden">
-          {testimonial}
-        </Text>
-        <Text fontSize="lg" fontWeight="bold" mb={2}>
-          {name}
-        </Text>
-        <Text fontSize="md" fontStyle="italic">
-          {subtitle}
-        </Text>
-      </Flex>
-    )
-  }
   return (
     <Flex
-      h={cardHeight}
-      w="90%"
-      mt={10}
-      ml="auto"
-      mr="auto"
-      borderRadius="lg"
-      boxShadow="lg"
-      backgroundColor="white"
-      mb={5}
+      direction={{ base: 'column', md: 'row' }}
+      bg="white"
+      borderRadius="2xl"
+      borderWidth="1px"
+      borderColor="gray.100"
+      boxShadow="0 1px 2px rgba(17,24,39,0.04), 0 20px 48px -24px rgba(17,24,39,0.18)"
+      overflow="hidden"
+      mx="auto"
+      maxW="1000px"
+      textAlign="left"
     >
-      <Center w="30%" h="100%">
+      <Box
+        w={{ base: '100%', md: '320px' }}
+        h={{ base: '280px', md: 'auto' }}
+        minH={{ md: '360px' }}
+        position="relative"
+        bgGradient="linear(to-br, brand.purple, brand.iris)"
+        flexShrink={0}
+      >
         <Image
           src={image}
           alt={altText}
-          fit="cover"
-          align="top"
-          borderTopLeftRadius={4}
-          borderRadius="md"
+          objectFit="cover"
+          objectPosition="top"
+          w="100%"
           h="100%"
         />
-      </Center>
-      <Flex
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        textAlign="start"
-        w="70%"
-        p={4}
+      </Box>
+
+      <Stack
+        spacing={5}
+        p={{ base: 6, md: 10 }}
+        flex="1"
+        justify="center"
       >
-        <Text fontSize="xl" mb={2}>
+        <Icon as={FaQuoteLeft} boxSize={6} color="brand.purpleLight" opacity={0.6} />
+        <Text
+          fontSize={{ base: 'md', md: 'lg' }}
+          color="gray.700"
+          lineHeight="1.7"
+          noOfLines={{ base: 8, md: 10 }}
+        >
           {testimonial}
         </Text>
-        <Text fontSize="lg" fontWeight="bold" mb={2} justifySelf="flex-end">
-          {name}
-        </Text>
-        <Text fontSize="md" fontStyle="italic">
-          {subtitle}
-        </Text>
-      </Flex>
+        <Stack spacing={0} pt={2}>
+          <Text fontSize="md" fontWeight="bold" color="gray.900">
+            {name}
+          </Text>
+          <Text fontSize="sm" color="gray.500" fontStyle="italic">
+            {subtitle}
+          </Text>
+        </Stack>
+      </Stack>
     </Flex>
   )
 }

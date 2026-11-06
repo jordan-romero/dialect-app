@@ -1,9 +1,9 @@
 import React from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { Box, useBreakpointValue, Flex, Center } from '@chakra-ui/react'
+import { Box, Flex, Icon } from '@chakra-ui/react'
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import PrelaunchCard from './PrelaunchCard'
-import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 interface Card {
   id: number
@@ -18,41 +18,65 @@ interface CardCarouselProps {
   cards: Card[]
 }
 
-const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
-  const isMidSized = useMidSizeCheck()
-  const carouselHeight = useBreakpointValue({
-    base: 'auto',
-    md: '300px',
-    lg: '285px',
-  })
+const navButtonStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  zIndex: 2,
+  width: '48px',
+  height: '48px',
+  borderRadius: '9999px',
+  background: 'white',
+  boxShadow: '0 8px 24px -8px rgba(17,24,39,0.25)',
+  border: '1px solid rgba(17,24,39,0.06)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '#723FC5',
+  cursor: 'pointer',
+}
 
+const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
   return (
-    <Flex align="center" justify="center" height={carouselHeight} width="100%">
-      <Box maxWidth="1500px" width="100%" h={isMidSized ? undefined : '100%'}>
+    <Flex align="center" justify="center" width="100%">
+      <Box maxWidth="1100px" width="100%">
         <Carousel
           showThumbs={false}
           showStatus={false}
           infiniteLoop
           autoPlay
-          interval={3000}
-          renderIndicator={() => null}
+          interval={6000}
+          swipeable
+          emulateTouch
+          showIndicators
+          renderIndicator={(onClickHandler, isSelected, index) => (
+            <li
+              onClick={onClickHandler}
+              onKeyDown={onClickHandler}
+              role="button"
+              tabIndex={0}
+              aria-label={`Slide ${index + 1}`}
+              style={{
+                display: 'inline-block',
+                width: isSelected ? '24px' : '8px',
+                height: '8px',
+                borderRadius: '9999px',
+                background: isSelected ? '#723FC5' : 'rgba(17,24,39,0.18)',
+                margin: '0 4px',
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+              }}
+            />
+          )}
           renderArrowPrev={(onClickHandler, hasPrev) =>
             hasPrev && (
               <button
                 type="button"
                 onClick={onClickHandler}
-                aria-label="Previous"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '20px',
-                  transform: 'translateY(-50%)',
-                  zIndex: 1,
-                  fontSize: '48px',
-                  fontWeight: 'bold',
-                }}
+                aria-label="Previous testimonial"
+                style={{ ...navButtonStyle, left: '12px' }}
               >
-                &lt;
+                <Icon as={ChevronLeftIcon} boxSize={6} />
               </button>
             )
           }
@@ -61,26 +85,18 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
               <button
                 type="button"
                 onClick={onClickHandler}
-                aria-label="Next"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '20px',
-                  transform: 'translateY(-50%)',
-                  zIndex: 1,
-                  fontSize: '48px',
-                  fontWeight: 'bold',
-                }}
+                aria-label="Next testimonial"
+                style={{ ...navButtonStyle, right: '12px' }}
               >
-                &gt;
+                <Icon as={ChevronRightIcon} boxSize={6} />
               </button>
             )
           }
         >
           {cards.map((card) => (
-            <Center key={card.id}>
+            <Box key={card.id} px={{ base: 2, md: 10 }} pb={10}>
               <PrelaunchCard {...card} />
-            </Center>
+            </Box>
           ))}
         </Carousel>
       </Box>
