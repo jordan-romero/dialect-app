@@ -1,83 +1,87 @@
-import { Box, Flex, Heading, SimpleGrid } from '@chakra-ui/react'
 import React from 'react'
+import {
+  Box,
+  Container,
+  Heading,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import { FaGraduationCap, FaBook, FaRegLightbulb } from 'react-icons/fa'
 import PrelaunchCard from './PrelaunchCard'
-import { FaGraduationCap } from 'react-icons/fa'
-import { FaBook } from 'react-icons/fa'
-import { FaRegLightbulb } from 'react-icons/fa'
 import { CardData } from '../types'
-import useMobileCheck from '../../hooks/useMobileCheck'
-import useMidSizeCheck from '../../hooks/useMidSizeCheck'
+
+const cardsData: CardData[] = [
+  {
+    icon: FaBook,
+    header: 'Our Promise',
+    body: 'Learn how to effectively use the International Phonetic Alphabet (IPA) for the study of dialects and accents. Professional coaches agree that actors with a solid IPA background are quicker studies and perform more authentically — whether on stage, on set, or behind the mic.',
+    buttonText: 'Meet the coaches',
+    href: 'about',
+  },
+  {
+    icon: FaGraduationCap,
+    header: 'The IPA Advantage',
+    body: 'Our first series, “The Actor’s Guide to IPA and Accents,” teaches you to read and write the IPA, chart any dialect you choose, and make consistent, compelling choices that elevate your performance. Each lesson comes with exercises to gauge your progress.',
+    buttonText: 'Read testimonials',
+    href: '#testimonials',
+  },
+  {
+    icon: FaRegLightbulb,
+    header: 'Complete Control',
+    body: 'This approach gives you confidence, credibility, and complete control of your own creative process. It’s the most efficient method for learning a dialect available to actors — and you’ll never have to rely on mere mimicry again.',
+    buttonText: 'Contact us',
+    href: 'contact',
+  },
+]
 
 const PrelaunchCardsContainer = () => {
-  const cardsData: CardData[] = [
-    {
-      icon: FaBook,
-      header: 'Our Promise',
-      body: 'This course will teach actors how to effectively utilize the International Phonetic Alphabet, or IPA, for the study of dialects and accents. Professional dialect coaches overwhelmingly agree that actors with a solid IPA background are quicker studies and perform dialects and accents more authentically. While this course is targeted towards actors, there are many other vocations which can benefit from it.',
-      buttonText: 'Learn more About Our Coaches',
-      href: 'about',
-    },
-    {
-      icon: FaGraduationCap,
-      header: 'The IPA Advantage',
-      body: 'The first instructional video series will be “The Actor’s Guide to IPA and Accents”. In this course you will learn how to read and write in the IPA, how to use the IPA to chart out any dialect or accent you choose, and how to make consistent and compelling choices to enhance your performance. Each lesson will be accompanied by helpful exercises and resources to gauge your progress.',
-      buttonText: 'Read our Testimonials',
-      href: '#testimonials',
-    },
-    {
-      icon: FaRegLightbulb,
-      header: 'Complete Control',
-      body: 'This approach will give you confidence, credibility, and complete control of your own creative process. You’ll find it’s the most efficient method for learning a dialect available to you as an actor. Plus, you will no longer have to rely on mere mimicry to get the job done.',
-      buttonText: 'Contact Us for More Info',
-      href: 'contact',
-    },
-    // Add more card data objects as needed
-  ]
-
-  const isMobile = useMobileCheck()
-  const isMidSized = useMidSizeCheck()
-
-  const renderCards = () => {
-    if (isMobile) {
-      return cardsData.map((cardData, index) => (
-        <PrelaunchCard key={index} data={cardData} />
-      ))
-    } else if (isMidSized) {
-      return (
-        <Flex ml="10" mr="10" direction="column">
-          {cardsData.map((cardData, index) => (
-            <PrelaunchCard key={index} data={cardData} />
-          ))}
-        </Flex>
-      )
-    } else {
-      return (
-        <SimpleGrid
-          spacing={4}
-          templateColumns="repeat(3, minmax(200px, 1fr))"
-          ml="10"
-          mr="10"
-        >
-          {cardsData.map((cardData, index) => (
-            <PrelaunchCard key={index} data={cardData} />
-          ))}
-        </SimpleGrid>
-      )
-    }
-  }
-
   return (
-    <Box pt={isMobile ? '1' : '35'} textAlign="center">
-      <Heading fontSize={isMobile ? '3xl' : '5xl'}>
-        Why use ActingAccents.com?
-      </Heading>
-      <Box
-        pt={isMidSized ? '1' : '40'}
-        textAlign={isMobile ? 'center' : 'left'}
-      >
-        {renderCards()}
+    <Container maxW="7xl" px={{ base: 5, md: 8 }} py={{ base: 20, md: 28 }}>
+      <Stack spacing={4} textAlign="center" mb={{ base: 10, md: 14 }}>
+        <Text
+          fontSize="sm"
+          fontWeight="bold"
+          color="brand.purple"
+          letterSpacing="0.14em"
+          textTransform="uppercase"
+        >
+          Why ActingAccents.com
+        </Text>
+        <Heading
+          as="h2"
+          fontSize={{ base: '3xl', md: '5xl' }}
+          fontWeight="black"
+          letterSpacing="-0.02em"
+          color="gray.900"
+          lineHeight="1.1"
+        >
+          A method, not a guess.
+        </Heading>
+        <Text
+          fontSize={{ base: 'md', md: 'lg' }}
+          color="gray.600"
+          maxW="640px"
+          mx="auto"
+        >
+          Three reasons actors, coaches, and language enthusiasts are joining
+          the early-access list.
+        </Text>
+      </Stack>
+
+      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 6, md: 8 }}>
+        {cardsData.map((card) => (
+          <PrelaunchCard key={card.header} data={card} />
+        ))}
+      </SimpleGrid>
+
+      <Box textAlign="center" mt={{ base: 10, md: 14 }}>
+        <Text fontSize="sm" color="gray.500">
+          Every lesson pairs clear instruction with hands-on exercises you can
+          try right in your browser.
+        </Text>
       </Box>
-    </Box>
+    </Container>
   )
 }
 

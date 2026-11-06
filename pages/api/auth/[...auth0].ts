@@ -32,12 +32,33 @@ const afterCallback = async (
   return session
 }
 
-export default handleAuth({
-  async callback(req, res) {
-    try {
-      await handleCallback(req, res, { afterCallback })
-    } catch (error: any) {
-      res.status(error.status || 500).end(error.message)
-    }
-  },
-})
+// Dev-only escape hatch: when the Auth0 secrets aren't present (e.g. running
+// `next dev` without Doppler), `handleAuth` throws "secret is required" on
+// every request, which the UserProvider then retries forever — the UI flashes
+// as the nav flips between loading and errored states. Short-circuit to a
+// logged-out response so the public site works. Never active in production.
+const authDisabled =
+  process.env.NODE_ENV !== 'production' && !process.env.AUTH0_SECRET
+
+const stubHandler = (req: NextApiRequest, res: NextApiResponse) => {
+  const route = Array.isArray(req.query.auth0)
+    ? req.query.auth0[0]
+    : req.query.auth0
+  if (route === 'me') {
+    res.status(204).end()
+    return
+  }
+  res.status(503).json({ error: 'Auth0 not configured in this dev environment' })
+}
+
+export default authDisabled
+  ? stubHandler
+  : handleAuth({
+      async callback(req, res) {
+        try {
+          await handleCallback(req, res, { afterCallback })
+        } catch (error: any) {
+          res.status(error.status || 500).end(error.message)
+        }
+      },
+    })
