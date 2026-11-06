@@ -42,6 +42,7 @@ const PrelaunchTestimonialsContainer = () => {
           letterSpacing="-0.02em"
           color="gray.900"
           lineHeight="1.1"
+          sx={{ textWrap: 'balance' }}
         >
           From working actors and coaches.
         </Heading>
@@ -50,6 +51,7 @@ const PrelaunchTestimonialsContainer = () => {
           color="gray.600"
           maxW="640px"
           mx="auto"
+          sx={{ textWrap: 'balance' }}
         >
           Students who came for a role and left with a career-long skill.
         </Text>

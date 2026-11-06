@@ -41,6 +41,7 @@ const PrelaunchMain = () => {
         lineHeight="1.05"
         letterSpacing="-0.02em"
         color="gray.900"
+        sx={{ textWrap: 'balance' }}
       >
         Master any{' '}
         <Box
@@ -53,7 +54,12 @@ const PrelaunchMain = () => {
         — on your own.
       </Heading>
 
-      <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" lineHeight="1.7">
+      <Text
+        fontSize={{ base: 'md', md: 'lg' }}
+        color="gray.600"
+        lineHeight="1.7"
+        sx={{ textWrap: 'pretty' }}
+      >
         ActingAccents.com teaches actors and performers the International
         Phonetic Alphabet (IPA) — the systematic method that top dialect coaches
         agree produces the most authentic performances. No more guesswork, no

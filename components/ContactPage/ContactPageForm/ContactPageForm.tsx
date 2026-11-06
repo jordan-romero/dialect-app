@@ -1,5 +1,18 @@
 import React, { useState } from 'react'
-import { Input, Button, Stack, Box, Heading } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Heading,
+  Input,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import { ArrowForwardIcon } from '@chakra-ui/icons'
 
 const ContactPageForm = () => {
   const [firstName, setFirstName] = useState('')
@@ -9,10 +22,10 @@ const ContactPageForm = () => {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!email || !email.length) {
+    if (!email) {
       setError('Email is required')
       return
     }
@@ -20,24 +33,16 @@ const ContactPageForm = () => {
     setLoading(true)
     setError(null)
 
-    const data = {
-      email,
-      firstName,
-      lastName,
-    }
-
     try {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, firstName, lastName }),
       })
 
       if (!response.ok) {
-        const { error } = await response.json()
-        setError(error)
+        const data = await response.json().catch(() => ({ error: 'Something went wrong' }))
+        setError(data.error || 'Something went wrong')
         setSuccess(false)
       } else {
         setSuccess(true)
@@ -45,8 +50,8 @@ const ContactPageForm = () => {
         setLastName('')
         setEmail('')
       }
-    } catch (error) {
-      console.error('Contact form error:', error)
+    } catch (err) {
+      console.error('Contact form error:', err)
       setError('Internal server error')
       setSuccess(false)
     }
@@ -54,36 +59,112 @@ const ContactPageForm = () => {
     setLoading(false)
   }
 
+  const inputStyles = {
+    bg: 'white',
+    borderColor: 'gray.200',
+    borderRadius: 'xl',
+    _hover: { borderColor: 'brand.purpleLight' },
+    _focusVisible: {
+      borderColor: 'brand.purple',
+      boxShadow: '0 0 0 3px rgba(114,63,197,0.18)',
+    },
+  } as const
+
   return (
-    <Box w="50%">
-      <Heading as="h1" size="2xl" textAlign="center" color="brand.iris" mb={8}>
-        Contact Us
-      </Heading>
+    <Box>
+      <Stack spacing={2} mb={6}>
+        <Heading
+          as="h2"
+          fontSize={{ base: 'xl', md: '2xl' }}
+          fontWeight="black"
+          color="gray.900"
+          letterSpacing="-0.01em"
+        >
+          Send us a note
+        </Heading>
+        <Text fontSize="sm" color="gray.500">
+          We’ll never share your details and you can unsubscribe anytime.
+        </Text>
+      </Stack>
+
       <form onSubmit={handleSubmit}>
-        <Stack spacing={10}>
-          <Input
-            type="text"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            w="100%"
-          />
-          <Input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {error && <div>{error}</div>}
-          {success && <div>Thank you for subscribing!</div>}
-          <Button type="submit" isLoading={loading} variant="brandBold">
-            Subscribe
+        <Stack spacing={4}>
+          <HStack spacing={3}>
+            <FormControl>
+              <FormLabel fontSize="sm" fontWeight="semibold" color="gray.700">
+                First name
+              </FormLabel>
+              <Input
+                size="lg"
+                type="text"
+                placeholder="Jane"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                {...inputStyles}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel fontSize="sm" fontWeight="semibold" color="gray.700">
+                Last name
+              </FormLabel>
+              <Input
+                size="lg"
+                type="text"
+                placeholder="Doe"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                {...inputStyles}
+              />
+            </FormControl>
+          </HStack>
+
+          <FormControl isRequired>
+            <FormLabel fontSize="sm" fontWeight="semibold" color="gray.700">
+              Email
+            </FormLabel>
+            <Input
+              size="lg"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              {...inputStyles}
+            />
+          </FormControl>
+
+          {error && (
+            <Alert status="error" borderRadius="lg" fontSize="sm">
+              <AlertIcon />
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert status="success" borderRadius="lg" fontSize="sm">
+              <AlertIcon />
+              Thanks — you’re on the list. Keep an eye on your inbox.
+            </Alert>
+          )}
+
+          <Button
+            type="submit"
+            size="lg"
+            isLoading={loading}
+            loadingText="Sending"
+            borderRadius="xl"
+            rightIcon={<ArrowForwardIcon />}
+            bgGradient="linear(to-r, brand.purple, brand.iris)"
+            color="white"
+            fontWeight="semibold"
+            boxShadow="0 10px 24px -8px rgba(114,63,197,0.55)"
+            _hover={{
+              bgGradient: 'linear(to-r, brand.purpleLight, brand.purple)',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 14px 28px -8px rgba(114,63,197,0.6)',
+            }}
+            _active={{ transform: 'translateY(0)' }}
+            transition="transform 0.15s, box-shadow 0.15s"
+          >
+            Sign me up
           </Button>
         </Stack>
       </form>

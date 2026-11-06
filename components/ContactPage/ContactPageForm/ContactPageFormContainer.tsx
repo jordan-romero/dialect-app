@@ -1,27 +1,22 @@
-import { Flex } from '@chakra-ui/react'
 import React from 'react'
-import ContactPageIcon from './ContactPageIcon'
+import { Box } from '@chakra-ui/react'
 import ContactPageForm from './ContactPageForm'
 
 const ContactPageFormContainer = () => {
   return (
-    <Flex
-      borderRadius="10"
-      boxShadow="dark-lg"
-      w="75%"
-      h="600px"
-      mr="auto"
-      ml="auto"
-      mt={10}
-      mb={10}
-      p={10}
-      alignItems="center"
-      justifyContent="space-around"
-      bg="util.white"
+    <Box
+      bg="white"
+      borderRadius="2xl"
+      borderWidth="1px"
+      borderColor="gray.100"
+      boxShadow="0 1px 2px rgba(17,24,39,0.04), 0 24px 56px -20px rgba(30,20,70,0.22)"
+      p={{ base: 6, md: 10 }}
+      w="100%"
+      maxW="520px"
+      ml={{ base: 0, lg: 'auto' }}
     >
-      <ContactPageIcon />
       <ContactPageForm />
-    </Flex>
+    </Box>
   )
 }
 
