@@ -2,18 +2,17 @@
 
 Everything on this page is blocking an exercise.
 
-**Both 13b.A and 14a.B are now built.** Their content, answer keys and wiring
-are committed; each has a script that verifies every clip exists on S3 and
-refuses to write until they do. So the day the recordings land, each exercise
-goes live in one command — no further build work:
+**13b.A is live in Lesson 19 without its clips.** Each item already points at
+the file it expects, so uploading the six clips below is all that's left — they
+play as soon as they exist, no rebuild.
+
+**14a.B is built but not registered.** Its script verifies every clip exists on
+S3 and refuses to write until they do. Its option ids (from 1281) now overlap
+rows in the database, so they need moving before it's run:
 
 ```bash
-node --env-file=.env scripts/add-13bA-exercise.mjs && yarn seed
 node --env-file=.env scripts/add-14aB-exercise.mjs && yarn seed
 ```
-
-They are deliberately not registered as lesson steps yet. In both the audio
-clip _is_ the question, so a silent version would just be a broken step.
 
 Compiled 2026-09-06 by auditing the Drive master content and the S3 bucket
 against the course database. Filenames below follow the conventions already in
@@ -25,7 +24,8 @@ use, so once the clips exist the attachment is mechanical.
 
 ### 13b.A — Repeat After Me Tongue Twisters (6 clips)
 
-Blocks: **Lesson 19**, the last exercise missing from Module 13b.
+Live in **Lesson 19** with no audio yet — the Play clip button does nothing
+until these are uploaded.
 Content is complete in the Drive doc "13b.A - Repeat After Me TTs"; only the
 audio is absent (the Drive folder holds the doc alone, and S3 has nothing under
 `13b.A`).

@@ -1,18 +1,16 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  Text,
-  CardFooter,
+  Box,
   Button,
-  Icon,
   Flex,
+  Heading,
+  Icon,
+  Stack,
+  Text,
+  useBreakpointValue,
 } from '@chakra-ui/react'
+import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { CardData } from '../types'
-import useMobileCheck from '../../hooks/useMobileCheck'
-import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 interface PrelaunchCardProps {
   data: CardData
@@ -20,67 +18,89 @@ interface PrelaunchCardProps {
 
 const PrelaunchCard = ({ data }: PrelaunchCardProps) => {
   const { header, body, buttonText, icon, href } = data
-  const isMobile = useMobileCheck()
-  const isMidSized = useMidSizeCheck()
   const [isExpanded, setIsExpanded] = useState(false)
-  const MAX_MOBILE_BODY_LENGTH = 115
+  const MOBILE_PREVIEW_LENGTH = 180
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded)
-  }
+  const needsMobileClamp = !!isMobile && body.length > MOBILE_PREVIEW_LENGTH
+  const displayedBody =
+    needsMobileClamp && !isExpanded
+      ? `${body.slice(0, MOBILE_PREVIEW_LENGTH).trimEnd()}…`
+      : body
 
-  const renderBodyText = () => {
-    if (isMobile && body.length > MAX_MOBILE_BODY_LENGTH) {
-      return (
-        <>
-          <Text>
-            {isExpanded ? body : `${body.slice(0, MAX_MOBILE_BODY_LENGTH)}...`}
-          </Text>
+  return (
+    <Stack
+      spacing={5}
+      p={{ base: 6, md: 8 }}
+      bg="white"
+      borderRadius="2xl"
+      borderWidth="1px"
+      borderColor="gray.100"
+      boxShadow="0 1px 2px rgba(17,24,39,0.04), 0 8px 24px -16px rgba(17,24,39,0.12)"
+      transition="transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease"
+      _hover={{
+        transform: 'translateY(-4px)',
+        boxShadow:
+          '0 1px 2px rgba(17,24,39,0.04), 0 20px 36px -20px rgba(114,63,197,0.3)',
+        borderColor: 'brand.purpleLight',
+      }}
+      h="100%"
+    >
+      <Flex
+        w="56px"
+        h="56px"
+        borderRadius="xl"
+        align="center"
+        justify="center"
+        bgGradient="linear(to-br, brand.purple, brand.iris)"
+        color="white"
+        boxShadow="0 8px 20px -8px rgba(114,63,197,0.55)"
+      >
+        <Icon as={icon} boxSize={6} />
+      </Flex>
+
+      <Stack spacing={3} flex="1">
+        <Heading
+          as="h3"
+          fontSize={{ base: 'xl', md: '2xl' }}
+          fontWeight="bold"
+          color="gray.900"
+          letterSpacing="-0.01em"
+        >
+          {header}
+        </Heading>
+        <Text color="gray.600" lineHeight="1.7">
+          {displayedBody}
+        </Text>
+        {needsMobileClamp && (
           <Text
+            as="button"
+            onClick={() => setIsExpanded((v) => !v)}
+            alignSelf="flex-start"
             color="brand.purple"
-            fontSize="lg"
-            fontWeight="bold"
-            cursor="pointer"
-            onClick={toggleExpand}
-            mt={2}
+            fontWeight="semibold"
+            fontSize="sm"
           >
             {isExpanded ? 'Read less' : 'Read more'}
           </Text>
-        </>
-      )
-    } else {
-      return <Text>{body}</Text>
-    }
-  }
+        )}
+      </Stack>
 
-  return (
-    <Card
-      w={isMidSized ? '100%' : '400px'}
-      mt={isMidSized ? '4' : undefined}
-      bg="white"
-      borderRadius="md"
-      boxShadow="lg"
-      transition="box-shadow 0.2s"
-      _hover={{
-        boxShadow: 'dark-lg',
-      }}
-      p={isMidSized ? '5' : undefined}
-    >
-      <CardHeader bg="util.gray" borderRadius="md">
-        <Flex align="center">
-          <Icon as={icon} boxSize={8} mr={4} color="brand.purple" />
-          <Heading size="lg" display="inline-block">
-            {header}
-          </Heading>
-        </Flex>
-      </CardHeader>
-      <CardBody p={isMidSized ? '2' : '5'}>{renderBodyText()}</CardBody>
-      <CardFooter justifyContent={isMidSized ? 'center' : undefined}>
-        <Button as="a" href={href} variant="brandWhite">
+      <Box>
+        <Button
+          as="a"
+          href={href}
+          variant="ghost"
+          color="brand.purple"
+          fontWeight="semibold"
+          px={0}
+          rightIcon={<ArrowForwardIcon />}
+          _hover={{ bg: 'transparent', color: 'brand.purpleLight' }}
+        >
           {buttonText}
         </Button>
-      </CardFooter>
-    </Card>
+      </Box>
+    </Stack>
   )
 }
 

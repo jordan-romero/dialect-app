@@ -12,6 +12,12 @@ export default function Document() {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* Arimo only. Charis SIL is self-hosted (see styles/globals.css)
+            because Google's subsets drop the IPA tie bar and breve. */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <body>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />

@@ -1,56 +1,30 @@
 import React from 'react'
-import DialectVideo from './DialectVideo'
-import PrelaunchCta from './PrelaunchCta'
-import { Flex, Spacer, Box } from '@chakra-ui/react'
+import { Box, Container, Grid, GridItem, Stack } from '@chakra-ui/react'
 import PrelaunchMain from './PrelaunchMain'
-import useMidSizeCheck from '../../hooks/useMidSizeCheck'
-import { Slide } from 'react-awesome-reveal'
-import { Fade } from 'react-awesome-reveal'
+import PrelaunchCta from './PrelaunchCta'
+import DialectVideo from './DialectVideo'
 
 const PrelaunchContent = () => {
-  const isMidSized = useMidSizeCheck()
-
-  if (isMidSized) {
-    return (
-      <Flex direction="column" mt={isMidSized ? 0 : 2}>
-        <PrelaunchContentMobile />
-      </Flex>
-    )
-  }
-
   return (
-    <Flex direction="row">
-      <Slide direction="left" triggerOnce={true}>
-        <Flex direction="column" mt="20">
-          <PrelaunchMain />
-          <PrelaunchCta />
-        </Flex>
-      </Slide>
-      <Spacer />
-      <Box w="100%">
-        <Fade duration={2000} triggerOnce={true}>
-          <Flex
-            justifyContent="flex-end"
-            w="100%"
-            h="500px"
-            pb="10"
-            pt="15"
-            mt="20"
-          >
+    <Box position="relative" zIndex={1}>
+      <Container maxW="7xl" px={{ base: 5, md: 8 }} py={{ base: 16, md: 24 }}>
+        <Grid
+          templateColumns={{ base: '1fr', lg: '0.9fr 1.3fr' }}
+          gap={{ base: 10, lg: 12 }}
+          alignItems="center"
+        >
+          <GridItem>
+            <Stack spacing={8}>
+              <PrelaunchMain />
+              <PrelaunchCta />
+            </Stack>
+          </GridItem>
+          <GridItem>
             <DialectVideo />
-          </Flex>
-        </Fade>
-      </Box>
-    </Flex>
-  )
-}
-const PrelaunchContentMobile = () => {
-  return (
-    <Flex w="100%" h="1300px" pb="10" direction="column">
-      <DialectVideo />
-      <PrelaunchMain />
-      <PrelaunchCta />
-    </Flex>
+          </GridItem>
+        </Grid>
+      </Container>
+    </Box>
   )
 }
 

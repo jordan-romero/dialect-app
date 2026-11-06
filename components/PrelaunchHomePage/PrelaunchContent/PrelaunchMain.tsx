@@ -1,105 +1,99 @@
 import {
+  Badge,
   Box,
-  Card,
-  Flex,
   Heading,
-  ListItem,
-  SimpleGrid,
+  HStack,
+  Stack,
+  Tag,
   Text,
-  UnorderedList,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react'
 import React from 'react'
-import useMobileCheck from '../../hooks/useMobileCheck'
 import { personas } from './PrelaunchPersonas/utils'
-import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchMain = () => {
-  const isMobile = useMobileCheck()
-  const isMidSized = useMidSizeCheck()
-
-  if (isMobile) {
-    return (
-      <Flex direction="column" mt={4}>
-        <PrelaunchMainMobile />
-      </Flex>
-    )
-  }
   return (
-    <Flex
-      w={isMidSized ? '100%' : '575px'}
-      h={isMidSized ? '700px' : '590px'}
-      ml={isMidSized ? 'auto' : undefined}
-      mr={isMidSized ? 'auto' : undefined}
-      alignItems={isMidSized ? 'center' : 'flex-start'}
-      flexDirection="column"
-    >
-      <Heading fontSize="4xl" fontWeight="black" lineHeight="1.25">
-        Welcome to the future home of{' '}
-        <Text color="brand.purple" fontSize="5xl">
-          ActingAccents.com!
-        </Text>
+    <Stack spacing={6} maxW={{ base: '100%', lg: '620px' }}>
+      <Badge
+        alignSelf="flex-start"
+        bg="whiteAlpha.800"
+        color="brand.purple"
+        px={3}
+        py={1.5}
+        borderRadius="full"
+        textTransform="none"
+        fontSize="sm"
+        fontWeight="semibold"
+        letterSpacing="0.01em"
+        boxShadow="0 1px 2px rgba(0,0,0,0.04)"
+      >
+        <HStack spacing={2}>
+          <Box w="6px" h="6px" borderRadius="full" bg="brand.purple" />
+          <Text as="span">Early access coming soon</Text>
+        </HStack>
+      </Badge>
+
+      <Heading
+        as="h1"
+        fontSize={{ base: '4xl', md: '5xl', lg: '6xl' }}
+        fontWeight="black"
+        lineHeight="1.05"
+        letterSpacing="-0.02em"
+        color="gray.900"
+      >
+        Master any{' '}
+        <Box
+          as="span"
+          bgGradient="linear(to-r, brand.purple, brand.iris)"
+          bgClip="text"
+        >
+          accent or dialect
+        </Box>{' '}
+        — on your own.
       </Heading>
-      <Text fontSize="md" mt="5" w="85%">
-        This website will be a resource for learning various dialects and
-        accents for performance purposes. Whether you have a natural gift for
-        dialects, or you find the process intimidating, having a systematic
-        approach will help you to make more authentic dialect and accent
-        choices.
+
+      <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" lineHeight="1.7">
+        ActingAccents.com teaches actors and performers the International
+        Phonetic Alphabet (IPA) — the systematic method that top dialect coaches
+        agree produces the most authentic performances. No more guesswork, no
+        more mimicry.
       </Text>
+
       <Box pt={2}>
         <Text
-          fontSize="lg"
+          fontSize="sm"
           fontWeight="bold"
-          color="brand.purpleLight"
-          textAlign={isMidSized ? 'center' : undefined}
+          color="gray.500"
+          letterSpacing="0.08em"
+          textTransform="uppercase"
+          mb={3}
         >
-          Who Would Benefit From ActingAccents.com Courses?
+          Built for
         </Text>
-        <SimpleGrid columns={2}>
-          {personas.map((persona, index) => (
-            <UnorderedList key={index} pt={3}>
-              <ListItem>{persona}</ListItem>
-            </UnorderedList>
+        <Wrap spacing={2}>
+          {personas.map((persona) => (
+            <WrapItem key={persona}>
+              <Tag
+                size="md"
+                bg="white"
+                color="gray.700"
+                borderWidth="1px"
+                borderColor="gray.200"
+                borderRadius="full"
+                px={3}
+                py={1.5}
+                fontWeight="medium"
+                boxShadow="0 1px 2px rgba(17,24,39,0.04)"
+              >
+                {persona}
+              </Tag>
+            </WrapItem>
           ))}
-        </SimpleGrid>
+        </Wrap>
       </Box>
-      <Text
-        fontSize="xl"
-        fontWeight="extrabold"
-        color="brand.iris"
-        mt="5"
-        w="85%"
-      >
-        Ultimately, this course will teach you to teach yourself any dialect or
-        accent you desire.
-      </Text>
-    </Flex>
+    </Stack>
   )
 }
-const PrelaunchMainMobile = () => {
-  return (
-    <Card maxW="sm" mx="auto" mt={1} p={6} boxShadow="lg">
-      <Heading
-        fontSize="3xl"
-        fontWeight="black"
-        lineHeight="1.25"
-        display="inline"
-      >
-        Welcome to the future home of
-        <Text color="brand.purple">ActingAccents.com!</Text>
-      </Heading>
-      <Text fontSize="md" mt={7}>
-        This website will be a resource for learning various dialects and
-        accents for performance purposes. Whether you have a natural gift for
-        dialects, or you find the process intimidating, having a systematic
-        approach will help you to make more authentic dialect and accent
-        choices.
-      </Text>
-      <Text fontSize="lg" fontWeight="extrabold" mt={5}>
-        Ultimately, this course will teach you to teach yourself any dialect or
-        accent you desire.
-      </Text>
-    </Card>
-  )
-}
+
 export default PrelaunchMain
