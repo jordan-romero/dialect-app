@@ -1,196 +1,357 @@
-import { HamburgerIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import React from 'react'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 import {
+  Box,
+  Button,
   Flex,
   HStack,
   IconButton,
-  Menu,
-  MenuItem,
-  MenuButton,
-  MenuList,
   Image,
-  Button,
+  Link,
+  Menu,
+  MenuButton,
   MenuDivider,
-  useMediaQuery,
+  MenuItem,
+  MenuList,
+  Text,
 } from '@chakra-ui/react'
-import React from 'react'
-import NavComponent from './NavComponent'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { useFeatureFlag } from 'configcat-react'
-import Login from '../AuthComponents/Login'
-import Logout from '../AuthComponents/Logout'
 import { useUser } from '@auth0/nextjs-auth0/client'
 
+type NavItem = {
+  label: string
+  href: string
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { label: 'About', href: '/about' },
+  { label: 'Testimonials', href: '/#testimonials' },
+  { label: 'Contact', href: '/contact' },
+]
+
+const TOOL_ITEMS: NavItem[] = [
+  { label: 'IPA Keyboard', href: '/ipa-keyboard' },
+]
+
 const Navbar = () => {
-  // The desktop links need more room than a phone-sized breakpoint provides,
-  // especially when the account actions are visible.
-  const [isCompactNav] = useMediaQuery('(max-width: 1440px)')
+  const router = useRouter()
   const { value: signUpAndLoginVisible } = useFeatureFlag(
     'signUpAndLoginVisible',
     false,
   )
   const { user: authUser, isLoading: authLoading } = useUser()
-  const router = useRouter()
 
-  if (router.pathname.includes('dashboard')) {
-    return null
-  }
+  if (router.pathname.startsWith('/dashboard')) return null
 
-  if (isCompactNav) {
-    return (
-      <MobileNavbar
-        showAccountActions={signUpAndLoginVisible && !authLoading}
-        isAuthenticated={authUser !== undefined}
-      />
-    )
+  const showAccountActions = signUpAndLoginVisible && !authLoading
+  const isAuthenticated = authUser !== undefined
+  // Anchor links (e.g. "/#testimonials") shouldn't highlight the whole route
+  // as active — they are jump targets, not destination pages.
+  const isActive = (href: string) => {
+    if (href.includes('#')) return false
+    return href === '/'
+      ? router.pathname === '/'
+      : router.pathname === href || router.pathname.startsWith(href + '/')
   }
 
   return (
-    <Flex w="100%" h="24" align="center" bgColor={'brand.purple'}>
-      <HStack w="100%" justify="space-between">
-        <HStack align="center" bgColor={'brand.purple'} spacing={0}>
-          <Link href="/">
-            <Flex>
-              <Image
-                src="/actingAccentsLogo.png"
-                alt="acting accents logo"
-                objectFit="contain"
-                h="24"
-                mr={-6}
-                w="100%"
-              />
-              <Image
-                src="/actingAccentsTitle.png"
-                alt="acting accents title"
-                objectFit="contain"
-                h="20"
-              />
-            </Flex>
+    <Box
+      as="header"
+      position="sticky"
+      top={0}
+      zIndex={100}
+      bg="whiteAlpha.900"
+      backdropFilter="saturate(180%) blur(12px)"
+      borderBottomWidth="1px"
+      borderBottomColor="blackAlpha.100"
+      mx={{ base: -4, md: -6, lg: -8 }}
+    >
+      <Flex
+        maxW="1600px"
+        mx="auto"
+        px={{ base: 4, md: 8 }}
+        h={{ base: 16, md: 20 }}
+        align="center"
+        justify="space-between"
+        gap={4}
+      >
+        {/* Brand */}
+        <NextLink href="/" passHref legacyBehavior>
+          <Link
+            display="inline-flex"
+            alignItems="baseline"
+            flexShrink={0}
+            _hover={{ textDecoration: 'none' }}
+            aria-label="ActingAccents home"
+          >
+            <Text
+              fontSize={{ base: 'xl', md: '2xl' }}
+              fontWeight="black"
+              letterSpacing="-0.02em"
+              color="gray.900"
+              lineHeight="1"
+            >
+              Acting
+              <Box
+                as="span"
+                bgGradient="linear(to-r, brand.purple, brand.iris)"
+                bgClip="text"
+              >
+                Accents
+              </Box>
+            </Text>
+            <Text
+              fontSize={{ base: 'sm', md: 'md' }}
+              fontWeight="semibold"
+              color="gray.400"
+              lineHeight="1"
+              ml={0.5}
+            >
+              .com
+            </Text>
           </Link>
-        </HStack>
-        <HStack spacing="24px" mr={4} pr={8} justifyContent="end">
-          <NavComponent navText="About" />
-          <NavComponent navText="Contact" />
+        </NextLink>
 
-          {/* Tools Dropdown */}
+        {/* Desktop nav */}
+        <HStack
+          as="nav"
+          spacing={1}
+          display={{ base: 'none', md: 'flex' }}
+          flex="1"
+          justify="center"
+        >
+          {NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              active={isActive(item.href)}
+            />
+          ))}
           <Menu>
             <MenuButton
               as={Button}
-              rightIcon={<ChevronDownIcon />}
+              size="sm"
               variant="ghost"
-              color="util.white"
-              fontSize="xl"
-              fontWeight="bold"
-              _hover={{ color: 'brand.blueLight', bg: 'transparent' }}
-              _active={{ bg: 'transparent' }}
+              rightIcon={<ChevronDownIcon />}
+              color="gray.700"
+              fontSize="md"
+              fontWeight="semibold"
+              px={4}
+              _hover={{ bg: 'blackAlpha.50', color: 'brand.purple' }}
+              _active={{ bg: 'blackAlpha.50' }}
             >
               Tools
             </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => router.push('/ipa-keyboard')}>
-                IPA Keyboard
-              </MenuItem>
+            <MenuList
+              borderRadius="xl"
+              borderColor="blackAlpha.100"
+              boxShadow="0 12px 32px -12px rgba(17,24,39,0.18)"
+              py={2}
+            >
+              {TOOL_ITEMS.map((tool) => (
+                <MenuItem
+                  key={tool.href}
+                  onClick={() => router.push(tool.href)}
+                  fontWeight="medium"
+                  _hover={{ bg: 'purple.50', color: 'brand.purple' }}
+                >
+                  {tool.label}
+                </MenuItem>
+              ))}
             </MenuList>
           </Menu>
-
-          {signUpAndLoginVisible && !authLoading && authUser === undefined ? (
-            <Login />
-          ) : null}
-          {signUpAndLoginVisible && !authLoading && authUser !== undefined ? (
-            <>
-              <NavComponent navText="Dashboard" />
-              <Logout />
-            </>
-          ) : null}
         </HStack>
-      </HStack>
-    </Flex>
-  )
-}
 
-type MobileNavbarProps = {
-  showAccountActions: boolean
-  isAuthenticated: boolean
-}
-
-const MobileNavbar = ({
-  showAccountActions,
-  isAuthenticated,
-}: MobileNavbarProps) => {
-  const router = useRouter()
-
-  return (
-    <Flex
-      w="100%"
-      h="20"
-      px={{ base: 2, sm: 4 }}
-      align="center"
-      justify="space-between"
-      bgColor="brand.purple"
-    >
-      <Link href="/" aria-label="Acting Accents home">
-        <Flex align="center" minW={0}>
-          <Image
-            src="/actingAccentsLogo.png"
-            alt="acting accents logo"
-            objectFit="contain"
-            h={{ base: 16, sm: 18, lg: 20 }}
-            w="auto"
-          />
-          <Image
-            src="/actingAccentsTitle.png"
-            alt="Acting Accents"
-            objectFit="contain"
-            display={{ base: 'none', sm: 'block' }}
-            w={{ sm: '205px', md: '260px', lg: '360px', xl: '420px' }}
-            h="auto"
-            ml={-2}
-          />
-        </Flex>
-      </Link>
-
-      <Menu>
-        <MenuButton
-          as={IconButton}
-          aria-label="Open navigation menu"
-          icon={<HamburgerIcon />}
-          variant="ghost"
-          color="util.white"
-          fontSize="2xl"
-          _hover={{ color: 'brand.blueLight', bg: 'transparent' }}
-          _active={{ bg: 'transparent' }}
-        />
-
-        <MenuList minW="13rem" py={2}>
-          <MenuItem onClick={() => router.push('/about')}>About</MenuItem>
-          <MenuItem onClick={() => router.push('/contact')}>Contact</MenuItem>
-          <MenuDivider />
-          <MenuItem onClick={() => router.push('/ipa-keyboard')}>
-            Tools: IPA Keyboard
-          </MenuItem>
-          {showAccountActions ? (
+        {/* Desktop account actions / CTA */}
+        <HStack spacing={3} display={{ base: 'none', md: 'flex' }}>
+          {showAccountActions && isAuthenticated && (
             <>
-              <MenuDivider />
-              {isAuthenticated ? (
-                <>
-                  <MenuItem onClick={() => router.push('/dashboard')}>
-                    Dashboard
-                  </MenuItem>
-                  <MenuItem onClick={() => router.push('/api/auth/logout')}>
-                    Logout
-                  </MenuItem>
-                </>
-              ) : (
-                <MenuItem onClick={() => router.push('/api/auth/login')}>
-                  Login
-                </MenuItem>
-              )}
+              <NavLink
+                href="/dashboard"
+                label="Dashboard"
+                active={isActive('/dashboard')}
+              />
+              <Button
+                as={NextLink}
+                href="/api/auth/logout"
+                size="sm"
+                variant="ghost"
+                fontWeight="semibold"
+                color="gray.700"
+                _hover={{ bg: 'blackAlpha.50', color: 'brand.purple' }}
+              >
+                Logout
+              </Button>
             </>
-          ) : null}
-        </MenuList>
-      </Menu>
-    </Flex>
+          )}
+          {showAccountActions && !isAuthenticated && (
+            <Button
+              as={NextLink}
+              href="/api/auth/login"
+              size="sm"
+              variant="ghost"
+              fontWeight="semibold"
+              color="gray.700"
+              _hover={{ bg: 'blackAlpha.50', color: 'brand.purple' }}
+            >
+              Login
+            </Button>
+          )}
+          <Button
+            as={NextLink}
+            href="/#early-access"
+            size="sm"
+            px={5}
+            borderRadius="full"
+            fontWeight="semibold"
+            color="white"
+            bgGradient="linear(to-r, brand.purple, brand.iris)"
+            boxShadow="0 8px 20px -8px rgba(114,63,197,0.5)"
+            _hover={{
+              bgGradient: 'linear(to-r, brand.purpleLight, brand.purple)',
+              transform: 'translateY(-1px)',
+            }}
+            _active={{ transform: 'translateY(0)' }}
+            transition="transform 0.15s"
+          >
+            Get early access
+          </Button>
+        </HStack>
+
+        {/* Mobile menu */}
+        <Box display={{ base: 'flex', md: 'none' }}>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Open navigation menu"
+              icon={<HamburgerIcon boxSize={5} />}
+              variant="ghost"
+              color="gray.700"
+              _hover={{ bg: 'blackAlpha.50', color: 'brand.purple' }}
+            />
+            <MenuList
+              minW="14rem"
+              borderRadius="xl"
+              borderColor="blackAlpha.100"
+              boxShadow="0 12px 32px -12px rgba(17,24,39,0.18)"
+              py={2}
+            >
+              {NAV_ITEMS.map((item) => (
+                <MenuItem
+                  key={item.href}
+                  onClick={() => router.push(item.href)}
+                  fontWeight="medium"
+                  _hover={{ bg: 'purple.50', color: 'brand.purple' }}
+                >
+                  {item.label}
+                </MenuItem>
+              ))}
+              <MenuDivider />
+              {TOOL_ITEMS.map((tool) => (
+                <MenuItem
+                  key={tool.href}
+                  onClick={() => router.push(tool.href)}
+                  fontWeight="medium"
+                  _hover={{ bg: 'purple.50', color: 'brand.purple' }}
+                >
+                  {tool.label}
+                </MenuItem>
+              ))}
+              {showAccountActions && (
+                <>
+                  <MenuDivider />
+                  {isAuthenticated ? (
+                    <>
+                      <MenuItem
+                        onClick={() => router.push('/dashboard')}
+                        fontWeight="medium"
+                        _hover={{ bg: 'purple.50', color: 'brand.purple' }}
+                      >
+                        Dashboard
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => router.push('/api/auth/logout')}
+                        fontWeight="medium"
+                        _hover={{ bg: 'purple.50', color: 'brand.purple' }}
+                      >
+                        Logout
+                      </MenuItem>
+                    </>
+                  ) : (
+                    <MenuItem
+                      onClick={() => router.push('/api/auth/login')}
+                      fontWeight="medium"
+                      _hover={{ bg: 'purple.50', color: 'brand.purple' }}
+                    >
+                      Login
+                    </MenuItem>
+                  )}
+                </>
+              )}
+              <MenuDivider />
+              <Box px={3} py={2}>
+                <Button
+                  as={NextLink}
+                  href="/#early-access"
+                  size="sm"
+                  w="100%"
+                  borderRadius="full"
+                  color="white"
+                  bgGradient="linear(to-r, brand.purple, brand.iris)"
+                  _hover={{
+                    bgGradient:
+                      'linear(to-r, brand.purpleLight, brand.purple)',
+                  }}
+                >
+                  Get early access
+                </Button>
+              </Box>
+            </MenuList>
+          </Menu>
+        </Box>
+      </Flex>
+    </Box>
   )
 }
+
+type NavLinkProps = {
+  href: string
+  label: string
+  active?: boolean
+}
+
+const NavLink = ({ href, label, active }: NavLinkProps) => (
+  <NextLink href={href} passHref legacyBehavior>
+    <Link
+      px={4}
+      py={2}
+      borderRadius="md"
+      fontSize="md"
+      fontWeight="semibold"
+      color={active ? 'brand.purple' : 'gray.700'}
+      position="relative"
+      _hover={{ textDecoration: 'none', color: 'brand.purple' }}
+      _after={
+        active
+          ? {
+              content: '""',
+              position: 'absolute',
+              left: '16px',
+              right: '16px',
+              bottom: '2px',
+              height: '2px',
+              borderRadius: 'full',
+              bgGradient: 'linear(to-r, brand.purple, brand.iris)',
+            }
+          : undefined
+      }
+    >
+      {label}
+    </Link>
+  </NextLink>
+)
 
 export default Navbar

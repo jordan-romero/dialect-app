@@ -55,8 +55,14 @@ const LessonDescription = ({ lesson }: LessonDescriptionProps) => {
           Lesson Description
         </Heading>
 
-        <Text color="text.muted" fontSize="md" lineHeight="1.7" mb={7}>
-          {lesson.description}
+        <Text
+          color="text.muted"
+          fontSize="md"
+          lineHeight="1.7"
+          mb={7}
+          whiteSpace="pre-line"
+        >
+          {lesson.description?.trim()}
         </Text>
 
         {outline.length > 0 && (

@@ -5,13 +5,14 @@ import {
   Box,
   Text,
   VStack,
+  HStack,
   Input,
   Icon,
   Tooltip,
   useToast,
 } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import { MdKeyboard } from 'react-icons/md'
+import { MdKeyboard, MdPlayArrow } from 'react-icons/md'
 import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
@@ -23,6 +24,8 @@ interface ShortAnswerQuizProps {
   quizIndex: number
   onComplete: () => void
 }
+
+const UNCONNECTED_MARKER = ' — unconnected '
 
 const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   lessonId,
@@ -38,13 +41,17 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const [isQuestionComplete, setIsQuestionComplete] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [focusedOptionId, setFocusedOptionId] = useState<number | null>(null)
   const toast = useToast()
   const ipaKeyboard = useIpaKeyboard()
 
   const currentQuiz = quizzes[quizIndex]
   const currentQuestion = currentQuiz?.questions[currentQuestionIndex]
 
-  const revealSentenceOption = currentQuestion?.answerOptions.find(
+  const isUnconnectedPrompt =
+    currentQuestion?.text.includes(UNCONNECTED_MARKER) ?? false
+
+  const revealSentenceOption =currentQuestion?.answerOptions.find(
     (option) => option.audioUrl,
   )
 
@@ -209,23 +216,81 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
           <Box display="flex" justifyContent="flex-end" mb={2}>
             <Button
               size="sm"
-              variant={ipaKeyboard.isOpen ? 'brandBold' : 'outline'}
+              variant="brandBold"
               leftIcon={<Icon as={MdKeyboard} />}
               onClick={ipaKeyboard.toggle}
             >
               {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
             </Button>
           </Box>
-          <Text fontSize="xl">{currentQuestion.text}</Text>
-          {currentQuestion.audioUrl && (
-            <Button
-              onClick={() => playAudio(currentQuestion.audioUrl)}
-              mt={2}
-              mb={4}
-            >
-              Play Question Audio
-            </Button>
-          )}
+          {(() => {
+            // Descriptive Transcription prompts are authored as
+            // "“Quote.” — unconnected /…/": show the quote, then the
+            // unconnected transcription in its own labelled box beneath.
+            const [quote, unconnected] =
+              currentQuestion.text.split(UNCONNECTED_MARKER)
+            if (unconnected === undefined) {
+              return (
+                <>
+                  <Text fontSize="xl">
+                    {renderUnderlined(currentQuestion.text)}
+                  </Text>
+                  {currentQuestion.audioUrl && (
+                    <Button
+                      onClick={() => playAudio(currentQuestion.audioUrl)}
+                      mt={2}
+                      mb={4}
+                    >
+                      Play Question Audio
+                    </Button>
+                  )}
+                </>
+              )
+            }
+            // The clip is what the learner transcribes, so its button sits
+            // beside the sentence it speaks rather than below the IPA box.
+            return (
+              <>
+                <HStack spacing={3} flexWrap="wrap">
+                  <Text fontSize="xl" fontWeight="bold">
+                    {renderUnderlined(quote)}
+                  </Text>
+                  {currentQuestion.audioUrl && (
+                    <Button
+                      size="sm"
+                      leftIcon={<Icon as={MdPlayArrow} />}
+                      onClick={() => playAudio(currentQuestion.audioUrl)}
+                    >
+                      Play Audio
+                    </Button>
+                  )}
+                </HStack>
+                <Box
+                  mt={3}
+                  bg="accent.subtle"
+                  borderLeft="4px solid"
+                  borderColor="brand.iris"
+                  borderRadius="md"
+                  px={4}
+                  py={3}
+                >
+                  <Text
+                    fontSize="xs"
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    letterSpacing="wide"
+                    color="brand.iris"
+                    mb={1}
+                  >
+                    Unconnected speech
+                  </Text>
+                  <Text fontSize="xl" className="ipa-text" color="purple.900">
+                    {unconnected}
+                  </Text>
+                </Box>
+              </>
+            )
+          })()}
           <VStack spacing={4} mt={4} align="start">
             {currentQuestion.answerOptions
               .filter((option) => !option.audioUrl)
@@ -253,16 +318,24 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                         e.target.value,
                       )
                     }
+                    onFocus={() => setFocusedOptionId(option.id)}
+                    onBlur={() => setFocusedOptionId(null)}
                     isReadOnly={isCompleted}
                     width="100%"
                     marginBottom={2}
                   />
+                  {/* Descriptive Transcription's task, restated where the
+                      learner is typing so it's in view while they answer. */}
+                  {isUnconnectedPrompt &&
+                    focusedOptionId === option.id &&
+                    !isCompleted && (
+                      <Text mt={-1} fontSize="sm" color="gray.500">
+                        Type out the connected speech version to match the
+                        audio.
+                      </Text>
+                    )}
                   {!revealSentenceOption && showSentence && (
-                    <Text
-                      mt={1}
-                      fontFamily="ipa"
-                      color="green.700"
-                    >
+                    <Text mt={1} fontFamily="ipa" color="green.700">
                       Answer: {option.optionText}
                     </Text>
                   )}

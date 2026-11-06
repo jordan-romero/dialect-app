@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
-import { Box, Input, Button, useToast, Heading } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Stack,
+  Text,
+  useToast,
+} from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
-import useMobileCheck from '../../hooks/useMobileCheck'
-import useMidSizeCheck from '../../hooks/useMidSizeCheck'
 
 const PrelaunchCta = () => {
   const toast = useToast()
   const [email, setEmail] = useState('')
-  const isMobile = useMobileCheck()
-  const isMidSized = useMidSizeCheck()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!email) {
@@ -23,20 +31,18 @@ const PrelaunchCta = () => {
       return
     }
 
+    setIsSubmitting(true)
     try {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       })
-
       const data = await response.json()
 
       if (response.ok) {
         toast({
-          title: 'Success!',
+          title: 'You’re on the list!',
           description: data.message,
           status: 'success',
           duration: 3000,
@@ -62,81 +68,72 @@ const PrelaunchCta = () => {
         duration: 3000,
         isClosable: true,
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <>
-      {!isMobile && !isMidSized && (
-        <Box as="form" onSubmit={handleSubmit} w="55%">
-          <Heading fontSize="2xl" mb="7">
-            Sign up now for an Early Bird Discount!
-          </Heading>
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            mb={4}
-            isRequired
-            borderRadius="md"
-            borderColor="brand.purple"
-            _placeholder={{ color: 'gray.400' }}
-            _focus={{ borderColor: 'brand.iris', boxShadow: 'outline' }}
-            _hover={{ bg: 'gray.200' }}
-          />
-          <Button
-            leftIcon={<EmailIcon />}
-            type="submit"
-            variant="brandBold"
-            mt="5"
-          >
-            Sign up now
-          </Button>
-        </Box>
-      )}
-      {isMidSized && (
-        <Box
-          as="form"
-          onSubmit={handleSubmit}
-          w="100%"
-          h="300px"
-          bg="brand.purple"
-          borderRadius="10"
-          p="5"
-          mt="9"
-          textAlign="center"
+    <Stack spacing={3} id="early-access" scrollMarginTop="96px">
+      <Text fontSize="md" fontWeight="semibold" color="gray.700">
+        Join the early-access list for a launch-day discount.
+      </Text>
+      <Box as="form" onSubmit={handleSubmit}>
+        <Flex
+          direction={{ base: 'column', sm: 'row' }}
+          gap={3}
+          align="stretch"
+          maxW="520px"
         >
-          <Heading fontSize="3xl" mb="9" color="white">
-            Sign up now for an Early Bird Discount!
-          </Heading>
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            mb={5}
-            bg="white"
-            isRequired
-            borderRadius="md"
-            borderColor="white"
-            _placeholder={{ color: 'black' }}
-            _focus={{ borderColor: 'brand.iris', boxShadow: 'outline' }}
-            _hover={{ bg: 'gray.200' }}
-          />
+          <InputGroup size="lg" flex="1">
+            <InputLeftElement pointerEvents="none" color="gray.400">
+              <EmailIcon />
+            </InputLeftElement>
+            <Input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              isRequired
+              bg="white"
+              borderColor="gray.200"
+              borderRadius="xl"
+              _placeholder={{ color: 'gray.400' }}
+              _hover={{ borderColor: 'brand.purpleLight' }}
+              _focusVisible={{
+                borderColor: 'brand.purple',
+                boxShadow: '0 0 0 3px rgba(114,63,197,0.18)',
+              }}
+            />
+          </InputGroup>
           <Button
-            leftIcon={<EmailIcon />}
             type="submit"
-            variant="brandWhite"
-            mt="5"
-            w="250px"
-            fontSize="lg"
+            size="lg"
+            px={7}
+            borderRadius="xl"
+            isLoading={isSubmitting}
+            loadingText="Signing up"
+            bgGradient="linear(to-r, brand.purple, brand.iris)"
+            color="white"
+            fontWeight="semibold"
+            boxShadow="0 10px 24px -8px rgba(114,63,197,0.55)"
+            _hover={{
+              bgGradient: 'linear(to-r, brand.purpleLight, brand.purple)',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 14px 28px -8px rgba(114,63,197,0.6)',
+            }}
+            _active={{ transform: 'translateY(0)' }}
+            transition="transform 0.15s, box-shadow 0.15s"
           >
-            Sign up now
+            Get early access
           </Button>
-        </Box>
-      )}
-    </>
+        </Flex>
+      </Box>
+      <HStack spacing={2} color="gray.500" fontSize="sm">
+        <Box w="5px" h="5px" borderRadius="full" bg="green.400" />
+        <Text>No spam. Unsubscribe anytime.</Text>
+      </HStack>
+    </Stack>
   )
 }
 
