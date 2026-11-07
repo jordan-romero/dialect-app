@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Box,
-  Container,
-  Heading,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Container, Heading, Stack, Text } from '@chakra-ui/react'
 import AboutCard from './AboutCard'
 import { coaches } from './utils'
 import { motion } from 'framer-motion'
@@ -126,20 +119,16 @@ const AboutPageContainer = () => {
 
       {/* Coaches */}
       <Container maxW="7xl" px={{ base: 5, md: 8 }} py={{ base: 16, md: 24 }}>
-        <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 10, lg: 10 }}>
+        <Stack spacing={{ base: 20, lg: 32 }}>
           {coaches.map((coach, i) => (
-            <motion.div
+            <AboutCard
               key={coach.name}
-              initial={{ opacity: 0, y: 48 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.8, ease: EASE, delay: i * 0.15 }}
-              style={{ height: '100%' }}
-            >
-              <AboutCard {...coach} />
-            </motion.div>
+              {...coach}
+              index={i}
+              reverse={i % 2 === 1}
+            />
           ))}
-        </SimpleGrid>
+        </Stack>
       </Container>
     </Box>
   )

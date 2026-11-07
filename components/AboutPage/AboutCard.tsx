@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
-  AspectRatio,
   Box,
   Button,
   Flex,
+  Grid,
   Heading,
   HStack,
   Icon,
@@ -12,12 +12,17 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { ArrowForwardIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import { ArrowForwardIcon } from '@chakra-ui/icons'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Coach } from '../PrelaunchHomePage/types'
+import { EASE } from '../PrelaunchHomePage/motion'
 import { getIconLink, removeProtocol } from './utils'
 import AboutCardModal from './AboutCardModal'
 
-type AboutCardProps = Coach
+type AboutCardProps = Coach & {
+  index?: number
+  reverse?: boolean
+}
 
 // First names in IPA, a small nod to what the coaches teach.
 const NAME_IPA: Record<string, string> = {
@@ -34,178 +39,261 @@ const AboutCard: React.FC<AboutCardProps> = ({
   website,
   websiteSecondary,
   icons,
+  index = 0,
+  reverse = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-
   const handleModal = () => setIsOpen((v) => !v)
+  const firstName = name.split(' ')[0]
+  const ipa = NAME_IPA[firstName]
+
+  // The portrait drifts a little as the row scrolls past.
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  const drift = useTransform(scrollYProgress, [0, 1], [30, -30])
+
+  const sites = [website, websiteSecondary].filter(Boolean) as string[]
 
   return (
     <>
-      <Stack
-        role="group"
-        spacing={0}
-        bg="white"
-        borderRadius="2xl"
-        borderWidth="1px"
-        borderColor="gray.100"
-        boxShadow="0 1px 2px rgba(17,24,39,0.04), 0 20px 48px -24px rgba(17,24,39,0.18)"
-        overflow="hidden"
-        h="100%"
-        transition="transform 0.2s ease, box-shadow 0.2s ease"
-        _hover={{
-          transform: 'translateY(-4px)',
-          boxShadow:
-            '0 1px 2px rgba(17,24,39,0.04), 0 28px 56px -24px rgba(114,63,197,0.25)',
+      <Grid
+        ref={ref}
+        templateColumns={{
+          base: '1fr',
+          lg: reverse ? '1fr 0.85fr' : '0.85fr 1fr',
         }}
+        gap={{ base: 10, lg: 20 }}
+        alignItems="center"
       >
-        {/* Portrait: 1:1 square, face centered — no overlay */}
-        <Box position="relative" bgGradient="linear(to-br, #F5F2FF, #E6F6FB)">
-          <AspectRatio ratio={1} overflow="hidden">
-            <Image
-              src={photoSrc}
-              alt={name}
-              objectFit="cover"
-              objectPosition="center top"
-              transition="transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)"
-              _groupHover={{ transform: 'scale(1.05)' }}
-              sx={{
-                '@media (prefers-reduced-motion: reduce)': {
-                  transition: 'none',
-                  transform: 'none !important',
-                },
-              }}
+        {/* Portrait */}
+        <Box
+          order={{ base: 0, lg: reverse ? 1 : 0 }}
+          position="relative"
+          maxW={{ base: '420px', lg: 'none' }}
+          mx={{ base: 'auto', lg: 0 }}
+          w="100%"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: reverse ? 60 : -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.9, ease: EASE }}
+          >
+            {/* Offset brand shape behind the photo */}
+            <Box
+              position="absolute"
+              inset={0}
+              transform={
+                reverse
+                  ? 'translate(-22px, 22px) rotate(-3deg)'
+                  : 'translate(22px, 22px) rotate(3deg)'
+              }
+              borderRadius="3xl"
+              bgGradient="linear(to-br, brand.purple, brand.iris 55%, brand.blue)"
+              opacity={0.9}
             />
-          </AspectRatio>
-          <Box
-            position="absolute"
-            insetX={0}
-            bottom={0}
-            h="35%"
-            bgGradient="linear(to-t, rgba(114,63,197,0.18), transparent)"
-            pointerEvents="none"
-          />
+            <Box
+              position="relative"
+              borderRadius="3xl"
+              overflow="hidden"
+              boxShadow="0 30px 60px -28px rgba(30,20,70,0.5)"
+              sx={{ aspectRatio: '4 / 5' }}
+              bg="purple.50"
+            >
+              <motion.div
+                style={{ y: drift, height: '112%', marginTop: '-6%' }}
+              >
+                <Image
+                  src={photoSrc}
+                  alt={name}
+                  objectFit="cover"
+                  objectPosition="center top"
+                  w="100%"
+                  h="100%"
+                />
+              </motion.div>
+            </Box>
+            {ipa && (
+              <Box
+                position="absolute"
+                bottom={{ base: 4, md: 6 }}
+                {...(reverse
+                  ? { right: { base: 4, md: -6 } }
+                  : { left: { base: 4, md: -6 } })}
+                bg="whiteAlpha.900"
+                backdropFilter="blur(10px)"
+                borderRadius="xl"
+                px={4}
+                py={2.5}
+                boxShadow="0 16px 36px -14px rgba(30,20,70,0.4)"
+                aria-label={`${firstName}, in IPA`}
+              >
+                <Text
+                  fontSize="xs"
+                  color="gray.500"
+                  fontWeight="semibold"
+                  lineHeight="1.2"
+                >
+                  {firstName}
+                </Text>
+                <Text
+                  fontFamily="ipa"
+                  fontSize="xl"
+                  color="brand.purple"
+                  fontWeight="bold"
+                  lineHeight="1.3"
+                >
+                  {ipa}
+                </Text>
+              </Box>
+            )}
+          </motion.div>
         </Box>
 
-        {/* Name + title strip */}
-        <Stack
-          spacing={1}
-          px={{ base: 6, md: 8 }}
-          pt={{ base: 6, md: 7 }}
-          pb={2}
-        >
-          <Heading
-            as="h2"
-            fontSize={{ base: '2xl', md: '3xl' }}
-            fontWeight="black"
-            letterSpacing="-0.01em"
-            lineHeight="1.15"
-            color="gray.900"
+        {/* Text */}
+        <Box order={{ base: 1, lg: reverse ? 0 : 1 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
           >
-            {name}
-          </Heading>
-          <Text fontSize="sm" color="brand.purple" fontWeight="semibold">
-            {title}
-          </Text>
-          {NAME_IPA[name.split(' ')[0]] && (
-            <Text
-              fontFamily="ipa"
-              fontSize="sm"
-              color="gray.400"
-              aria-label={`${name.split(' ')[0]}, in IPA`}
-            >
-              {name.split(' ')[0]} · {NAME_IPA[name.split(' ')[0]]}
-            </Text>
-          )}
-        </Stack>
+            <Stack spacing={6}>
+              <Stack spacing={3}>
+                <Text
+                  fontSize="sm"
+                  fontWeight="bold"
+                  color="brand.purple"
+                  letterSpacing="0.14em"
+                  textTransform="uppercase"
+                  aria-hidden
+                >
+                  Coach 0{index + 1}
+                </Text>
+                <Heading
+                  as="h2"
+                  fontSize={{ base: '4xl', md: '5xl' }}
+                  fontWeight="black"
+                  letterSpacing="-0.03em"
+                  lineHeight="1.02"
+                  color="gray.900"
+                >
+                  {name}
+                </Heading>
+                <Text
+                  fontSize={{ base: 'md', md: 'lg' }}
+                  color="brand.purple"
+                  fontWeight="semibold"
+                >
+                  {title}
+                </Text>
+              </Stack>
 
-        {/* Body */}
-        <Stack spacing={5} px={{ base: 6, md: 8 }} pt={4} pb={6} flex="1">
-          <Text color="gray.600" lineHeight="1.7">
-            {bio}
-          </Text>
+              <Box
+                w="56px"
+                h="3px"
+                borderRadius="full"
+                bgGradient="linear(to-r, brand.purple, brand.iris)"
+              />
 
-          <Stack spacing={2}>
-            <Link
-              href={website}
-              isExternal
-              color="brand.purple"
-              fontSize="sm"
-              fontWeight="medium"
-              display="inline-flex"
-              alignItems="center"
-              gap={1.5}
-              _hover={{ color: 'brand.purpleLight', textDecoration: 'none' }}
-            >
-              {removeProtocol(website)}
-              <ExternalLinkIcon boxSize={3} />
-            </Link>
-            {websiteSecondary && (
-              <Link
-                href={websiteSecondary}
-                isExternal
-                color="brand.purple"
-                fontSize="sm"
-                fontWeight="medium"
-                display="inline-flex"
-                alignItems="center"
-                gap={1.5}
-                _hover={{ color: 'brand.purpleLight', textDecoration: 'none' }}
+              <Text
+                fontSize={{ base: 'md', md: 'lg' }}
+                color="gray.600"
+                lineHeight="1.8"
               >
-                {removeProtocol(websiteSecondary)}
-                <ExternalLinkIcon boxSize={3} />
-              </Link>
-            )}
-          </Stack>
+                {bio}
+              </Text>
 
-          {icons && icons.length > 0 && (
-            <HStack spacing={3}>
-              {icons.map((IconComponent) => {
-                const link = getIconLink(IconComponent)
-                return (
-                  <Flex
-                    key={link}
-                    as="a"
-                    href={link}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${name} social link`}
-                    w="38px"
-                    h="38px"
-                    align="center"
-                    justify="center"
-                    borderRadius="full"
-                    borderWidth="1px"
-                    borderColor="gray.200"
-                    color="gray.600"
-                    transition="all 0.15s"
+              <Stack spacing={2.5}>
+                {sites.map((site) => (
+                  <Link
+                    key={site}
+                    href={site}
+                    isExternal
+                    role="group"
+                    display="inline-flex"
+                    alignItems="center"
+                    gap={2}
+                    alignSelf="flex-start"
+                    fontWeight="semibold"
+                    color="gray.800"
+                    borderBottomWidth="1.5px"
+                    borderColor="purple.100"
+                    pb={0.5}
                     _hover={{
                       color: 'brand.purple',
-                      borderColor: 'brand.purpleLight',
-                      bg: 'purple.50',
+                      borderColor: 'brand.purple',
+                      textDecoration: 'none',
                     }}
+                    transition="color 0.2s, border-color 0.2s"
                   >
-                    <Icon as={IconComponent} boxSize={4} />
-                  </Flex>
-                )
-              })}
-            </HStack>
-          )}
-        </Stack>
+                    {removeProtocol(site)}
+                    <ArrowForwardIcon
+                      transform="rotate(-45deg)"
+                      transition="transform 0.2s"
+                      _groupHover={{
+                        transform: 'rotate(-45deg) translateX(3px)',
+                      }}
+                    />
+                  </Link>
+                ))}
+              </Stack>
 
-        <Box borderTopWidth="1px" borderTopColor="gray.100" p={4}>
-          <Button
-            onClick={handleModal}
-            w="100%"
-            variant="ghost"
-            color="brand.purple"
-            fontWeight="semibold"
-            rightIcon={<ArrowForwardIcon />}
-            _hover={{ bg: 'purple.50', color: 'brand.purpleLight' }}
-          >
-            Learn more about {name.split(' ')[0]}
-          </Button>
+              <Flex align="center" gap={5} wrap="wrap" pt={2}>
+                <Button
+                  onClick={handleModal}
+                  size="lg"
+                  borderRadius="xl"
+                  px={7}
+                  rightIcon={<ArrowForwardIcon />}
+                  bgGradient="linear(to-r, brand.purple, brand.iris)"
+                  color="white"
+                  fontWeight="semibold"
+                  boxShadow="0 10px 24px -8px rgba(114,63,197,0.55)"
+                  _hover={{
+                    bgGradient: 'linear(to-r, brand.purpleLight, brand.purple)',
+                    transform: 'translateY(-1px)',
+                  }}
+                  _active={{ transform: 'translateY(0)' }}
+                >
+                  Learn more about {firstName}
+                </Button>
+
+                {icons && icons.length > 0 && (
+                  <HStack spacing={1}>
+                    {icons.map((IconComponent) => {
+                      const link = getIconLink(IconComponent)
+                      return (
+                        <Flex
+                          key={link}
+                          as="a"
+                          href={link}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`${name} social link`}
+                          w="40px"
+                          h="40px"
+                          align="center"
+                          justify="center"
+                          borderRadius="full"
+                          color="gray.500"
+                          transition="all 0.15s"
+                          _hover={{ color: 'brand.purple', bg: 'purple.50' }}
+                        >
+                          <Icon as={IconComponent} boxSize={5} />
+                        </Flex>
+                      )
+                    })}
+                  </HStack>
+                )}
+              </Flex>
+            </Stack>
+          </motion.div>
         </Box>
-      </Stack>
+      </Grid>
       <AboutCardModal {...{ isOpen, handleModal, longBio, name }} />
     </>
   )
