@@ -203,14 +203,20 @@ export const IpaTicker = () => {
         ə
       </Box>
       <Box position="relative" h="40px" flex="1" overflow="hidden">
-        <AnimatePresence initial={false}>
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={word}
-            style={{ position: 'absolute', inset: 0 }}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{ duration: 0.45, ease: EASE }}
+            initial={{ y: 12, opacity: 0 }}
+            animate={{
+              y: 0,
+              opacity: 1,
+              transition: { duration: 0.32, ease: EASE },
+            }}
+            exit={{
+              y: -8,
+              opacity: 0,
+              transition: { duration: 0.16, ease: 'easeIn' },
+            }}
           >
             <Text
               fontSize="xs"

@@ -56,7 +56,7 @@ const DialectVideo = () => {
         position={{ base: 'relative', md: 'absolute' }}
         mt={{ base: 4, md: 0 }}
         left={{ base: 0, md: -6 }}
-        bottom={{ md: -14 }}
+        bottom={{ md: -20 }}
         display={{ base: 'flex', md: 'block' }}
         justifyContent="center"
         zIndex={2}

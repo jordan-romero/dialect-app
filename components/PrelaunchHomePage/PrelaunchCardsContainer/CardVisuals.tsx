@@ -203,17 +203,21 @@ export const AccentToggleVisual = () => {
           bath
         </Text>
         <Box h="32px" position="relative" overflow="hidden" minW="90px">
-          <AnimatePresence initial={false}>
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={ACCENTS[i].ipa}
-              initial={{ y: 16, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -16, opacity: 0 }}
-              transition={{ duration: 0.35, ease: EASE }}
+              initial={{ y: 12, opacity: 0 }}
+              animate={{
+                y: 0,
+                opacity: 1,
+                transition: { duration: 0.32, ease: EASE },
+              }}
+              exit={{
+                y: -8,
+                opacity: 0,
+                transition: { duration: 0.16, ease: 'easeIn' },
+              }}
               style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
                 fontFamily: "'Charis SIL', 'Doulos SIL', serif",
                 color: '#723FC5',
                 fontSize: 22,

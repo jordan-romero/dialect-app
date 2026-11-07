@@ -52,8 +52,8 @@ const PrelaunchTestimonialsContainer = () => {
             fontSize={{ base: 'md', md: 'lg' }}
             color="gray.600"
             maxW="640px"
-            mx="auto"
-            sx={{ textWrap: 'balance' }}
+            alignSelf="center"
+            sx={{ textWrap: 'balance', marginInline: 'auto !important' }}
           >
             Students who came for a role and left with a career-long skill.
           </Text>

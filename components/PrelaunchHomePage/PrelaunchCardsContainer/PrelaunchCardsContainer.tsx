@@ -74,8 +74,8 @@ const PrelaunchCardsContainer = () => {
             fontSize={{ base: 'md', md: 'lg' }}
             color="gray.600"
             maxW="640px"
-            mx="auto"
-            sx={{ textWrap: 'balance' }}
+            alignSelf="center"
+            sx={{ textWrap: 'balance', marginInline: 'auto !important' }}
           >
             Three reasons actors, coaches, and language enthusiasts are joining
             the early-access list.

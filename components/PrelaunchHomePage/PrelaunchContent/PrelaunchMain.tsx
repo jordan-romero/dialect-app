@@ -130,22 +130,26 @@ const PersonaRotator = () => {
         letterSpacing="-0.02em"
         lineHeight="1.3"
       >
-        <AnimatePresence initial={false}>
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={personas[i]}
-            initial={{ y: '60%', opacity: 0 }}
-            animate={{ y: '0%', opacity: 1 }}
-            exit={{ y: '-60%', opacity: 0 }}
-            transition={{ duration: 0.45, ease: EASE }}
+            initial={{ y: 14, opacity: 0 }}
+            animate={{
+              y: 0,
+              opacity: 1,
+              transition: { duration: 0.32, ease: EASE },
+            }}
+            exit={{
+              y: -10,
+              opacity: 0,
+              transition: { duration: 0.16, ease: 'easeIn' },
+            }}
             style={{
               backgroundImage: 'linear-gradient(90deg, #723FC5, #5F53CF)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               color: 'transparent',
               width: 'fit-content',
-              position: 'absolute',
-              left: 0,
-              top: 0,
             }}
           >
             {personas[i]}
