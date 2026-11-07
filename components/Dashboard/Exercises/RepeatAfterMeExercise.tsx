@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import {
   Box,
   Button,
+  Collapse,
   HStack,
   Text,
   VStack,
@@ -12,12 +13,19 @@ import {
   Tr,
   Th,
   Td,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { MdVolumeUp, MdMic, MdStop } from 'react-icons/md'
+import {
+  MdVolumeUp,
+  MdMic,
+  MdStop,
+  MdExpandMore,
+  MdExpandLess,
+} from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
-import { renderUnderlined } from './UnderlineMarkup'
+import { renderRich, renderUnderlined } from './UnderlineMarkup'
 
 /**
  * Renders a transcription with `{...}` marking the RP sound the clip teaches,
@@ -48,8 +56,16 @@ interface LexicalSet {
 }
 interface Item {
   n: number
-  lexicalSets: LexicalSet[]
+  // An item carries either the lexical set table (with an optional note) or a
+  // titled question that stands in for it, with an optional callout boxed
+  // below the question.
+  lexicalSets?: LexicalSet[]
   note?: string
+  // Footnotes keyed to asterisks on the set names ("B{A}TH*"), shown as written.
+  notes?: string[]
+  title?: string
+  question?: string
+  callout?: string
   sentence: string
   ipa: string
   audioUrl: string
@@ -84,6 +100,8 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<BlobPart[]>([])
   const toast = useToast()
+  const { isOpen: isInstructionsOpen, onToggle: onToggleInstructions } =
+    useDisclosure({ defaultIsOpen: true })
 
   useEffect(() => {
     fetch(`/api/repeatAfterMe?lessonId=${lessonId}`)
@@ -206,48 +224,109 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
         border="1px solid"
         borderColor="border.subtle"
       >
-        <Text fontSize="sm">
-          <b>Instructions:</b> {data.instructions}
-        </Text>
+        <HStack
+          as="button"
+          w="100%"
+          justify="space-between"
+          onClick={onToggleInstructions}
+          aria-expanded={isInstructionsOpen}
+        >
+          <Text fontSize="sm">Instructions</Text>
+          {isInstructionsOpen ? <MdExpandLess /> : <MdExpandMore />}
+        </HStack>
+        <Collapse in={isInstructionsOpen} animateOpacity>
+          <VStack spacing={2} align="stretch" pt={2}>
+            {data.instructions.split('\n\n').map((para, i) => (
+              <Text key={i} fontSize="sm">
+                {renderRich(para)}
+              </Text>
+            ))}
+          </VStack>
+        </Collapse>
       </Box>
 
       <Text fontSize="sm" color="text.muted">
         {index + 1} of {data.items.length}
       </Text>
 
+      {/* Titled question that stands in for the lexical set table */}
+      {(item.title || item.question) && (
+        <Box
+          p={5}
+          borderRadius="lg"
+          border="1px solid"
+          borderColor="border.subtle"
+          borderLeft="4px solid"
+          borderLeftColor="brand.purple"
+        >
+          {item.title && (
+            <Text fontSize="xl" fontWeight="bold" mb={3}>
+              {item.title}
+            </Text>
+          )}
+          {item.question && (
+            <VStack spacing={3} align="stretch">
+              {item.question.split('\n\n').map((para, i) => (
+                <Text key={i} fontSize="lg" lineHeight="tall">
+                  {renderRich(para)}
+                </Text>
+              ))}
+            </VStack>
+          )}
+          {item.callout && (
+            <Box bg="accent.subtle" borderRadius="md" p={4} mt={4}>
+              <Text fontSize="md" lineHeight="tall">
+                {renderRich(item.callout)}
+              </Text>
+            </Box>
+          )}
+        </Box>
+      )}
+
       {/* Lexical set(s) and the GA → RP change */}
-      <Table size="sm" variant="simple" maxW="420px">
-        <Thead>
-          <Tr>
-            <Th>Lexical Set</Th>
-            <Th textAlign="center">GA</Th>
-            <Th textAlign="center">RP</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {item.lexicalSets.map((s) => (
-            <Tr key={s.name}>
-              <Td fontWeight="bold">{renderUnderlined(s.name)}</Td>
-              <Td textAlign="center" fontFamily="ipa" fontSize="lg">
-                {s.ga}
-              </Td>
-              <Td
-                textAlign="center"
-                fontFamily="ipa"
-                fontSize="lg"
-                color="brand.purple"
-              >
-                {s.rp}
-              </Td>
+      {item.lexicalSets && (
+        <Table size="sm" variant="simple" maxW="420px">
+          <Thead>
+            <Tr>
+              <Th>Lexical Set</Th>
+              <Th textAlign="center">GA</Th>
+              <Th textAlign="center">RP</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {item.lexicalSets.map((s) => (
+              <Tr key={s.name}>
+                <Td fontWeight="bold">{renderUnderlined(s.name)}</Td>
+                <Td textAlign="center" fontFamily="ipa" fontSize="lg">
+                  {s.ga}
+                </Td>
+                <Td
+                  textAlign="center"
+                  fontFamily="ipa"
+                  fontSize="lg"
+                  color="brand.purple"
+                >
+                  {s.rp}
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      )}
 
       {item.note && (
         <Text fontSize="sm" fontStyle="italic" color="text.muted">
-          Note: {item.note}
+          Note: {renderRich(item.note)}
         </Text>
+      )}
+      {item.notes && (
+        <VStack spacing={1} align="stretch">
+          {item.notes.map((n, i) => (
+            <Text key={i} fontSize="sm" fontStyle="italic" color="text.muted">
+              {renderRich(n)}
+            </Text>
+          ))}
+        </VStack>
       )}
 
       {/* Sentence + transcription */}

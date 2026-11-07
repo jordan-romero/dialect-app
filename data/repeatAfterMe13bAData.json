@@ -2,7 +2,7 @@
   "id": 42,
   "lessonId": 19,
   "quizType": "repeatAfterMe",
-  "instructions": "Listen to the presented audio clip while following along with the provided transcription. Record your own attempt at speaking the text, then play it back to compare with ours — re-record as many times as you need. This exercise also introduces alternate sound changes that may suit specific character choices, such as a pre-20th century period piece. As you go, fill out your blank Lexical Chart with the RP changes presented.",
+  "instructions": "_This exercise presents some distinct rules and alternate sound changes for certain lexical sets, which are only appropriate in specific situations._\n\n_Read the description of each feature, then listen to the presented audio clip while following along with the provided transcription. Then record your own attempt at speaking the text and play your recording back to compare to ours. Feel free to re-record as many times as necessary for practice._\n\n_As you complete each question, fill out the blank Lexical Chart you began filling out in the previous module with the presented RP changes._",
   "questions": [
     {
       "id": 431,
@@ -12,81 +12,49 @@
   "items": [
     {
       "n": 1,
-      "lexicalSets": [
-        {
-          "name": "LINKING {R}",
-          "ga": "[ɚ]",
-          "rp": "[əɹ]"
-        },
-        {
-          "name": "H{URR}Y",
-          "ga": "[ɝ]",
-          "rp": "[ʌɹ]"
-        }
-      ],
-      "note": "If a syllable ending with rhoticity is followed by a syllable beginning with a vowel, that lost “R” colouring returns as a consonant “R” between the two. It helps to think of the “R” as starting the second word rather than ending the first.",
+      "title": "The “Linking R”",
+      "question": "If a syllable ending with _rhoticity_ (an “R” sound), which is normally dropped in RP, is then _followed by a syllable beginning with a vowel sound_, **that lost “R” coloring re-introduces itself as a consonant “R” between the two vowels**. For example, the phrase, “The letter implied...”, would not become /θə lɛtə ɪmplaɪ̆d/ in RP; instead it would be spoken as /θə lɛtə**ɹ**ɪmplaɪ̆d/, with _the consonant “R” serving as connective tissue between the words_. **Note:** It’s helpful to _think of the “R” sound as starting on the second word,_ rather than ending on the first.\n\nThis **can also happen within multi-syllable words,** such as “forum, hairy, marriage”, which sound like: /fɔ**ɹ**əm | hɛ**ɹ**ĭ | mæ**ɹ**ɪd͡ʒ/ in RP. Additionally, in **words which feature the rhotic vowel [ɝ]** in Gen Am such as “hurry, worry, or courage,” (/hɝĭ | wɝĭ | kɝəd͡ʒ/), the stressed vowel not only loses the rhoticity in RP, but also **shifts to [ʌ] and the “R” becomes a consonant** beginning the second syllable: /hʌɹĭ | wʌɹĭ | kʌɹɪd͡ʒ/.",
+      "callout": "_Note, in multi-syllable words like “hurry, worry, or courage,” which in GenAm feature the rhotic vowel [ɝ] (/hɝĭ | wɝĭ | kɝəd͡ʒ/), the vowel not only loses its rhoticity in RP, but shifts to [ʌ] and the “R” becomes a consonant beginning the second syllable: /hʌɹĭ | wʌɹĭ | kʌɹɪd͡ʒ/_",
       "sentence": "The blurry star above appears either nearer or farther away depending on where I am.",
       "ipa": "/ðə bl{ʌɹ}ĭ stɑ {ɹ}əbʌv əpɪə̆z aɪ̆ðə nɪ{ɹ}ə {ɹ}ɔ fɑðə {ɹ}əweɪ̆ dəpɛndɪŋ ɒn wɛː {ɹ}aɪ̆ æm/",
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.1.mp3"
     },
     {
       "n": 2,
-      "lexicalSets": [
-        {
-          "name": "INTRUSIVE {R}",
-          "ga": "(none)",
-          "rp": "[ɹ]"
-        }
-      ],
-      "note": "An “R” inserts itself between a word ending in a vowel and one beginning with a vowel, even with no “R” in the spelling. It does not occur after a high vowel such as [i] or [u] — “the bee in the tree” keeps its gap, but “the claw in the paw” does not.",
+      "title": "The “Intrusive R”",
+      "question": "This is where **an “R” sound inserts itself between a word that ends in a vowel and a word that begins in a vowel**, even if there is no “R” in the spelling of it; for instance, “The Shah of Persia is here,” would be /ðə ʃɑ **ɹ**əv pɜʒə **ɹ**ɪz hɪə̆/.\n\nThere are exceptions to this rule. _One would not hear this feature following a vowel where the tongue is high in the mouth_, such as [i] or [u]. For instance, in the phrase “The bee in the tree,” you wouldn’t say /ðə bi**ɹ**ɪn ðə tɹi/, but you would hear it in “The claw in the paw”: /ðə klɔ**ɹ**ɪn ðə pɔ/.",
       "sentence": "Krista is gaga over the drama of the conga on the dance floor.",
       "ipa": "/kɹɪstə {ɹ}ɪz gɑgɑ {ɹ}əʊ̆və ðə dɹɑmə {ɹ}əv ðə kɔŋgə {ɹ}ɒn ðə dɑns flɔ/",
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.2.mp3"
     },
     {
       "n": 3,
-      "lexicalSets": [
-        {
-          "name": "LIQUID {U}",
-          "ga": "[u]",
-          "rp": "[ɪ̆u]"
-        }
-      ],
-      "note": "Present where [u] follows [t], [d], [n], [s], [z], the affricates [t͡ʃ] and [d͡ʒ], and rarely a light [l]. It relies partly on spelling: only in words spelled with “U” or occasionally “E-W”, never “O” or “OO” words like “too, zoo, soon”.",
+      "title": "The “Liquid U”",
+      "question": "The **“Liquid-U”** appears _more frequently in British RP_ compared to GenAm, **namely in words where the [u] vowel follows the alveolar consonants [t]** as in “tune”, **[d]** as in “duke”, **[n]** as in “new”, **[s]** as in “suit”, and **[z]** as in “presume”, as well as after the affricates **[t͡ʃ]** as in “chew”, and **[d͡ʒ]** as in “juice”.\n\nRarely, one may even hear it following the light **[l]**, as in “lunatic”.\n\nHowever, this feature is somewhat reliant upon spelling, as **the “Liquid-U” only occurs in words spelled with the letter “U” or occasionally “E-W”**, _but never “O” or “double O” words_, such as: “too, zoo, soon, loose, and do”.",
       "sentence": "The only suitable meal while on duty on Tuesdays in June is a superbly chewy stew served with juice.",
       "ipa": "/ði əʊ̆nlĭ s{ɪ̆u}təbɫ̩ miɫ waɪ̆ɫ ɒn d{ɪ̆u}tĭ ɒn ˈt{ɪ̆u}zdeɪ̆z ɪn d͡ʒ{ɪ̆u}n ɪz ə s{ɪ̆u}pɜblĭ t͡ʃ{ɪ̆u}wĭ st{ɪ̆u} sɜvd wɪð d͡ʒ{ɪ̆u}s/",
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.3.mp3"
     },
     {
       "n": 4,
-      "lexicalSets": [
-        {
-          "name": "SYNCOPE (-{o}ry, -{a}ry, -{e}ry, -{u}ry)",
-          "ga": "[ɔɹĭ] / [ɛɹĭ]",
-          "rp": "[ɹĭ]"
-        }
-      ],
-      "note": "Multisyllabic words ending in “-ury, -ory, -ary, -ery” lose the penultimate vowel. So “library” and “territory” become /ˈlaɪ̆bɹĭ/ and /ˈtɛɹɪˌtɹĭ/.",
+      "title": "Syncope",
+      "question": "_Multisyllabic words that end in “-ury, -ory, -ary, -ery,”_ or similar endings, will **lose the penultimate vowel sound**. Hence, “library” and “territory” are pronounced /ˈlaɪ̆bɹĭ/ and /ˈtɛɹɪˌtɹĭ/. This feature is defined as “syncope”, or _the loss of a sound within a word_.",
       "sentence": "The observatory’s lavatory was inaccessible to the secretary in January and February.",
       "ipa": "/ði əbzɜvət{ɹĭ}z lævət{ɹĭ} wəz ˌɪnɛkˈsɛsɪbɫ̩ tʊ ðə sɛkɹət{ɹĭ} ɪn d͡ʒænjʊ{ɹĭ} ænd fɛbɹʊ{ɹĭ}/",
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.4.mp3"
     },
     {
       "n": 5,
-      "lexicalSets": [
-        {
-          "name": "-{ILE}",
-          "ga": "[ɫ̩]",
-          "rp": "[aɪ̆l]"
-        }
-      ],
-      "note": "The final syllable of “-ile” words takes equal stress, pronounced with the diphthong [aɪ̆] followed by a light [l].",
+      "title": "The “-ile” Ending",
+      "question": "The final syllable of **words ending in “-ile” is given equal stress**, pronounced with the diphthong [aɪ̆] and followed by a light [l], _resulting in /aɪ̆l/_.",
       "sentence": "The hostile juvenile was agile with his mobile phone.",
       "ipa": "/ðə hɒst{aɪ̆l} d͡ʒuvən{aɪ̆l} wəz æd͡ʒ{aɪ̆l} wɪð hɪz məʊ̆b{aɪ̆l} fəʊ̆n/",
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.5.mp3"
     },
     {
       "n": 6,
+      "title": "Alternate Features",
+      "question": "As with every dialect or accent, **variance exists within certain lexical sets**, meaning that often _there is more than one “correct” sound change to choose from_.\n\nFor RP, there are _certain sound changes that are indicative of more antiquated or upper class characters_. For instance, most of the following features were present in Queen Elizabeth II’s idiolect. While not technically “distinct features”, we have opted to group them together here as an example of this type of character.",
       "lexicalSets": [
         {
           "name": "HAPP{Y}",
@@ -109,7 +77,6 @@
           "rp": "[ɾ]"
         }
       ],
-      "note": "These changes read as more antiquated or upper class — most were present in Queen Elizabeth II’s idiolect. Not strictly “distinct features”, but grouped here as an example of that character.",
       "sentence": "It felt silly to worry about losing her way, for she had her map in her gray bag.",
       "ipa": "/ɪt fɛlt sɪl{ɪ} tʊ wʌ{ɾɪ} əbaʊ̆t luzɪŋ hɜ w{ɛɪ̆} | fɔ ʃɪ h{ɛ}d hə m{ɛ}p ɪn hə g{ɾɛɪ̆} b{ɛ}g/",
       "audioUrl": "https://acting-accents.s3.amazonaws.com/13b.%20Distinct%20Features%20of%20the%20Dialect/13b.A.Audio/13bA.6.mp3"
