@@ -3,13 +3,11 @@ import React from 'react'
 import PrelaunchContent from './PrelaunchContent/PrelaunchContentContainer'
 import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsContainer'
 import PrelaunchTestimonialsContainer from './PrelaunchTestimonials/PrelaunchTestimonialsContainer'
-import { MotionConfig } from 'framer-motion'
-import { FloatingGlyphs, GlyphMarquee, ScrollProgress } from './motion'
+import { FloatingGlyphs, GlyphMarquee } from './motion'
 
 const PrelaunchHomePage = () => {
   return (
-    <MotionConfig reducedMotion="user">
-      <ScrollProgress />
+    <>
       <Box bg="white">
         <Box
           position="relative"
@@ -52,7 +50,7 @@ const PrelaunchHomePage = () => {
           <PrelaunchTestimonialsContainer />
         </Box>
       </Box>
-    </MotionConfig>
+    </>
   )
 }
 

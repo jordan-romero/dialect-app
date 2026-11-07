@@ -19,6 +19,12 @@ import AboutCardModal from './AboutCardModal'
 
 type AboutCardProps = Coach
 
+// First names in IPA, a small nod to what the coaches teach.
+const NAME_IPA: Record<string, string> = {
+  Scott: '/skɑt/',
+  Krista: '/ˈkɹɪs.tə/',
+}
+
 const AboutCard: React.FC<AboutCardProps> = ({
   name,
   title,
@@ -36,6 +42,7 @@ const AboutCard: React.FC<AboutCardProps> = ({
   return (
     <>
       <Stack
+        role="group"
         spacing={0}
         bg="white"
         borderRadius="2xl"
@@ -52,18 +59,31 @@ const AboutCard: React.FC<AboutCardProps> = ({
         }}
       >
         {/* Portrait: 1:1 square, face centered — no overlay */}
-        <Box
-          position="relative"
-          bgGradient="linear(to-br, #F5F2FF, #E6F6FB)"
-        >
-          <AspectRatio ratio={1}>
+        <Box position="relative" bgGradient="linear(to-br, #F5F2FF, #E6F6FB)">
+          <AspectRatio ratio={1} overflow="hidden">
             <Image
               src={photoSrc}
               alt={name}
               objectFit="cover"
               objectPosition="center top"
+              transition="transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)"
+              _groupHover={{ transform: 'scale(1.05)' }}
+              sx={{
+                '@media (prefers-reduced-motion: reduce)': {
+                  transition: 'none',
+                  transform: 'none !important',
+                },
+              }}
             />
           </AspectRatio>
+          <Box
+            position="absolute"
+            insetX={0}
+            bottom={0}
+            h="35%"
+            bgGradient="linear(to-t, rgba(114,63,197,0.18), transparent)"
+            pointerEvents="none"
+          />
         </Box>
 
         {/* Name + title strip */}
@@ -86,6 +106,16 @@ const AboutCard: React.FC<AboutCardProps> = ({
           <Text fontSize="sm" color="brand.purple" fontWeight="semibold">
             {title}
           </Text>
+          {NAME_IPA[name.split(' ')[0]] && (
+            <Text
+              fontFamily="ipa"
+              fontSize="sm"
+              color="gray.400"
+              aria-label={`${name.split(' ')[0]}, in IPA`}
+            >
+              {name.split(' ')[0]} · {NAME_IPA[name.split(' ')[0]]}
+            </Text>
+          )}
         </Stack>
 
         {/* Body */}
