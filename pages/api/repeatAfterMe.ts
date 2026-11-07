@@ -10,15 +10,15 @@ import { getLessonAccess } from '../../lib/access'
 
 const prisma = new PrismaClient()
 
-// Two lessons run this exercise off different content: 13a.C on Lesson 18 and
-// 13b.A on Lesson 19. Both are quizType "repeatAfterMe", so the lesson is what
+// Two lessons run this exercise off different content: 13C on Lesson 18 and
+// 14A on Lesson 19 (13a.C and 13b.A before the Nov 2026 renumbering). Both are quizType "repeatAfterMe", so the lesson is what
 // distinguishes them. Whitelisted rather than interpolated — the lessonId
 // arrives from the query string. Because the file served is keyed by this same
 // id, gating on it is safe: the caller only ever receives the lesson they ask
 // for, and both lessons are gated.
 const BY_LESSON: Record<string, string> = {
-  '18': 'repeatAfterMeData.json',
-  '19': 'repeatAfterMe13bAData.json',
+  '18': 'repeatAfterMe13CData.json',
+  '19': 'repeatAfterMe14AData.json',
 }
 
 export default async function handler(
