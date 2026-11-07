@@ -1,12 +1,6 @@
-import React from 'react'
-import {
-  Box,
-  Flex,
-  Icon,
-  Image,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Box, Flex, Icon, Image, Stack, Text } from '@chakra-ui/react'
 import { FaQuoteLeft } from 'react-icons/fa'
 
 interface PrelaunchCardProps {
@@ -24,6 +18,9 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
   image,
   altText,
 }) => {
+  const [expanded, setExpanded] = useState(false)
+  const isLong = testimonial.length > 420
+
   return (
     <Flex
       direction={{ base: 'column', md: 'row' }}
@@ -45,31 +42,53 @@ const PrelaunchCard: React.FC<PrelaunchCardProps> = ({
         bgGradient="linear(to-br, brand.purple, brand.iris)"
         flexShrink={0}
       >
-        <Image
-          src={image}
-          alt={altText}
-          objectFit="cover"
-          objectPosition="top"
-          w="100%"
-          h="100%"
-        />
+        <Box w="100%" h="100%" overflow="hidden">
+          <motion.div
+            initial={{ scale: 1.12 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 6, ease: 'easeOut' }}
+            style={{ width: '100%', height: '100%' }}
+          >
+            <Image
+              src={image}
+              alt={altText}
+              objectFit="cover"
+              objectPosition="top"
+              w="100%"
+              h="100%"
+            />
+          </motion.div>
+        </Box>
       </Box>
 
-      <Stack
-        spacing={5}
-        p={{ base: 6, md: 10 }}
-        flex="1"
-        justify="center"
-      >
-        <Icon as={FaQuoteLeft} boxSize={6} color="brand.purpleLight" opacity={0.6} />
+      <Stack spacing={5} p={{ base: 6, md: 10 }} flex="1" justify="center">
+        <Icon
+          as={FaQuoteLeft}
+          boxSize={6}
+          color="brand.purpleLight"
+          opacity={0.6}
+        />
         <Text
           fontSize={{ base: 'md', md: 'lg' }}
           color="gray.700"
           lineHeight="1.7"
-          noOfLines={{ base: 8, md: 10 }}
+          noOfLines={expanded ? undefined : { base: 8, md: 10 }}
         >
           {testimonial}
         </Text>
+        {isLong && (
+          <Box
+            as="button"
+            onClick={() => setExpanded((v) => !v)}
+            alignSelf="flex-start"
+            color="brand.purple"
+            fontWeight="semibold"
+            fontSize="sm"
+            _hover={{ color: 'brand.purpleLight' }}
+          >
+            {expanded ? 'Show less' : 'Read the full story'}
+          </Box>
+        )}
         <Stack spacing={0} pt={2}>
           <Text fontSize="md" fontWeight="bold" color="gray.900">
             {name}
