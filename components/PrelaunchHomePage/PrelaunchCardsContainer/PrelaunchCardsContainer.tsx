@@ -2,14 +2,24 @@ import React from 'react'
 import {
   Box,
   Container,
+  Grid,
+  GridItem,
   Heading,
-  SimpleGrid,
   Stack,
   Text,
 } from '@chakra-ui/react'
 import { FaGraduationCap, FaBook, FaRegLightbulb } from 'react-icons/fa'
 import PrelaunchCard from './PrelaunchCard'
 import { CardData } from '../types'
+import { motion } from 'framer-motion'
+import { EASE, Reveal } from '../motion'
+import { AccentToggleVisual, ChartVisual, ScriptVisual } from './CardVisuals'
+
+const visuals = [
+  <ChartVisual key="chart" />,
+  <ScriptVisual key="script" />,
+  <AccentToggleVisual key="toggle" />,
+]
 
 const cardsData: CardData[] = [
   {
@@ -38,51 +48,77 @@ const cardsData: CardData[] = [
 const PrelaunchCardsContainer = () => {
   return (
     <Container maxW="7xl" px={{ base: 5, md: 8 }} py={{ base: 20, md: 28 }}>
-      <Stack spacing={4} textAlign="center" mb={{ base: 10, md: 14 }}>
-        <Text
-          fontSize="sm"
-          fontWeight="bold"
-          color="brand.purple"
-          letterSpacing="0.14em"
-          textTransform="uppercase"
-        >
-          Why ActingAccents.com
-        </Text>
-        <Heading
-          as="h2"
-          fontSize={{ base: '3xl', md: '5xl' }}
-          fontWeight="black"
-          letterSpacing="-0.02em"
-          color="gray.900"
-          lineHeight="1.1"
-          sx={{ textWrap: 'balance' }}
-        >
-          A method, not a guess.
-        </Heading>
-        <Text
-          fontSize={{ base: 'md', md: 'lg' }}
-          color="gray.600"
-          maxW="640px"
-          mx="auto"
-          sx={{ textWrap: 'balance' }}
-        >
-          Three reasons actors, coaches, and language enthusiasts are joining
-          the early-access list.
-        </Text>
-      </Stack>
+      <Reveal>
+        <Stack spacing={4} textAlign="center" mb={{ base: 10, md: 14 }}>
+          <Text
+            fontSize="sm"
+            fontWeight="bold"
+            color="brand.purple"
+            letterSpacing="0.14em"
+            textTransform="uppercase"
+          >
+            Why ActingAccents.com
+          </Text>
+          <Heading
+            as="h2"
+            fontSize={{ base: '3xl', md: '5xl' }}
+            fontWeight="black"
+            letterSpacing="-0.02em"
+            color="gray.900"
+            lineHeight="1.1"
+            sx={{ textWrap: 'balance' }}
+          >
+            A method, not a guess.
+          </Heading>
+          <Text
+            fontSize={{ base: 'md', md: 'lg' }}
+            color="gray.600"
+            maxW="640px"
+            alignSelf="center"
+            sx={{ textWrap: 'balance', marginInline: 'auto !important' }}
+          >
+            Three reasons actors, coaches, and language enthusiasts are joining
+            the early-access list.
+          </Text>
+        </Stack>
+      </Reveal>
 
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 6, md: 8 }}>
-        {cardsData.map((card) => (
-          <PrelaunchCard key={card.header} data={card} />
+      {/* Bento: the promise is the tall card, the other two stack beside it */}
+      <Grid
+        templateColumns={{ base: '1fr', lg: '1.05fr 1fr' }}
+        templateRows={{ base: 'auto', lg: 'auto auto' }}
+        gap={{ base: 6, md: 7 }}
+      >
+        {cardsData.map((card, i) => (
+          <GridItem
+            key={card.header}
+            rowSpan={{ base: 1, lg: i === 0 ? 2 : 1 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.75, ease: EASE, delay: i * 0.12 }}
+              style={{ height: '100%' }}
+            >
+              <PrelaunchCard
+                data={card}
+                visual={visuals[i]}
+                featured={i === 0}
+              />
+            </motion.div>
+          </GridItem>
         ))}
-      </SimpleGrid>
+      </Grid>
 
-      <Box textAlign="center" mt={{ base: 10, md: 14 }}>
-        <Text fontSize="sm" color="gray.500">
-          Every lesson pairs clear instruction with hands-on exercises you can
-          try right in your browser.
-        </Text>
-      </Box>
+      <Reveal delay={0.2}>
+        <Box textAlign="center" mt={{ base: 10, md: 14 }}>
+          <Text fontSize="sm" color="gray.500">
+            Every lesson pairs clear instruction with hands-on exercises you can
+            try right in your browser.
+          </Text>
+        </Box>
+      </Reveal>
     </Container>
   )
 }
