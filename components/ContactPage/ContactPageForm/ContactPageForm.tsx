@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   Alert,
   AlertIcon,
@@ -15,7 +16,28 @@ import {
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { AnimatePresence, motion } from 'framer-motion'
 
+// Shown after the confirmation link in the signup email sends people back here.
+const CONFIRM_STATUS: Record<
+  string,
+  { status: 'success' | 'warning' | 'error'; text: string }
+> = {
+  '1': { status: 'success', text: 'You’re subscribed. Thanks for confirming!' },
+  invalid: {
+    status: 'warning',
+    text: 'That confirmation link is invalid or expired. Sign up again below.',
+  },
+  error: {
+    status: 'error',
+    text: 'We couldn’t confirm your subscription. Please try again.',
+  },
+}
+
 const ContactPageForm = () => {
+  const router = useRouter()
+  const confirmed =
+    typeof router.query.subscribed === 'string'
+      ? CONFIRM_STATUS[router.query.subscribed]
+      : undefined
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -135,6 +157,12 @@ const ContactPageForm = () => {
             />
           </FormControl>
 
+          {confirmed && !success && (
+            <Alert status={confirmed.status} borderRadius="lg" fontSize="sm">
+              <AlertIcon />
+              {confirmed.text}
+            </Alert>
+          )}
           {error && (
             <Alert status="error" borderRadius="lg" fontSize="sm">
               <AlertIcon />
@@ -188,7 +216,8 @@ const ContactPageForm = () => {
                     </svg>
                   </Box>
                   <Text fontSize="sm" fontWeight="semibold" color="gray.800">
-                    Thanks — you’re on the list. Keep an eye on your inbox.
+                    Almost there — check your inbox and click the link to
+                    confirm.
                   </Text>
                 </HStack>
               </motion.div>

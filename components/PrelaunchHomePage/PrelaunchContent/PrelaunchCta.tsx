@@ -42,10 +42,10 @@ const PrelaunchCta = () => {
 
       if (response.ok) {
         toast({
-          title: 'You’re on the list!',
+          title: 'Almost there!',
           description: data.message,
           status: 'success',
-          duration: 3000,
+          duration: 6000,
           isClosable: true,
         })
         setEmail('')
