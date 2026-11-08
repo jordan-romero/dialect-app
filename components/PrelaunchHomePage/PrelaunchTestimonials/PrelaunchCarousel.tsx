@@ -29,6 +29,11 @@ interface CardCarouselProps {
 }
 
 const INTERVAL_MS = 8000
+
+// Image paths in the data are a mix of './a.jpg' and 'a.jpg'. Make them
+// root-relative so they resolve the same on any page.
+const imgSrc = (s: string) =>
+  /^(https?:)?\//.test(s) ? s : '/' + s.replace(/^\.?\//, '')
 const RING = 2 * Math.PI * 27 // circumference of the progress ring (r = 27)
 
 // "Cast list" testimonials: one quote on stage, every headshot in a row below.
@@ -132,7 +137,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   style={{ position: 'absolute', inset: 0 }}
                 >
                   <Image
-                    src={card.image}
+                    src={imgSrc(card.image)}
                     alt={card.altText}
                     objectFit="cover"
                     objectPosition="top"
@@ -275,7 +280,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   _hover={{ opacity: 1, filter: 'none' }}
                 >
                   <Image
-                    src={c.image}
+                    src={imgSrc(c.image)}
                     alt=""
                     position="absolute"
                     inset="6px"
