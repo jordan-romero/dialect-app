@@ -1,4 +1,4 @@
-// Build the missing 14a.B exercise — "Choose the Right Transcription".
+// Build the missing 16B exercise (14a.B before the Nov 2026 renumbering) — "Choose the Right Transcription".
 //
 // Module 14a's spec lists this as the second exercise and Lesson 23 shipped
 // without it. Structurally it is 13b.B: the learner hears a clip and picks the
@@ -14,9 +14,9 @@
 // recorded — see docs/audio-still-needed.md. Every option needs one, including
 // the wrong ones, read exactly as transcribed. Until then this script reports
 // what's missing and exits without touching anything. Once Scott's recordings
-// are uploaded to 14a.B.Audio/, running it once completes the exercise.
+// are uploaded to 16B.Audio/, running it once completes the exercise.
 //
-// Idempotent. Run: node --env-file=.env scripts/add-14aB-exercise.mjs [--dry-run]
+// Idempotent. Run: node --env-file=.env scripts/add-16B-exercise.mjs [--dry-run]
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -31,7 +31,7 @@ const QUIZ_ID = 41
 const LESSON_ID = 23
 const FIRST_QUESTION_ID = 426
 const FIRST_OPTION_ID = 1281
-const DIR = '14a. Dialect Transcription in Action/14a.B.Audio'
+const DIR = '16. Dialect Transcription in Action/16B.Audio'
 
 const INSTRUCTIONS =
   'Choose the transcription that best represents the presented audio clip. ' +
@@ -110,7 +110,7 @@ if (data.Quiz.some((q) => q.id === QUIZ_ID)) {
 const missing = []
 for (const [i] of QUESTIONS.entries()) {
   for (const letter of LETTERS) {
-    const key = `${DIR}/14aB.${i + 1}.${letter}.mp3`
+    const key = `${DIR}/16B.${i + 1}.${letter}.mp3`
     try {
       const h = await s3.send(new HeadObjectCommand({ Bucket, Key: key }))
       if (!h.ContentLength) missing.push(`${key} (zero bytes)`)
@@ -122,7 +122,7 @@ for (const [i] of QUESTIONS.entries()) {
 
 if (missing.length) {
   console.error(
-    `Not building 14a.B yet — ${missing.length} of 20 recordings are missing:\n`,
+    `Not building 16B yet — ${missing.length} of 20 recordings are missing:\n`,
   )
   missing.forEach((m) => console.error(`  ${m}`))
   console.error(
@@ -146,7 +146,7 @@ for (const [i, q] of QUESTIONS.entries()) {
     quizId: QUIZ_ID,
     categories: [],
     // The question plays the correct reading.
-    audioUrl: toUrl(`${DIR}/14aB.${i + 1}.a.mp3`),
+    audioUrl: toUrl(`${DIR}/16B.${i + 1}.a.mp3`),
   })
   q.options.forEach((optionText, j) => {
     data.AnswerOption.push({
@@ -158,7 +158,7 @@ for (const [i, q] of QUESTIONS.entries()) {
       rhymeCategory: null,
       rhymingWordId: null,
       // Each option carries its own reading, so a wrong pick can be heard.
-      audioUrl: toUrl(`${DIR}/14aB.${i + 1}.${LETTERS[j]}.mp3`),
+      audioUrl: toUrl(`${DIR}/16B.${i + 1}.${LETTERS[j]}.mp3`),
     })
   })
 }
@@ -198,7 +198,7 @@ if (quizSteps !== quizCount) {
 }
 
 console.log(
-  `14a.B: ${QUESTIONS.length} questions · ${QUESTIONS.length * 4} options · all 20 clips verified on S3`,
+  `16B: ${QUESTIONS.length} questions · ${QUESTIONS.length * 4} options · all 20 clips verified on S3`,
 )
 console.log(`steps → ${steps.map((s) => s.type).join(' → ')}`)
 
