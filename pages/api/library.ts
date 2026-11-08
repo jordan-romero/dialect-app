@@ -36,8 +36,8 @@ export default async function handler(
     })
 
     const email = session.user.email
-    const paid = await hasPaidAccess(prisma, email)
-    const unlocked = await getUnlockedCourseIds(prisma, email)
+    const paid = await hasPaidAccess(prisma, session.user)
+    const unlocked = await getUnlockedCourseIds(prisma, session.user)
 
     const phases = courses.map((c: any) => {
       const phaseUnlocked = unlocked.has(c.id)

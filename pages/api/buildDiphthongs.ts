@@ -27,7 +27,7 @@ export default async function handler(
   if (!session?.user) return res.status(401).json({ error: 'Unauthorized' })
 
   try {
-    const access = await getLessonAccess(prisma, session.user.email, LESSON_ID)
+    const access = await getLessonAccess(prisma, session.user, LESSON_ID)
     if (!access.ok) {
       return res.status(access.status).json({ error: access.message })
     }

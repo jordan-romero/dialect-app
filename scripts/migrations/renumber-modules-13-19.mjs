@@ -49,7 +49,10 @@ const KEYS = {
   '14a. Dialect Transcription in Action/14a Dialect Transcription in Action.mp4': `${M16}16 Dialect Transcription in Action.mp4`,
   '14b. Transcription Transformation/14b Transcription Transformation.mp4': `${M17}17 Transcription Transformation.mp4`,
   '15. Performance Implementation/15 Performance Implementation.mp4': `${M18}18 Performance Implementation.mp4`,
-  '16. Outro/Outro Option 1.mp4': '19. Outro/Outro Option 1.mp4',
+  // Outro: Grayson's 2026 re-cut, per Scott (Nov 2026). The second line moves
+  // rows already pointed at the interim copy of the original.
+  '16. Outro/Outro Option 1.mp4': '19. Outro/Outro Option 1 (2026).mp4',
+  '19. Outro/Outro Option 1.mp4': '19. Outro/Outro Option 1 (2026).mp4',
 
   // handouts
   '13a. Segmental Features of the Dialect/13a.A - Blank RP Lexical Template.pdf': `${M13}13A - Blank RP Lexical Template.pdf`,

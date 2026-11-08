@@ -35,7 +35,7 @@ export default async function handler(
   try {
     const access = await getLessonAccess(
       prisma,
-      session.user.email,
+      session.user,
       Number(lessonKey),
     )
     if (!access.ok) {

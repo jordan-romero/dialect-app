@@ -23,6 +23,7 @@ import {
   FiUser,
   FiLogOut,
   FiMenu,
+  FiUsers,
 } from 'react-icons/fi'
 import { MdKeyboard } from 'react-icons/md'
 import { IconType } from 'react-icons'
@@ -125,6 +126,15 @@ const DashboardNavigationContainer = () => {
   const [avatarSrc, setAvatarSrc] = useState('')
   // First-time learners see "Start" instead of "Continue".
   const [firstTime, setFirstTime] = useState(false)
+  // Teachers and admins get a "Teach" item (role-based; see lib/rbac.ts).
+  const [canTeach, setCanTeach] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setCanTeach(!!d?.permissions?.includes('cohort:manage')))
+      .catch(() => {})
+  }, [])
 
   const loadAvatar = useCallback(() => {
     fetch('/api/profile')
@@ -186,6 +196,15 @@ const DashboardNavigationContainer = () => {
         active={path === '/dashboard/keyboard'}
         {...opts}
       />
+      {canTeach && (
+        <NavItem
+          icon={FiUsers}
+          label="Teach"
+          href="/teach"
+          active={path.startsWith('/teach')}
+          {...opts}
+        />
+      )}
       <NavItem
         icon={FiHelpCircle}
         label="Get Help"
