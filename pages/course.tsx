@@ -516,6 +516,14 @@ const CoursePage = ({ phases, stats }: Props) => (
 // or renamed lessons show up without a deploy. If the database can't be
 // reached, the page falls back to the snapshot in courseOutline.ts.
 export const getStaticProps: GetStaticProps<Props> = async () => {
+  // No database configured for this environment: serve the snapshot and
+  // don't retry a connection that can't succeed.
+  if (!process.env.DEV_POSTGRES_PRISMA_URL) {
+    return {
+      props: { phases: FALLBACK_PHASES, stats: FALLBACK_STATS },
+      revalidate: 3600,
+    }
+  }
   try {
     const { phases, stats } = await loadCourseOutline()
     return { props: { phases, stats }, revalidate: 3600 }
