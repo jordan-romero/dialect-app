@@ -13,8 +13,14 @@ export default withPermission('cohort:manage', async (req, res, { user }) => {
   const cohort = await loadCohortFor(user, Number(req.query.id))
   if (!cohort) return res.status(404).json({ error: 'Class not found' })
   const r = await prisma.cohortMember.updateMany({
-    where: { cohortId: cohort.id, userId: Number(req.query.userId), removedAt: null },
+    where: {
+      cohortId: cohort.id,
+      userId: Number(req.query.userId),
+      removedAt: null,
+    },
     data: { removedAt: new Date() },
   })
-  return r.count ? res.status(200).json({ ok: true }) : res.status(404).json({ error: 'Student not found' })
+  return r.count
+    ? res.status(200).json({ ok: true })
+    : res.status(404).json({ error: 'Student not found' })
 })

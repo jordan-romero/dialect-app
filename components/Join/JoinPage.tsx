@@ -30,12 +30,33 @@ type Preview = {
   endsAt: string | null
   inviteEmail: string | null
 }
-type Joined = { cohortId: number; cohortName: string; alreadyMember: boolean; usesSeat: boolean; needsPurchase: boolean }
+type Joined = {
+  cohortId: number
+  cohortName: string
+  alreadyMember: boolean
+  usesSeat: boolean
+  needsPurchase: boolean
+}
 
 const Shell = ({ children }: { children: React.ReactNode }) => (
   <Center minH="100vh" bg="gray.50" px={4} py={10}>
-    <Box bg="white" color="gray.800" borderRadius="xl" boxShadow="md" p={{ base: 6, md: 10 }} w="100%" maxW="520px">
-      <Text fontSize="sm" letterSpacing="widest" textTransform="uppercase" color="brand.purple" fontWeight="bold" mb={4}>
+    <Box
+      bg="white"
+      color="gray.800"
+      borderRadius="xl"
+      boxShadow="md"
+      p={{ base: 6, md: 10 }}
+      w="100%"
+      maxW="520px"
+    >
+      <Text
+        fontSize="sm"
+        letterSpacing="widest"
+        textTransform="uppercase"
+        color="brand.purple"
+        fontWeight="bold"
+        mb={4}
+      >
         Acting Accents
       </Text>
       {children}
@@ -71,7 +92,12 @@ export const EnterCode = () => {
             autoFocus
             aria-label="Class code"
           />
-          <Button type="submit" colorScheme="purple" size="lg" isDisabled={!code.trim()}>
+          <Button
+            type="submit"
+            colorScheme="purple"
+            size="lg"
+            isDisabled={!code.trim()}
+          >
             Next
           </Button>
         </HStack>
@@ -90,7 +116,9 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
   const [error, setError] = useState<string | null>(null)
   const [buying, setBuying] = useState(false)
 
-  const qs = token ? `token=${encodeURIComponent(token)}` : `code=${encodeURIComponent(code || '')}`
+  const qs = token
+    ? `token=${encodeURIComponent(token)}`
+    : `code=${encodeURIComponent(code || '')}`
   const here = router.asPath.split('?')[0]
 
   useEffect(() => {
@@ -123,7 +151,10 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
     const r = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cohortId: joined.cohortId, returnTo: '/dashboard/progress' }),
+      body: JSON.stringify({
+        cohortId: joined.cohortId,
+        returnTo: '/dashboard/progress',
+      }),
     })
     const j = await r.json().catch(() => ({}))
     if (r.ok && j.url) window.location.href = j.url
@@ -156,7 +187,9 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
   }
 
   const login = (signup: boolean) =>
-    `/api/auth/login?returnTo=${encodeURIComponent(here)}${signup ? '&screen_hint=signup' : ''}`
+    `/api/auth/login?returnTo=${encodeURIComponent(here)}${
+      signup ? '&screen_hint=signup' : ''
+    }`
 
   return (
     <Shell>
@@ -167,7 +200,12 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
         {preview.name}
       </Heading>
       <Text color="gray.600" mt={1}>
-        {[preview.institution, preview.teacherName && `with ${preview.teacherName}`].filter(Boolean).join(' · ')}
+        {[
+          preview.institution,
+          preview.teacherName && `with ${preview.teacherName}`,
+        ]
+          .filter(Boolean)
+          .join(' · ')}
       </Text>
 
       {!preview.open ? (
@@ -179,12 +217,22 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
         <Stack mt={6} spacing={4}>
           <Alert status="success" borderRadius="md">
             <AlertIcon />
-            {joined.alreadyMember ? 'You’re already in this class.' : 'You’ve joined the class.'}
+            {joined.alreadyMember
+              ? 'You’re already in this class.'
+              : 'You’ve joined the class.'}
           </Alert>
           {joined.needsPurchase ? (
             <>
-              <Text>Your class uses the full course. Unlock it to keep going past the free lessons.</Text>
-              <Button colorScheme="purple" size="lg" onClick={buy} isLoading={buying}>
+              <Text>
+                Your class uses the full course. Unlock it to keep going past
+                the free lessons.
+              </Text>
+              <Button
+                colorScheme="purple"
+                size="lg"
+                onClick={buy}
+                isLoading={buying}
+              >
                 Unlock the full course
               </Button>
               <Button as={NextLink} href="/dashboard/progress" variant="ghost">
@@ -193,8 +241,15 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
             </>
           ) : (
             <>
-              {joined.usesSeat && <Text>Your class has given you full course access.</Text>}
-              <Button as={NextLink} href="/dashboard" colorScheme="purple" size="lg">
+              {joined.usesSeat && (
+                <Text>Your class has given you full course access.</Text>
+              )}
+              <Button
+                as={NextLink}
+                href="/dashboard"
+                colorScheme="purple"
+                size="lg"
+              >
                 Start learning
               </Button>
             </>
@@ -204,7 +259,8 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
         <Stack mt={6} spacing={3}>
           {preview.inviteEmail && (
             <Text fontSize="sm" color="gray.600">
-              This invite is for <b>{preview.inviteEmail}</b>. Use that email address.
+              This invite is for <b>{preview.inviteEmail}</b>. Use that email
+              address.
             </Text>
           )}
           <Button as="a" href={login(true)} colorScheme="purple" size="lg">
@@ -223,8 +279,9 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
               : 'Students in this class buy the course themselves.'}
           </Text>
           <Box bg="purple.50" borderRadius="md" p={3} fontSize="sm">
-            Your teacher will be able to see your progress and the answers you enter in the course, including work
-            you did before joining. You can leave the class at any time.
+            Your teacher will be able to see your progress and the answers you
+            enter in the course, including work you did before joining. You can
+            leave the class at any time.
           </Box>
           {error && (
             <Alert status="error" borderRadius="md">
@@ -232,10 +289,20 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
               {error}
             </Alert>
           )}
-          <Button colorScheme="purple" size="lg" onClick={join} isLoading={joining}>
+          <Button
+            colorScheme="purple"
+            size="lg"
+            onClick={join}
+            isLoading={joining}
+          >
             Join class
           </Button>
-          <Link href="/api/auth/logout" fontSize="sm" color="gray.500" textAlign="center">
+          <Link
+            href="/api/auth/logout"
+            fontSize="sm"
+            color="gray.500"
+            textAlign="center"
+          >
             Not you? Log out
           </Link>
         </Stack>

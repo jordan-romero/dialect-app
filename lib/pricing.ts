@@ -22,7 +22,12 @@ export type SeatTier = {
 
 export const SEAT_TIERS: SeatTier[] = [
   { minSeats: 1, lookupKey: 'seat_tier_1', unitAmount: 15000, label: '1–24' },
-  { minSeats: 25, lookupKey: 'seat_tier_25', unitAmount: 13500, label: '25–49' },
+  {
+    minSeats: 25,
+    lookupKey: 'seat_tier_25',
+    unitAmount: 13500,
+    label: '25–49',
+  },
   { minSeats: 50, lookupKey: 'seat_tier_50', unitAmount: 12000, label: '50+' },
 ]
 
@@ -37,9 +42,7 @@ export function seatTierFor(quantity: number): SeatTier {
 const priceCache = new Map<string, { id: string; at: number }>()
 const CACHE_MS = 5 * 60 * 1000
 
-export async function priceIdForLookupKey(
-  key: string,
-): Promise<string | null> {
+export async function priceIdForLookupKey(key: string): Promise<string | null> {
   if (!stripe) return null
   const hit = priceCache.get(key)
   if (hit && Date.now() - hit.at < CACHE_MS) return hit.id

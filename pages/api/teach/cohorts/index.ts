@@ -3,10 +3,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../../lib/prisma'
 import { can, withPermission } from '../../../../lib/rbac'
-import { cohortIsOpen, formatJoinCode, uniqueJoinCode } from '../../../../lib/cohorts'
+import {
+  cohortIsOpen,
+  formatJoinCode,
+  uniqueJoinCode,
+} from '../../../../lib/cohorts'
 
 export default withPermission('cohort:manage', async (req, res, { user }) => {
-  if (req.method === 'GET') return list(req, res, user.id, can(user, 'cohort:manageAny'))
+  if (req.method === 'GET')
+    return list(req, res, user.id, can(user, 'cohort:manageAny'))
   if (req.method === 'POST') return create(req, res, user.id)
   res.setHeader('Allow', ['GET', 'POST'])
   return res.status(405).end()
@@ -21,7 +26,10 @@ async function list(
   const all = isAdmin && req.query.all === '1'
   const cohorts = await prisma.cohort.findMany({
     where: all ? {} : { teacherId: userId },
-    orderBy: [{ archivedAt: { sort: 'desc', nulls: 'first' } }, { createdAt: 'desc' }],
+    orderBy: [
+      { archivedAt: { sort: 'desc', nulls: 'first' } },
+      { createdAt: 'desc' },
+    ],
     include: {
       teacher: { select: { email: true, firstName: true, lastName: true } },
       _count: { select: { members: { where: { removedAt: null } } } },
@@ -29,7 +37,11 @@ async function list(
   })
   const seatCounts = await prisma.cohortMember.groupBy({
     by: ['cohortId'],
-    where: { cohortId: { in: cohorts.map((c) => c.id) }, usesSeat: true, removedAt: null },
+    where: {
+      cohortId: { in: cohorts.map((c) => c.id) },
+      usesSeat: true,
+      removedAt: null,
+    },
     _count: { _all: true },
   })
   const used = new Map(seatCounts.map((s) => [s.cohortId, s._count._all]))
@@ -59,14 +71,26 @@ function parseDate(v: unknown): Date | null | 'invalid' {
   return isNaN(d.getTime()) ? 'invalid' : d
 }
 
-async function create(req: NextApiRequest, res: NextApiResponse, teacherId: number) {
+async function create(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  teacherId: number,
+) {
   const body = req.body || {}
   const name = typeof body.name === 'string' ? body.name.trim() : ''
   if (!name || name.length > 120) {
-    return res.status(400).json({ error: 'Give the class a name (up to 120 characters).' })
+    return res
+      .status(400)
+      .json({ error: 'Give the class a name (up to 120 characters).' })
   }
-  const paymentMode = body.paymentMode === 'SEATS' ? 'SEATS' : body.paymentMode === 'SELF_PAY' ? 'SELF_PAY' : null
-  if (!paymentMode) return res.status(400).json({ error: 'Choose how students pay.' })
+  const paymentMode =
+    body.paymentMode === 'SEATS'
+      ? 'SEATS'
+      : body.paymentMode === 'SELF_PAY'
+      ? 'SELF_PAY'
+      : null
+  if (!paymentMode)
+    return res.status(400).json({ error: 'Choose how students pay.' })
   const startsAt = parseDate(body.startsAt)
   const endsAt = parseDate(body.endsAt)
   if (startsAt === 'invalid' || endsAt === 'invalid') {
@@ -74,13 +98,19 @@ async function create(req: NextApiRequest, res: NextApiResponse, teacherId: numb
   }
   // Seats end at the cohort's end date, so a seat cohort needs one.
   if (paymentMode === 'SEATS' && !endsAt) {
-    return res.status(400).json({ error: 'Seat-package classes need an end date; seats end then.' })
+    return res
+      .status(400)
+      .json({ error: 'Seat-package classes need an end date; seats end then.' })
   }
   if (endsAt && endsAt <= new Date()) {
-    return res.status(400).json({ error: 'The end date must be in the future.' })
+    return res
+      .status(400)
+      .json({ error: 'The end date must be in the future.' })
   }
   if (startsAt && endsAt && endsAt <= startsAt) {
-    return res.status(400).json({ error: 'The end date must be after the start date.' })
+    return res
+      .status(400)
+      .json({ error: 'The end date must be after the start date.' })
   }
   const institution =
     typeof body.institution === 'string' && body.institution.trim()

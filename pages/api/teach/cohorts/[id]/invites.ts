@@ -21,10 +21,17 @@ export default withPermission('cohort:manage', async (req, res, { user }) => {
   if (req.method === 'DELETE') {
     const inviteId = Number(req.query.inviteId)
     const r = await prisma.cohortInvite.updateMany({
-      where: { id: inviteId, cohortId: cohort.id, acceptedAt: null, revokedAt: null },
+      where: {
+        id: inviteId,
+        cohortId: cohort.id,
+        acceptedAt: null,
+        revokedAt: null,
+      },
       data: { revokedAt: new Date() },
     })
-    return r.count ? res.status(200).json({ ok: true }) : res.status(404).json({ error: 'Invite not found' })
+    return r.count
+      ? res.status(200).json({ ok: true })
+      : res.status(404).json({ error: 'Invite not found' })
   }
 
   if (req.method !== 'POST') {
@@ -41,9 +48,12 @@ export default withPermission('cohort:manage', async (req, res, { user }) => {
   const emails = Array.from(new Set(list.map(normalizeEmail).filter(Boolean)))
   const invalid = emails.filter((e) => !isEmail(e))
   const valid = emails.filter(isEmail)
-  if (valid.length === 0) return res.status(400).json({ error: 'No valid email addresses.', invalid })
+  if (valid.length === 0)
+    return res.status(400).json({ error: 'No valid email addresses.', invalid })
   if (valid.length > MAX_PER_REQUEST) {
-    return res.status(400).json({ error: `Up to ${MAX_PER_REQUEST} emails at a time.` })
+    return res
+      .status(400)
+      .json({ error: `Up to ${MAX_PER_REQUEST} emails at a time.` })
   }
 
   const origin = appOrigin(req)
@@ -56,7 +66,11 @@ export default withPermission('cohort:manage', async (req, res, { user }) => {
       ? existing.revokedAt
         ? await prisma.cohortInvite.update({
             where: { id: existing.id },
-            data: { revokedAt: null, token: generateInviteToken(), createdAt: new Date() },
+            data: {
+              revokedAt: null,
+              token: generateInviteToken(),
+              createdAt: new Date(),
+            },
           })
         : existing
       : await prisma.cohortInvite.create({

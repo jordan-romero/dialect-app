@@ -84,7 +84,8 @@ export function withPermission(
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const { user, claims } = await getSessionUser(req, res)
-      if (!user || !claims) return res.status(401).json({ error: 'Unauthorized' })
+      if (!user || !claims)
+        return res.status(401).json({ error: 'Unauthorized' })
       if (permission && !can(user, permission)) {
         return res.status(403).json({ error: 'Forbidden' })
       }

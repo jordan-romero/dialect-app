@@ -19,6 +19,7 @@ import {
 import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { useFeatureFlag } from 'configcat-react'
 import { useUser } from '@auth0/nextjs-auth0/client'
+import { isAppShellPath } from './appShell'
 
 type NavItem = {
   label: string
@@ -42,7 +43,7 @@ const Navbar = () => {
   )
   const { user: authUser, isLoading: authLoading } = useUser()
 
-  if (router.pathname.startsWith('/dashboard')) return null
+  if (isAppShellPath(router.pathname)) return null
 
   const showAccountActions = signUpAndLoginVisible && !authLoading
   const isAuthenticated = authUser !== undefined

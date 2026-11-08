@@ -96,7 +96,10 @@ const fileCache = new Map<string, any>()
 function dataFile(rel: string): any {
   if (!fileCache.has(rel)) {
     try {
-      fileCache.set(rel, JSON.parse(readFileSync(join(process.cwd(), rel), 'utf8')))
+      fileCache.set(
+        rel,
+        JSON.parse(readFileSync(join(process.cwd(), rel), 'utf8')),
+      )
     } catch {
       fileCache.set(rel, null)
     }
@@ -112,14 +115,20 @@ function optionText(q: Q, id: unknown): string | null {
 }
 const correctOption = (q: Q) => q.answerOptions.find((o) => o.isCorrect) ?? null
 
-function decodeQuestion(quizType: string, q: Q, raw: string | null): Omit<WorkQuestion, 'id' | 'prompt' | 'savedAt'> {
+function decodeQuestion(
+  quizType: string,
+  q: Q,
+  raw: string | null,
+): Omit<WorkQuestion, 'id' | 'prompt' | 'savedAt'> {
   if (raw === null) {
     return { entries: [entry(null, expectedFor(quizType, q))] }
   }
   switch (quizType) {
     case 'multipleChoice':
     case 'lineBuilder':
-      return { entries: [entry(optionText(q, raw), correctOption(q)?.optionText)] }
+      return {
+        entries: [entry(optionText(q, raw), correctOption(q)?.optionText)],
+      }
 
     case 'matching':
       return { entries: [entry(raw, correctOption(q)?.optionText)] }
@@ -137,18 +146,28 @@ function decodeQuestion(quizType: string, q: Q, raw: string | null): Omit<WorkQu
       }
       return {
         entries: inputs.map((o, i) =>
-          entry(typed[o.id], o.optionText, inputs.length > 1 ? `Blank ${i + 1}` : undefined),
+          entry(
+            typed[o.id],
+            o.optionText,
+            inputs.length > 1 ? `Blank ${i + 1}` : undefined,
+          ),
         ),
       }
     }
 
     case 'stressPlacement': {
       const placed = parseJson<(number | null)[]>(raw) || []
-      const order = q.answerOptions.filter((o) => o.isCorrect).sort((a, b) => a.id - b.id)
+      const order = q.answerOptions
+        .filter((o) => o.isCorrect)
+        .sort((a, b) => a.id - b.id)
       const n = Math.max(order.length, placed.length)
       return {
         entries: Array.from({ length: n }, (_, i) =>
-          entry(optionText(q, placed[i]), order[i]?.optionText, `Blank ${i + 1}`),
+          entry(
+            optionText(q, placed[i]),
+            order[i]?.optionText,
+            `Blank ${i + 1}`,
+          ),
         ),
       }
     }
@@ -168,7 +187,10 @@ function expectedFor(quizType: string, q: Q): string | null {
   return null
 }
 
-function decodeDragAndDrop(q: Q, raw: string): Omit<WorkQuestion, 'id' | 'prompt' | 'savedAt'> {
+function decodeDragAndDrop(
+  q: Q,
+  raw: string,
+): Omit<WorkQuestion, 'id' | 'prompt' | 'savedAt'> {
   const byId = new Map(q.answerOptions.map((o) => [o.id, o]))
   const data = parseJson<any>(raw)
   if (q.questionType === 'rhymingPairs') {
@@ -185,21 +207,33 @@ function decodeDragAndDrop(q: Q, raw: string): Omit<WorkQuestion, 'id' | 'prompt
     const matched = new Set<number>((data?.matchedIds || []).map(Number))
     const show = (ps: typeof pairs) =>
       ps.map(([x, y]) => `${x.optionText} ↔ ${y.optionText}`).join(', ')
-    const studentPairs = show(pairs.filter(([x, y]) => matched.has(x.id) && matched.has(y.id)))
-    if (raw === 'completed') return { entries: [entry(null, show(pairs))], note: 'Completed; the board wasn’t saved.' }
+    const studentPairs = show(
+      pairs.filter(([x, y]) => matched.has(x.id) && matched.has(y.id)),
+    )
+    if (raw === 'completed')
+      return {
+        entries: [entry(null, show(pairs))],
+        note: 'Completed; the board wasn’t saved.',
+      }
     return { entries: [entry(studentPairs || null, show(pairs), 'Pairs')] }
   }
   // rhymingCategories: buckets saved under "0","1",… (index into categories)
   const cats = q.categories || []
-  const nameOf = (key: string) => (/^\d+$/.test(key) && cats[Number(key)] ? cats[Number(key)] : key)
+  const nameOf = (key: string) =>
+    /^\d+$/.test(key) && cats[Number(key)] ? cats[Number(key)] : key
   const expectedIn = (bucket: string) =>
     q.answerOptions
-      .filter((o) => (bucket === 'thought' ? o.rhymeCategory !== 'thought' : o.rhymeCategory === bucket))
+      .filter((o) =>
+        bucket === 'thought'
+          ? o.rhymeCategory !== 'thought'
+          : o.rhymeCategory === bucket,
+      )
       .map((o) => o.optionText)
   if (!data || raw === 'completed') {
     return {
       entries: cats.map((c) => entry(null, expectedIn(c).join(', '), c)),
-      note: raw === 'completed' ? 'Completed; the board wasn’t saved.' : undefined,
+      note:
+        raw === 'completed' ? 'Completed; the board wasn’t saved.' : undefined,
     }
   }
   const placed: Record<string, string[]> = {}
@@ -215,7 +249,10 @@ function decodeDragAndDrop(q: Q, raw: string): Omit<WorkQuestion, 'id' | 'prompt
 
 // symbolPicker keeps the whole quiz on its first question's row:
 // {answerOptionId: chosenSymbol}; the expected symbol is the option's question text.
-function decodeSymbolPicker(questions: Q[], answers: Map<number, Ans>): WorkQuestion[] {
+function decodeSymbolPicker(
+  questions: Q[],
+  answers: Map<number, Ans>,
+): WorkQuestion[] {
   let picks: Record<string, string> = {}
   answers.forEach((a) => {
     const j = parseJson<Record<string, string>>(a.textAnswer)
@@ -225,12 +262,17 @@ function decodeSymbolPicker(questions: Q[], answers: Map<number, Ans>): WorkQues
     id: q.id,
     prompt: q.text,
     savedAt: answers.get(q.id)?.updatedAt.toISOString() ?? null,
-    entries: q.answerOptions.map((o) => entry(picks[o.id], q.text, showBraces(o.optionText))),
+    entries: q.answerOptions.map((o) =>
+      entry(picks[o.id], q.text, showBraces(o.optionText)),
+    ),
   }))
 }
 
 // Chart/board exercises whose answer key lives in a JSON file.
-function decodeFileBased(quizType: string, raw: string | null): { entries: WorkEntry[]; note?: string } | null {
+function decodeFileBased(
+  quizType: string,
+  raw: string | null,
+): { entries: WorkEntry[]; note?: string } | null {
   const saved = raw && !DONE_MARKERS.has(raw) ? parseJson<any>(raw) : null
   switch (quizType) {
     case 'lexicalChart': {
@@ -248,7 +290,11 @@ function decodeFileBased(quizType: string, raw: string | null): { entries: WorkE
       const slots = [...(d.slots || []), ...(d.specialSlots || [])]
       return {
         entries: slots.map((s: any) =>
-          entry(saved?.[s.id], s.symbol, s.label || `${s.voicing} ${s.place} ${s.manner}`),
+          entry(
+            saved?.[s.id],
+            s.symbol,
+            s.label || `${s.voicing} ${s.place} ${s.manner}`,
+          ),
         ),
       }
     }
@@ -258,17 +304,25 @@ function decodeFileBased(quizType: string, raw: string | null): { entries: WorkE
       return {
         entries: Object.entries<any>(d.vowelPositions || {})
           .filter(([, v]) => v.isCorrect)
-          .map(([k, v]) => entry(saved?.[k]?.vowel ?? null, v.vowel, v.label || k)),
+          .map(([k, v]) =>
+            entry(saved?.[k]?.vowel ?? null, v.vowel, v.label || k),
+          ),
       }
     }
     case 'hangman':
     case 'buildAWord': {
-      const d = dataFile(quizType === 'hangman' ? 'public/hangmanIPAData.json' : 'data/buildAWordData.json')
+      const d = dataFile(
+        quizType === 'hangman'
+          ? 'public/hangmanIPAData.json'
+          : 'data/buildAWordData.json',
+      )
       if (!d) return null
       return {
         entries: (d.questions_data || []).map((w: any) =>
           entry(
-            Array.isArray(saved?.[w.id]) ? saved[w.id].map((x: any) => x || '_').join(' ') : null,
+            Array.isArray(saved?.[w.id])
+              ? saved[w.id].map((x: any) => x || '_').join(' ')
+              : null,
             (w.correctAnswer || []).join(' '),
             w.word,
           ),
@@ -280,7 +334,9 @@ function decodeFileBased(quizType: string, raw: string | null): { entries: WorkE
     case 'buildDiphthongs':
       return {
         entries: [],
-        note: raw ? 'Completed. This exercise doesn’t save the student’s individual answers.' : 'Not done yet.',
+        note: raw
+          ? 'Completed. This exercise doesn’t save the student’s individual answers.'
+          : 'Not done yet.',
       }
   }
   return null
@@ -305,7 +361,10 @@ export async function studentWork(userId: number): Promise<WorkLesson[]> {
         id: true,
         title: true,
         lessons: {
-          orderBy: [{ displayOrder: { sort: 'asc', nulls: 'last' } }, { id: 'asc' }],
+          orderBy: [
+            { displayOrder: { sort: 'asc', nulls: 'last' } },
+            { id: 'asc' },
+          ],
           select: {
             id: true,
             title: true,
@@ -324,7 +383,12 @@ export async function studentWork(userId: number): Promise<WorkLesson[]> {
     }),
     prisma.userAnswer.findMany({
       where: { userId },
-      select: { quizId: true, questionId: true, textAnswer: true, updatedAt: true },
+      select: {
+        quizId: true,
+        questionId: true,
+        textAnswer: true,
+        updatedAt: true,
+      },
     }),
     prisma.lessonProgress.findMany({
       where: { userId },
@@ -361,7 +425,8 @@ export async function studentWork(userId: number): Promise<WorkLesson[]> {
         if (type === 'symbolPicker') {
           const questions = decodeSymbolPicker(quiz.questions, qa)
           const noPicks =
-            base.submitted && questions.every((q) => q.entries.every((e) => e.student === null))
+            base.submitted &&
+            questions.every((q) => q.entries.every((e) => e.student === null))
           return {
             ...base,
             questions,

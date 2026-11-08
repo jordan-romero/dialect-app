@@ -14,6 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { EmailIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import { isAppShellPath } from './appShell'
 
 type FooterLink = {
   label: string
@@ -40,7 +41,7 @@ const RESOURCE_LINKS: FooterLink[] = [
 const Footer = () => {
   const router = useRouter()
 
-  if (router.pathname.startsWith('/dashboard')) return null
+  if (isAppShellPath(router.pathname)) return null
 
   const year = new Date().getFullYear()
 
@@ -52,7 +53,11 @@ const Footer = () => {
       bg="gray.900"
       color="gray.300"
     >
-      <Container maxW="1600px" px={{ base: 6, md: 10 }} py={{ base: 12, md: 16 }}>
+      <Container
+        maxW="1600px"
+        px={{ base: 6, md: 10 }}
+        py={{ base: 12, md: 16 }}
+      >
         <SimpleGrid
           columns={{ base: 1, md: 4 }}
           spacing={{ base: 10, md: 12 }}

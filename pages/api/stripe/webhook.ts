@@ -180,8 +180,10 @@ async function onRefund(charge: Stripe.Charge) {
       ...(full ? { status: 'REFUNDED' } : {}),
     },
   })
-  if (purchase.kind === 'COURSE' && full) await revokeCourseIfNoOtherPurchase(purchase.userId)
-  if (purchase.kind === 'SEATS' && purchase.cohortId) await recalcSeats(purchase.cohortId)
+  if (purchase.kind === 'COURSE' && full)
+    await revokeCourseIfNoOtherPurchase(purchase.userId)
+  if (purchase.kind === 'SEATS' && purchase.cohortId)
+    await recalcSeats(purchase.cohortId)
 }
 
 async function onDispute(d: Stripe.Dispute, phase: 'created' | 'closed') {
@@ -214,8 +216,10 @@ async function onDispute(d: Stripe.Dispute, phase: 'created' | 'closed') {
       where: { id: purchase.id },
       data: { status: 'REFUNDED', amountRefunded: purchase.amountTotal },
     })
-    if (purchase.kind === 'COURSE') await revokeCourseIfNoOtherPurchase(purchase.userId)
-    if (purchase.kind === 'SEATS' && purchase.cohortId) await recalcSeats(purchase.cohortId)
+    if (purchase.kind === 'COURSE')
+      await revokeCourseIfNoOtherPurchase(purchase.userId)
+    if (purchase.kind === 'SEATS' && purchase.cohortId)
+      await recalcSeats(purchase.cohortId)
   }
 }
 

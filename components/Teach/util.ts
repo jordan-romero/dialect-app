@@ -39,10 +39,20 @@ export async function send(url: string, method: string, body?: unknown) {
 }
 
 export const money = (cents: number, currency = 'usd') =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase(), maximumFractionDigits: 0 }).format(cents / 100)
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency.toUpperCase(),
+    maximumFractionDigits: 0,
+  }).format(cents / 100)
 
 export const shortDate = (iso: string | null | undefined) =>
-  iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'
+  iso
+    ? new Date(iso).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : '—'
 
 export function relative(iso: string | null | undefined): string {
   if (!iso) return 'Never'
@@ -55,7 +65,11 @@ export function relative(iso: string | null | undefined): string {
   return shortDate(iso)
 }
 
-export function downloadText(filename: string, text: string, type = 'text/csv') {
+export function downloadText(
+  filename: string,
+  text: string,
+  type = 'text/csv',
+) {
   const blob = new Blob([text], { type })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
@@ -77,5 +91,11 @@ export function csv(rows: (string | number | null)[][]): string {
     .join('\n')
 }
 
-export const teacherName = (t?: { firstName?: string | null; lastName?: string | null; email?: string } | null) =>
+export const teacherName = (
+  t?: {
+    firstName?: string | null
+    lastName?: string | null
+    email?: string
+  } | null,
+) =>
   t ? [t.firstName, t.lastName].filter(Boolean).join(' ') || t.email || '' : ''

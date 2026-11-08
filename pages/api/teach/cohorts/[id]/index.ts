@@ -82,26 +82,38 @@ async function get(req: NextApiRequest, res: NextApiResponse, cohort: Cohort) {
   })
 }
 
-async function patch(req: NextApiRequest, res: NextApiResponse, cohort: Cohort) {
+async function patch(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  cohort: Cohort,
+) {
   const b = req.body || {}
   const data: Record<string, unknown> = {}
   if (typeof b.name === 'string') {
     const name = b.name.trim()
-    if (!name || name.length > 120) return res.status(400).json({ error: 'Invalid name.' })
+    if (!name || name.length > 120)
+      return res.status(400).json({ error: 'Invalid name.' })
     data.name = name
   }
-  if (typeof b.institution === 'string') data.institution = b.institution.trim().slice(0, 160) || null
+  if (typeof b.institution === 'string')
+    data.institution = b.institution.trim().slice(0, 160) || null
   if (typeof b.joinEnabled === 'boolean') data.joinEnabled = b.joinEnabled
   if (b.rotateJoinCode === true) data.joinCode = await uniqueJoinCode()
-  if (typeof b.archived === 'boolean') data.archivedAt = b.archived ? new Date() : null
+  if (typeof b.archived === 'boolean')
+    data.archivedAt = b.archived ? new Date() : null
   if (b.endsAt !== undefined) {
     const d = b.endsAt ? new Date(b.endsAt) : null
-    if (d && isNaN(d.getTime())) return res.status(400).json({ error: 'Invalid end date.' })
+    if (d && isNaN(d.getTime()))
+      return res.status(400).json({ error: 'Invalid end date.' })
     if (!d && cohort.paymentMode === 'SEATS') {
-      return res.status(400).json({ error: 'Seat-package classes need an end date.' })
+      return res
+        .status(400)
+        .json({ error: 'Seat-package classes need an end date.' })
     }
     data.endsAt = d
   }
   const updated = await prisma.cohort.update({ where: { id: cohort.id }, data })
-  return res.status(200).json({ id: updated.id, joinCode: formatJoinCode(updated.joinCode) })
+  return res
+    .status(200)
+    .json({ id: updated.id, joinCode: formatJoinCode(updated.joinCode) })
 }

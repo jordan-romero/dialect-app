@@ -5,6 +5,7 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import { MotionConfig } from 'framer-motion'
 import { ScrollProgress } from '../PrelaunchHomePage/motion'
+import { isAppShellPath } from './appShell'
 
 interface Props {
   children?: ReactNode
@@ -17,7 +18,7 @@ const MAX_APP_WIDTH = '1600px'
 
 const Layout = ({ children }: Props) => {
   const router = useRouter()
-  const isDashboard = router.pathname.startsWith('/dashboard')
+  const isDashboard = isAppShellPath(router.pathname)
 
   return (
     <MotionConfig reducedMotion="user">
