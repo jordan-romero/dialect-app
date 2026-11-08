@@ -10,12 +10,15 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import {
-  FaEnvelope,
-  FaMicrophoneAlt,
-  FaRegLightbulb,
-} from 'react-icons/fa'
+import { FaEnvelope, FaMicrophoneAlt, FaRegLightbulb } from 'react-icons/fa'
 import ContactPageFormContainer from './ContactPageForm/ContactPageFormContainer'
+import { motion } from 'framer-motion'
+import {
+  EASE,
+  fadeUp,
+  FloatingGlyphs,
+  stagger,
+} from '../PrelaunchHomePage/motion'
 
 const perks = [
   {
@@ -65,6 +68,7 @@ const ContactPageContainer = () => {
           pointerEvents: 'none',
         }}
       >
+        <FloatingGlyphs />
         <Container
           maxW="7xl"
           position="relative"
@@ -78,56 +82,98 @@ const ContactPageContainer = () => {
             alignItems="center"
           >
             <GridItem>
-              <Stack spacing={6} maxW="520px">
-                <Text
-                  fontSize="sm"
-                  fontWeight="bold"
-                  color="brand.purple"
-                  letterSpacing="0.14em"
-                  textTransform="uppercase"
-                >
-                  Get in touch
-                </Text>
-                <Heading
-                  as="h1"
-                  fontSize={{ base: '4xl', md: '5xl', lg: '6xl' }}
-                  fontWeight="black"
-                  letterSpacing="-0.02em"
-                  lineHeight="1.05"
-                  color="gray.900"
-                  sx={{ textWrap: 'balance' }}
-                >
-                  Questions, ideas, or ready to{' '}
-                  <Box
-                    as="span"
-                    bgGradient="linear(to-r, brand.purple, brand.iris)"
-                    bgClip="text"
-                  >
-                    join the list?
-                  </Box>
-                </Heading>
-                <Text
-                  fontSize={{ base: 'md', md: 'lg' }}
-                  color="gray.600"
-                  lineHeight="1.7"
-                  sx={{ textWrap: 'pretty' }}
-                >
-                  Drop your details and we’ll keep you posted on launch,
-                  lessons, and early-access perks. Prefer email?{' '}
-                  <Box
-                    as="a"
-                    href="mailto:info@actingaccents.com"
+              <Stack
+                spacing={6}
+                maxW="520px"
+                as={motion.div}
+                variants={stagger(0.12, 0.1)}
+                initial="hidden"
+                animate="show"
+              >
+                <motion.div variants={fadeUp}>
+                  <Text
+                    fontSize="sm"
+                    fontWeight="bold"
                     color="brand.purple"
-                    fontWeight="semibold"
-                    _hover={{ color: 'brand.purpleLight' }}
+                    letterSpacing="0.14em"
+                    textTransform="uppercase"
                   >
-                    info@actingaccents.com
-                  </Box>
-                </Text>
+                    Get in touch
+                  </Text>
+                </motion.div>
+                <motion.div variants={fadeUp}>
+                  <Heading
+                    as="h1"
+                    fontSize={{ base: '4xl', md: '5xl', lg: '6xl' }}
+                    fontWeight="black"
+                    letterSpacing="-0.02em"
+                    lineHeight="1.05"
+                    color="gray.900"
+                    sx={{ textWrap: 'balance' }}
+                  >
+                    Questions, ideas, or ready to{' '}
+                    <Box
+                      as="span"
+                      bgGradient="linear(to-r, brand.purple, brand.iris, brand.blue, brand.purple)"
+                      bgClip="text"
+                      bgSize="300% 100%"
+                      sx={{
+                        animation: 'aa-shimmer 8s ease-in-out infinite',
+                        '@keyframes aa-shimmer': {
+                          '0%, 100%': { backgroundPosition: '0% 50%' },
+                          '50%': { backgroundPosition: '100% 50%' },
+                        },
+                        '@media (prefers-reduced-motion: reduce)': {
+                          animation: 'none',
+                        },
+                      }}
+                    >
+                      join the list?
+                    </Box>
+                  </Heading>
+                </motion.div>
+                <motion.div variants={fadeUp}>
+                  <Text
+                    fontSize={{ base: 'md', md: 'lg' }}
+                    color="gray.600"
+                    lineHeight="1.7"
+                    sx={{ textWrap: 'pretty' }}
+                  >
+                    Drop your details and we’ll keep you posted on launch,
+                    lessons, and early-access perks. Prefer email?{' '}
+                    <Box
+                      as="a"
+                      href="mailto:info@actingaccents.com"
+                      color="brand.purple"
+                      fontWeight="semibold"
+                      _hover={{ color: 'brand.purpleLight' }}
+                    >
+                      info@actingaccents.com
+                    </Box>
+                  </Text>
+                </motion.div>
 
-                <Stack spacing={4} pt={2}>
+                <Stack
+                  spacing={4}
+                  pt={2}
+                  as={motion.div}
+                  variants={stagger(0.12, 0)}
+                >
                   {perks.map((perk) => (
-                    <HStack key={perk.title} align="flex-start" spacing={4}>
+                    <HStack
+                      key={perk.title}
+                      align="flex-start"
+                      spacing={4}
+                      as={motion.div}
+                      variants={{
+                        hidden: { opacity: 0, x: -24 },
+                        show: {
+                          opacity: 1,
+                          x: 0,
+                          transition: { duration: 0.6, ease: EASE },
+                        },
+                      }}
+                    >
                       <Box
                         w="42px"
                         h="42px"
@@ -156,8 +202,14 @@ const ContactPageContainer = () => {
               </Stack>
             </GridItem>
 
-            <GridItem>
-              <ContactPageFormContainer />
+            <GridItem style={{ perspective: '1400px' }}>
+              <motion.div
+                initial={{ opacity: 0, rotateY: 12, y: 40, scale: 0.96 }}
+                animate={{ opacity: 1, rotateY: 0, y: 0, scale: 1 }}
+                transition={{ duration: 1, ease: EASE, delay: 0.35 }}
+              >
+                <ContactPageFormContainer />
+              </motion.div>
             </GridItem>
           </Grid>
         </Container>

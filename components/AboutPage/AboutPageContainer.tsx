@@ -1,14 +1,14 @@
 import React from 'react'
-import {
-  Box,
-  Container,
-  Heading,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Container, Heading, Stack, Text } from '@chakra-ui/react'
 import AboutCard from './AboutCard'
 import { coaches } from './utils'
+import { motion } from 'framer-motion'
+import {
+  EASE,
+  fadeUp,
+  FloatingGlyphs,
+  stagger,
+} from '../PrelaunchHomePage/motion'
 
 const AboutPageContainer = () => {
   return (
@@ -41,6 +41,7 @@ const AboutPageContainer = () => {
           pointerEvents: 'none',
         }}
       >
+        <FloatingGlyphs layout="center" />
         <Container
           maxW="4xl"
           position="relative"
@@ -49,60 +50,85 @@ const AboutPageContainer = () => {
           py={{ base: 16, md: 24 }}
           textAlign="center"
         >
-          <Stack spacing={5}>
-            <Text
-              fontSize="sm"
-              fontWeight="bold"
-              color="brand.purple"
-              letterSpacing="0.14em"
-              textTransform="uppercase"
-            >
-              Meet the coaches
-            </Text>
-            <Heading
-              as="h1"
-              fontSize={{ base: '4xl', md: '6xl' }}
-              fontWeight="black"
-              letterSpacing="-0.02em"
-              lineHeight="1.05"
-              color="gray.900"
-              sx={{ textWrap: 'balance' }}
-            >
-              Trained ears.{' '}
-              <Box
-                as="span"
-                bgGradient="linear(to-r, brand.purple, brand.iris)"
-                bgClip="text"
+          <Stack
+            spacing={5}
+            as={motion.div}
+            variants={stagger(0.12, 0.1)}
+            initial="hidden"
+            animate="show"
+          >
+            <motion.div variants={fadeUp}>
+              <Text
+                fontSize="sm"
+                fontWeight="bold"
+                color="brand.purple"
+                letterSpacing="0.14em"
+                textTransform="uppercase"
               >
-                Working actors.
-              </Box>
-            </Heading>
-            <Text
-              fontSize={{ base: 'md', md: 'lg' }}
-              color="gray.600"
-              maxW="640px"
-              mx="auto"
-              lineHeight="1.7"
-              sx={{ textWrap: 'balance' }}
-            >
-              The coaches behind ActingAccents.com teach the systematic,
-              IPA-based approach they use every day in professional theatre,
-              film, and television — and in the classroom.
-            </Text>
+                Meet the coaches
+              </Text>
+            </motion.div>
+            <motion.div variants={fadeUp}>
+              <Heading
+                as="h1"
+                fontSize={{ base: '4xl', md: '6xl' }}
+                fontWeight="black"
+                letterSpacing="-0.02em"
+                lineHeight="1.05"
+                color="gray.900"
+                sx={{ textWrap: 'balance' }}
+              >
+                Trained ears.{' '}
+                <Box
+                  as="span"
+                  bgGradient="linear(to-r, brand.purple, brand.iris, brand.blue, brand.purple)"
+                  bgClip="text"
+                  bgSize="300% 100%"
+                  sx={{
+                    animation: 'aa-shimmer 8s ease-in-out infinite',
+                    '@keyframes aa-shimmer': {
+                      '0%, 100%': { backgroundPosition: '0% 50%' },
+                      '50%': { backgroundPosition: '100% 50%' },
+                    },
+                    '@media (prefers-reduced-motion: reduce)': {
+                      animation: 'none',
+                    },
+                  }}
+                >
+                  Working actors.
+                </Box>
+              </Heading>
+            </motion.div>
+            <motion.div variants={fadeUp}>
+              <Text
+                fontSize={{ base: 'md', md: 'lg' }}
+                color="gray.600"
+                maxW="640px"
+                mx="auto"
+                lineHeight="1.7"
+                sx={{ textWrap: 'balance' }}
+              >
+                The coaches behind ActingAccents.com teach the systematic,
+                IPA-based approach they use every day in professional theatre,
+                film, and television — and in the classroom.
+              </Text>
+            </motion.div>
           </Stack>
         </Container>
       </Box>
 
       {/* Coaches */}
       <Container maxW="7xl" px={{ base: 5, md: 8 }} py={{ base: 16, md: 24 }}>
-        <SimpleGrid
-          columns={{ base: 1, lg: 2 }}
-          spacing={{ base: 10, lg: 10 }}
-        >
-          {coaches.map((coach) => (
-            <AboutCard key={coach.name} {...coach} />
+        <Stack spacing={{ base: 20, lg: 32 }}>
+          {coaches.map((coach, i) => (
+            <AboutCard
+              key={coach.name}
+              {...coach}
+              index={i}
+              reverse={i % 2 === 1}
+            />
           ))}
-        </SimpleGrid>
+        </Stack>
       </Container>
     </Box>
   )
