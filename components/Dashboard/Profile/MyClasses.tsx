@@ -9,6 +9,7 @@ type MyCohort = {
   institution: string | null
   teacher: { firstName: string | null; lastName: string | null; email: string }
   usesSeat: boolean
+  waitingForSeat: boolean
   endsAt: string | null
   open: boolean
 }
@@ -70,6 +71,12 @@ const MyClasses = ({ bg }: { bg: string }) => {
                   ? ` · access until ${new Date(c.endsAt).toLocaleDateString()}`
                   : ''}
               </Text>
+              {c.waitingForSeat && (
+                <Text fontSize="xs" color="orange.500">
+                  Waiting for your teacher to add a seat. You’ll get full course
+                  access then.
+                </Text>
+              )}
               <Text fontSize="xs" color="text.muted">
                 Your teacher can see your progress and answers.
               </Text>

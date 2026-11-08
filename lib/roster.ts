@@ -2,6 +2,7 @@
 // Computed with a handful of grouped queries (not per student), so a large
 // class stays one round trip per table.
 import { prisma } from './prisma'
+import { isWaitingForSeat } from './cohorts'
 
 export type OutlineLesson = {
   id: number
@@ -43,6 +44,7 @@ export type RosterRow = {
   name: string | null
   joinedAt: string
   usesSeat: boolean
+  waitingForSeat: boolean
   lessonsCompleted: number
   totalLessons: number
   currentLesson: { id: number; title: string; courseTitle: string } | null
@@ -52,11 +54,22 @@ export type RosterRow = {
 }
 
 export async function cohortRoster(cohortId: number): Promise<RosterRow[]> {
+  const cohort = await prisma.cohort.findUniqueOrThrow({
+    where: { id: cohortId },
+    select: { paymentMode: true },
+  })
   const members = await prisma.cohortMember.findMany({
     where: { cohortId, removedAt: null },
     include: {
       user: {
-        select: { id: true, email: true, firstName: true, lastName: true },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          hasAccessToPaidCourses: true,
+          role: true,
+        },
       },
     },
     orderBy: { joinedAt: 'asc' },
@@ -119,6 +132,7 @@ export async function cohortRoster(cohortId: number): Promise<RosterRow[]> {
       name,
       joinedAt: m.joinedAt.toISOString(),
       usesSeat: m.usesSeat,
+      waitingForSeat: isWaitingForSeat(cohort, m, m.user),
       lessonsCompleted: outline.filter((l) => d.has(l.id)).length,
       totalLessons: outline.length,
       currentLesson: current

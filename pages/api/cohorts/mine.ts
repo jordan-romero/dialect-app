@@ -3,7 +3,11 @@
 //      access to my work; my progress stays mine)
 import { prisma } from '../../../lib/prisma'
 import { withPermission } from '../../../lib/rbac'
-import { cohortIsOpen } from '../../../lib/cohorts'
+import {
+  cohortIsOpen,
+  fillWaitingSeats,
+  isWaitingForSeat,
+} from '../../../lib/cohorts'
 
 export default withPermission(null, async (req, res, { user }) => {
   if (req.method === 'POST') {
@@ -12,6 +16,7 @@ export default withPermission(null, async (req, res, { user }) => {
       where: { cohortId: id, userId: user.id, removedAt: null },
       data: { removedAt: new Date() },
     })
+    if (r.count) await fillWaitingSeats(id)
     return r.count
       ? res.status(200).json({ ok: true })
       : res.status(404).json({ error: 'Not in that class' })
@@ -39,6 +44,7 @@ export default withPermission(null, async (req, res, { user }) => {
       teacher: m.cohort.teacher,
       paymentMode: m.cohort.paymentMode,
       usesSeat: m.usesSeat,
+      waitingForSeat: isWaitingForSeat(m.cohort, m, user),
       endsAt: m.cohort.endsAt,
       open: cohortIsOpen(m.cohort),
       joinedAt: m.joinedAt,

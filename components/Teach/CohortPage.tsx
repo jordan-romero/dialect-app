@@ -60,6 +60,7 @@ type RosterRow = {
   name: string | null
   joinedAt: string
   usesSeat: boolean
+  waitingForSeat: boolean
   lessonsCompleted: number
   totalLessons: number
   currentLesson: { id: number; title: string; courseTitle: string } | null
@@ -163,6 +164,7 @@ const CohortPage = ({ id }: { id: string }) => {
   const c = data.cohort
   const seats = c.paymentMode === 'SEATS'
   const over = seats ? Math.max(0, c.seatsUsed - c.seatCount) : 0
+  const waiting = data.roster.filter((r) => r.waitingForSeat).length
 
   const patch = async (body: Record<string, unknown>, ok?: string) => {
     const r = await send(`/api/teach/cohorts/${c.id}`, 'PATCH', body)
@@ -246,6 +248,12 @@ const CohortPage = ({ id }: { id: string }) => {
                 <b>{c.seatsUsed}</b> of <b>{c.seatCount}</b> seats used ·{' '}
                 <b>{Math.max(0, c.seatCount - c.seatsUsed)}</b> left
               </Text>
+              {waiting > 0 && (
+                <Text mt={1} fontSize="sm" color="orange.500">
+                  <b>{waiting}</b> waiting for a seat. They get one as soon as
+                  you buy more.
+                </Text>
+              )}
               <Progress
                 mt={2}
                 value={c.seatCount ? (c.seatsUsed / c.seatCount) * 100 : 0}
@@ -726,7 +734,7 @@ const RosterTable = ({
           'Exercises submitted',
           'Last active',
           'Joined',
-          'Uses seat',
+          'Seat',
         ],
         ...sorted.map((r) => [
           r.name,
@@ -737,7 +745,7 @@ const RosterTable = ({
           r.exercisesSubmitted,
           r.lastActive,
           r.joinedAt,
-          r.usesSeat ? 'yes' : 'no',
+          r.usesSeat ? 'yes' : r.waitingForSeat ? 'waiting' : 'no',
         ]),
       ]),
     )
@@ -845,6 +853,11 @@ const RosterTable = ({
                     >
                       {r.name || r.email}
                     </Link>
+                    {r.waitingForSeat && (
+                      <Badge colorScheme="orange" ml={2}>
+                        Waiting for a seat
+                      </Badge>
+                    )}
                     {r.name && (
                       <Text fontSize="xs" color="text.muted">
                         {r.email}
