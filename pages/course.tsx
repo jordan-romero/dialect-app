@@ -26,7 +26,32 @@ import LessonTour from '../components/CoursePage/LessonTour'
 import RhymeDemo from '../components/CoursePage/RhymeDemo'
 import Curriculum from '../components/CoursePage/Curriculum'
 import BrowserFrame from '../components/CoursePage/BrowserFrame'
-import { COURSE_STATS } from '../components/CoursePage/courseOutline'
+import type { GetStaticProps } from 'next'
+import {
+  CourseStats,
+  FALLBACK_PHASES,
+  FALLBACK_STATS,
+  OutlinePhase,
+} from '../components/CoursePage/courseOutline'
+import { loadCourseOutline } from '../lib/coursePreview'
+
+type Props = { phases: OutlinePhase[]; stats: CourseStats }
+
+const NUMBER_WORDS = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+]
+const inWords = (n: number) => NUMBER_WORDS[n] ?? String(n)
+const capitalize = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
 
 const Eyebrow = ({
   children,
@@ -110,11 +135,11 @@ const PrimaryCta = ({ children }: { children: React.ReactNode }) => (
   </Button>
 )
 
-const STATS = [
-  { value: COURSE_STATS.phases, label: 'phases' },
-  { value: COURSE_STATS.lessons, label: 'video lessons' },
-  { value: COURSE_STATS.exercises, label: 'interactive exercises' },
-  { value: COURSE_STATS.handouts, label: 'handouts & charts' },
+const statTiles = (stats: CourseStats) => [
+  { value: stats.phases, label: 'phases' },
+  { value: stats.lessons, label: 'video lessons' },
+  { value: stats.exercises, label: 'interactive exercises' },
+  { value: stats.handouts, label: 'handouts & charts' },
 ]
 
 const TOOLS = [
@@ -145,13 +170,15 @@ const TOOLS = [
   },
 ]
 
-const CoursePage = () => (
+const CoursePage = ({ phases, stats }: Props) => (
   <>
     <Head>
       <title>Inside the Course | Acting Accents</title>
       <meta
         name="description"
-        content="Take a look inside The Actor's Guide to IPA and Accents: three phases of video lessons, interactive exercises and handouts, from your first IPA symbol to performing in British RP."
+        content={`Take a look inside The Actor's Guide to IPA and Accents: ${inWords(
+          stats.phases,
+        )} phases of video lessons, interactive exercises and handouts, from your first IPA symbol to performing in British RP.`}
       />
       <meta property="og:title" content="Inside the Course | Acting Accents" />
       <meta
@@ -218,9 +245,9 @@ const CoursePage = () => (
                 lineHeight="1.65"
                 maxW="680px"
               >
-                Three phases of video lessons, exercises and handouts that take
-                you from your first IPA symbol to performing a dialect. Here’s
-                what it looks like inside.
+                {capitalize(inWords(stats.phases))} phases of video lessons,
+                exercises and handouts that take you from your first IPA symbol
+                to performing a dialect. Here’s what it looks like inside.
               </Text>
             </motion.div>
             <motion.div variants={fadeUp}>
@@ -259,7 +286,7 @@ const CoursePage = () => (
             maxW="900px"
             mx="auto"
           >
-            {STATS.map((s) => (
+            {statTiles(stats).map((s) => (
               <Box
                 key={s.label}
                 bg="whiteAlpha.900"
@@ -335,8 +362,8 @@ const CoursePage = () => (
                 body="This is the first exercise in the course, from the free lesson “Why the IPA?”. Match the words that really rhyme, and watch the IPA show you why."
               />
               <Text color="gray.500" fontSize="sm">
-                Inside the course there are {COURSE_STATS.exercises - 1} more,
-                from an interactive vowel chart to transcribing Hamlet.
+                Inside the course there are {stats.exercises - 1} more, from an
+                interactive vowel chart to transcribing Hamlet.
               </Text>
             </Stack>
           </Reveal>
@@ -355,11 +382,17 @@ const CoursePage = () => (
             center
             eyebrow="The curriculum"
             title="From the first symbol to the stage."
-            body={`${COURSE_STATS.lessons} lessons and ${COURSE_STATS.checkpoints} checkpoints across three phases. Each phase opens when you finish the one before it, and the first ${COURSE_STATS.freeLessons} lessons are free.`}
+            body={`${stats.lessons} lessons and ${
+              stats.checkpoints
+            } checkpoints across ${inWords(
+              stats.phases,
+            )} phases. Each phase opens when you finish the one before it, and the first ${
+              stats.freeLessons
+            } lessons are free.`}
           />
         </Reveal>
         <Box mt={{ base: 8, md: 12 }}>
-          <Curriculum />
+          <Curriculum phases={phases} />
         </Box>
       </Container>
     </Box>
@@ -459,7 +492,9 @@ const CoursePage = () => (
               lineHeight="1.05"
               color="white"
             >
-              Start with the three free lessons.
+              {stats.freeLessons > 0
+                ? `Start with the ${inWords(stats.freeLessons)} free lessons.`
+                : 'Be first in line when it opens.'}
             </Heading>
             <Text
               fontSize={{ base: 'md', md: 'lg' }}
@@ -476,5 +511,24 @@ const CoursePage = () => (
     </Box>
   </>
 )
+
+// Built from the course database and refreshed at most once an hour, so new
+// or renamed lessons show up without a deploy. If the database can't be
+// reached, the page falls back to the snapshot in courseOutline.ts.
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  try {
+    const { phases, stats } = await loadCourseOutline()
+    return { props: { phases, stats }, revalidate: 3600 }
+  } catch (err) {
+    console.error(
+      'course page: outline load failed, using fallback',
+      err instanceof Error ? err.name : 'unknown',
+    )
+    return {
+      props: { phases: FALLBACK_PHASES, stats: FALLBACK_STATS },
+      revalidate: 300,
+    }
+  }
+}
 
 export default CoursePage

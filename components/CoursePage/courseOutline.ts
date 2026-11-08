@@ -1,9 +1,9 @@
 // The course outline shown on the public /course page.
 //
-// This is a hand-kept copy of the lesson titles, order and exercise names in
-// the course database, so the marketing page renders without a login or a
-// database call. If a lesson is renamed, added or moved in the course, update
-// it here too. Only titles and short summaries live here, never paid content.
+// The page reads the live outline from the course database (lib/coursePreview.ts)
+// and refreshes it hourly. FALLBACK_PHASES below is a snapshot of that outline,
+// used only if the database can't be reached when the page is built. Only
+// titles, summaries and exercise names appear here, never paid content.
 
 export type OutlineLesson = {
   title: string
@@ -20,12 +20,12 @@ export type OutlinePhase = {
   lessons: OutlineLesson[]
 }
 
-export const PHASES: OutlinePhase[] = [
+export const FALLBACK_PHASES: OutlinePhase[] = [
   {
     name: 'Phase 1',
-    title: 'The IPA, from the ground up',
+    title: 'Learn the alphabet of sound',
     blurb:
-      'Why spelling fails actors, how speech is made, and every consonant and vowel of General American with its symbol.',
+      'Why spelling fails actors, how speech is made, and every consonant and vowel of General American, each with its IPA symbol.',
     lessons: [
       {
         title: 'What is the IPA?',
@@ -97,9 +97,9 @@ export const PHASES: OutlinePhase[] = [
   },
   {
     name: 'Phase 2',
-    title: 'Transcription',
+    title: 'Write down what you hear',
     blurb:
-      'Turn speech into the IPA, from single words to connected lines, with stress and a lexical template of your own.',
+      'Transcribe real speech in the IPA, from single words to full lines, mark where the stress falls, and build a lexical chart of your own.',
     lessons: [
       {
         title: 'Transcription Concepts',
@@ -135,16 +135,21 @@ export const PHASES: OutlinePhase[] = [
         title: 'Checkpoint 2',
         summary:
           'Transcribe Hamlet’s advice to the players before moving on to Phase 3.',
-        exercises: ['Hamlet’s Advice, parts 1–4'],
+        exercises: [
+          'Hamlet’s Advice pt. 1',
+          'Hamlet’s Advice pt. 2',
+          'Hamlet’s Advice pt. 3',
+          'Hamlet’s Advice pt. 4',
+        ],
         checkpoint: true,
       },
     ],
   },
   {
     name: 'Phase 3',
-    title: 'Learning a dialect: British RP',
+    title: 'Put on a dialect: British RP',
     blurb:
-      'Use everything so far to learn a real dialect, then carry it from the page into performance.',
+      'Learn British Received Pronunciation sound by sound, from example speakers to its rhythm and melody, then carry it into a performance of Hamlet’s advice.',
     lessons: [
       {
         title: 'Gathering Resources',
@@ -190,14 +195,35 @@ export const PHASES: OutlinePhase[] = [
   },
 ]
 
-const allLessons = PHASES.flatMap((p) => p.lessons)
+// Marketing copy for each phase, by position. The course records only carry
+// a phase name ("Phase 1") and an internal note, so the headline and blurb
+// live here. A phase beyond these falls back to its course record.
+export const PHASE_COPY: { title: string; blurb: string }[] =
+  FALLBACK_PHASES.map(({ title, blurb }) => ({ title, blurb }))
 
-// Exercise and handout totals are counted from the course database.
-export const COURSE_STATS = {
-  phases: PHASES.length,
-  lessons: allLessons.filter((l) => !l.checkpoint).length,
-  checkpoints: allLessons.filter((l) => l.checkpoint).length,
-  exercises: 34,
-  handouts: 40,
-  freeLessons: allLessons.filter((l) => l.free).length,
+export type CourseStats = {
+  phases: number
+  lessons: number
+  checkpoints: number
+  exercises: number
+  handouts: number
+  freeLessons: number
 }
+
+export const computeStats = (
+  phases: OutlinePhase[],
+  handouts: number,
+): CourseStats => {
+  const all = phases.flatMap((p) => p.lessons)
+  return {
+    phases: phases.length,
+    lessons: all.filter((l) => !l.checkpoint).length,
+    checkpoints: all.filter((l) => l.checkpoint).length,
+    exercises: all.reduce((n, l) => n + (l.exercises?.length ?? 0), 0),
+    handouts,
+    freeLessons: all.filter((l) => l.free).length,
+  }
+}
+
+// Handout count at the time of the snapshot above.
+export const FALLBACK_STATS = computeStats(FALLBACK_PHASES, 40)

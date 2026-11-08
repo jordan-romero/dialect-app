@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { FiFlag } from 'react-icons/fi'
-import { PHASES, OutlineLesson } from './courseOutline'
+import { OutlineLesson, OutlinePhase } from './courseOutline'
 import { Reveal } from '../PrelaunchHomePage/motion'
 
 const LessonRow = ({
@@ -99,8 +99,8 @@ const LessonRow = ({
   </Flex>
 )
 
-/** The three phases, each opening to show its lessons and exercises. */
-const Curriculum = () => {
+/** Each phase opens to show its lessons and exercises. */
+const Curriculum = ({ phases }: { phases: OutlinePhase[] }) => {
   const [open, setOpen] = useState<number[]>([0])
   const toggle = (i: number) =>
     setOpen((o) => (o.includes(i) ? o.filter((x) => x !== i) : [...o, i]))
@@ -109,7 +109,7 @@ const Curriculum = () => {
 
   return (
     <Stack spacing={{ base: 4, md: 5 }}>
-      {PHASES.map((phase, i) => {
+      {phases.map((phase, i) => {
         const isOpen = open.includes(i)
         const lessons = phase.lessons.filter((l) => !l.checkpoint).length
         const exercises = phase.lessons.reduce(
@@ -208,7 +208,11 @@ const Curriculum = () => {
                   pb={{ base: 2, md: 3 }}
                 >
                   {rows.map(({ lesson, n }) => (
-                    <LessonRow key={lesson.title} lesson={lesson} n={n} />
+                    <LessonRow
+                      key={`${lesson.title}-${n}`}
+                      lesson={lesson}
+                      n={n}
+                    />
                   ))}
                 </Box>
               </Collapse>
