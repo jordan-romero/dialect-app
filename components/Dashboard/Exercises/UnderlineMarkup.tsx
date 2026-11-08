@@ -72,6 +72,88 @@ export const renderUnderlined = (text: string): React.ReactNode => {
   )
 }
 
+type RunStyle = { b: boolean; i: boolean; u: boolean }
+
+/**
+ * Prose form of renderUnderlined that also carries the bold and italics Scott
+ * sets in the Drive docs:
+ *
+ *   "**bold**"   "_italic_"   "{underline}"
+ *
+ * Markers may nest and may sit inside a transcription — the docs bold a single
+ * sound mid-word, as in /θə lɛtə**ɹ**ɪmplaɪ̆d/. So the markers are stripped
+ * first, and the IPA font is decided on the plain text afterwards; deciding it
+ * on the marked-up text would cut a transcription at every marker.
+ *
+ * A marker with no partner later in the string is left as literal text, so a
+ * footnote's "*" or "**" survives. Kept separate from renderUnderlined, which
+ * every exercise uses, so `_` and `**` only mean something in prose that was
+ * written with them in mind.
+ */
+export const renderRich = (text: string): React.ReactNode => {
+  if (!text) return text
+
+  let plain = ''
+  const styles: RunStyle[] = []
+  let b = false
+  let i = false
+  let u = false
+  for (let k = 0; k < text.length; ) {
+    if (text.startsWith('**', k) && (b || text.indexOf('**', k + 2) !== -1)) {
+      b = !b
+      k += 2
+      continue
+    }
+    const c = text[k]
+    if (c === '_' && (i || text.indexOf('_', k + 1) !== -1)) {
+      i = !i
+      k++
+      continue
+    }
+    if (c === '{' && !u && text.indexOf('}', k + 1) !== -1) {
+      u = true
+      k++
+      continue
+    }
+    if (c === '}' && u) {
+      u = false
+      k++
+      continue
+    }
+    plain += c
+    styles.push({ b, i, u })
+    k++
+  }
+
+  const ipa: boolean[] = new Array(plain.length).fill(false)
+  const segment = new RegExp(IPA_SEGMENT.source, 'g')
+  let m: RegExpExecArray | null
+  while ((m = segment.exec(plain)) !== null) {
+    if (!m[0]) {
+      segment.lastIndex++
+      continue
+    }
+    for (let k = m.index; k < m.index + m[0].length; k++) ipa[k] = true
+  }
+
+  const keyAt = (k: number) =>
+    `${+styles[k].b}${+styles[k].i}${+styles[k].u}${+ipa[k]}`
+  const nodes: React.ReactNode[] = []
+  let start = 0
+  for (let k = 1; k <= plain.length; k++) {
+    if (k < plain.length && keyAt(k) === keyAt(start)) continue
+    const s = styles[start]
+    let node: React.ReactNode = plain.slice(start, k)
+    if (ipa[start]) node = <span className="ipa-text">{node}</span>
+    if (s.u) node = <u>{node}</u>
+    if (s.i) node = <em>{node}</em>
+    if (s.b) node = <strong>{node}</strong>
+    nodes.push(<React.Fragment key={start}>{node}</React.Fragment>)
+    start = k
+  }
+  return <span>{nodes}</span>
+}
+
 /** Component form, for when JSX reads better than a call. */
 const UnderlineMarkup: React.FC<{ text: string }> = ({ text }) => (
   <>{renderUnderlined(text)}</>

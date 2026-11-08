@@ -2,67 +2,71 @@
 
 Everything on this page is blocking an exercise.
 
-**13b.A is live in Lesson 19 without its clips.** Each item already points at
+> **Renumbered Nov 2026.** Scott renamed modules 13–19 in Drive (13a→13,
+> 13b→14, 13c→15, 14a→16, 14b→17, 15→18, Outro→19). Paths and filenames below
+> use the new names; S3 still holds the old folders too.
+
+**14A is live in Lesson 19 without its clips.** Each item already points at
 the file it expects, so uploading the six clips below is all that's left — they
 play as soon as they exist, no rebuild.
 
-**14a.B is built but not registered.** Its script verifies every clip exists on
+**16B is built but not registered.** Its script verifies every clip exists on
 S3 and refuses to write until they do. Its option ids (from 1281) now overlap
 rows in the database, so they need moving before it's run:
 
 ```bash
-node --env-file=.env scripts/add-14aB-exercise.mjs && yarn seed
+node --env-file=.env scripts/add-16B-exercise.mjs && yarn seed
 ```
 
 Compiled 2026-09-06 by auditing the Drive master content and the S3 bucket
-against the course database. Filenames below follow the conventions already in
-use, so once the clips exist the attachment is mechanical.
+against the course database; renamed 2026-11-07. Filenames below follow the
+conventions already in use, so once the clips exist the attachment is
+mechanical.
 
 ---
 
 ## 1. Recordings that don't exist anywhere — Scott needs a mic
 
-### 13b.A — Repeat After Me Tongue Twisters (6 clips)
+### 14A — Repeat After Me Tongue Twisters (6 clips)
 
 Live in **Lesson 19** with no audio yet — the Play clip button does nothing
 until these are uploaded.
-Content is complete in the Drive doc "13b.A - Repeat After Me TTs"; only the
-audio is absent (the Drive folder holds the doc alone, and S3 has nothing under
-`13b.A`).
+Content is complete in the Drive doc "14A - Repeat After Me TTs"; only the
+audio is absent (neither Drive nor S3 has any 14A clips as of 2026-11-07).
 
-Upload to `13b. Distinct Features of the Dialect/13b.A.Audio/`, named to match
-the 13a set (`13aC.1.mp3` … ):
+Upload to `14. Distinct Features of the Dialect/14A.Audio/`, named to match
+the 13C set (`13C.1.mp3` … ):
 
-| File         | Feature            | Sentence to read                                                                                       |
-| ------------ | ------------------ | ------------------------------------------------------------------------------------------------------ |
-| `13bA.1.mp3` | Linking R          | "The blurry star above appears either nearer or farther away depending on where I am."                 |
-| `13bA.2.mp3` | Intrusive R        | "Krista is gaga over the drama of the conga on the dance floor."                                       |
-| `13bA.3.mp3` | Liquid U           | "The only suitable meal while on duty on Tuesdays in June is a superbly chewy stew served with juice." |
-| `13bA.4.mp3` | Syncope            | "The observatory's lavatory was inaccessible to the secretary in January and February."                |
-| `13bA.5.mp3` | The "-ile" ending  | "The hostile juvenile was agile with his mobile phone."                                                |
-| `13bA.6.mp3` | Alternate features | "It felt silly to worry about losing her way, for she had her map in her gray bag."                    |
+| File        | Feature            | Sentence to read                                                                                       |
+| ----------- | ------------------ | ------------------------------------------------------------------------------------------------------ |
+| `14A.1.mp3` | Linking R          | "The blurry star above appears either nearer or farther away depending on where I am."                 |
+| `14A.2.mp3` | Intrusive R        | "Krista is gaga over the drama of the conga on the dance floor."                                       |
+| `14A.3.mp3` | Liquid U           | "The only suitable meal while on duty on Tuesdays in June is a superbly chewy stew served with juice." |
+| `14A.4.mp3` | Syncope            | "The observatory's lavatory was inaccessible to the secretary in January and February."                |
+| `14A.5.mp3` | The "-ile" ending  | "The hostile juvenile was agile with his mobile phone."                                                |
+| `14A.6.mp3` | Alternate features | "It felt silly to worry about losing her way, for she had her map in her gray bag."                    |
 
 Read in **RP**, following the transcriptions in the doc.
 
-### 14a.B — Choose the Right Transcription (20 clips)
+### 16B — Choose the Right Transcription (20 clips)
 
-Blocks: **Lesson 23**. Same format as 13b.B, which is already built and can be
+Blocks: **Lesson 23**. Same format as 14B, which is already built and can be
 copied exactly: each question plays the **correct** reading, and choosing a
 wrong answer reveals that option's own clip so the learner can hear why.
 
 So every option needs recording — including the wrong ones, read exactly as
 transcribed in the doc.
 
-Upload to `14a. Dialect Transcription in Action/14a.B.Audio/`, named to match
-13b.B (`13bB.1.a.mp3` … ):
+Upload to `16. Dialect Transcription in Action/16B.Audio/`, named to match
+14B (`14B.1.a.mp3` … ):
 
-| Question | Text                                                                    | Files                   |
-| -------- | ----------------------------------------------------------------------- | ----------------------- |
-| 1        | "…near the duke street tower."                                          | `14aB.1.a` – `14aB.1.d` |
-| 2        | "…on her first morning she felt stressed."                              | `14aB.2.a` – `14aB.2.d` |
-| 3        | "…and washed her face in a hurry."                                      | `14aB.3.a` – `14aB.3.d` |
-| 4        | "…because normally you would only expect to see it in a dog or a goat." | `14aB.4.a` – `14aB.4.d` |
-| 5        | "The goose's owner, Mary Harrison, kept calling, 'Comma, Comma',"       | `14aB.5.a` – `14aB.5.d` |
+| Question | Text                                                                    | Files                 |
+| -------- | ----------------------------------------------------------------------- | --------------------- |
+| 1        | "…near the duke street tower."                                          | `16B.1.a` – `16B.1.d` |
+| 2        | "…on her first morning she felt stressed."                              | `16B.2.a` – `16B.2.d` |
+| 3        | "…and washed her face in a hurry."                                      | `16B.3.a` – `16B.3.d` |
+| 4        | "…because normally you would only expect to see it in a dog or a goat." | `16B.4.a` – `16B.4.d` |
+| 5        | "The goose's owner, Mary Harrison, kept calling, 'Comma, Comma',"       | `16B.5.a` – `16B.5.d` |
 
 `a` is the correct reading in every case. `b`, `c`, `d` are the distractor
 transcriptions from the doc, read as written.
