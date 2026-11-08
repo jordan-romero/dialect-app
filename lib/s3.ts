@@ -142,8 +142,24 @@ export function signDeep<T>(data: T, expiresIn: number = DEFAULT_TTL): T {
     }
     return out as unknown as T
   }
-  if (typeof data === 'string' && isOurS3Url(data)) {
-    return signS3Url(data, expiresIn) as unknown as T
+  if (typeof data === 'string') {
+    if (isOurS3Url(data)) return signS3Url(data, expiresIn) as unknown as T
+    // Links written inside prose ("[the PDF](https://…)") are signed in place.
+    if (data.includes(`${Bucket}.s3`)) {
+      return data.replace(EMBEDDED_S3_URL, (u) =>
+        isOurS3Url(u) ? signS3Url(u, expiresIn) : u,
+      ) as unknown as T
+    }
   }
   return data
 }
+
+// An https URL on our bucket inside a longer string; stops at whitespace and
+// the characters that close a markdown link or quote.
+const EMBEDDED_S3_URL = new RegExp(
+  `https://${Bucket.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&',
+  )}\\.s3[^\\s)\\]"'<>]*`,
+  'g',
+)

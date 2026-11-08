@@ -1467,7 +1467,7 @@
       "quizType": "shortAnswer",
       "order": 0,
       "isCompleted": false,
-      "instructions": "Fully transcribe “Hamlet’s Advice” into British RP, one line at a time. Reference your GenAm transcription from Checkpoint Exercise 2, your Lexical Chart and the provided audio sample. After each line, reveal the answer key to check your work."
+      "instructions": "Fully transcribe “Hamlet’s Advice” into British RP, one line at a time. Reference your GenAm transcription from Checkpoint Exercise 2, your Lexical Chart and the provided audio sample. After each line, reveal the answer key to check your work.\n\nExtra challenge: [Print out the “Transcribing Hamlet’s Advice into RP” PDF](https://acting-accents.s3.amazonaws.com/17.%20Transcription%20Transformation/17A%20-%20Transcribing%20Hamlet%27s%20Advice%20into%20RP.pdf) and transcribe the speech by hand first, then come back here and check each line."
     }
   ],
   "Question": [
@@ -2423,7 +2423,7 @@
     },
     {
       "id": 194,
-      "text": "“Surely that player is joking.” — GenAm /ʃʊɚ̆lĭ ðæt̚ pleɪ̆.ɚ ɪz d͡ʒoʊ̆kɪŋ/",
+      "text": "“Surely that player is joking.” — GenAm /ʃʊɚ̆lĭ ðæt̚ plɛɪ̆ə̆z ɪz d͡ʒoʊ̆kɪŋ/",
       "questionType": "shortAnswer",
       "quizId": 28,
       "categories": [],
@@ -8272,7 +8272,7 @@
     },
     {
       "id": 503,
-      "optionText": "/ʃʊːlĭ ðæt plɛɪ̆ə̆ ɹɪz d͡ʒəʊ̆kɪŋ/",
+      "optionText": "/ʃʊə̆lĭ ðæt plɛɪ̆ə̆ ɹɪz d͡ʒəʊ̆kɪŋ/",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,
@@ -15582,7 +15582,7 @@
     },
     {
       "id": 1440,
-      "optionText": "spik ðə spit͡ʃ | aɪ̆ pɹeɪ̆ ju | æz aɪ̆ pɹənaʊ̆nst ɪt̚ tʊ ju |",
+      "optionText": "spik ðə spit͡ʃ | aɪ̆ pɹeɪ̆ ju | æz aɪ̆ pɹənaʊ̆nst ɪt̚ tʊ ju |*\n*Note, this first line, unlike the rest, has no segmental or distinct sound changes between GenAm and RP.",
       "isCorrect": true,
       "rhymeCategory": null,
       "rhymingWordId": null,

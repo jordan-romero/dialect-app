@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { renderUnderlined } from './UnderlineMarkup'
+import Callout from './Callout'
 import {
   Button,
   Box,
@@ -8,6 +9,7 @@ import {
   HStack,
   Input,
   Icon,
+  Link,
   Tooltip,
   useToast,
 } from '@chakra-ui/react'
@@ -26,6 +28,54 @@ interface ShortAnswerQuizProps {
 }
 
 const UNCONNECTED_MARKER = ' — unconnected '
+const CHALLENGE_PREFIX = 'Extra challenge:'
+
+// "[label](https://…)" in authored text becomes a link opening in a new tab.
+// The API presigns our S3 URLs inside the text before it gets here.
+const renderLinks = (text: string): React.ReactNode =>
+  text.split(/(\[[^\]]+\]\(https?:\/\/[^)\s]+\))/g).map((part, i) => {
+    const m = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/)
+    return m ? (
+      <Link
+        key={i}
+        href={m[2]}
+        isExternal
+        color="brand.iris"
+        textDecoration="underline"
+        fontWeight="semibold"
+      >
+        {m[1]}
+      </Link>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    )
+  })
+
+// An answer's text may carry a note on the lines after it ("…|*" then
+// "*Note: …"): the first line is the answer, the rest show as its footnote.
+const splitAnswer = (text: string) => {
+  const [answer, ...note] = text.split('\n')
+  return { answer, footnote: note.join(' ').trim() || undefined }
+}
+
+// Prompts authored as "“Quote.” — <marker> /…/" show the quote, then the
+// transcription the learner works from in a purple callout labelled here.
+const PROMPT_MARKERS: Array<[string, string]> = [
+  [UNCONNECTED_MARKER, 'Unconnected speech'],
+  [' — GenAm ', 'GenAm transcription'],
+]
+const splitPrompt = (text: string) => {
+  for (const [marker, label] of PROMPT_MARKERS) {
+    const i = text.indexOf(marker)
+    if (i !== -1)
+      return {
+        quote: text.slice(0, i),
+        transcription: text.slice(i + marker.length),
+        label,
+      }
+  }
+  return null
+}
 
 const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   lessonId,
@@ -51,7 +101,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const isUnconnectedPrompt =
     currentQuestion?.text.includes(UNCONNECTED_MARKER) ?? false
 
-  const revealSentenceOption =currentQuestion?.answerOptions.find(
+  const revealSentenceOption = currentQuestion?.answerOptions.find(
     (option) => option.audioUrl,
   )
 
@@ -208,11 +258,23 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
         <Box>
           {/* Not every short-answer quiz carries wording; those that do have
               it authored in the content, so it isn't inferred here. */}
-          {currentQuiz?.instructions && (
-            <Text fontStyle="italic" mb={4}>
-              Instructions: {currentQuiz.instructions}
-            </Text>
-          )}
+          {/* A paragraph starting "Extra challenge:" is shown as its own
+              purple callout under the instructions. */}
+          {currentQuiz?.instructions &&
+            currentQuiz.instructions.split('\n\n').map((para, i) =>
+              para.startsWith(CHALLENGE_PREFIX) ? (
+                <Box key={i} mb={4}>
+                  <Callout tone="prompt" label="Extra challenge" mt={0}>
+                    {renderLinks(para.slice(CHALLENGE_PREFIX.length).trim())}
+                  </Callout>
+                </Box>
+              ) : (
+                <Text key={i} fontStyle="italic" mb={4}>
+                  {i === 0 ? 'Instructions: ' : ''}
+                  {para}
+                </Text>
+              ),
+            )}
           <Box display="flex" justifyContent="flex-end" mb={2}>
             <Button
               size="sm"
@@ -224,12 +286,11 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
             </Button>
           </Box>
           {(() => {
-            // Descriptive Transcription prompts are authored as
-            // "“Quote.” — unconnected /…/": show the quote, then the
-            // unconnected transcription in its own labelled box beneath.
-            const [quote, unconnected] =
-              currentQuestion.text.split(UNCONNECTED_MARKER)
-            if (unconnected === undefined) {
+            // Descriptive Transcription ("— unconnected /…/") and Practice RP
+            // Changes ("— GenAm /…/") prompts: the quote, then the
+            // transcription to work from in a purple callout beneath.
+            const prompt = splitPrompt(currentQuestion.text)
+            if (!prompt) {
               return (
                 <>
                   <Text fontSize="xl">
@@ -253,7 +314,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               <>
                 <HStack spacing={3} flexWrap="wrap">
                   <Text fontSize="xl" fontWeight="bold">
-                    {renderUnderlined(quote)}
+                    {renderUnderlined(prompt.quote)}
                   </Text>
                   {currentQuestion.audioUrl && (
                     <Button
@@ -265,29 +326,9 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                     </Button>
                   )}
                 </HStack>
-                <Box
-                  mt={3}
-                  bg="accent.subtle"
-                  borderLeft="4px solid"
-                  borderColor="brand.iris"
-                  borderRadius="md"
-                  px={4}
-                  py={3}
-                >
-                  <Text
-                    fontSize="xs"
-                    fontWeight="bold"
-                    textTransform="uppercase"
-                    letterSpacing="wide"
-                    color="brand.iris"
-                    mb={1}
-                  >
-                    Unconnected speech
-                  </Text>
-                  <Text fontSize="xl" className="ipa-text" color="purple.900">
-                    {unconnected}
-                  </Text>
-                </Box>
+                <Callout tone="prompt" label={prompt.label} ipa>
+                  {prompt.transcription}
+                </Callout>
               </>
             )
           })()}
@@ -335,26 +376,43 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                       </Text>
                     )}
                   {!revealSentenceOption && showSentence && (
-                    <Text mt={1} fontFamily="ipa" color="green.700">
-                      Answer: {option.optionText}
-                    </Text>
+                    <Callout
+                      tone="answer"
+                      label="Answer"
+                      ipa
+                      mt={1}
+                      footnote={splitAnswer(option.optionText).footnote}
+                    >
+                      {splitAnswer(option.optionText).answer}
+                    </Callout>
                   )}
                 </Box>
               ))}
           </VStack>
+          {/* The learner commits an attempt before seeing the answer, the
+              same rule Reveal Sentence follows below. */}
           {!revealSentenceOption && (
-            <Button
-              onClick={() => setShowSentence(true)}
-              mt={4}
-              variant="brandWhite"
-              isDisabled={showSentence}
+            <Tooltip
+              label="Type your answer above to reveal it"
+              isDisabled={allInputsFilled || showSentence}
+              shouldWrapChildren
+              hasArrow
             >
-              Reveal Answer
-            </Button>
+              <Button
+                onClick={() => setShowSentence(true)}
+                mt={4}
+                variant="brandWhite"
+                isDisabled={showSentence || !allInputsFilled}
+              >
+                Reveal Answer
+              </Button>
+            </Tooltip>
           )}
           {showSentence && revealSentenceOption && (
             <Box mt={4}>
-              <Text>{renderUnderlined(revealSentenceOption.optionText)}</Text>
+              <Callout tone="answer" label="Answer" mt={0}>
+                {renderUnderlined(revealSentenceOption.optionText)}
+              </Callout>
               <Button
                 onClick={() => playAudio(revealSentenceOption.audioUrl)}
                 mt={2}
