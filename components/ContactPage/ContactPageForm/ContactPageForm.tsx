@@ -13,6 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { ArrowForwardIcon } from '@chakra-ui/icons'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const ContactPageForm = () => {
   const [firstName, setFirstName] = useState('')
@@ -41,7 +42,9 @@ const ContactPageForm = () => {
       })
 
       if (!response.ok) {
-        const data = await response.json().catch(() => ({ error: 'Something went wrong' }))
+        const data = await response
+          .json()
+          .catch(() => ({ error: 'Something went wrong' }))
         setError(data.error || 'Something went wrong')
         setSuccess(false)
       } else {
@@ -138,12 +141,59 @@ const ContactPageForm = () => {
               {error}
             </Alert>
           )}
-          {success && (
-            <Alert status="success" borderRadius="lg" fontSize="sm">
-              <AlertIcon />
-              Thanks — you’re on the list. Keep an eye on your inbox.
-            </Alert>
-          )}
+          <AnimatePresence>
+            {success && (
+              <motion.div
+                role="status"
+                initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <HStack
+                  spacing={3}
+                  p={4}
+                  borderRadius="xl"
+                  bgGradient="linear(to-r, #F3EEFF, #E8F7F1)"
+                  borderWidth="1px"
+                  borderColor="green.100"
+                >
+                  <Box flexShrink={0} w="34px" h="34px">
+                    <svg viewBox="0 0 34 34" width="34" height="34" aria-hidden>
+                      <motion.circle
+                        cx="17"
+                        cy="17"
+                        r="15"
+                        fill="#38A169"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 320,
+                          damping: 18,
+                        }}
+                        style={{ originX: '50%', originY: '50%' }}
+                      />
+                      <motion.path
+                        d="M10 17.5 L15 22 L24 12.5"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.4, delay: 0.25 }}
+                      />
+                    </svg>
+                  </Box>
+                  <Text fontSize="sm" fontWeight="semibold" color="gray.800">
+                    Thanks — you’re on the list. Keep an eye on your inbox.
+                  </Text>
+                </HStack>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <Button
             type="submit"

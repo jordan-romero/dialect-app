@@ -3,13 +3,11 @@ import React from 'react'
 import PrelaunchContent from './PrelaunchContent/PrelaunchContentContainer'
 import PrelaunchCardsContainer from './PrelaunchCardsContainer/PrelaunchCardsContainer'
 import PrelaunchTestimonialsContainer from './PrelaunchTestimonials/PrelaunchTestimonialsContainer'
-import { MotionConfig } from 'framer-motion'
-import { FloatingGlyphs, GlyphMarquee, ScrollProgress } from './motion'
+import { FloatingGlyphs, GlyphMarquee } from './motion'
 
 const PrelaunchHomePage = () => {
   return (
-    <MotionConfig reducedMotion="user">
-      <ScrollProgress />
+    <>
       <Box bg="white">
         <Box
           position="relative"
@@ -48,11 +46,40 @@ const PrelaunchHomePage = () => {
           <PrelaunchCardsContainer />
         </Box>
 
-        <Box bgGradient="linear(to-b, #FAFAFF, white)">
-          <PrelaunchTestimonialsContainer />
+        <Box
+          position="relative"
+          overflow="hidden"
+          bg="#140D2A"
+          borderRadius={{ base: 0, md: '3xl' }}
+          mb={{ base: 0, md: 12 }}
+          _before={{
+            content: '""',
+            position: 'absolute',
+            top: '-30%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '900px',
+            height: '700px',
+            bg: 'radial-gradient(closest-side, rgba(149,128,255,0.30), transparent 70%)',
+            pointerEvents: 'none',
+          }}
+          _after={{
+            content: '""',
+            position: 'absolute',
+            bottom: '-25%',
+            right: '-10%',
+            width: '600px',
+            height: '600px',
+            bg: 'radial-gradient(closest-side, rgba(126,172,226,0.18), transparent 70%)',
+            pointerEvents: 'none',
+          }}
+        >
+          <Box position="relative" zIndex={1}>
+            <PrelaunchTestimonialsContainer />
+          </Box>
         </Box>
       </Box>
-    </MotionConfig>
+    </>
   )
 }
 

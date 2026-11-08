@@ -3,6 +3,8 @@ import { Box } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import { MotionConfig } from 'framer-motion'
+import { ScrollProgress } from '../PrelaunchHomePage/motion'
 
 interface Props {
   children?: ReactNode
@@ -18,18 +20,21 @@ const Layout = ({ children }: Props) => {
   const isDashboard = router.pathname.startsWith('/dashboard')
 
   return (
-    <Box
-      w="100%"
-      maxW={isDashboard ? '100%' : MAX_APP_WIDTH}
-      h="auto"
-      mr="auto"
-      ml="auto"
-      px={isDashboard ? 0 : { base: 4, md: 6, lg: 8 }}
-    >
-      <Navbar />
-      {children}
-      <Footer />
-    </Box>
+    <MotionConfig reducedMotion="user">
+      {!isDashboard && <ScrollProgress />}
+      <Box
+        w="100%"
+        maxW={isDashboard ? '100%' : MAX_APP_WIDTH}
+        h="auto"
+        mr="auto"
+        ml="auto"
+        px={isDashboard ? 0 : { base: 4, md: 6, lg: 8 }}
+      >
+        <Navbar />
+        {children}
+        <Footer />
+      </Box>
+    </MotionConfig>
   )
 }
 
