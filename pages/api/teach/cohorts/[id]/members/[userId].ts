@@ -3,7 +3,7 @@
 // student's own progress and answers are untouched.
 import { prisma } from '../../../../../../lib/prisma'
 import { withPermission } from '../../../../../../lib/rbac'
-import { loadCohortFor } from '../../../../../../lib/cohorts'
+import { fillWaitingSeats, loadCohortFor } from '../../../../../../lib/cohorts'
 
 export default withPermission('cohort:manage', async (req, res, { user }) => {
   if (req.method !== 'DELETE') {
@@ -20,6 +20,7 @@ export default withPermission('cohort:manage', async (req, res, { user }) => {
     },
     data: { removedAt: new Date() },
   })
+  if (r.count) await fillWaitingSeats(cohort.id)
   return r.count
     ? res.status(200).json({ ok: true })
     : res.status(404).json({ error: 'Student not found' })

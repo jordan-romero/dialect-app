@@ -36,6 +36,7 @@ type Joined = {
   alreadyMember: boolean
   usesSeat: boolean
   needsPurchase: boolean
+  waitingForSeat: boolean
 }
 
 const Shell = ({ children }: { children: React.ReactNode }) => (
@@ -243,6 +244,13 @@ const JoinPage = ({ code, token }: { code?: string; token?: string }) => {
             <>
               {joined.usesSeat && (
                 <Text>Your class has given you full course access.</Text>
+              )}
+              {joined.waitingForSeat && (
+                <Text>
+                  Your teacher hasn’t added a seat for you yet. You’ll get full
+                  course access as soon as they do. Until then you can start
+                  with the free lessons.
+                </Text>
               )}
               <Button
                 as={NextLink}

@@ -96,7 +96,57 @@ export async function recalcSeats(cohortId: number): Promise<number> {
     where: { id: cohortId },
     data: { seatCount: seats },
   })
+  await fillWaitingSeats(cohortId)
   return seats
+}
+
+// A student in a seat class who has no seat and no course access of their own
+// is waiting for one. They can join before the teacher buys seats (or after
+// they run out) and get one as soon as seats are free.
+export const waitingMemberWhere = {
+  usesSeat: false,
+  removedAt: null,
+  user: { hasAccessToPaidCourses: false, role: 'STUDENT' },
+} as const satisfies Prisma.CohortMemberWhereInput
+
+export function isWaitingForSeat(
+  cohort: Pick<Cohort, 'paymentMode'>,
+  member: { usesSeat: boolean },
+  user: Pick<User, 'hasAccessToPaidCourses' | 'role'>,
+): boolean {
+  return (
+    cohort.paymentMode === 'SEATS' &&
+    !member.usesSeat &&
+    !user.hasAccessToPaidCourses &&
+    !can(user, 'course:full')
+  )
+}
+
+// Hand free seats to waiting students, earliest joiner first. Run after
+// seats are bought and after a seat is freed. Locks the cohort row, like
+// joining does, so it can't race a join for the same seat.
+export async function fillWaitingSeats(cohortId: number): Promise<number> {
+  return prisma.$transaction(async (tx) => {
+    const rows = await tx.$queryRaw<
+      { seatCount: number; paymentMode: string }[]
+    >`SELECT "seatCount", "paymentMode"::text FROM "Cohort" WHERE id = ${cohortId} FOR UPDATE`
+    const c = rows[0]
+    if (!c || c.paymentMode !== 'SEATS') return 0
+    const free = c.seatCount - (await seatsUsed(cohortId, tx))
+    if (free <= 0) return 0
+    const waiting = await tx.cohortMember.findMany({
+      where: { cohortId, ...waitingMemberWhere },
+      orderBy: { joinedAt: 'asc' },
+      take: free,
+      select: { id: true },
+    })
+    if (waiting.length === 0) return 0
+    await tx.cohortMember.updateMany({
+      where: { id: { in: waiting.map((w) => w.id) } },
+      data: { usesSeat: true },
+    })
+    return waiting.length
+  })
 }
 
 // ---- Resource checks ----
@@ -150,6 +200,8 @@ export type JoinResult =
       usesSeat: boolean
       // SELF_PAY cohort and the student hasn't bought the course yet.
       needsPurchase: boolean
+      // SEATS cohort with no free seat: joined, waiting for the teacher.
+      waitingForSeat: boolean
     }
   | { ok: false; status: number; code: string; message: string }
 
@@ -158,7 +210,7 @@ type JoinTarget = { code: string } | { token: string }
 // Join a cohort by its join code or by an emailed invite token.
 //
 // Seat cohorts: a student who doesn't already own the course takes a seat if
-// one is free. The seat check runs in a transaction that locks the cohort row,
+// one is free, and otherwise joins and waits for one. The seat check runs in a transaction that locks the cohort row,
 // so two students can't both take the last seat.
 export async function joinCohort(
   user: User,
@@ -226,32 +278,31 @@ export async function joinCohort(
       })
       if (existing && !existing.removedAt) {
         if (inviteId) await markInviteAccepted(tx, inviteId, user.id)
-        return ok(c, true, existing.usesSeat, ownsCourse)
+        return ok(
+          c,
+          true,
+          existing.usesSeat,
+          ownsCourse,
+          wantsSeat && !existing.usesSeat,
+        )
       }
 
-      if (wantsSeat) {
-        const used = await seatsUsed(c.id, tx)
-        if (used >= c.seatCount) {
-          return fail(
-            409,
-            'cohort_full',
-            'This class has no seats left. Ask your teacher to add more.',
-          )
-        }
-      }
+      // No free seat: join anyway and wait for one (fillWaitingSeats hands it
+      // over when the teacher buys more or someone leaves).
+      const takesSeat = wantsSeat && (await seatsUsed(c.id, tx)) < c.seatCount
 
       if (existing) {
         await tx.cohortMember.update({
           where: { id: existing.id },
-          data: { removedAt: null, usesSeat: wantsSeat, joinedAt: new Date() },
+          data: { removedAt: null, usesSeat: takesSeat, joinedAt: new Date() },
         })
       } else {
         await tx.cohortMember.create({
-          data: { cohortId: c.id, userId: user.id, usesSeat: wantsSeat },
+          data: { cohortId: c.id, userId: user.id, usesSeat: takesSeat },
         })
       }
       if (inviteId) await markInviteAccepted(tx, inviteId, user.id)
-      return ok(c, false, wantsSeat, ownsCourse)
+      return ok(c, false, takesSeat, ownsCourse, wantsSeat && !takesSeat)
     })
   } catch (e) {
     console.error('joinCohort failed:', e)
@@ -275,6 +326,7 @@ function ok(
   alreadyMember: boolean,
   usesSeat: boolean,
   ownsCourse: boolean,
+  waitingForSeat = false,
 ): JoinResult {
   return {
     ok: true,
@@ -283,6 +335,7 @@ function ok(
     alreadyMember,
     usesSeat,
     needsPurchase: c.paymentMode === 'SELF_PAY' && !ownsCourse,
+    waitingForSeat,
   }
 }
 
