@@ -6,7 +6,11 @@ import { requirePermissionPage } from '../../../../lib/pageGuards'
 
 const CohortRoute = () => {
   const { query } = useRouter()
-  return <DashboardLayout>{typeof query.id === 'string' && <CohortPage id={query.id} />}</DashboardLayout>
+  return (
+    <DashboardLayout>
+      {typeof query.id === 'string' && <CohortPage id={query.id} />}
+    </DashboardLayout>
+  )
 }
 
 export const getServerSideProps = requirePermissionPage('cohort:manage')

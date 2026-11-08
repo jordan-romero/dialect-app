@@ -2,7 +2,10 @@
 // lesson and exercise, with what they entered next to the expected answer.
 // Only for a current member of a cohort the caller manages.
 import { withPermission } from '../../../../../../lib/rbac'
-import { loadCohortFor, loadStudentInCohort } from '../../../../../../lib/cohorts'
+import {
+  loadCohortFor,
+  loadStudentInCohort,
+} from '../../../../../../lib/cohorts'
 import { studentWork } from '../../../../../../lib/studentWork'
 
 export default withPermission('cohort:manage', async (req, res, { user }) => {
@@ -12,12 +15,20 @@ export default withPermission('cohort:manage', async (req, res, { user }) => {
   }
   const cohort = await loadCohortFor(user, Number(req.query.id))
   if (!cohort) return res.status(404).json({ error: 'Class not found' })
-  const member = await loadStudentInCohort(cohort.id, Number(req.query.studentId))
-  if (!member) return res.status(404).json({ error: 'Student not found in this class' })
+  const member = await loadStudentInCohort(
+    cohort.id,
+    Number(req.query.studentId),
+  )
+  if (!member)
+    return res.status(404).json({ error: 'Student not found in this class' })
   const lessons = await studentWork(member.userId)
   return res.status(200).json({
     cohort: { id: cohort.id, name: cohort.name },
-    student: { ...member.user, joinedAt: member.joinedAt, usesSeat: member.usesSeat },
+    student: {
+      ...member.user,
+      joinedAt: member.joinedAt,
+      usesSeat: member.usesSeat,
+    },
     lessons,
   })
 })

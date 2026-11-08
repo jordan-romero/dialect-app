@@ -12,7 +12,9 @@ export default withPermission(null, async (req, res, { user }) => {
       where: { cohortId: id, userId: user.id, removedAt: null },
       data: { removedAt: new Date() },
     })
-    return r.count ? res.status(200).json({ ok: true }) : res.status(404).json({ error: 'Not in that class' })
+    return r.count
+      ? res.status(200).json({ ok: true })
+      : res.status(404).json({ error: 'Not in that class' })
   }
   if (req.method !== 'GET') {
     res.setHeader('Allow', ['GET', 'POST'])
@@ -22,7 +24,9 @@ export default withPermission(null, async (req, res, { user }) => {
     where: { userId: user.id, removedAt: null },
     include: {
       cohort: {
-        include: { teacher: { select: { firstName: true, lastName: true, email: true } } },
+        include: {
+          teacher: { select: { firstName: true, lastName: true, email: true } },
+        },
       },
     },
     orderBy: { joinedAt: 'desc' },

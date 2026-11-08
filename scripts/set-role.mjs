@@ -15,7 +15,9 @@ try {
     where: { email: { equals: email.trim(), mode: 'insensitive' } },
   })
   if (!user) {
-    console.error(`No user with email ${email}. They need to sign in once first.`)
+    console.error(
+      `No user with email ${email}. They need to sign in once first.`,
+    )
     process.exit(1)
   }
   await prisma.user.update({ where: { id: user.id }, data: { role } })

@@ -53,7 +53,10 @@ export default async function handler(
             .json({ message: 'Complete the previous phase to unlock this.' })
           return
         }
-        if (lessonRow.isGatedLesson && !(await hasPaidAccess(prisma, session.user))) {
+        if (
+          lessonRow.isGatedLesson &&
+          !(await hasPaidAccess(prisma, session.user))
+        ) {
           res
             .status(403)
             .json({ message: 'This lesson requires full course access.' })

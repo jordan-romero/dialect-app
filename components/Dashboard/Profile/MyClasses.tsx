@@ -25,8 +25,15 @@ const MyClasses = ({ bg }: { bg: string }) => {
   if (cohorts.length === 0) return null
 
   const leave = async (c: MyCohort) => {
-    const seat = c.usesSeat ? ' Your class seat gives you course access, so you’ll lose that access too.' : ''
-    if (!window.confirm(`Leave ${c.name}? Your teacher will no longer see your progress.${seat}`)) return
+    const seat = c.usesSeat
+      ? ' Your class seat gives you course access, so you’ll lose that access too.'
+      : ''
+    if (
+      !window.confirm(
+        `Leave ${c.name}? Your teacher will no longer see your progress.${seat}`,
+      )
+    )
+      return
     await fetch('/api/cohorts/mine', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -42,14 +49,26 @@ const MyClasses = ({ bg }: { bg: string }) => {
       </Text>
       <Stack spacing={2}>
         {cohorts.map((c) => (
-          <Flex key={c.id} p={3} borderRadius="lg" bg={bg} justify="space-between" align="center" gap={3}>
+          <Flex
+            key={c.id}
+            p={3}
+            borderRadius="lg"
+            bg={bg}
+            justify="space-between"
+            align="center"
+            gap={3}
+          >
             <Box minW={0}>
               <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
                 {c.name}
               </Text>
               <Text fontSize="xs" color="text.muted" noOfLines={1}>
-                {[c.teacher.firstName, c.teacher.lastName].filter(Boolean).join(' ') || c.teacher.email}
-                {c.usesSeat && c.endsAt ? ` · access until ${new Date(c.endsAt).toLocaleDateString()}` : ''}
+                {[c.teacher.firstName, c.teacher.lastName]
+                  .filter(Boolean)
+                  .join(' ') || c.teacher.email}
+                {c.usesSeat && c.endsAt
+                  ? ` · access until ${new Date(c.endsAt).toLocaleDateString()}`
+                  : ''}
               </Text>
               <Text fontSize="xs" color="text.muted">
                 Your teacher can see your progress and answers.

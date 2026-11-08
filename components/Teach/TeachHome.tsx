@@ -44,7 +44,9 @@ type CohortSummary = {
 }
 
 const TeachHome = () => {
-  const { data, loading, error } = useJson<{ cohorts: CohortSummary[] }>('/api/teach/cohorts')
+  const { data, loading, error } = useJson<{ cohorts: CohortSummary[] }>(
+    '/api/teach/cohorts',
+  )
   const create = useDisclosure()
   const cohorts = data?.cohorts || []
 
@@ -57,7 +59,11 @@ const TeachHome = () => {
             Invite students, track their progress and read their answers.
           </Text>
         </Box>
-        <Button colorScheme="purple" leftIcon={<FiPlus />} onClick={create.onOpen}>
+        <Button
+          colorScheme="purple"
+          leftIcon={<FiPlus />}
+          onClick={create.onOpen}
+        >
           New class
         </Button>
       </Flex>
@@ -69,13 +75,21 @@ const TeachHome = () => {
           <Skeleton h="140px" borderRadius="lg" />
         </SimpleGrid>
       ) : cohorts.length === 0 ? (
-        <Box bg="surface.card" borderWidth="1px" borderColor="border.subtle" borderRadius="lg" p={10} textAlign="center">
+        <Box
+          bg="surface.card"
+          borderWidth="1px"
+          borderColor="border.subtle"
+          borderRadius="lg"
+          p={10}
+          textAlign="center"
+        >
           <Box as={FiUsers} boxSize={8} mx="auto" color="text.muted" />
           <Heading size="md" mt={3}>
             No classes yet
           </Heading>
           <Text color="text.muted" mt={2}>
-            Create a class, then share its code, link or QR code with your students.
+            Create a class, then share its code, link or QR code with your
+            students.
           </Text>
           <Button mt={5} colorScheme="purple" onClick={create.onOpen}>
             Create your first class
@@ -128,7 +142,9 @@ const TeachHome = () => {
                 ) : (
                   <Text color="text.muted">Students pay for themselves</Text>
                 )}
-                {c.endsAt && <Text color="text.muted">Ends {shortDate(c.endsAt)}</Text>}
+                {c.endsAt && (
+                  <Text color="text.muted">Ends {shortDate(c.endsAt)}</Text>
+                )}
               </Flex>
             </Box>
           ))}
@@ -140,7 +156,13 @@ const TeachHome = () => {
   )
 }
 
-const CreateCohortModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const CreateCohortModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean
+  onClose: () => void
+}) => {
   const router = useRouter()
   const toast = useToast()
   const [name, setName] = useState('')
@@ -160,12 +182,17 @@ const CreateCohortModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       // End of the chosen day, local time.
       endsAt: endsAt ? new Date(`${endsAt}T23:59:59`).toISOString() : null,
     })
-    setSaving(false)
     if (!r.ok) {
-      toast({ title: r.data.error || 'Could not create the class', status: 'error' })
+      setSaving(false)
+      toast({
+        title: r.data.error || 'Could not create the class',
+        status: 'error',
+      })
       return
     }
-    router.push(`/teach/cohorts/${r.data.id}`)
+    // Keep the button busy until the class page has loaded, so a slow page
+    // load doesn't look like nothing happened (and invite a second click).
+    await router.push(`/teach/cohorts/${r.data.id}`)
   }
 
   return (
@@ -178,21 +205,34 @@ const CreateCohortModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           <Stack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Class name</FormLabel>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="THTR 210 Voice & Speech, Spring 2027" />
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="THTR 210 Voice & Speech, Spring 2027"
+              />
             </FormControl>
             <FormControl>
               <FormLabel>School or program</FormLabel>
-              <Input value={institution} onChange={(e) => setInstitution(e.target.value)} placeholder="Optional" />
+              <Input
+                value={institution}
+                onChange={(e) => setInstitution(e.target.value)}
+                placeholder="Optional"
+              />
             </FormControl>
             <FormControl>
               <FormLabel>How do students get access?</FormLabel>
-              <RadioGroup value={paymentMode} onChange={(v) => setPaymentMode(v as 'SEATS' | 'SELF_PAY')}>
+              <RadioGroup
+                value={paymentMode}
+                onChange={(v) => setPaymentMode(v as 'SEATS' | 'SELF_PAY')}
+              >
                 <Stack>
                   <Radio value="SEATS">
-                    <b>I buy seats for the class.</b> Students join for free, one seat each.
+                    <b>I buy seats for the class.</b> Students join for free,
+                    one seat each.
                   </Radio>
                   <Radio value="SELF_PAY">
-                    <b>Students buy the course themselves.</b> They join your class, then pay.
+                    <b>Students buy the course themselves.</b> They join your
+                    class, then pay.
                   </Radio>
                 </Stack>
               </RadioGroup>
@@ -200,16 +240,25 @@ const CreateCohortModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             <Flex gap={4} direction={{ base: 'column', sm: 'row' }}>
               <FormControl>
                 <FormLabel>Starts</FormLabel>
-                <Input type="date" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
+                <Input
+                  type="date"
+                  value={startsAt}
+                  onChange={(e) => setStartsAt(e.target.value)}
+                />
               </FormControl>
               <FormControl isRequired={paymentMode === 'SEATS'}>
                 <FormLabel>Ends</FormLabel>
-                <Input type="date" value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
+                <Input
+                  type="date"
+                  value={endsAt}
+                  onChange={(e) => setEndsAt(e.target.value)}
+                />
               </FormControl>
             </Flex>
             {paymentMode === 'SEATS' && (
               <Text fontSize="sm" color="text.muted" mt={-2}>
-                Seat access ends on the end date. Students keep their work and can buy the course to continue.
+                Seat access ends on the end date. Students keep their work and
+                can buy the course to continue.
               </Text>
             )}
           </Stack>

@@ -70,7 +70,12 @@ export async function cohortRoster(cohortId: number): Promise<RosterRow[]> {
       prisma.quiz.count(),
       prisma.lessonProgress.findMany({
         where: { userId: { in: ids } },
-        select: { userId: true, lessonId: true, progress: true, updatedAt: true },
+        select: {
+          userId: true,
+          lessonId: true,
+          progress: true,
+          updatedAt: true,
+        },
       }),
       prisma.userAnswer.groupBy({
         by: ['userId', 'quizId'],
@@ -117,7 +122,11 @@ export async function cohortRoster(cohortId: number): Promise<RosterRow[]> {
       lessonsCompleted: outline.filter((l) => d.has(l.id)).length,
       totalLessons: outline.length,
       currentLesson: current
-        ? { id: current.id, title: current.title, courseTitle: current.courseTitle }
+        ? {
+            id: current.id,
+            title: current.title,
+            courseTitle: current.courseTitle,
+          }
         : null,
       exercisesSubmitted: exercises.get(m.userId) || 0,
       totalExercises,

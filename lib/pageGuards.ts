@@ -10,9 +10,13 @@ export function requirePermissionPage(permission: Permission) {
     async getServerSideProps(ctx: GetServerSidePropsContext) {
       const session = await getSession(ctx.req, ctx.res)
       const sub = session?.user?.sub
-      const user = sub ? await prisma.user.findUnique({ where: { auth0Id: sub } }) : null
+      const user = sub
+        ? await prisma.user.findUnique({ where: { auth0Id: sub } })
+        : null
       if (!can(user, permission)) {
-        return { redirect: { destination: '/dashboard/progress', permanent: false } }
+        return {
+          redirect: { destination: '/dashboard/progress', permanent: false },
+        }
       }
       return { props: {} }
     },
