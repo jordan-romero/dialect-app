@@ -16,17 +16,22 @@
 // the script is safe to run early and run again — rows already moved are
 // skipped.
 //
-// Dry run by default:
-//   node --env-file=.env scripts/migrations/renumber-modules-13-19.mjs
-//   node --env-file=.env scripts/migrations/renumber-modules-13-19.mjs --apply
+// Dry run by default. --seed works on prisma/seed-data.json instead of a
+// database (the live site has no database configured yet):
+//   node --env-file=.env scripts/migrations/renumber-modules-13-19.mjs --seed
+//   node --env-file=.env scripts/migrations/renumber-modules-13-19.mjs --seed --apply
+// Without --seed it updates the database in DEV_POSTGRES_PRISMA_URL.
 import { PrismaClient } from '@prisma/client'
 import { S3Client, HeadObjectCommand } from '@aws-sdk/client-s3'
+import { readFileSync, writeFileSync } from 'node:fs'
 
 const APPLY = process.argv.includes('--apply')
+const SEED = process.argv.includes('--seed')
+const SEED_FILE = 'prisma/seed-data.json'
 const Bucket = process.env.AWS_S3_BUCKET_NAME || 'acting-accents'
 const HOST = `https://${Bucket}.s3.amazonaws.com/`
 const s3 = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' })
-const prisma = new PrismaClient()
+const prisma = SEED ? null : new PrismaClient()
 
 const M13 = '13. Segmental Features of the Dialect/'
 const M14 = '14. Distinct Features of the Dialect/'
@@ -116,9 +121,28 @@ const queue = async (table, id, field, url, extra = {}) => {
   plan.push({ table, id, data: { [field]: urlOf(key), ...extra }, key })
 }
 
-for (const l of await prisma.lesson.findMany())
+// --seed rewrites prisma/seed-data.json instead of a live database. That file
+// is the course content's source of truth (`yarn seed` upserts every row from
+// it), so this is how the change reaches whichever database gets seeded next.
+const seed = SEED ? JSON.parse(readFileSync(SEED_FILE, 'utf-8')) : null
+const TABLE = {
+  lesson: 'Lesson',
+  resource: 'Resource',
+  question: 'Question',
+  answerOption: 'AnswerOption',
+}
+const rows = async (table) =>
+  seed
+    ? seed[TABLE[table]]
+    : prisma[table].findMany(
+        table === 'question' || table === 'answerOption'
+          ? { where: { audioUrl: { not: null } } }
+          : undefined,
+      )
+
+for (const l of await rows('lesson'))
   await queue('lesson', l.id, 'videoUrl', l.videoUrl)
-for (const r of await prisma.resource.findMany())
+for (const r of await rows('resource'))
   await queue(
     'resource',
     r.id,
@@ -126,13 +150,9 @@ for (const r of await prisma.resource.findMany())
     r.url,
     RENAMED[r.name] ? { name: RENAMED[r.name] } : {},
   )
-for (const q of await prisma.question.findMany({
-  where: { audioUrl: { not: null } },
-}))
+for (const q of await rows('question'))
   await queue('question', q.id, 'audioUrl', q.audioUrl)
-for (const o of await prisma.answerOption.findMany({
-  where: { audioUrl: { not: null } },
-}))
+for (const o of await rows('answerOption'))
   await queue('answerOption', o.id, 'audioUrl', o.audioUrl)
 
 for (const p of plan) console.log(`${p.table} ${p.id} → ${p.key}`)
@@ -145,6 +165,13 @@ if (!APPLY) {
   console.log(
     `\nDry run: ${plan.length} to update. Re-run with --apply to write.`,
   )
+} else if (seed) {
+  for (const p of plan) {
+    const row = seed[TABLE[p.table]].find((r) => r.id === p.id)
+    Object.assign(row, p.data)
+  }
+  writeFileSync(SEED_FILE, JSON.stringify(seed, null, 2) + '\n')
+  console.log(`\nUpdated ${plan.length} rows in ${SEED_FILE}.`)
 } else {
   await prisma.$transaction(
     plan.map((p) =>
@@ -153,4 +180,4 @@ if (!APPLY) {
   )
   console.log(`\nUpdated ${plan.length} rows.`)
 }
-await prisma.$disconnect()
+if (prisma) await prisma.$disconnect()
