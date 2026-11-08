@@ -22,6 +22,7 @@ type FooterLink = {
 }
 
 const EXPLORE_LINKS: FooterLink[] = [
+  { label: 'Course', href: '/course' },
   { label: 'About', href: '/about' },
   { label: 'Testimonials', href: '/#testimonials' },
   { label: 'Contact', href: '/contact' },
