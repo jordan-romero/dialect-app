@@ -45,8 +45,8 @@ export default async function handler(
     // and gated lessons require purchase. Prevents marking paid/locked lessons
     // complete by POSTing an arbitrary lessonId.
     const [paid, unlocked] = await Promise.all([
-      hasPaidAccess(prisma, userEmail),
-      getUnlockedCourseIds(prisma, userEmail),
+      hasPaidAccess(prisma, session.user),
+      getUnlockedCourseIds(prisma, session.user),
     ])
     if (!unlocked.has(lesson.courseId) || (lesson.isGatedLesson && !paid)) {
       return res.status(403).json({ message: 'Access denied' })

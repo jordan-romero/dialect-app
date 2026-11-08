@@ -62,8 +62,8 @@ export default async function handler(
     }
     const email = session.user.email
     const [paid, unlocked] = await Promise.all([
-      hasPaidAccess(prisma, email),
-      getUnlockedCourseIds(prisma, email),
+      hasPaidAccess(prisma, session.user),
+      getUnlockedCourseIds(prisma, session.user),
     ])
     if (!unlocked.has(lesson.courseId) || (lesson.isGatedLesson && !paid)) {
       return res.status(403).json({ error: 'Access denied' })

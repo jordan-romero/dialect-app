@@ -66,7 +66,7 @@ export async function computeOverview(
   progressRows.forEach((p) => (progressMap[p.lessonId] = p.progress))
   const isDone = (lessonId: number) => (progressMap[lessonId] || 0) >= 100
 
-  const unlocked = await getUnlockedCourseIds(prisma, email)
+  const unlocked = await getUnlockedCourseIds(prisma, { sub: user.auth0Id })
 
   const orderLessons = (c: CourseWithLessons): Lesson[] =>
     [...(c.lessons || [])].sort(

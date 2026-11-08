@@ -23,9 +23,20 @@ model User {
   badges                 String[]         @default([])
   hasAccessToPaidCourses Boolean          @default(false)
   hasSeenWelcome         Boolean          @default(false)
+  role                   Role             @default(STUDENT)
   enrollments            Enrollment[]
   lessonProgress         LessonProgress[]
   userAnswers            UserAnswer[]
+  teaching               Cohort[]         @relation("CohortTeacher")
+  memberships            CohortMember[]
+  purchases              Purchase[]
+}
+
+// Role-based access. Permissions per role live in lib/rbac.ts.
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
 }
 
 // Course Model
@@ -66,8 +77,6 @@ model LessonProgress {
   id                   Int      @id @default(autoincrement())
   lessonId             Int
   progress             Float
-  quizScore            Int?
-  quizPassed           Boolean?
   updatedAt            DateTime @updatedAt
   lesson               Lesson   @relation(fields: [lessonId], references: [id])
   user                 User     @relation(fields: [userId], references: [id])
@@ -173,4 +182,97 @@ model Enrollment {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
   course    Course   @relation(fields: [courseId], references: [id])
+}
+
+// ---- Cohorts (teacher-led classes) ----
+
+enum CohortPayment {
+  SELF_PAY // each student buys the course themselves
+  SEATS // the teacher/institution bought a seat package
+}
+
+model Cohort {
+  id          Int            @id @default(autoincrement())
+  name        String
+  institution String?
+  teacherId   Int
+  teacher     User           @relation("CohortTeacher", fields: [teacherId], references: [id])
+  paymentMode CohortPayment
+  // Seats bought, kept in step with PAID seat purchases by the webhook.
+  seatCount   Int            @default(0)
+  joinCode    String         @unique
+  joinEnabled Boolean        @default(true)
+  startsAt    DateTime?
+  // Seat access ends here (required for SEATS cohorts, enforced in the API).
+  endsAt      DateTime?
+  archivedAt  DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  members     CohortMember[]
+  invites     CohortInvite[]
+  purchases   Purchase[]
+
+  @@index([teacherId])
+}
+
+model CohortMember {
+  id        Int       @id @default(autoincrement())
+  cohortId  Int
+  userId    Int
+  joinedAt  DateTime  @default(now())
+  // True when this member's course access comes from the cohort's seats.
+  usesSeat  Boolean   @default(false)
+  // Soft remove (by the teacher, or the student leaving); frees the seat.
+  removedAt DateTime?
+  cohort    Cohort    @relation(fields: [cohortId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([cohortId, userId])
+  @@index([userId])
+}
+
+model CohortInvite {
+  id         Int       @id @default(autoincrement())
+  cohortId   Int
+  email      String // lower-cased
+  token      String    @unique
+  createdAt  DateTime  @default(now())
+  acceptedAt DateTime?
+  acceptedBy Int?
+  revokedAt  DateTime?
+  cohort     Cohort    @relation(fields: [cohortId], references: [id])
+
+  @@unique([cohortId, email])
+}
+
+// ---- Purchases (one row per Stripe Checkout Session) ----
+
+enum PurchaseKind {
+  COURSE
+  SEATS
+}
+
+enum PurchaseStatus {
+  PAID
+  REFUNDED
+  DISPUTED
+}
+
+model Purchase {
+  id                    Int            @id @default(autoincrement())
+  userId                Int?
+  user                  User?          @relation(fields: [userId], references: [id])
+  cohortId              Int?
+  cohort                Cohort?        @relation(fields: [cohortId], references: [id])
+  kind                  PurchaseKind
+  quantity              Int            @default(1)
+  amountTotal           Int // cents
+  // Refunded so far (cents). Seat purchases lose seats in proportion.
+  amountRefunded        Int            @default(0)
+  currency              String
+  stripeSessionId       String         @unique
+  stripePaymentIntentId String?        @unique
+  status                PurchaseStatus
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
 }
