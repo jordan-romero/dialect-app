@@ -1,6 +1,8 @@
 import React from 'react'
+import NextLink from 'next/link'
 import {
   Box,
+  Button,
   Container,
   Grid,
   GridItem,
@@ -8,6 +10,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { FaGraduationCap, FaBook, FaRegLightbulb } from 'react-icons/fa'
 import PrelaunchCard from './PrelaunchCard'
 import { CardData } from '../types'
@@ -117,6 +120,28 @@ const PrelaunchCardsContainer = () => {
             Every lesson pairs clear instruction with hands-on exercises you can
             try right in your browser.
           </Text>
+          <Button
+            as={NextLink}
+            href="/course"
+            mt={4}
+            size="lg"
+            borderRadius="xl"
+            px={7}
+            bg="white"
+            color="brand.purple"
+            borderWidth="1px"
+            borderColor="purple.100"
+            fontWeight="semibold"
+            rightIcon={<ArrowForwardIcon />}
+            boxShadow="0 10px 24px -16px rgba(30,20,70,0.45)"
+            _hover={{
+              borderColor: 'purple.300',
+              transform: 'translateY(-1px)',
+            }}
+            _active={{ transform: 'translateY(0)' }}
+          >
+            See inside the course
+          </Button>
         </Box>
       </Reveal>
     </Container>
