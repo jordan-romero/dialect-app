@@ -7,11 +7,17 @@ import {
   Icon,
   IconButton,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   Text,
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { FaQuoteLeft } from 'react-icons/fa'
+import { FaPause, FaPlay, FaQuoteLeft } from 'react-icons/fa'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { EASE } from '../motion'
 
@@ -28,7 +34,9 @@ interface CardCarouselProps {
   cards: Card[]
 }
 
-const INTERVAL_MS = 8000
+// Time on screen scales with quote length (~200 words a minute), 6–14s.
+const readMs = (text: string) =>
+  Math.min(14000, Math.max(6000, text.split(/\s+/).length * 300))
 
 // Image paths in the data are a mix of './a.jpg' and 'a.jpg'. Make them
 // root-relative so they resolve the same on any page.
@@ -41,8 +49,10 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
   const reduce = useReducedMotion()
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false) // full story overlay open
+  const [truncated, setTruncated] = useState(false)
   const castRef = useRef<HTMLDivElement>(null)
+  const quoteRef = useRef<HTMLParagraphElement>(null)
 
   const go = useCallback(
     (next: number) => {
@@ -52,13 +62,13 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
     [cards.length],
   )
 
-  // Auto-advance unless hovering, focused inside, reading the full story, or
-  // the visitor prefers reduced motion.
+  // Auto-advance unless paused, reading the full story, or the visitor
+  // prefers reduced motion.
   useEffect(() => {
     if (paused || reduce || expanded) return
-    const id = setTimeout(() => go(index + 1), INTERVAL_MS)
+    const id = setTimeout(() => go(index + 1), readMs(cards[index].testimonial))
     return () => clearTimeout(id)
-  }, [index, paused, reduce, expanded, go])
+  }, [index, paused, reduce, expanded, go, cards])
 
   // Keep the active headshot in view inside the cast row.
   useEffect(() => {
@@ -69,16 +79,23 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
     row.scrollTo({ left, behavior: reduce ? 'auto' : 'smooth' })
   }, [index, reduce])
 
+  // Only offer "Read the full story" when the quote is actually cut off at
+  // the current screen size.
+  useEffect(() => {
+    const el = quoteRef.current
+    if (!el) return
+    const check = () => setTruncated(el.scrollHeight > el.clientHeight + 1)
+    check()
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [index])
+
   const card = cards[index]
-  const isLong = card.testimonial.length > 360
   const counter = (n: number) => String(n).padStart(2, '0')
 
   return (
     <Box
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') go(index + 1)
         if (e.key === 'ArrowLeft') go(index - 1)
@@ -130,11 +147,18 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
               <AnimatePresence initial={false}>
                 <motion.div
                   key={card.id}
-                  initial={{ clipPath: 'inset(0 0 100% 0)', scale: 1.08 }}
-                  animate={{ clipPath: 'inset(0 0 0% 0)', scale: 1 }}
-                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0, scale: 1.06 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    transition: { duration: 0.6, delay: 0.25 },
+                  }}
                   transition={{ duration: 0.9, ease: EASE }}
-                  style={{ position: 'absolute', inset: 0 }}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    willChange: 'opacity, transform',
+                  }}
                 >
                   <Image
                     src={imgSrc(card.image)}
@@ -151,13 +175,13 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
           </Box>
 
           {/* Quote */}
-          <Box position="relative" minH={{ md: '360px' }}>
+          <Box position="relative">
             <motion.div
               key={card.id}
               initial={{ opacity: 0, y: 18, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.55, ease: EASE }}
-              aria-live={paused ? 'polite' : 'off'}
+              aria-live={paused || reduce ? 'polite' : 'off'}
             >
               <Stack spacing={6}>
                 <Icon
@@ -172,24 +196,32 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                   lineHeight="1.55"
                   fontWeight="medium"
                   letterSpacing="-0.01em"
-                  noOfLines={expanded ? undefined : { base: 9, md: 7 }}
+                  ref={quoteRef}
+                  noOfLines={{ base: 9, md: 7 }}
+                  // Same height for every quote, so slides never shift the page.
+                  h={{ base: 'calc(1.55em * 9)', md: 'calc(1.55em * 7)' }}
                   sx={{ textWrap: 'pretty' }}
                 >
                   {card.testimonial}
                 </Text>
-                {isLong && (
-                  <Box
-                    as="button"
-                    onClick={() => setExpanded((v) => !v)}
-                    alignSelf="flex-start"
-                    color="purple.200"
-                    fontWeight="semibold"
-                    fontSize="sm"
-                    _hover={{ color: 'white' }}
-                  >
-                    {expanded ? 'Show less' : 'Read the full story'}
-                  </Box>
-                )}
+                <Box
+                  as="button"
+                  onClick={() => setExpanded(true)}
+                  alignSelf="flex-start"
+                  py={3}
+                  my={-3}
+                  pr={4}
+                  color="purple.200"
+                  fontWeight="semibold"
+                  fontSize="sm"
+                  _hover={{ color: 'white' }}
+                  // Keep its space either way so the layout never moves.
+                  visibility={truncated ? 'visible' : 'hidden'}
+                  aria-hidden={!truncated}
+                  tabIndex={truncated ? 0 : -1}
+                >
+                  Read the full story
+                </Box>
                 <motion.div
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -209,7 +241,12 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                       >
                         {card.name}
                       </Text>
-                      <Text fontSize="sm" color="purple.200">
+                      <Text
+                        fontSize="sm"
+                        color="purple.200"
+                        noOfLines={2}
+                        minH={{ base: '3em', md: '1.5em' }}
+                      >
                         {card.subtitle}
                       </Text>
                     </Stack>
@@ -330,7 +367,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
                           duration:
                             reduce || paused || expanded
                               ? 0
-                              : INTERVAL_MS / 1000,
+                              : readMs(c.testimonial) / 1000,
                           ease: 'linear',
                         }}
                       />
@@ -355,6 +392,15 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
         </Box>
 
         <HStack spacing={2} flexShrink={0}>
+          {!reduce && (
+            <IconButton
+              aria-label={paused ? 'Play testimonials' : 'Pause testimonials'}
+              aria-pressed={paused}
+              icon={<Icon as={paused ? FaPlay : FaPause} boxSize={3.5} />}
+              onClick={() => setPaused((v) => !v)}
+              {...arrowStyle}
+            />
+          )}
           <IconButton
             aria-label="Previous testimonial"
             icon={<Icon as={ChevronLeftIcon} boxSize={6} />}
@@ -369,6 +415,54 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards }) => {
           />
         </HStack>
       </Flex>
+      <Modal
+        isOpen={expanded}
+        onClose={() => setExpanded(false)}
+        size={{ base: 'full', md: '2xl' }}
+        scrollBehavior="inside"
+        isCentered
+      >
+        <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(6px)" />
+        <ModalContent
+          bg="#1B1236"
+          color="white"
+          borderRadius={{ base: 0, md: '2xl' }}
+          borderWidth={{ md: '1px' }}
+          borderColor="whiteAlpha.200"
+        >
+          <ModalHeader pt={{ base: 6, md: 8 }} px={{ base: 6, md: 10 }}>
+            <HStack spacing={4}>
+              <Image
+                src={imgSrc(card.image)}
+                alt=""
+                w="56px"
+                h="56px"
+                borderRadius="full"
+                objectFit="cover"
+                objectPosition="top"
+              />
+              <Stack spacing={0}>
+                <Text fontWeight="bold" fontSize="lg">
+                  {card.name}
+                </Text>
+                <Text fontSize="sm" color="purple.200" fontWeight="normal">
+                  {card.subtitle}
+                </Text>
+              </Stack>
+            </HStack>
+          </ModalHeader>
+          <ModalCloseButton
+            top={{ base: 4, md: 6 }}
+            right={{ base: 4, md: 6 }}
+          />
+          <ModalBody px={{ base: 6, md: 10 }} pb={{ base: 8, md: 10 }}>
+            <Icon as={FaQuoteLeft} boxSize={6} color="brand.blue" mb={4} />
+            <Text fontSize={{ base: 'lg', md: 'xl' }} lineHeight="1.65">
+              {card.testimonial}
+            </Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   )
 }

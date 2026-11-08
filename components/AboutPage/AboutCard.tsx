@@ -121,8 +121,8 @@ const AboutCard: React.FC<AboutCardProps> = ({
                 position="absolute"
                 bottom={{ base: 4, md: 6 }}
                 {...(reverse
-                  ? { right: { base: 4, md: -6 } }
-                  : { left: { base: 4, md: -6 } })}
+                  ? { right: { base: 4, xl: -6 } }
+                  : { left: { base: 4, xl: -6 } })}
                 bg="whiteAlpha.900"
                 backdropFilter="blur(10px)"
                 borderRadius="xl"
