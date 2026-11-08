@@ -83,7 +83,24 @@ const GLYPHS = [
   { g: 'ʊ', x: '64%', y: '46%', s: 36, d: 0.9 },
 ]
 
-export const FloatingGlyphs = () => {
+// For centered heroes, keep every symbol out at the edges.
+const EDGE_GLYPHS = [
+  { g: 'ð', x: '5%', y: '16%', s: 60, d: 0 },
+  { g: 'ə', x: '14%', y: '70%', s: 46, d: 1.2 },
+  { g: 'θ', x: '88%', y: '14%', s: 58, d: 0.6 },
+  { g: 'ʃ', x: '3%', y: '48%', s: 50, d: 2.1 },
+  { g: 'ŋ', x: '84%', y: '74%', s: 56, d: 1.6 },
+  { g: 'æ', x: '93%', y: '44%', s: 48, d: 0.3 },
+  { g: 'ʒ', x: '10%', y: '88%', s: 40, d: 2.6 },
+  { g: 'ɑ', x: '78%', y: '6%', s: 38, d: 1.9 },
+]
+
+export const FloatingGlyphs = ({
+  layout = 'split',
+}: {
+  layout?: 'split' | 'center'
+}) => {
+  const glyphs = layout === 'center' ? EDGE_GLYPHS : GLYPHS
   const reduce = useReducedMotion()
   const { scrollY } = useScroll()
   const drift = useTransform(scrollY, [0, 800], [0, -120])
@@ -101,7 +118,7 @@ export const FloatingGlyphs = () => {
       <motion.div
         style={{ position: 'absolute', inset: 0, y: reduce ? 0 : drift }}
       >
-        {GLYPHS.map(({ g, x, y, s, d }) => (
+        {glyphs.map(({ g, x, y, s, d }) => (
           <motion.span
             key={g + x}
             initial={{ opacity: 0, scale: 0.6 }}

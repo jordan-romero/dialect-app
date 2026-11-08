@@ -31,7 +31,7 @@ const PrelaunchTestimonialsContainer = () => {
           <Text
             fontSize="sm"
             fontWeight="bold"
-            color="brand.purple"
+            color="purple.200"
             letterSpacing="0.14em"
             textTransform="uppercase"
           >
@@ -42,7 +42,7 @@ const PrelaunchTestimonialsContainer = () => {
             fontSize={{ base: '3xl', md: '5xl' }}
             fontWeight="black"
             letterSpacing="-0.02em"
-            color="gray.900"
+            color="white"
             lineHeight="1.1"
             sx={{ textWrap: 'balance' }}
           >
@@ -50,7 +50,7 @@ const PrelaunchTestimonialsContainer = () => {
           </Heading>
           <Text
             fontSize={{ base: 'md', md: 'lg' }}
-            color="gray.600"
+            color="whiteAlpha.700"
             maxW="640px"
             alignSelf="center"
             sx={{ textWrap: 'balance', marginInline: 'auto !important' }}

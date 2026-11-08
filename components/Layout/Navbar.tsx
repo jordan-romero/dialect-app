@@ -31,9 +31,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ]
 
-const TOOL_ITEMS: NavItem[] = [
-  { label: 'IPA Keyboard', href: '/ipa-keyboard' },
-]
+const TOOL_ITEMS: NavItem[] = [{ label: 'IPA Keyboard', href: '/ipa-keyboard' }]
 
 const Navbar = () => {
   const router = useRouter()
@@ -118,7 +116,7 @@ const Navbar = () => {
         <HStack
           as="nav"
           spacing={1}
-          display={{ base: 'none', md: 'flex' }}
+          display={{ base: 'none', lg: 'flex' }}
           flex="1"
           justify="center"
         >
@@ -166,7 +164,7 @@ const Navbar = () => {
         </HStack>
 
         {/* Desktop account actions / CTA */}
-        <HStack spacing={3} display={{ base: 'none', md: 'flex' }}>
+        <HStack spacing={3} display={{ base: 'none', lg: 'flex' }}>
           {showAccountActions && isAuthenticated && (
             <>
               <NavLink
@@ -222,7 +220,7 @@ const Navbar = () => {
         </HStack>
 
         {/* Mobile menu */}
-        <Box display={{ base: 'flex', md: 'none' }}>
+        <Box display={{ base: 'flex', lg: 'none' }}>
           <Menu>
             <MenuButton
               as={IconButton}
@@ -302,8 +300,7 @@ const Navbar = () => {
                   color="white"
                   bgGradient="linear(to-r, brand.purple, brand.iris)"
                   _hover={{
-                    bgGradient:
-                      'linear(to-r, brand.purpleLight, brand.purple)',
+                    bgGradient: 'linear(to-r, brand.purpleLight, brand.purple)',
                   }}
                 >
                   Get early access
