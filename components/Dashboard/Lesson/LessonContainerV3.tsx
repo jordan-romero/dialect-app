@@ -26,6 +26,7 @@ import SymbolExercise from '../Exercises/SymbolExercise'
 import LessonDescription from './LessonDescription'
 import Paper from '../../theme/Paper'
 import LessonOutro from './LessonOutro'
+import CourseComplete from './CourseComplete'
 import { VowelQuadrilateralExercise } from '../Exercises/VowelQuadrilateral'
 import { ConsonantRectangleExercise } from '../Exercises/ConsonantRectangleExercise'
 import { RepeatAfterMeExercise } from '../Exercises/RepeatAfterMeExercise'
@@ -368,7 +369,13 @@ const LessonContainerV3: React.FC<LessonContainerProps> = ({
       case 'description':
         return <LessonDescription lesson={lesson} />
       case 'outro':
-        return <LessonOutro resources={lesson.resources} />
+        // The course's final lesson ends on the course-complete finale
+        // rather than the per-lesson "Lesson complete" slide.
+        return lesson.title.trim() === 'Outro' ? (
+          <CourseComplete />
+        ) : (
+          <LessonOutro resources={lesson.resources} />
+        )
       case 'quiz':
         const currentQuiz = getCurrentQuiz()
         return currentQuiz ? (
