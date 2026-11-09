@@ -50,8 +50,8 @@ export default async function handler(
     }
 
     const email = session.user.email
-    const paid = await hasPaidAccess(prisma, email)
-    const unlockedCourses = await getUnlockedCourseIds(prisma, email)
+    const paid = await hasPaidAccess(prisma, session.user)
+    const unlockedCourses = await getUnlockedCourseIds(prisma, session.user)
     res.status(200).json(
       await signDeep(
         gateLessonFull(lesson, {

@@ -46,14 +46,17 @@ export default async function handler(
       })
       if (lessonRow) {
         const email = session.user.email
-        const unlockedCourses = await getUnlockedCourseIds(prisma, email)
+        const unlockedCourses = await getUnlockedCourseIds(prisma, session.user)
         if (!unlockedCourses.has(lessonRow.courseId)) {
           res
             .status(403)
             .json({ message: 'Complete the previous phase to unlock this.' })
           return
         }
-        if (lessonRow.isGatedLesson && !(await hasPaidAccess(prisma, email))) {
+        if (
+          lessonRow.isGatedLesson &&
+          !(await hasPaidAccess(prisma, session.user))
+        ) {
           res
             .status(403)
             .json({ message: 'This lesson requires full course access.' })

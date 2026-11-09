@@ -1,8 +1,16 @@
 // Paid-content access control.
 //
 // A lesson is free when `isGatedLesson === false` (the first three lessons).
-// Everything else requires access, granted only by User.hasAccessToPaidCourses
-// (set by the Stripe webhook after purchase).
+// Everything else requires paid access, which a user has when ANY of these is
+// true (see hasPaidAccess):
+//   - they bought the course (User.hasAccessToPaidCourses, set by the Stripe
+//     webhook against the buyer's Auth0 id),
+//   - they hold a seat in a cohort whose seats are still valid (not removed,
+//     cohort not archived, before the cohort's end date),
+//   - their role grants it (teachers and admins get the full course free).
+//
+// Every lookup is by the Auth0 `sub` from the verified session, never by
+// email: an email can be claimed by an unverified signup, a `sub` can't.
 //
 // ADMIN_EMAILS does NOT grant access — admins still go through the real paywall
 // so the full Stripe flow gets tested. Instead, admin emails see the Stripe
@@ -10,6 +18,13 @@
 // entries may be an exact address or a whole domain (leading @, e.g.
 // @romerodev.co covers all your test accounts).
 import type { PrismaClient } from '@prisma/client'
+import { roleHas } from './rbac'
+
+// The signed-in identity, as Auth0 puts it on the session (`session.user`).
+export type Viewer =
+  | { sub?: string | null; email?: string | null; [k: string]: unknown }
+  | null
+  | undefined
 
 export function isAllowlisted(email?: string | null): boolean {
   if (!email) return false
@@ -21,25 +36,65 @@ export function isAllowlisted(email?: string | null): boolean {
     .some((entry) => (entry.startsWith('@') ? e.endsWith(entry) : e === entry))
 }
 
+// Prisma filter for cohort memberships whose seat currently grants access.
+export function activeSeatWhere(now = new Date()) {
+  return {
+    usesSeat: true,
+    removedAt: null,
+    cohort: {
+      paymentMode: 'SEATS' as const,
+      archivedAt: null,
+      OR: [{ endsAt: null }, { endsAt: { gt: now } }],
+    },
+  }
+}
+
+export type AccessInfo = {
+  paid: boolean
+  source: 'purchase' | 'seat' | 'role' | null
+  role: 'STUDENT' | 'TEACHER' | 'ADMIN' | null
+}
+
+export async function getAccessInfo(
+  prisma: PrismaClient,
+  viewer: Viewer,
+): Promise<AccessInfo> {
+  const sub = viewer?.sub
+  if (!sub) return { paid: false, source: null, role: null }
+  const user = await prisma.user.findUnique({
+    where: { auth0Id: sub },
+    select: {
+      role: true,
+      hasAccessToPaidCourses: true,
+      memberships: { where: activeSeatWhere(), select: { id: true }, take: 1 },
+    },
+  })
+  if (!user) return { paid: false, source: null, role: null }
+  if (user.hasAccessToPaidCourses)
+    return { paid: true, source: 'purchase', role: user.role }
+  if (user.memberships.length > 0)
+    return { paid: true, source: 'seat', role: user.role }
+  if (roleHas(user.role, 'course:full'))
+    return { paid: true, source: 'role', role: user.role }
+  return { paid: false, source: null, role: user.role }
+}
+
 // Does this signed-in user have access to PAID (gated) content?
 export async function hasPaidAccess(
   prisma: PrismaClient,
-  email?: string | null,
+  viewer: Viewer,
 ): Promise<boolean> {
-  if (!email) return false
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { hasAccessToPaidCourses: true },
-  })
-  return !!user?.hasAccessToPaidCourses
+  return (await getAccessInfo(prisma, viewer)).paid
 }
 
 // Sequential phase progression: a course (phase) is unlocked only when every
 // lesson in the PREVIOUS course is complete (LessonProgress.progress >= 100).
-// The first course is always unlocked. Returns the set of unlocked course ids.
+// The first course is always unlocked. Teachers and admins have every phase
+// unlocked so they can look at any exercise they assign. Returns the set of
+// unlocked course ids.
 export async function getUnlockedCourseIds(
   prisma: PrismaClient,
-  email?: string | null,
+  viewer: Viewer,
 ): Promise<Set<number>> {
   const unlocked = new Set<number>()
   const courses = await prisma.course.findMany({
@@ -48,11 +103,15 @@ export async function getUnlockedCourseIds(
   })
 
   const completed = new Set<number>()
-  if (email) {
+  if (viewer?.sub) {
     const user = await prisma.user.findUnique({
-      where: { email },
-      select: { id: true },
+      where: { auth0Id: viewer.sub },
+      select: { id: true, role: true },
     })
+    if (user && roleHas(user.role, 'course:allPhases')) {
+      courses.forEach((c) => unlocked.add(c.id))
+      return unlocked
+    }
     if (user) {
       const lp = await prisma.lessonProgress.findMany({
         where: { userId: user.id, progress: { gte: 100 } },
@@ -82,7 +141,7 @@ export type LessonAccess =
 
 export async function getLessonAccess(
   prisma: PrismaClient,
-  email: string | null | undefined,
+  viewer: Viewer,
   lessonId: number,
 ): Promise<LessonAccess> {
   const lesson = await prisma.lesson.findUnique({
@@ -92,8 +151,8 @@ export async function getLessonAccess(
   if (!lesson) return { ok: false, status: 404, message: 'Lesson not found' }
 
   const [unlocked, paid] = await Promise.all([
-    getUnlockedCourseIds(prisma, email),
-    hasPaidAccess(prisma, email),
+    getUnlockedCourseIds(prisma, viewer),
+    hasPaidAccess(prisma, viewer),
   ])
   if (!unlocked.has(lesson.courseId)) {
     return {

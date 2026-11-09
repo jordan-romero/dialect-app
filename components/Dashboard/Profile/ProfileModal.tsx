@@ -28,6 +28,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { FiSun, FiMoon, FiPlus, FiUploadCloud } from 'react-icons/fi'
+import MyClasses from './MyClasses'
 
 interface Props {
   isOpen: boolean
@@ -354,6 +355,9 @@ const ProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
               Switch to {colorMode === 'dark' ? 'light' : 'dark'}
             </Button>
           </Flex>
+          <Box mt={5}>
+            <MyClasses bg={chipBg} />
+          </Box>
         </ModalBody>
 
         <ModalFooter gap={3}>
