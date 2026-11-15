@@ -14,6 +14,7 @@ import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
+import Callout from './Callout'
 
 // Tap-to-place: the learner taps transcriptions from a bank into blanks, in
 // order. Two shapes share it:
@@ -308,14 +309,11 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
             </Button>
           )}
           {!isQuestionCorrect && isCompleted && (
-            <Text>
-              Correct order:{' '}
-              <Text as="span" className="ipa-text">
-                {correctOrder
-                  .map((o) => o.optionText)
-                  .join(isInline ? ' … ' : ' ')}
-              </Text>
-            </Text>
+            <Callout tone="answer" label="Correct order" ipa mt={1}>
+              {correctOrder
+                .map((o) => o.optionText)
+                .join(isInline ? ' … ' : ' ')}
+            </Callout>
           )}
         </Flex>
       )}
