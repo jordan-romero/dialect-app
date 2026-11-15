@@ -39,7 +39,7 @@ type Joined = {
   waitingForSeat: boolean
 }
 
-const Shell = ({ children }: { children: React.ReactNode }) => (
+export const Shell = ({ children }: { children: React.ReactNode }) => (
   <Center minH="100vh" bg="gray.50" px={4} py={10}>
     <Box
       bg="white"

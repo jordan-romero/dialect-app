@@ -7,9 +7,12 @@
 // never removed automatically when seats drop; the teacher dashboard shows the
 // overage and the teacher decides.
 //
+// Teacher invites (admin-sold seat packages) are paid by Stripe invoice:
+// invoice.paid marks the invite paid and emails the teacher their accept link.
+//
 // Events to enable on the endpoint: checkout.session.completed,
 // checkout.session.async_payment_succeeded, charge.refunded,
-// charge.dispute.created, charge.dispute.closed.
+// charge.dispute.created, charge.dispute.closed, invoice.paid.
 //
 // Local testing:  stripe listen --forward-to localhost:3000/api/stripe/webhook
 // (that prints the STRIPE_WEBHOOK_SECRET to put in .env)
@@ -19,6 +22,8 @@ import { Prisma } from '@prisma/client'
 import { stripe } from '../../../lib/stripe'
 import { prisma } from '../../../lib/prisma'
 import { recalcSeats } from '../../../lib/cohorts'
+import { markInvitePaid } from '../../../lib/teacherInvites'
+import { siteUrl } from '../../../lib/siteUrl'
 
 // Stripe signature verification needs the raw, unparsed body.
 export const config = { api: { bodyParser: false } }
@@ -62,6 +67,9 @@ export default async function handler(
       case 'checkout.session.completed':
       case 'checkout.session.async_payment_succeeded':
         await fulfill(event.data.object as Stripe.Checkout.Session)
+        break
+      case 'invoice.paid':
+        await onInvoicePaid(event.data.object as Stripe.Invoice)
         break
       case 'charge.refunded':
         await onRefund(event.data.object as Stripe.Charge)
@@ -161,6 +169,23 @@ async function fulfill(s: Stripe.Checkout.Session) {
     const seats = await recalcSeats(cohort.id)
     console.log(`Stripe: cohort ${cohort.id} now has ${seats} seats`)
   }
+}
+
+async function onInvoicePaid(inv: Stripe.Invoice) {
+  const meta = inv.metadata || {}
+  if (meta.kind !== 'teacher_invite') return
+  const id = Number(meta.teacherInviteId)
+  if (!Number.isInteger(id)) return
+  const paid = await markInvitePaid(id, {
+    manual: false,
+    amountPaid: inv.amount_paid,
+    baseUrl: siteUrl(),
+  })
+  console.log(
+    paid
+      ? `Stripe: teacher invite ${id} paid; teacher emailed`
+      : `Stripe: teacher invite ${id} already handled`,
+  )
 }
 
 async function onRefund(charge: Stripe.Charge) {
