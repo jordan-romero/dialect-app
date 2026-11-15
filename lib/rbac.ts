@@ -25,6 +25,8 @@ export type Permission =
   | 'cohort:manageAny'
   // Change other users' roles.
   | 'user:assignRole'
+  // Sell seat packages: invite a teacher, invoice, mark paid.
+  | 'teacher:invite'
 
 const ROLE_PERMISSIONS: Record<RoleName, readonly Permission[]> = {
   STUDENT: [],
@@ -35,6 +37,7 @@ const ROLE_PERMISSIONS: Record<RoleName, readonly Permission[]> = {
     'cohort:manage',
     'cohort:manageAny',
     'user:assignRole',
+    'teacher:invite',
   ],
 }
 

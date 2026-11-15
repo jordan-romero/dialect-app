@@ -28,6 +28,7 @@ model User {
   lessonProgress         LessonProgress[]
   userAnswers            UserAnswer[]
   teaching               Cohort[]         @relation("CohortTeacher")
+  teacherInvitesSent     TeacherInvite[]  @relation("TeacherInviteCreatedBy")
   memberships            CohortMember[]
   purchases              Purchase[]
 }
@@ -192,25 +193,26 @@ enum CohortPayment {
 }
 
 model Cohort {
-  id          Int            @id @default(autoincrement())
-  name        String
-  institution String?
-  teacherId   Int
-  teacher     User           @relation("CohortTeacher", fields: [teacherId], references: [id])
-  paymentMode CohortPayment
+  id            Int            @id @default(autoincrement())
+  name          String
+  institution   String?
+  teacherId     Int
+  teacher       User           @relation("CohortTeacher", fields: [teacherId], references: [id])
+  paymentMode   CohortPayment
   // Seats bought, kept in step with PAID seat purchases by the webhook.
-  seatCount   Int            @default(0)
-  joinCode    String         @unique
-  joinEnabled Boolean        @default(true)
-  startsAt    DateTime?
+  seatCount     Int            @default(0)
+  joinCode      String         @unique
+  joinEnabled   Boolean        @default(true)
+  startsAt      DateTime?
   // Seat access ends here (required for SEATS cohorts, enforced in the API).
-  endsAt      DateTime?
-  archivedAt  DateTime?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  members     CohortMember[]
-  invites     CohortInvite[]
-  purchases   Purchase[]
+  endsAt        DateTime?
+  archivedAt    DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  members       CohortMember[]
+  invites       CohortInvite[]
+  purchases     Purchase[]
+  teacherInvite TeacherInvite?
 
   @@index([teacherId])
 }
@@ -275,4 +277,52 @@ model Purchase {
   status                PurchaseStatus
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
+}
+
+// ---- Teacher invites (admin-sold seat packages) ----
+//
+// An admin invites a teacher with N seats. Stripe invoices the billing contact;
+// once the invoice is paid (or an admin marks it paid), the teacher is emailed
+// an accept link. Accepting makes them a teacher and creates their class with
+// the paid seats, so the student join code only exists after payment.
+
+enum TeacherInviteStatus {
+  INVOICED // invoice sent, waiting for payment
+  PAID // paid; teacher emailed, not accepted yet
+  ACCEPTED // teacher accepted; class created
+  VOID // cancelled before payment
+}
+
+model TeacherInvite {
+  id               Int                 @id @default(autoincrement())
+  email            String // teacher, lower-cased
+  teacherName      String?
+  institution      String?
+  className        String
+  seats            Int
+  unitAmount       Int // cents per seat
+  currency         String              @default("usd")
+  billingEmail     String // who the invoice goes to, lower-cased
+  endsAt           DateTime // seat access ends; copied to the class
+  status           TeacherInviteStatus @default(INVOICED)
+  token            String              @unique
+  stripeCustomerId String?
+  stripeInvoiceId  String?             @unique
+  invoiceUrl       String? // Stripe hosted invoice page
+  paymentIntentId  String? // set when paid by card or bank, for refunds
+  amountPaid       Int?
+  paidAt           DateTime?
+  paidManually     Boolean             @default(false)
+  emailedAt        DateTime?
+  emailError       String?
+  acceptedAt       DateTime?
+  acceptedBy       Int?
+  cohortId         Int?                @unique
+  cohort           Cohort?             @relation(fields: [cohortId], references: [id])
+  createdById      Int
+  createdBy        User                @relation("TeacherInviteCreatedBy", fields: [createdById], references: [id])
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([email])
 }
