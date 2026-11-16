@@ -24,6 +24,7 @@ import {
   FiLogOut,
   FiMenu,
   FiUsers,
+  FiBriefcase,
 } from 'react-icons/fi'
 import { MdKeyboard } from 'react-icons/md'
 import { IconType } from 'react-icons'
@@ -128,11 +129,16 @@ const DashboardNavigationContainer = () => {
   const [firstTime, setFirstTime] = useState(false)
   // Teachers and admins get a "Teach" item (role-based; see lib/rbac.ts).
   const [canTeach, setCanTeach] = useState(false)
+  // Admins (Scott, Krista) get "Admin": invite teachers and sell seats.
+  const [canAdmin, setCanAdmin] = useState(false)
 
   useEffect(() => {
     fetch('/api/me')
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => setCanTeach(!!d?.permissions?.includes('cohort:manage')))
+      .then((d) => {
+        setCanTeach(!!d?.permissions?.includes('cohort:manage'))
+        setCanAdmin(!!d?.permissions?.includes('teacher:invite'))
+      })
       .catch(() => {})
   }, [])
 
@@ -202,6 +208,15 @@ const DashboardNavigationContainer = () => {
           label="Teach"
           href="/teach"
           active={path.startsWith('/teach')}
+          {...opts}
+        />
+      )}
+      {canAdmin && (
+        <NavItem
+          icon={FiBriefcase}
+          label="Admin"
+          href="/admin"
+          active={path.startsWith('/admin')}
           {...opts}
         />
       )}
