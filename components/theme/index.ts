@@ -11,6 +11,10 @@ const theme = extendTheme({
   styles: {
     global: {
       body: { bg: 'white', color: 'gray.800' },
+      // Underlines mark the sound being asked about ("Bri{ng}"). Browsers
+      // break an underline around descenders, which all but erased it under
+      // the g of "Bring"; keep it continuous so the marked letters read.
+      u: { textDecorationSkipInk: 'none' },
     },
   },
   // Dark-mode-aware design tokens. The public site & lesson content stay light

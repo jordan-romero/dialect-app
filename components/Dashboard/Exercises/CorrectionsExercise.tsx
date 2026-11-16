@@ -11,6 +11,8 @@ import {
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
+import InstructionsBox from './InstructionsBox'
+import { BANK_TITLE } from './bank'
 
 interface Word {
   ipa: string
@@ -217,25 +219,16 @@ export const CorrectionsExercise: React.FC<Props> = ({
         {completed.size > 0 && ` · ${completed.size} fixed`}
       </Text>
 
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm" color="text.primary">
-          <b>Instructions:</b>{' '}
-          <Text as="span" fontWeight={part === 1 ? 'bold' : 'normal'}>
-            First, identify the incorrectly transcribed word in the presented
-            sentence.
-          </Text>{' '}
-          <Text as="span" fontWeight={part === 2 ? 'bold' : 'normal'}>
-            Then, replace the mistake by clicking the correct symbol in the
-            bank.
-          </Text>
+      {/* The current step is bolded. */}
+      <InstructionsBox>
+        <Text as="span" fontWeight={part === 1 ? 'bold' : 'normal'}>
+          First, identify the incorrectly transcribed word in the presented
+          sentence.
+        </Text>{' '}
+        <Text as="span" fontWeight={part === 2 ? 'bold' : 'normal'}>
+          Then, replace the mistake by clicking the correct symbol in the bank.
         </Text>
-      </Box>
+      </InstructionsBox>
 
       <Text fontSize="md" fontStyle="italic" color="text.primary">
         “{item.sentence}”
@@ -307,7 +300,8 @@ export const CorrectionsExercise: React.FC<Props> = ({
               hideInstructions={true}
               persistClickedSymbols={false}
               showCategoriesInCompact={true}
-              symbolSize="lg"
+              symbolSize="bank"
+              title={BANK_TITLE.symbol}
               maxW="100%"
             />
           )}

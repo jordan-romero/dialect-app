@@ -6,6 +6,7 @@ import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
+import InstructionsBox from './InstructionsBox'
 
 interface MatchingExerciseProps {
   lessonId: number
@@ -298,21 +299,12 @@ const MatchingExercise: React.FC<MatchingExerciseProps> = ({
 
   return (
     <VStack spacing={5} align="stretch">
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm" color="text.primary">
-          <Text as="span" fontWeight="bold">
-            Instructions:
-          </Text>{' '}
-          {quizData.instructions?.trim() ||
-            'Match the IPA symbol with the associated word. Click a symbol then its word, or a word then its symbol — either order works. Click a matched pair again to undo it.'}
-        </Text>
-      </Box>
+      <InstructionsBox
+        text={
+          quizData.instructions?.trim() ||
+          'Match the IPA symbol with the associated word. Click a symbol then its word, or a word then its symbol — either order works. Click a matched pair again to undo it.'
+        }
+      />
 
       {shuffled.map((group) => (
         <Box

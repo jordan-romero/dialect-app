@@ -15,6 +15,8 @@ import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
+import InstructionsBox from './InstructionsBox'
+import { BANK_TITLE } from './bank'
 
 interface LexicalItem {
   id: string
@@ -339,11 +341,7 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
                     aria-label={`${item.exampleWord.replace(/[{}]/g, '')}${
                       userAnswer ? `, ${userAnswer} placed` : ', empty'
                     }${
-                      isCorrect
-                        ? ', correct'
-                        : hasAnswer
-                        ? ', incorrect'
-                        : ''
+                      isCorrect ? ', correct' : hasAnswer ? ', incorrect' : ''
                     }`}
                     borderBottom="1px solid white"
                     display="flex"
@@ -399,24 +397,12 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
           'Instructions: Click on IPA symbols from the bank below and place them in their correct corresponding spots for a General American dialect.'}
       </Text>
 
-      {/* Instructions */}
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm" color="text.primary">
-          <Text as="span" fontWeight="bold">
-            Instructions:
-          </Text>{' '}
-          Click on a symbol from the bank below, then click on the IPA Symbol
-          position next to the corresponding example word. Hover over example
-          words to see additional words with the same sound. Double-click on a
-          placed symbol to remove it.
-        </Text>
-      </Box>
+      <InstructionsBox>
+        Click on a symbol from the bank below, then click on the IPA Symbol
+        position next to the corresponding example word. Hover over example
+        words to see additional words with the same sound. Double-click on a
+        placed symbol to remove it.
+      </InstructionsBox>
 
       {/* Symbol Bank */}
       <IPAKeyboard
@@ -427,8 +413,8 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
         compact={true}
         hideInstructions={true}
         persistClickedSymbols={false}
-        title="Symbol Bank"
-        symbolSize="lg"
+        title={BANK_TITLE.symbol}
+        symbolSize="bank"
         maxW="100%"
       />
       {/* The chart, matching the printed General American sheet: coloured

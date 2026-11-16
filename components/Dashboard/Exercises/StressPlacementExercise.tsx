@@ -15,6 +15,8 @@ import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import Callout from './Callout'
+import InstructionsBox from './InstructionsBox'
+import { BankHeading, WORD_BANK_BUTTON } from './bank'
 
 // Tap-to-place: the learner taps transcriptions from a bank into blanks, in
 // order. Two shapes share it:
@@ -219,11 +221,7 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
 
   return (
     <Box>
-      {quiz.instructions && (
-        <Text fontStyle="italic" mb={4}>
-          Instructions: {quiz.instructions}
-        </Text>
-      )}
+      <InstructionsBox text={quiz.instructions} mb={4} />
       {word && (
         <Text
           fontSize="sm"
@@ -259,20 +257,23 @@ const StressPlacementExercise: React.FC<StressPlacementProps> = ({
       )}
 
       {!isLocked && (
-        <Wrap spacing={3} mt={6}>
-          {bank.map((option) => (
-            <WrapItem key={option.id}>
-              <Button
-                className="ipa-text"
-                fontSize="lg"
-                variant="brandWhite"
-                onClick={() => placeOption(option.id)}
-              >
-                {option.optionText}
-              </Button>
-            </WrapItem>
-          ))}
-        </Wrap>
+        <Box mt={6}>
+          <BankHeading kind="word" />
+          <Wrap spacing={3}>
+            {bank.map((option) => (
+              <WrapItem key={option.id}>
+                <Button
+                  className="ipa-text"
+                  {...WORD_BANK_BUTTON}
+                  variant="brandWhite"
+                  onClick={() => placeOption(option.id)}
+                >
+                  {option.optionText}
+                </Button>
+              </WrapItem>
+            ))}
+          </Wrap>
+        </Box>
       )}
 
       {!isLocked && (

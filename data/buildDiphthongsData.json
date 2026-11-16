@@ -3,7 +3,7 @@
   "lessonId": 10,
   "quizType": "buildDiphthongs",
   "title": "Building the Diphthongs & Triphthongs",
-  "instructions": "A diphthong or triphthong will play. Build it by clicking its vowels, in order, on the quadrilateral. Double-click any vowel to hear it on its own.",
+  "instructions": "Click play to listen to the presented diphthong or triphthong. Then, build it by clicking on the vowels, in order, on the quadrilateral.",
   "questions": [
     {
       "id": 425,
@@ -18,7 +18,8 @@
         "ɪ"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86.mp3",
+      "example": "PR{I}CE"
     },
     {
       "symbol": "eɪ̆",
@@ -27,7 +28,8 @@
         "ɪ"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/e%C9%AA%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/e%C9%AA%CC%86.mp3",
+      "example": "F{A}CE"
     },
     {
       "symbol": "oʊ̆",
@@ -36,7 +38,8 @@
         "ʊ"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/o%CA%8A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/o%CA%8A%CC%86.mp3",
+      "example": "G{OA}T"
     },
     {
       "symbol": "aʊ̆",
@@ -45,7 +48,8 @@
         "ʊ"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%CA%8A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%CA%8A%CC%86.mp3",
+      "example": "M{OU}TH"
     },
     {
       "symbol": "ɪ̆u",
@@ -54,7 +58,8 @@
         "u"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%CC%86u.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%CC%86u.mp3",
+      "example": "V{IEW}"
     },
     {
       "symbol": "ɔɪ̆",
@@ -63,7 +68,8 @@
         "ɪ"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%AA%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%AA%CC%86.mp3",
+      "example": "CH{OI}CE"
     },
     {
       "symbol": "aɪ̆ə̆",
@@ -73,7 +79,8 @@
         "ə"
       ],
       "rhotic": false,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86%C9%99%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86%C9%99%CC%86.mp3",
+      "example": "G{IA}NT"
     },
     {
       "symbol": "ɑɚ̆",
@@ -82,7 +89,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%91%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%91%C9%9A%CC%86.mp3",
+      "example": "ST{AR}T"
     },
     {
       "symbol": "ɔɚ̆",
@@ -91,7 +99,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%9A%CC%86.mp3",
+      "example": "N{OR}TH / F{OR}CE"
     },
     {
       "symbol": "ɛɚ̆",
@@ -100,7 +109,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7D.Audio/%C9%9B%C9%9A%CC%86.wav"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7D.Audio/%C9%9B%C9%9A%CC%86.wav",
+      "example": "SQU{ARE}"
     },
     {
       "symbol": "ɪɚ̆",
@@ -109,7 +119,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%C9%9A%CC%86.mp3",
+      "example": "N{EAR}"
     },
     {
       "symbol": "ʊɚ̆",
@@ -118,7 +129,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%CA%8A%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%CA%8A%C9%9A%CC%86.mp3",
+      "example": "C{URE}"
     },
     {
       "symbol": "aɪ̆ɚ̆",
@@ -128,7 +140,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%C9%AA%CC%86%C9%9A%CC%86.mp3",
+      "example": "F{IRE}"
     },
     {
       "symbol": "aʊ̆ɚ̆",
@@ -138,7 +151,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%CA%8A%CC%86%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/a%CA%8A%CC%86%C9%9A%CC%86.mp3",
+      "example": "H{OUR}"
     },
     {
       "symbol": "ɔɪ̆ɚ̆",
@@ -148,7 +162,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%AA%CC%86%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%94%C9%AA%CC%86%C9%9A%CC%86.mp3",
+      "example": "L{AWYER}"
     },
     {
       "symbol": "ɪ̆ʊɚ̆",
@@ -158,7 +173,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%CC%86%CA%8A%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%AA%CC%86%CA%8A%C9%9A%CC%86.mp3",
+      "example": "DEM{URE}"
     },
     {
       "symbol": "ɛɪ̆ɚ̆",
@@ -168,7 +184,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%9B%C9%AA%CC%86%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/%C9%9B%C9%AA%CC%86%C9%9A%CC%86.mp3",
+      "example": "PL{AYER}"
     },
     {
       "symbol": "oʊ̆ɚ̆",
@@ -178,7 +195,8 @@
         "ɚ"
       ],
       "rhotic": true,
-      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/o%CA%8A%CC%86%C9%9A%CC%86.mp3"
+      "audioUrl": "https://acting-accents.s3.amazonaws.com/7.%20Diphthongs%20%26%20Triphthongs/7B.Audio/o%CA%8A%CC%86%C9%9A%CC%86.mp3",
+      "example": "L{OWER}"
     }
   ],
   "chartAudio": {

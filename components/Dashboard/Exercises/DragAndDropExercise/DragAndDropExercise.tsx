@@ -283,9 +283,17 @@ const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({
       },
     )
 
-    // The wordBank should be empty except for the rhyming words in the 'thought' category
+    // Words may stay in the bank when they belong to no column: the 'thought'
+    // rhymes in that question, and decoys with no rhyming partner (Nuclear,
+    // Liar, Drier in "hear / bear"). Every word that does belong to a column
+    // is already required to be placed above.
+    const questionCategories = (currentQuestion?.categories ?? []).filter(
+      (c) => c.toLowerCase() !== 'thought',
+    )
     const remainingWordsAreThoughtRhymes = wordBank.every(
-      (word) => word.rhymeCategory === 'thought',
+      (word) =>
+        word.rhymeCategory === 'thought' ||
+        !questionCategories.includes(word.rhymeCategory as string),
     )
 
     const finalIsComplete =

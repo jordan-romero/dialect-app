@@ -5,6 +5,8 @@ import useQuiz from './utils'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
+import { BANK_TITLE } from './bank'
+import InstructionsBox from './InstructionsBox'
 
 interface SymbolExerciseProps {
   lessonId: number
@@ -320,10 +322,10 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
   return (
     <Box>
       <Box bg="surface.card" pt={4} pb={3}>
-        <Text fontStyle="italic" mb={3}>
+        <InstructionsBox mb={3}>
           Select the IPA symbol that corresponds with the underlined part of the
           word when spoken in a General American dialect.
-        </Text>
+        </InstructionsBox>
 
         {/* Symbol Bank */}
         <IPAKeyboard
@@ -334,8 +336,8 @@ const SymbolExercise: React.FC<SymbolExerciseProps> = ({
           compact={true}
           hideInstructions={true}
           persistClickedSymbols={false}
-          title="Symbol Bank"
-          symbolSize="lg"
+          title={BANK_TITLE.symbol}
+          symbolSize="bank"
           maxW="100%"
         />
       </Box>
