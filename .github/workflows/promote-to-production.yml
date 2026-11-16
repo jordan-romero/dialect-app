@@ -1,0 +1,46 @@
+# One button: ship everything on `staging` to production (actingaccents.com).
+# Run it from Actions → "Promote to production" → Run workflow, and type
+# "promote" in the confirm box. It never runs on its own. See DEPLOYING.md.
+#
+# Opens a staging → production PR listing what ships (or reuses the open one)
+# and merges it with a merge commit, which starts the Vercel production deploy.
+# Run any prod database migration or content seed BEFORE pressing this.
+name: Promote to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type "promote" to ship staging to actingaccents.com
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: promote-production
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BASE: ${{ vars.PRODUCTION_BRANCH || 'prod' }}
+      HEAD: staging
+    steps:
+      - name: Check confirmation
+        if: inputs.confirm != 'promote'
+        run: |
+          echo "::error::Type exactly \"promote\" in the confirm box to ship to production."
+          exit 1
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge staging into production
+        run: bash .github/scripts/promote.sh

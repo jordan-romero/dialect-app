@@ -3,8 +3,8 @@
 One developer, one direction of travel:
 
 ```
-feature branch ──PR──▶ staging ──promote PR──▶ prod
-                       (testers)               (actingaccents.com)
+feature branch ──[Promote to staging]──▶ staging ──[Promote to production]──▶ prod
+                                          (testers)                            (actingaccents.com)
 ```
 
 - **Every feature PR targets `staging`.** Never open a feature PR into `prod`
@@ -86,31 +86,49 @@ safe to re-run and never touches users, enrollments or progress.
 `yarn …` uses `dev` when the folder is linked to Doppler. Double-check which
 config a command uses before you point it at prod.
 
+## The two buttons
+
+Both live under the repo's **Actions** tab (also in the GitHub mobile app:
+repo → Actions). Pick the workflow, press **Run workflow**, fill in the box.
+
+| Button                    | Box                | What it does                                                                                                                                                              |
+| ------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Promote to staging**    | the branch to ship | Opens a PR from that branch into `staging` (or reuses the open one), updates the branch if protection asks for that, and merges it. Staging redeploys in a minute or two. |
+| **Promote to production** | type `promote`     | Opens a `staging` → production PR listing every change that ships, and merges it. actingaccents.com redeploys. It never runs on its own.                                  |
+
+Both merge with a merge commit, so the branches keep the same history and the
+Branch sync check stays quiet. If a merge has conflicts, the run stops and
+says so: merge the target into your branch locally, fix, push, press again.
+
+The production button targets the branch named in the repo variable
+`PRODUCTION_BRANCH` (Settings → Secrets and variables → Actions → Variables),
+or `prod` when it isn't set. If Vercel's production branch ever changes,
+change that one variable.
+
+GitHub only shows a **Run workflow** button for workflows on the repo's
+**default branch**, so these appear once the default branch is `staging`
+(or once these files reach the current default).
+
 ## Shipping a change
 
-1. Branch off `staging`: `git switch -c my-change origin/staging`.
-2. Open a PR **into `staging`**. Vercel posts a preview URL on the PR.
-3. Merge it. `actingaccents-staging.vercel.app` updates in a minute or two.
-   If the change needs a migration or new content, run `yarn db:migrate` /
+1. Branch off `staging`: `git switch -c my-change origin/staging`, commit, push.
+2. Press **Promote to staging** with your branch name. (Or open a PR into
+   `staging` by hand and merge it. Same result.)
+3. If the change needs a migration or new content, run `yarn db:migrate` /
    `yarn seed` against dev.
-4. Testers check staging.
+4. Testers check https://actingaccents-staging.vercel.app.
 
 ## Promoting staging to production
 
-1. See what's waiting:
+1. See what's waiting. The Branch sync run summary lists it, or:
    ```bash
    git fetch origin && git log --no-merges --oneline origin/prod..origin/staging
    ```
 2. If anything in that list adds a migration or content, apply it to the prod
    DB first (table above). Migrations should be additive so the old code keeps
    working until the deploy lands.
-3. Open the promote PR:
-   ```bash
-   gh pr create --base prod --head staging --title "Promote staging to prod" --body "$(git log --no-merges --format='- %s' origin/prod..origin/staging)"
-   ```
-4. Merge it with a **merge commit** (not squash), so `staging` and `prod` keep
-   the same history and the sync check stays quiet.
-5. Check https://www.actingaccents.com once the Production deployment is Ready.
+3. Press **Promote to production** and type `promote`.
+4. Check https://www.actingaccents.com once the Production deployment is Ready.
 
 Rollback: Vercel → dialect-app → Deployments → pick the previous Production
 deployment → **Instant Rollback**. Then fix forward on `staging`.

@@ -1,0 +1,40 @@
+# One button: merge a feature branch into `staging` so testers see it on
+# actingaccents-staging.vercel.app. Run it from Actions → "Promote to staging"
+# → Run workflow (also works from the GitHub mobile app). See DEPLOYING.md.
+#
+# Opens a PR from the branch into staging (or reuses the open one), brings the
+# branch up to date if branch protection asks for that, and merges it with a
+# merge commit.
+name: Promote to staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to merge into staging
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: promote-staging
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BASE: staging
+      HEAD: ${{ inputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge into staging
+        run: bash .github/scripts/promote.sh
