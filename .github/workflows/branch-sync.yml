@@ -1,0 +1,91 @@
+# Keeps `staging` a superset of `prod` (and of `main` while it still exists),
+# so testers on actingaccents-staging.vercel.app never miss work that landed
+# somewhere else. See DEPLOYING.md.
+#
+# If a source branch has a real (non-merge) commit that `staging` lacks, this
+# opens a "Sync <source> into staging" PR, or leaves the existing one alone.
+# It also writes what's waiting to be promoted (staging -> prod) to the run
+# summary. It never merges anything.
+name: Branch sync
+
+on:
+  push:
+    branches: [staging, prod, main]
+  schedule:
+    - cron: '0 14 * * *' # daily, 8am US Central
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: branch-sync
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compare branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          target=staging
+          failed=0
+
+          for source in prod main; do
+            if ! git rev-parse -q --verify "origin/$source" >/dev/null; then
+              continue # branch retired
+            fi
+            # Merge commits are ignored: a staging -> prod promote leaves a
+            # merge commit on prod that staging never needs.
+            missing=$(git log --no-merges --format='- %h %s' "origin/$target..origin/$source")
+            if [ -z "$missing" ]; then
+              echo "✅ \`$target\` has everything from \`$source\`." >> "$GITHUB_STEP_SUMMARY"
+              continue
+            fi
+
+            count=$(printf '%s\n' "$missing" | wc -l | tr -d ' ')
+            {
+              echo "⚠️ \`$source\` has $count commit(s) that \`$target\` doesn't:"
+              echo
+              printf '%s\n' "$missing"
+              echo
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            existing=$(gh pr list --base "$target" --head "$source" --state open --json url --jq '.[0].url // empty')
+            if [ -n "$existing" ]; then
+              echo "Sync PR already open: $existing" >> "$GITHUB_STEP_SUMMARY"
+              continue
+            fi
+
+            body=$(printf '%s\n\n%s\n\n%s\n' \
+              "\`$source\` has commits that \`$target\` (what testers see) is missing:" \
+              "$missing" \
+              "Merge with a merge commit. Opened by the Branch sync workflow; see DEPLOYING.md.")
+            if url=$(gh pr create --base "$target" --head "$source" \
+                --title "Sync $source into $target" --body "$body" 2>&1); then
+              echo "Opened $url" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::error::Couldn't open a sync PR from $source into $target: $url"
+              echo "If this is a permissions error, turn on Settings → Actions → General → 'Allow GitHub Actions to create and approve pull requests'."
+              failed=1
+            fi
+          done
+
+          pending=$(git log --no-merges --format='- %h %s' origin/prod..origin/staging)
+          if [ -n "$pending" ]; then
+            {
+              echo "### Waiting to be promoted (\`staging\` → \`prod\`)"
+              echo
+              printf '%s\n' "$pending"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          exit "$failed"
