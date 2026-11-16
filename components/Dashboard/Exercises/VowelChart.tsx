@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { Box, Button, Text, Tooltip } from '@chakra-ui/react'
+import InfoTerm from './InfoTerm'
 
 /**
  * The IPA vowel quadrilateral, drawn rather than shipped as an image.
@@ -126,10 +127,34 @@ const VowelChart: React.FC<VowelChartProps> = ({
     if (url) new Audio(url).play().catch(() => {})
   }
 
+  // Capped and given a fixed shape: stretched to the page width the
+  // quadrilateral flattened out and the vowels spread too far apart.
+  // SVG gradient ids are global to the page; keep each chart's unique.
+  const fillId = `vq-fill-${useId().replace(/:/g, '')}`
+
   return (
-    <Box>
+    <Box
+      maxW="760px"
+      mx="auto"
+      w="100%"
+      // Pinned light card (the tiles and rules are light in both modes):
+      // a soft lavender-to-blue wash in the brand colours.
+      bgGradient="linear(to-br, #F6F4FF, #EEF5FD)"
+      border="1px solid"
+      borderColor="#E6E1FA"
+      borderRadius="xl"
+      boxShadow="0 1px 3px rgba(95, 83, 207, 0.08)"
+      px={{ base: 3, md: 5 }}
+      pt={{ base: 3, md: 4 }}
+      pb={{ base: 2, md: 3 }}
+    >
       {/* Column headers */}
-      <Box position="relative" h="22px" mb={1}>
+      <Box
+        position="relative"
+        h="30px"
+        mb={1}
+        ml={{ base: '68px', md: '96px' }}
+      >
         {(
           [
             ['Front', FRONT.close],
@@ -137,26 +162,31 @@ const VowelChart: React.FC<VowelChartProps> = ({
             ['Back', BACK],
           ] as [string, number][]
         ).map(([label, x]) => (
-          <Tooltip key={label} label={ADVANCEMENT_DEFS[label]} hasArrow>
-            <Text
-              position="absolute"
-              left={`${x}%`}
-              transform="translateX(-50%)"
-              fontSize="xs"
+          <Box
+            key={label}
+            position="absolute"
+            left={`${x}%`}
+            transform="translateX(-50%)"
+          >
+            <InfoTerm
+              definition={ADVANCEMENT_DEFS[label]}
+              fontSize={{ base: 'xs', md: 'md' }}
               fontWeight="semibold"
-              color="gray.600"
-              cursor="help"
-              textDecoration="underline dotted"
+              color="gray.700"
             >
               {label}
-            </Text>
-          </Tooltip>
+            </InfoTerm>
+          </Box>
         ))}
       </Box>
 
       <Box display="flex" alignItems="stretch" gap={2}>
         {/* Row headers */}
-        <Box position="relative" w="72px" flexShrink={0} minH="340px">
+        <Box
+          position="relative"
+          w={{ base: '60px', md: '88px' }}
+          flexShrink={0}
+        >
           {(
             [
               ['Close', ROWS.close],
@@ -165,27 +195,35 @@ const VowelChart: React.FC<VowelChartProps> = ({
               ['Open', ROWS.open],
             ] as [string, number][]
           ).map(([label, y]) => (
-            <Tooltip key={label} label={HEIGHT_DEFS[label]} hasArrow>
-              <Text
-                position="absolute"
-                top={`${y}%`}
-                right="0"
-                transform="translateY(-50%)"
-                fontSize="xs"
+            <Box
+              key={label}
+              position="absolute"
+              top={`${y}%`}
+              right="0"
+              transform="translateY(-50%)"
+              whiteSpace="nowrap"
+            >
+              <InfoTerm
+                definition={HEIGHT_DEFS[label]}
+                fontSize={{ base: 'xs', md: 'md' }}
                 fontWeight="semibold"
-                color="gray.600"
-                whiteSpace="nowrap"
-                cursor="help"
-                textDecoration="underline dotted"
+                color="gray.700"
               >
                 {label}
-              </Text>
-            </Tooltip>
+              </InfoTerm>
+            </Box>
           ))}
         </Box>
 
         {/* The chart itself */}
-        <Box position="relative" flex="1" minH="340px">
+        <Box
+          position="relative"
+          flex="1"
+          // A fixed shape on wider screens; on phones the 3:2 box would be too
+          // short for the tiles, so it gets a minimum height instead.
+          sx={{ aspectRatio: { md: '3 / 2' } }}
+          minH={{ base: '320px', md: 0 }}
+        >
           <Box
             as="svg"
             // Chakra's Box-as-svg types omit SVG-only attributes, so this
@@ -200,11 +238,19 @@ const VowelChart: React.FC<VowelChartProps> = ({
             h="100%"
             pointerEvents="none"
           >
+            <defs>
+              <linearGradient id={fillId} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#5F53CF" stopOpacity="0.07" />
+                <stop offset="100%" stopColor="#7EACE2" stopOpacity="0.14" />
+              </linearGradient>
+            </defs>
             <polygon
               points={OUTLINE.map(([x, y]) => `${x},${y}`).join(' ')}
-              fill="none"
-              stroke="#A0AEC0"
-              strokeWidth="1"
+              fill={`url(#${fillId})`}
+              stroke="#5F53CF"
+              strokeOpacity="0.55"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
             {RULES.map(([y, x1, x2]) => (
@@ -214,13 +260,22 @@ const VowelChart: React.FC<VowelChartProps> = ({
                 y1={y}
                 x2={x2}
                 y2={y}
-                stroke="#A0AEC0"
+                stroke="#5F53CF"
+                strokeOpacity="0.35"
                 strokeWidth="1"
+                strokeDasharray="4 4"
                 vectorEffect="non-scaling-stroke"
               />
             ))}
             {DOTS.map(([x, y]) => (
-              <circle key={`${x}-${y}`} cx={x} cy={y} r="0.9" fill="#A0AEC0" />
+              <circle
+                key={`${x}-${y}`}
+                cx={x}
+                cy={y}
+                r="1"
+                fill="#5F53CF"
+                fillOpacity="0.7"
+              />
             ))}
           </Box>
 
@@ -241,20 +296,34 @@ const VowelChart: React.FC<VowelChartProps> = ({
                   top={`${v.y}%`}
                   transform="translate(-50%, -50%)"
                   size="sm"
-                  minW="38px"
-                  h="38px"
+                  minW={{ base: '32px', md: '40px' }}
+                  h={{ base: '32px', md: '40px' }}
                   px={1}
+                  borderRadius="lg"
                   fontFamily="ipa"
                   className="ipa-text"
-                  fontSize="xl"
+                  fontSize={{ base: 'lg', md: 'xl' }}
                   variant="outline"
-                  bg="white"
+                  // Picked vowels show in blue, matching the slots they fill.
+                  bg={used ? 'blue.50' : 'white'}
+                  boxShadow="0 1px 2px rgba(95, 83, 207, 0.15)"
+                  transition="transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, color 0.15s ease"
+                  _hover={
+                    disabled
+                      ? {}
+                      : {
+                          borderColor: used ? 'blue.500' : 'brand.iris',
+                          color: 'brand.iris',
+                          boxShadow: '0 4px 10px rgba(95, 83, 207, 0.18)',
+                          transform: 'translate(-50%, calc(-50% - 2px))',
+                        }
+                  }
                   // The quadrilateral behind these keeps its light rules in
                   // both modes, so the symbol colour is pinned rather than
                   // inherited.
                   color="gray.800"
-                  borderColor={used ? 'purple.300' : 'gray.200'}
-                  opacity={used ? 0.45 : 1}
+                  borderColor={used ? 'blue.400' : '#DDD8F7'}
+                  borderWidth={used ? 2 : 1}
                   isDisabled={disabled}
                   onClick={() => onSymbolClick?.(v.symbol)}
                   onDoubleClick={() => play(v.symbol)}

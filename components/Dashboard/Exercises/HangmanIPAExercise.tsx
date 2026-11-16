@@ -14,11 +14,13 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
-import { MdKeyboard, MdVolumeUp } from 'react-icons/md'
+import { MdKeyboard, MdPlayArrow } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
+import InstructionsBox from './InstructionsBox'
+import { BankHeading } from './bank'
 
 /** How long a completed word stays on screen before the next one loads. */
 const ADVANCE_DELAY_MS = 3000
@@ -57,8 +59,8 @@ const DIACRITIC_DISPLAY: Record<
 /** Progress saved before the diacritics moved onto the blanks holds the full
  *  symbol; reduce it to the base the learner now places. */
 const LEGACY_DIACRITIC_ANSWERS: Record<string, string> = {
-  'n̩': 'n',
-  'ɫ̩': 'ɫ',
+  n̩: 'n',
+  ɫ̩: 'ɫ',
   ĭ: 'i',
 }
 
@@ -380,33 +382,18 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
         </Text>
       </Box>
 
-      {/* Instructions */}
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm" color="text.primary">
-          <Text as="span" fontWeight="bold" color="green.600">
-            Instructions:
-          </Text>{' '}
-          Point and click the correct IPA symbol into the blank spaces to
-          transcribe the presented word. Syllabic consonant indicators, stress
-          indicators, and syllable breaks have been provided for you.
-          {quizData.questions_data.some((q) => q.audioUrl)
-            ? ' Click the "Play Audio" button to hear the word.'
-            : ''}
-        </Text>
-      </Box>
+      <InstructionsBox>
+        Point and click the correct IPA symbol into the blank spaces to
+        transcribe the presented word. Syllabic consonant indicators, stress
+        indicators, and syllable breaks have been provided for you.
+        {quizData.questions_data.some((q) => q.audioUrl)
+          ? ' Click the "Play Audio" button to hear the word.'
+          : ''}
+      </InstructionsBox>
 
       {/* Symbol Bank */}
       <Box>
-        <Flex justify="space-between" align="center" mb={3}>
-          <Text fontWeight="bold" fontSize="lg">
-            Symbol bank:
-          </Text>
+        <BankHeading kind="symbol" mb={3}>
           <Tooltip
             label={isKeyboardOpen ? 'Hide IPA Keyboard' : 'Show IPA Keyboard'}
           >
@@ -418,7 +405,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
               size="sm"
             />
           </Tooltip>
-        </Flex>
+        </BankHeading>
         <IPAKeyboard
           symbolBankCategories={quizData.symbolBankCategories}
           customSymbols={shuffledHangmanBank}
@@ -429,7 +416,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
           hideInstructions={true}
           persistClickedSymbols={false}
           showCategoriesInCompact={!!quizData.symbolBankCategories}
-          symbolSize="lg"
+          symbolSize="bank"
           maxW="100%"
         />
         {selectedSymbol && (
@@ -505,7 +492,7 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
             {currentQuestion.audioUrl && (
               <Button
                 size="sm"
-                leftIcon={<MdVolumeUp />}
+                leftIcon={<MdPlayArrow />}
                 onClick={() =>
                   new Audio(currentQuestion.audioUrl).play().catch(() => {})
                 }
@@ -564,82 +551,88 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
                       {marker}
                     </Text>
                   )}
-                <Box
-                  minW="50px"
-                  h="50px"
-                  border="2px solid"
-                  borderColor={
-                    hasAnswer
-                      ? isCorrect
-                        ? 'green.500'
-                        : 'red.500'
-                      : isActiveBlank
-                      ? 'blue.500'
-                      : selectedSymbol
-                      ? 'brand.iris'
-                      : 'gray.300'
-                  }
-                  borderRadius="md"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  cursor="pointer"
-                  bg={
-                    isActiveBlank ? 'blue.50' : hasAnswer ? 'gray.50' : 'white'
-                  }
-                  onClick={() =>
-                    handleBlankClick(currentQuestion.id, blankIndex)
-                  }
-                  onDoubleClick={() =>
-                    handleClearBlank(currentQuestion.id, blankIndex)
-                  }
-                  _hover={{
-                    bg: 'gray.100',
-                    borderColor: 'brand.iris',
-                  }}
-                  transition="all 0.2s"
-                  position="relative"
-                  aria-label={
-                    diacritic ? `blank ${blankIndex + 1}, ${diacritic.label}` : undefined
-                  }
-                >
-                  {diacritic && (
-                    <Text
-                      aria-hidden
-                      position="absolute"
-                      left="50%"
-                      transform="translateX(-50%)"
-                      {...(diacritic.above
-                        ? { bottom: '100%', mb: '-6px' }
-                        : { top: '100%', mt: '-14px' })}
-                      fontFamily="ipa"
-                      className="ipa-text"
-                      fontSize="2xl"
-                      fontWeight="bold"
-                      lineHeight="1"
-                      color="text.primary"
-                      pointerEvents="none"
-                    >
-                      {diacritic.mark}
-                    </Text>
-                  )}
-                  {displaySymbol ? (
-                    <Text
-                      fontSize="lg"
-                      fontWeight="semibold"
-                      fontFamily="ipa"
-                      color={
-                        isActiveBlank && pendingSymbol ? 'blue.600' : 'black'
-                      }
-                    >
-                      {displaySymbol}
-                    </Text>
-                  ) : (
-                    <Text color="gray.400" fontSize="sm">
-                      _
-                    </Text>
-                  )}
-                </Box>
+                  <Box
+                    minW="50px"
+                    h="50px"
+                    border="2px solid"
+                    borderColor={
+                      hasAnswer
+                        ? isCorrect
+                          ? 'green.500'
+                          : 'red.500'
+                        : isActiveBlank
+                        ? 'blue.500'
+                        : selectedSymbol
+                        ? 'brand.iris'
+                        : 'gray.300'
+                    }
+                    borderRadius="md"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    cursor="pointer"
+                    bg={
+                      isActiveBlank
+                        ? 'blue.50'
+                        : hasAnswer
+                        ? 'gray.50'
+                        : 'white'
+                    }
+                    onClick={() =>
+                      handleBlankClick(currentQuestion.id, blankIndex)
+                    }
+                    onDoubleClick={() =>
+                      handleClearBlank(currentQuestion.id, blankIndex)
+                    }
+                    _hover={{
+                      bg: 'gray.100',
+                      borderColor: 'brand.iris',
+                    }}
+                    transition="all 0.2s"
+                    position="relative"
+                    aria-label={
+                      diacritic
+                        ? `blank ${blankIndex + 1}, ${diacritic.label}`
+                        : undefined
+                    }
+                  >
+                    {diacritic && (
+                      <Text
+                        aria-hidden
+                        position="absolute"
+                        left="50%"
+                        transform="translateX(-50%)"
+                        {...(diacritic.above
+                          ? { bottom: '100%', mb: '-6px' }
+                          : { top: '100%', mt: '-14px' })}
+                        fontFamily="ipa"
+                        className="ipa-text"
+                        fontSize="2xl"
+                        fontWeight="bold"
+                        lineHeight="1"
+                        color="text.primary"
+                        pointerEvents="none"
+                      >
+                        {diacritic.mark}
+                      </Text>
+                    )}
+                    {displaySymbol ? (
+                      <Text
+                        fontSize="lg"
+                        fontWeight="semibold"
+                        fontFamily="ipa"
+                        color={
+                          isActiveBlank && pendingSymbol ? 'blue.600' : 'black'
+                        }
+                      >
+                        {displaySymbol}
+                      </Text>
+                    ) : (
+                      <Text color="gray.400" fontSize="sm">
+                        _
+                      </Text>
+                    )}
+                  </Box>
                 </Fragment>
               )
             })}

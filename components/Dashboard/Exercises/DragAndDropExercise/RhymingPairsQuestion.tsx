@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { renderUnderlined } from '../UnderlineMarkup'
 import { Box, Text, VStack, Button } from '@chakra-ui/react'
 import { Question, AnswerOption } from '../QuizTypes'
+import { shuffleArray } from '../shuffle'
+import Callout from '../Callout'
+import InstructionsBox from '../InstructionsBox'
 
 interface RhymingPairsQuestionProps {
   question: Question
@@ -94,16 +97,16 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
     return 'gray'
   }
 
-  const column1Words: AnswerOption[] = []
-  const column2Words: AnswerOption[] = []
+  const pairedColumn1: AnswerOption[] = []
+  const pairedColumn2: AnswerOption[] = []
 
   question.answerOptions.forEach((word) => {
     if (!word.rhymingWordId) {
       // Words without a match
-      if (column1Words.length <= column2Words.length) {
-        column1Words.push(word)
+      if (pairedColumn1.length <= pairedColumn2.length) {
+        pairedColumn1.push(word)
       } else {
-        column2Words.push(word)
+        pairedColumn2.push(word)
       }
     } else {
       // Words with a match
@@ -112,25 +115,56 @@ const RhymingPairsQuestion: React.FC<RhymingPairsQuestionProps> = ({
       )
       if (
         rhymingWord &&
-        !column1Words.includes(rhymingWord) &&
-        !column2Words.includes(word)
+        !pairedColumn1.includes(rhymingWord) &&
+        !pairedColumn2.includes(word)
       ) {
-        column1Words.push(word)
-        column2Words.push(rhymingWord)
+        pairedColumn1.push(word)
+        pairedColumn2.push(rhymingWord)
       }
     }
   })
 
+  // Column 1 holds one word of each pair and column 2 the other (plus one
+  // word with no partner on each side). Each column is shuffled on its own,
+  // and column 2 is re-rolled until no word sits across from its partner, so
+  // the layout never gives a match away. The order is memoised on the word
+  // ids so nothing moves mid-click; words are looked up fresh so a refetch
+  // never leaves stale objects on screen.
+  const ids1 = pairedColumn1.map((w) => w.id)
+  const ids2 = pairedColumn2.map((w) => w.id)
+  const signature = `${ids1.join(',')}|${ids2.join(',')}`
+  const order = useMemo(() => {
+    const partnerOf = new Map(
+      question.answerOptions.map((o) => [o.id, o.rhymingWordId]),
+    )
+    const col1 = shuffleArray(ids1)
+    let col2 = shuffleArray(ids2)
+    for (let tries = 0; tries < 50; tries++) {
+      if (col2.every((id, i) => partnerOf.get(col1[i]) !== id)) break
+      col2 = shuffleArray(ids2)
+    }
+    return { col1, col2 }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signature])
+  const byId = new Map(question.answerOptions.map((o) => [o.id, o]))
+  const inOrder = (ids: number[]) =>
+    ids.map((id) => byId.get(id)).filter((o): o is AnswerOption => Boolean(o))
+  const column1Words = inOrder(order.col1)
+  const column2Words = inOrder(order.col2)
+
   return (
     <VStack spacing={8}>
       <Box>
-        <Text>
-          <b>Instructions:</b>
+        <Callout tone="prompt" label="Keep in mind" mt={0}>
           English spelling is incredibly inconsistent, as you will discover in
           this exercise.
-          <b>{renderUnderlined(question.text)}</b>
-          Be careful, some words do not have a rhyming partner.
-        </Text>
+        </Callout>
+        <Box mt={4}>
+          <InstructionsBox>
+            <b>{renderUnderlined(question.text)}</b>{' '}
+            <i>Be careful, some words do not have a rhyming partner.</i>
+          </InstructionsBox>
+        </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" width="100%">
         <Box width="45%">

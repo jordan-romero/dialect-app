@@ -202,22 +202,26 @@
     {
       "id": "special|Voiced Labial-Velar Approximant",
       "label": "Voiced Labial-Velar Approximant",
-      "symbol": "w"
+      "symbol": "w",
+      "definition": "A vibrated dual articulation produced with the back of the tongue approaching the velum while the lips round over the airflow."
     },
     {
       "id": "special|Voiceless Affricate",
       "label": "Voiceless Affricate",
-      "symbol": "t͡ʃ"
+      "symbol": "t͡ʃ",
+      "definition": "A voiceless consonant that begins as a stop and releases as a fricative."
     },
     {
       "id": "special|Voiced Affricate",
       "label": "Voiced Affricate",
-      "symbol": "d͡ʒ"
+      "symbol": "d͡ʒ",
+      "definition": "A voiced consonant that begins as a stop and releases as a fricative."
     },
     {
       "id": "special|Velarized (“Dark”) Lateral Approximant",
       "label": "Velarized (“Dark”) Lateral Approximant",
-      "symbol": "ɫ"
+      "symbol": "ɫ",
+      "definition": "Velarized, or “Dark”: the back of the tongue is raised toward the velum during articulation."
     }
   ],
   "symbolBank": [

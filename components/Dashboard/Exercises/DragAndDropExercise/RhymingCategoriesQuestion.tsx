@@ -6,6 +6,9 @@ import { Question, AnswerOption } from '../QuizTypes'
 import { useToast } from '@chakra-ui/react'
 import { Divider } from '@chakra-ui/react'
 import { capitalizeFirstLetter } from './utils'
+import Callout from '../Callout'
+import InstructionsBox from '../InstructionsBox'
+import { BankHeading, WORD_BANK_BUTTON } from '../bank'
 
 interface RhymingCategoriesQuestionProps {
   question: Question
@@ -42,12 +45,15 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
 
   return (
     <Box>
-      <Text>
-        <b>Instructions:</b>
+      <Callout tone="prompt" label="Keep in mind" mt={0}>
         English spelling is incredibly inconsistent, as you will discover in
         this exercise.
-        <b>{renderUnderlined(question.text)}</b>
-      </Text>
+      </Callout>
+      <Box mt={4} mb={4}>
+        <InstructionsBox>
+          <b>{renderUnderlined(question.text)}</b>
+        </InstructionsBox>
+      </Box>
       <Flex flexDirection="column">
         <Box
           position="sticky"
@@ -58,44 +64,45 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
           borderColor="border.subtle"
           pb={4}
         >
-          <Text fontWeight="bold" mb={2}>
-            Word Bank
-          </Text>
-          <Droppable droppableId="wordBank" direction="horizontal">
-            {(provided) => (
-              <Flex
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                bg="surface.subtle"
-                p={4}
-                flexWrap="wrap"
-              >
-                {wordBank.map((word, index) => (
-                  <Draggable
-                    key={word.id}
-                    draggableId={word.id.toString()}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <Box
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        bg="surface.card"
-                        p={2}
-                        m={1}
-                        boxShadow="md"
-                        borderRadius="md"
-                      >
-                        {renderUnderlined(word.optionText)}
-                      </Box>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </Flex>
-            )}
-          </Droppable>
+          <Box bg="surface.subtle" p={4} borderRadius="md">
+            <BankHeading kind="word" />
+            <Droppable droppableId="wordBank" direction="horizontal">
+              {(provided) => (
+                <Flex
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  minHeight="48px"
+                  flexWrap="wrap"
+                >
+                  {wordBank.map((word, index) => (
+                    <Draggable
+                      key={word.id}
+                      draggableId={word.id.toString()}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Box
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          bg="surface.card"
+                          {...WORD_BANK_BUTTON}
+                          display="flex"
+                          alignItems="center"
+                          m={1}
+                          boxShadow="md"
+                          borderRadius="md"
+                        >
+                          {renderUnderlined(word.optionText)}
+                        </Box>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </Flex>
+              )}
+            </Droppable>
+          </Box>
         </Box>
         <Flex flexWrap="wrap" justifyContent="space-between" mt={4}>
           {question.categories &&
@@ -111,7 +118,14 @@ const RhymingCategoriesQuestion: React.FC<RhymingCategoriesQuestionProps> = ({
                     mb={4}
                   >
                     <Text fontWeight="bold" mb={2}>
-                      {capitalizeFirstLetter(category)}
+                      {/* The THOUGHT column collects the words that DON'T rhyme. */}
+                      {category.toLowerCase() === 'thought' ? (
+                        <>
+                          Words that <u>do not rhyme</u> with “Thought”
+                        </>
+                      ) : (
+                        capitalizeFirstLetter(category)
+                      )}
                     </Text>
                     <Divider borderColor="brand.purple" mb={4} />
                     <Flex flexDirection="column" minHeight="200px">

@@ -18,6 +18,9 @@ import {
 } from '@chakra-ui/react'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
+import InstructionsBox from './InstructionsBox'
+import { BANK_BUTTON, BankHeading } from './bank'
+import InfoTerm from './InfoTerm'
 
 interface Slot {
   id: string
@@ -30,6 +33,8 @@ interface SpecialSlot {
   id: string
   label: string
   symbol: string
+  /** Shown on hover, like the row and column headers. */
+  definition?: string
 }
 interface ConsonantRectData {
   id: number
@@ -223,47 +228,35 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
 
   return (
     <VStack spacing={5} align="stretch">
-      <Text fontSize="lg" fontWeight="bold">
-        {data.questions[0]?.text}
-      </Text>
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm">
-          <b>Instructions:</b> Click a symbol from the bank, then click the
-          correct cell of the rectangle to place it (voiceless on the left,
-          voiced on the right). Click a filled cell with nothing selected to
-          clear it. Hover the row and column headers for definitions.
-        </Text>
-      </Box>
+      <InstructionsBox>
+        Click a symbol from the bank, then click the correct cell of the
+        rectangle to place it (voiceless on the left, voiced on the right).
+        Click a filled cell with nothing selected to clear it. Hover the row and
+        column headers for definitions.
+      </InstructionsBox>
 
-      {/* Symbol bank */}
-      <Wrap spacing={2}>
-        {shuffledBank.map((sym) => {
-          const used = Object.values(placements).includes(sym)
-          return (
-            <WrapItem key={sym}>
-              <Button
-                size="lg"
-                fontFamily="ipa"
-                fontSize="2xl"
-                minW="52px"
-                h="52px"
-                variant={selectedSymbol === sym ? 'solid' : 'outline'}
-                colorScheme={selectedSymbol === sym ? 'teal' : 'gray'}
-                opacity={used ? 0.4 : 1}
-                onClick={() => setSelectedSymbol(sym)}
-              >
-                {sym}
-              </Button>
-            </WrapItem>
-          )
-        })}
-      </Wrap>
+      <Box>
+        <BankHeading kind="symbol" />
+        <Wrap spacing={2}>
+          {shuffledBank.map((sym) => {
+            const used = Object.values(placements).includes(sym)
+            return (
+              <WrapItem key={sym}>
+                <Button
+                  {...BANK_BUTTON}
+                  fontFamily="ipa"
+                  variant={selectedSymbol === sym ? 'solid' : 'outline'}
+                  colorScheme={selectedSymbol === sym ? 'teal' : 'gray'}
+                  opacity={used ? 0.4 : 1}
+                  onClick={() => setSelectedSymbol(sym)}
+                >
+                  {sym}
+                </Button>
+              </WrapItem>
+            )
+          })}
+        </Wrap>
+      </Box>
 
       {/* Grid */}
       <Box overflowX="auto">
@@ -273,11 +266,7 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
               <Th />
               {data.places.map((p) => (
                 <Th key={p} textAlign="center">
-                  <Tooltip label={data.placeDefinitions[p]} hasArrow>
-                    <Text as="span" cursor="help">
-                      {p}
-                    </Text>
-                  </Tooltip>
+                  <InfoTerm definition={data.placeDefinitions[p]}>{p}</InfoTerm>
                 </Th>
               ))}
             </Tr>
@@ -286,11 +275,9 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
             {data.manners.map((manner) => (
               <Tr key={manner}>
                 <Th whiteSpace="nowrap" {...gridCell}>
-                  <Tooltip label={data.mannerDefinitions[manner]} hasArrow>
-                    <Text as="span" cursor="help">
-                      {manner}
-                    </Text>
-                  </Tooltip>
+                  <InfoTerm definition={data.mannerDefinitions[manner]}>
+                    {manner}
+                  </InfoTerm>
                 </Th>
                 {data.places.map((place) => (
                   <Cell
@@ -329,7 +316,8 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
                 mt={i === 0 ? 0 : '-1px'}
               >
                 <Text flex="1" px={3} py={2}>
-                  {slot.label}:
+                  <InfoTerm definition={slot.definition}>{slot.label}</InfoTerm>
+                  :
                 </Text>
                 <Flex
                   align="center"
@@ -360,12 +348,12 @@ export const ConsonantRectangleExercise: React.FC<Props> = ({
                         : 'gray.300'
                     }
                     bg={
-                  isCorrect
-                    ? 'surface.correct'
-                    : isWrong
-                    ? 'surface.wrong'
-                    : 'surface.slot'
-                }
+                      isCorrect
+                        ? 'surface.correct'
+                        : isWrong
+                        ? 'surface.wrong'
+                        : 'surface.slot'
+                    }
                     onClick={() => placeSymbol(slot.id)}
                   >
                     {placed || ''}

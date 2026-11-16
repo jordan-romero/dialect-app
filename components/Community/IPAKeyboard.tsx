@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
+import { BANK_BUTTON } from '../Dashboard/Exercises/bank'
 import {
   Box,
   Button,
@@ -76,7 +77,7 @@ interface IPAKeyboardProps {
   /** When false, symbol bank does not remember or highlight previously clicked symbols (e.g. for quizzes). Default true. */
   persistClickedSymbols?: boolean
   /** Overrides symbol button sizing independently of `compact` layout. */
-  symbolSize?: 'sm' | 'md' | 'lg'
+  symbolSize?: 'sm' | 'md' | 'lg' | 'bank'
   /** The symbol the parent is holding until it gets placed. Click-to-place
    *  quizzes own that state — the click here only hands the symbol over — so
    *  without it the bank has no way to show what's currently selected. */
@@ -671,16 +672,24 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
   // Symbols carry diacritics (breves, tie bars) that are hard to read and hard
   // to hit accurately at small sizes, so every tier runs a step larger than a
   // plain text button would.
-  const buttonSize = symbolSize
-    ? { sm: '32px', md: '42px', lg: '52px' }[symbolSize]
-    : compact
-    ? '34px'
-    : '38px'
-  const buttonFontSize = symbolSize
-    ? { sm: 'md', md: 'xl', lg: '2xl' }[symbolSize]
-    : compact
-    ? 'md'
-    : 'xl'
+  // 'bank' is the shared quiz-bank size (see Dashboard/Exercises/bank.tsx):
+  // medium, and a step smaller on phones.
+  const buttonSize =
+    symbolSize === 'bank'
+      ? BANK_BUTTON.h
+      : symbolSize
+      ? { sm: '32px', md: '42px', lg: '52px' }[symbolSize]
+      : compact
+      ? '34px'
+      : '38px'
+  const buttonFontSize =
+    symbolSize === 'bank'
+      ? BANK_BUTTON.fontSize
+      : symbolSize
+      ? { sm: 'md', md: 'xl', lg: '2xl' }[symbolSize]
+      : compact
+      ? 'md'
+      : 'xl'
   // Option on Mac, Alt on Windows/Linux. Only rendered inside the Drawer
   // (mounts client-side on open), so navigator sniffing is hydration-safe here.
   const mod = ipaModifierLabel()
@@ -1128,7 +1137,7 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
         {/* Header: optional title + an always-available Instructions side panel.
             The title only renders when an explicit (non-empty) one is passed,
             so pages with their own heading don't get a duplicate. */}
-        {!hideInstructions && (
+        {(title || !hideInstructions) && (
           <Flex align="center" justify="space-between" gap={2}>
             {title ? (
               <Text fontSize="lg" fontWeight="bold" color="brand.iris">
@@ -1137,15 +1146,17 @@ export const IPAKeyboard: React.FC<IPAKeyboardProps> = ({
             ) : (
               <Box />
             )}
-            <Button
-              size="sm"
-              variant="ghost"
-              colorScheme="purple"
-              leftIcon={<InfoOutlineIcon />}
-              onClick={() => setShowInstructions(true)}
-            >
-              Instructions
-            </Button>
+            {!hideInstructions && (
+              <Button
+                size="sm"
+                variant="ghost"
+                colorScheme="purple"
+                leftIcon={<InfoOutlineIcon />}
+                onClick={() => setShowInstructions(true)}
+              >
+                Instructions
+              </Button>
+            )}
           </Flex>
         )}
 

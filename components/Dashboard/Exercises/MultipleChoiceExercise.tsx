@@ -10,13 +10,14 @@ import {
   Flex,
   useToast,
 } from '@chakra-ui/react'
-import { MdAutoAwesome, MdVolumeUp } from 'react-icons/md'
+import { MdAutoAwesome, MdPlayArrow } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
+import InstructionsBox from './InstructionsBox'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -35,7 +36,7 @@ const AudioButton: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
     <Button
       onClick={playAudio}
       size="md"
-      leftIcon={<MdVolumeUp size={22} />}
+      leftIcon={<MdPlayArrow size={22} />}
       flexShrink={0}
     >
       Play Audio
@@ -376,18 +377,20 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         py={4}
         borderColor="border.subtle"
       >
-        <Text fontStyle="italic" mb={4}>
-          {/* A quiz can carry its own wording. The fallbacks below infer it
-              from the quiz shape, which is right for the symbol⇄word
-              exercises but wrong for anything one-off. */}
-          {multipleChoiceQuiz.instructions
-            ? `Instructions: ${multipleChoiceQuiz.instructions}`
-            : !hasParts
-            ? 'Instructions: Choose the correct transcription for the presented word in a General American Dialect.'
-            : currentPart === 1
-            ? 'Instructions: Choose the correct symbol that matches the sound in the underlined part of the word. Click the "Play Audio" button to hear the word.'
-            : 'Instructions: Choose the correct word that contains the sound of the presented symbol. Click the "Play Audio" button to hear the symbol.'}
-        </Text>
+        {/* A quiz can carry its own wording. The fallbacks below infer it
+            from the quiz shape, which is right for the symbol⇄word
+            exercises but wrong for anything one-off. */}
+        <InstructionsBox
+          mb={4}
+          text={
+            multipleChoiceQuiz.instructions ||
+            (!hasParts
+              ? 'Choose the correct transcription for the presented word in a General American Dialect.'
+              : currentPart === 1
+              ? 'Choose the correct symbol that matches the sound in the underlined part of the word. Click the "Play Audio" button to hear the word.'
+              : 'Choose the correct word that contains the sound of the presented symbol. Click the "Play Audio" button to hear the symbol.')
+          }
+        />
         {(!hasParts || currentPart === 1) &&
           !QUIZ_IDS_WITHOUT_DICTIONARY_NOTE.has(multipleChoiceQuiz.id) && (
             <Flex

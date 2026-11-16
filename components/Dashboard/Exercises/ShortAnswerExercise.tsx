@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { renderUnderlined } from './UnderlineMarkup'
+import Callout from './Callout'
+import InstructionsBox from './InstructionsBox'
+import VoiceRecorder from './VoiceRecorder'
 import {
   Button,
   Box,
@@ -25,7 +28,40 @@ interface ShortAnswerQuizProps {
   onComplete: () => void
 }
 
+// Prompts the learner answers by speaking, not typing ("Then, repeat the
+// phrase and try to mimic the exact sounds."). They get a recorder; once a
+// recording exists, RECORDED_ANSWER stands in as the answer so Next unlocks
+// and the saved quiz shows it was done. The audio itself is never uploaded.
+const isRecordPrompt = (text: string) =>
+  /\bmimic the exact sounds\b/i.test(text)
+const RECORDED_ANSWER = '(recorded)'
+
 const UNCONNECTED_MARKER = ' — unconnected '
+// An answer's text may carry a note on the lines after it ("…|*" then
+// "*Note: …"): the first line is the answer, the rest show as its footnote.
+const splitAnswer = (text: string) => {
+  const [answer, ...note] = text.split('\n')
+  return { answer, footnote: note.join(' ').trim() || undefined }
+}
+
+// Prompts authored as "“Quote.” — <marker> /…/" show the quote, then the
+// transcription the learner works from in a purple callout labelled here.
+const PROMPT_MARKERS: Array<[string, string]> = [
+  [UNCONNECTED_MARKER, 'Unconnected speech'],
+  [' — GenAm ', 'GenAm transcription'],
+]
+const splitPrompt = (text: string) => {
+  for (const [marker, label] of PROMPT_MARKERS) {
+    const i = text.indexOf(marker)
+    if (i !== -1)
+      return {
+        quote: text.slice(0, i),
+        transcription: text.slice(i + marker.length),
+        label,
+      }
+  }
+  return null
+}
 
 const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   lessonId,
@@ -51,9 +87,17 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
   const isUnconnectedPrompt =
     currentQuestion?.text.includes(UNCONNECTED_MARKER) ?? false
 
-  const revealSentenceOption =currentQuestion?.answerOptions.find(
+  const revealSentenceOption = currentQuestion?.answerOptions.find(
     (option) => option.audioUrl,
   )
+
+  // Reveal-the-sentence questions are answered in plain English: no IPA
+  // keyboard, so shut it if another exercise left it open.
+  const isPlainEnglish = !!revealSentenceOption
+  useEffect(() => {
+    if (isPlainEnglish && ipaKeyboard.isOpen) ipaKeyboard.close()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlainEnglish])
 
   // Load saved progress when component mounts
   useEffect(() => {
@@ -206,30 +250,29 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
     <Box>
       {currentQuestion && (
         <Box>
-          {/* Not every short-answer quiz carries wording; those that do have
-              it authored in the content, so it isn't inferred here. */}
-          {currentQuiz?.instructions && (
-            <Text fontStyle="italic" mb={4}>
-              Instructions: {currentQuiz.instructions}
-            </Text>
+          {/* Wording is authored in the content; callouts ("Keep in mind:",
+              "Extra challenge:"), links and numbered steps come with it. */}
+          <InstructionsBox text={currentQuiz?.instructions} mb={4} />
+          {/* Reveal-the-sentence questions (Speaking Without Consonants) are
+              answered in plain English, so there's no IPA keyboard. */}
+          {!isPlainEnglish && (
+            <Box display="flex" justifyContent="flex-end" mb={2}>
+              <Button
+                size="sm"
+                variant="brandBold"
+                leftIcon={<Icon as={MdKeyboard} />}
+                onClick={ipaKeyboard.toggle}
+              >
+                {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
+              </Button>
+            </Box>
           )}
-          <Box display="flex" justifyContent="flex-end" mb={2}>
-            <Button
-              size="sm"
-              variant="brandBold"
-              leftIcon={<Icon as={MdKeyboard} />}
-              onClick={ipaKeyboard.toggle}
-            >
-              {ipaKeyboard.isOpen ? 'Hide IPA Keyboard' : 'IPA Keyboard'}
-            </Button>
-          </Box>
           {(() => {
-            // Descriptive Transcription prompts are authored as
-            // "“Quote.” — unconnected /…/": show the quote, then the
-            // unconnected transcription in its own labelled box beneath.
-            const [quote, unconnected] =
-              currentQuestion.text.split(UNCONNECTED_MARKER)
-            if (unconnected === undefined) {
+            // Descriptive Transcription ("— unconnected /…/") and Practice RP
+            // Changes ("— GenAm /…/") prompts: the quote, then the
+            // transcription to work from in a purple callout beneath.
+            const prompt = splitPrompt(currentQuestion.text)
+            if (!prompt) {
               return (
                 <>
                   <Text fontSize="xl">
@@ -237,11 +280,14 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                   </Text>
                   {currentQuestion.audioUrl && (
                     <Button
+                      leftIcon={<Icon as={MdPlayArrow} />}
                       onClick={() => playAudio(currentQuestion.audioUrl)}
                       mt={2}
                       mb={4}
                     >
-                      Play Question Audio
+                      {isPlainEnglish
+                        ? `Play Sentence ${currentQuestionIndex + 1}`
+                        : 'Play Question Audio'}
                     </Button>
                   )}
                 </>
@@ -253,7 +299,7 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
               <>
                 <HStack spacing={3} flexWrap="wrap">
                   <Text fontSize="xl" fontWeight="bold">
-                    {renderUnderlined(quote)}
+                    {renderUnderlined(prompt.quote)}
                   </Text>
                   {currentQuestion.audioUrl && (
                     <Button
@@ -265,29 +311,9 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                     </Button>
                   )}
                 </HStack>
-                <Box
-                  mt={3}
-                  bg="accent.subtle"
-                  borderLeft="4px solid"
-                  borderColor="brand.iris"
-                  borderRadius="md"
-                  px={4}
-                  py={3}
-                >
-                  <Text
-                    fontSize="xs"
-                    fontWeight="bold"
-                    textTransform="uppercase"
-                    letterSpacing="wide"
-                    color="brand.iris"
-                    mb={1}
-                  >
-                    Unconnected speech
-                  </Text>
-                  <Text fontSize="xl" className="ipa-text" color="purple.900">
-                    {unconnected}
-                  </Text>
-                </Box>
+                <Callout tone="prompt" label={prompt.label} ipa>
+                  {prompt.transcription}
+                </Callout>
               </>
             )
           })()}
@@ -304,26 +330,40 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                   {revealSentenceOption && (
                     <Text mb={1}>{renderUnderlined(option.optionText)}</Text>
                   )}
-                  <Input
-                    ref={idx === 0 ? firstInputRef : undefined}
-                    type="text"
-                    data-ipa-field
-                    className="ipa-text"
-                    placeholder="Type your answer…"
-                    value={answers[currentQuestion.id]?.[option.id] || ''}
-                    onChange={(e) =>
-                      handleAnswerChange(
-                        currentQuestion.id,
-                        option.id,
-                        e.target.value,
-                      )
-                    }
-                    onFocus={() => setFocusedOptionId(option.id)}
-                    onBlur={() => setFocusedOptionId(null)}
-                    isReadOnly={isCompleted}
-                    width="100%"
-                    marginBottom={2}
-                  />
+                  {isRecordPrompt(option.optionText) ? (
+                    <VoiceRecorder
+                      isDisabled={isCompleted}
+                      wasRecorded={!!answers[currentQuestion.id]?.[option.id]}
+                      onRecordedChange={(has) =>
+                        handleAnswerChange(
+                          currentQuestion.id,
+                          option.id,
+                          has ? RECORDED_ANSWER : '',
+                        )
+                      }
+                    />
+                  ) : (
+                    <Input
+                      ref={idx === 0 ? firstInputRef : undefined}
+                      type="text"
+                      data-ipa-field={isPlainEnglish ? undefined : true}
+                      className={isPlainEnglish ? undefined : 'ipa-text'}
+                      placeholder="Type your answer…"
+                      value={answers[currentQuestion.id]?.[option.id] || ''}
+                      onChange={(e) =>
+                        handleAnswerChange(
+                          currentQuestion.id,
+                          option.id,
+                          e.target.value,
+                        )
+                      }
+                      onFocus={() => setFocusedOptionId(option.id)}
+                      onBlur={() => setFocusedOptionId(null)}
+                      isReadOnly={isCompleted}
+                      width="100%"
+                      marginBottom={2}
+                    />
+                  )}
                   {/* Descriptive Transcription's task, restated where the
                       learner is typing so it's in view while they answer. */}
                   {isUnconnectedPrompt &&
@@ -335,27 +375,45 @@ const ShortAnswerQuiz: React.FC<ShortAnswerQuizProps> = ({
                       </Text>
                     )}
                   {!revealSentenceOption && showSentence && (
-                    <Text mt={1} fontFamily="ipa" color="green.700">
-                      Answer: {option.optionText}
-                    </Text>
+                    <Callout
+                      tone="answer"
+                      label="Answer"
+                      ipa
+                      mt={1}
+                      footnote={splitAnswer(option.optionText).footnote}
+                    >
+                      {splitAnswer(option.optionText).answer}
+                    </Callout>
                   )}
                 </Box>
               ))}
           </VStack>
+          {/* The learner commits an attempt before seeing the answer, the
+              same rule Reveal Sentence follows below. */}
           {!revealSentenceOption && (
-            <Button
-              onClick={() => setShowSentence(true)}
-              mt={4}
-              variant="brandWhite"
-              isDisabled={showSentence}
+            <Tooltip
+              label="Type your answer above to reveal it"
+              isDisabled={allInputsFilled || showSentence}
+              shouldWrapChildren
+              hasArrow
             >
-              Reveal Answer
-            </Button>
+              <Button
+                onClick={() => setShowSentence(true)}
+                mt={4}
+                variant="brandWhite"
+                isDisabled={showSentence || !allInputsFilled}
+              >
+                Reveal Answer
+              </Button>
+            </Tooltip>
           )}
           {showSentence && revealSentenceOption && (
             <Box mt={4}>
-              <Text>{renderUnderlined(revealSentenceOption.optionText)}</Text>
+              <Callout tone="answer" label="Answer" mt={0}>
+                {renderUnderlined(revealSentenceOption.optionText)}
+              </Callout>
               <Button
+                leftIcon={<Icon as={MdPlayArrow} />}
                 onClick={() => playAudio(revealSentenceOption.audioUrl)}
                 mt={2}
               >

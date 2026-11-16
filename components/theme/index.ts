@@ -11,6 +11,10 @@ const theme = extendTheme({
   styles: {
     global: {
       body: { bg: 'white', color: 'gray.800' },
+      // Underlines mark the sound being asked about ("Bri{ng}"). Browsers
+      // break an underline around descenders, which all but erased it under
+      // the g of "Bring"; keep it continuous so the marked letters read.
+      u: { textDecorationSkipInk: 'none' },
     },
   },
   // Dark-mode-aware design tokens. The public site & lesson content stay light
@@ -34,7 +38,10 @@ const theme = extendTheme({
       // which sets color="text.primary" — so a hardcoded white slot inherits
       // near-white text in dark mode and the learner's answer disappears.
       'surface.slot': { default: 'white', _dark: 'gray.700' },
-      'surface.correct': { default: 'green.50', _dark: 'rgba(72,187,120,0.22)' },
+      'surface.correct': {
+        default: 'green.50',
+        _dark: 'rgba(72,187,120,0.22)',
+      },
       'surface.wrong': { default: 'red.50', _dark: 'rgba(245,101,101,0.22)' },
       // IPA keyboard key highlights — bright in light mode, gently tinted in dark.
       'symbol.used': {
@@ -77,11 +84,16 @@ const theme = extendTheme({
   components: {
     Button: {
       variants: {
+        // Chakra's base Button resets bg to `initial` when a DISABLED button
+        // is hovered, while these variants' hover colours still apply — so a
+        // disabled button hovered to white text on nothing. Each variant
+        // pins its resting look for the disabled-and-hovered case.
         brandBold: {
           bg: 'brand.iris',
           color: 'white',
           _hover: {
             bg: 'brand.purple',
+            _disabled: { bg: 'brand.iris', color: 'white' },
           },
           _active: {
             bg: 'util.white',
@@ -94,6 +106,7 @@ const theme = extendTheme({
           _hover: {
             bg: 'brand.iris',
             color: 'white',
+            _disabled: { bg: 'white', color: 'brand.iris' },
           },
           _active: {
             bg: 'brand.blueLight',
@@ -106,6 +119,7 @@ const theme = extendTheme({
           _hover: {
             bg: 'brand.purple',
             color: 'util.white',
+            _disabled: { bg: 'util.lightGray', color: 'brand.purple' },
           },
           _active: {
             bg: 'brand.blueLight',

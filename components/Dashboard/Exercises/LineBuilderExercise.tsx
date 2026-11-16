@@ -9,13 +9,14 @@ import {
   WrapItem,
   useToast,
 } from '@chakra-ui/react'
-import { MdVolumeUp } from 'react-icons/md'
+import { MdPlayArrow } from 'react-icons/md'
 import useQuiz from './utils'
 import { AnswerOption, Question } from './QuizTypes'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
+import InstructionsBox from './InstructionsBox'
 
 // Hamlet's Advice pts. 2 and 3. One question per word or phrase, a few
 // transcriptions each, but the learner should feel they're transcribing a
@@ -202,11 +203,7 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
 
   return (
     <Box>
-      {quiz.instructions && (
-        <Text fontStyle="italic" mb={4}>
-          Instructions: {quiz.instructions}
-        </Text>
-      )}
+      <InstructionsBox text={quiz.instructions} mb={4} />
 
       {/* The line itself: English until a word is solved, then its IPA. */}
       <Box
@@ -271,7 +268,7 @@ const LineBuilderExercise: React.FC<LineBuilderProps> = ({
             {current.audioUrl && (
               <Button
                 size="sm"
-                leftIcon={<MdVolumeUp size={18} />}
+                leftIcon={<MdPlayArrow size={18} />}
                 onClick={() => playAudio(current.audioUrl as string)}
               >
                 Play Audio

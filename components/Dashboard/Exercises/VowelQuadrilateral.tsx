@@ -6,6 +6,8 @@ import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import { IPAKeyboard } from '../../Community/IPAKeyboard'
+import InstructionsBox from './InstructionsBox'
+import { BANK_TITLE } from './bank'
 
 interface VowelPosition {
   top: number
@@ -258,23 +260,11 @@ export const VowelQuadrilateralExercise: React.FC<
 
   return (
     <VStack spacing={4} align="center">
-      {/* Instructions */}
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <Text fontSize="sm" color="text.primary">
-          <Text as="span" fontWeight="bold">
-            Instructions:
-          </Text>{' '}
-          Click on a vowel from the bank below, then click on a position on the
-          chart to place it. Click on a vowel again to replace an existing
-          vowel. Click on an empty position to clear it.
-        </Text>
-      </Box>
+      <InstructionsBox>
+        Click on a vowel from the bank below, then click on a position on the
+        chart to place it. To replace an existing vowel, click on the symbol
+        again.
+      </InstructionsBox>
 
       <IPAKeyboard
         customSymbols={shuffledVowels}
@@ -284,8 +274,8 @@ export const VowelQuadrilateralExercise: React.FC<
         compact={true}
         hideInstructions={false}
         persistClickedSymbols={false}
-        title="Vowel Bank"
-        symbolSize="lg"
+        title={BANK_TITLE.symbol}
+        symbolSize="bank"
         maxW="100%"
       />
 
@@ -353,7 +343,7 @@ export const VowelQuadrilateralExercise: React.FC<
       {Object.entries(vowelPositions).some(([, p]) => p.extra) && (
         <Box w="full" maxW="800px">
           <Text fontWeight="bold" mb={2}>
-            Rhotic Vowels
+            Rhotic Vowels (“R” Colored Vowels)
           </Text>
           <Text fontSize="sm" color="gray.600" mb={3}>
             These two aren&apos;t marked on the chart above — place them here.

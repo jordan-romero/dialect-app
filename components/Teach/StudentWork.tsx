@@ -26,6 +26,7 @@ import {
 } from '@chakra-ui/react'
 import { FiArrowLeft, FiCheck } from 'react-icons/fi'
 import { relative, shortDate, useJson } from './util'
+import { renderUnderlined } from '../Dashboard/Exercises/UnderlineMarkup'
 
 type WorkEntry = {
   label?: string
@@ -313,7 +314,8 @@ const QuizBlock = ({ quiz, index }: { quiz: WorkQuiz; index: number }) => (
                       borderColor="border.subtle"
                     >
                       <Text fontSize="sm" whiteSpace="pre-wrap" sx={ipa}>
-                        {q.prompt}
+                        {/* Prompts mark underlines as {…} (e.g. "Bri{ng}"). */}
+                        {renderUnderlined(q.prompt)}
                       </Text>
                       {q.note && (
                         <Text fontSize="xs" color="text.muted" mt={1}>

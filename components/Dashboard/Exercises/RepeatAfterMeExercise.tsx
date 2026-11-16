@@ -17,15 +17,16 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import {
-  MdVolumeUp,
   MdMic,
   MdStop,
   MdExpandMore,
   MdExpandLess,
+  MdPlayArrow,
 } from 'react-icons/md'
 import QuizNavigation from './QuizNavigation'
 import QuizSkeleton from './QuizSkeleton'
 import { renderRich, renderUnderlined } from './UnderlineMarkup'
+import InstructionsBox from './InstructionsBox'
 
 /**
  * Renders a transcription with `{...}` marking the RP sound the clip teaches,
@@ -100,8 +101,6 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<BlobPart[]>([])
   const toast = useToast()
-  const { isOpen: isInstructionsOpen, onToggle: onToggleInstructions } =
-    useDisclosure({ defaultIsOpen: true })
 
   useEffect(() => {
     fetch(`/api/repeatAfterMe?lessonId=${lessonId}`)
@@ -217,33 +216,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
 
   return (
     <VStack spacing={5} align="stretch">
-      <Box
-        bg="surface.subtle"
-        p={3}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <HStack
-          as="button"
-          w="100%"
-          justify="space-between"
-          onClick={onToggleInstructions}
-          aria-expanded={isInstructionsOpen}
-        >
-          <Text fontSize="sm">Instructions</Text>
-          {isInstructionsOpen ? <MdExpandLess /> : <MdExpandMore />}
-        </HStack>
-        <Collapse in={isInstructionsOpen} animateOpacity>
-          <VStack spacing={2} align="stretch" pt={2}>
-            {data.instructions.split('\n\n').map((para, i) => (
-              <Text key={i} fontSize="sm">
-                {renderRich(para)}
-              </Text>
-            ))}
-          </VStack>
-        </Collapse>
-      </Box>
+      <InstructionsBox collapsible text={data.instructions} />
 
       <Text fontSize="sm" color="text.muted">
         {index + 1} of {data.items.length}
@@ -347,7 +320,7 @@ export const RepeatAfterMeExercise: React.FC<Props> = ({
       {/* Listen + record */}
       <HStack spacing={3} flexWrap="wrap">
         <Button
-          leftIcon={<MdVolumeUp />}
+          leftIcon={<MdPlayArrow />}
           onClick={playClip}
           variant="brandBold"
         >
