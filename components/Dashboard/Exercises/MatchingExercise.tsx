@@ -148,7 +148,14 @@ const MatchingExercise: React.FC<MatchingExerciseProps> = ({
 
   const pickSymbol = (group: FrameGroup, pair: Pair) => {
     if (isCompleted) return
-    // A filled symbol clears, matching the other place-into-slot exercises.
+    // A word is already waiting — complete the pair, replacing whatever
+    // (e.g. a wrong match) the symbol held, in one click.
+    if (selection?.kind === 'word' && selection.frame === group.frame) {
+      assign(group, pair.questionId, selection.word)
+      return
+    }
+    // With nothing waiting, a filled symbol clears, matching the other
+    // place-into-slot exercises.
     if (answers[pair.questionId]) {
       setAnswers((prev) => {
         const next = { ...prev }
@@ -156,11 +163,6 @@ const MatchingExercise: React.FC<MatchingExerciseProps> = ({
         return next
       })
       setSelection(null)
-      return
-    }
-    // A word is already waiting — complete the pair.
-    if (selection?.kind === 'word' && selection.frame === group.frame) {
-      assign(group, pair.questionId, selection.word)
       return
     }
     setSelection((prev) =>
@@ -172,7 +174,13 @@ const MatchingExercise: React.FC<MatchingExerciseProps> = ({
 
   const pickWord = (group: FrameGroup, word: string) => {
     if (isCompleted) return
-    // Clicking a word that is already matched releases it.
+    // A symbol is already waiting — complete the pair (moving the word if it
+    // was matched elsewhere).
+    if (selection?.kind === 'symbol' && selection.frame === group.frame) {
+      assign(group, selection.questionId, word)
+      return
+    }
+    // With nothing waiting, clicking a word that is already matched releases it.
     const owner = group.pairs.find((p) => answers[p.questionId] === word)
     if (owner) {
       setAnswers((prev) => {
@@ -181,11 +189,6 @@ const MatchingExercise: React.FC<MatchingExerciseProps> = ({
         return next
       })
       setSelection(null)
-      return
-    }
-    // A symbol is already waiting — complete the pair.
-    if (selection?.kind === 'symbol' && selection.frame === group.frame) {
-      assign(group, selection.questionId, word)
       return
     }
     setSelection((prev) =>

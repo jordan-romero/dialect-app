@@ -369,10 +369,6 @@ export const HangmanIPAExercise: React.FC<HangmanIPAExerciseProps> = ({
 
   return (
     <VStack spacing={4} align="stretch" maxW="1000px" mx="auto" p={4}>
-      <Text fontSize="xl" fontWeight="bold" textAlign="center">
-        {quizData.questions[0]?.text || 'IPA Transcription Quiz'}
-      </Text>
-
       {/* Progress indicator */}
       <Box textAlign="center">
         <Text fontSize="sm" color="text.muted">

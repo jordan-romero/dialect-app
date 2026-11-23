@@ -392,11 +392,6 @@ export const LexicalChartExercise: React.FC<LexicalChartExerciseProps> = ({
 
   return (
     <VStack spacing={4} align="stretch" w="full" mx="auto" p={4}>
-      <Text fontSize="xl" fontWeight="bold" textAlign="center">
-        {chartData.questions[0]?.text ||
-          'Instructions: Click on IPA symbols from the bank below and place them in their correct corresponding spots for a General American dialect.'}
-      </Text>
-
       <InstructionsBox>
         Click on a symbol from the bank below, then click on the IPA Symbol
         position next to the corresponding example word. Hover over example
