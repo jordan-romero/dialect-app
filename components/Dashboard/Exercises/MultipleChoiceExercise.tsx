@@ -18,6 +18,7 @@ import QuizSkeleton from './QuizSkeleton'
 import { shuffleArray } from './shuffle'
 import { postQuizAnswers, fetchQuizProgress } from './quizApi'
 import InstructionsBox from './InstructionsBox'
+import { Callout } from './Callout'
 
 interface MultipleChoiceQuizProps {
   lessonId: number
@@ -333,16 +334,24 @@ const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
         if (isCorrect && !selected.feedback) return null
         return (
           <Box mt={3}>
-            {selected.feedback && (
-              <Text
-                fontSize="sm"
-                fontStyle="italic"
-                color={isCorrect ? 'green.700' : 'orange.600'}
-                mb={2}
-              >
-                {selected.feedback}
-              </Text>
-            )}
+            {/* A note on the right answer teaches something new, so it gets
+                the green answer callout; a note on a wrong pick stays a
+                short orange aside. */}
+            {selected.feedback &&
+              (isCorrect ? (
+                <Callout tone="answer" label="Good to know" mt={0}>
+                  {selected.feedback}
+                </Callout>
+              ) : (
+                <Text
+                  fontSize="sm"
+                  fontStyle="italic"
+                  color="orange.600"
+                  mb={2}
+                >
+                  {selected.feedback}
+                </Text>
+              ))}
             {/* Hearing the wrong choice read aloud is how the learner works out
                 why it's wrong, so it only appears once they've picked it. */}
             {selected.audioUrl && (
